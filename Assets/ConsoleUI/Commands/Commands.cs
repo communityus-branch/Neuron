@@ -15,6 +15,11 @@ namespace Assets.ConsoleUI.Commands
         [Help("Usage: nv_set <netvar> <param>\nSet values of netvars")]
         public void SetCommand(Netvar netvar, string args)
         {
+            if (netvar == null)
+            {
+                Console.Instance.Print("Netvar not found");
+                return;
+            }
             object value = ParseString(args);
             if (!netvar.ValidateType(value))
             {

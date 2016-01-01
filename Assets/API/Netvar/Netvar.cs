@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Assets.Events;
 
 namespace Assets.API.Netvar
@@ -29,8 +30,10 @@ namespace Assets.API.Netvar
                 NetvarChangedEvent @event = new NetvarChangedEvent(this, _value, value);
                 if (@event.IsCancelled())
                 {
+                    Debug.WriteLine("Netvar Event cancelled (" + Name + ")");
                     return;
                 }
+                Debug.WriteLine("OnSetValue (" + Name + ")");
                 OnSetValue(_value, value);
                 _value = value;
             }
