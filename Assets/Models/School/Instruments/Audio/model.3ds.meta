@@ -1,0 +1,188 @@
+fileFormatVersion: 2
+guid: 0f09f080923c0c5489c9820a953320c5
+timeCreated: 1452108908
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: _1
+    100002: _11
+    100004: _2
+    100006: _21
+    100008: _2301
+    100010: _2302
+    100012: _2303
+    100014: _2304
+    100016: _3
+    100018: _4
+    100020: _5
+    100022: _6
+    100024: ______
+    100026: Line01
+    100028: Line02
+    100030: Line03
+    100032: //RootNode
+    100034: Plane01
+    100036: Rectangle0
+    100038: Rectangle1
+    100040: Sphere01
+    100042: Sphere03
+    100044: sub01
+    100046: sub02
+    400000: _1
+    400002: _11
+    400004: _2
+    400006: _21
+    400008: _2301
+    400010: _2302
+    400012: _2303
+    400014: _2304
+    400016: _3
+    400018: _4
+    400020: _5
+    400022: _6
+    400024: ______
+    400026: Line01
+    400028: Line02
+    400030: Line03
+    400032: //RootNode
+    400034: Plane01
+    400036: Rectangle0
+    400038: Rectangle1
+    400040: Sphere01
+    400042: Sphere03
+    400044: sub01
+    400046: sub02
+    2300000: _1
+    2300002: _11
+    2300004: _2
+    2300006: _21
+    2300008: _2301
+    2300010: _2302
+    2300012: _2303
+    2300014: _2304
+    2300016: _3
+    2300018: _4
+    2300020: _5
+    2300022: _6
+    2300024: ______
+    2300026: Line01
+    2300028: Line02
+    2300030: Line03
+    2300032: Plane01
+    2300034: Rectangle0
+    2300036: Rectangle1
+    2300038: Sphere01
+    2300040: Sphere03
+    2300042: sub01
+    2300044: sub02
+    3300000: _1
+    3300002: _11
+    3300004: _2
+    3300006: _21
+    3300008: _2301
+    3300010: _2302
+    3300012: _2303
+    3300014: _2304
+    3300016: _3
+    3300018: _4
+    3300020: _5
+    3300022: _6
+    3300024: ______
+    3300026: Line01
+    3300028: Line02
+    3300030: Line03
+    3300032: Plane01
+    3300034: Rectangle0
+    3300036: Rectangle1
+    3300038: Sphere01
+    3300040: Sphere03
+    3300042: sub01
+    3300044: sub02
+    4300000: Plane01
+    4300002: Rectangle0
+    4300004: _2
+    4300006: _1
+    4300008: _2304
+    4300010: _2302
+    4300012: _2303
+    4300014: _2301
+    4300016: _11
+    4300018: _3
+    4300020: _4
+    4300022: _5
+    4300024: _6
+    4300026: _21
+    4300028: Sphere01
+    4300030: Line02
+    4300032: Line03
+    4300034: Rectangle1
+    4300036: ______
+    4300038: Sphere03
+    4300040: Line01
+    4300042: sub02
+    4300044: sub01
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

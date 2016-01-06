@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.API.EventFramework;
 using Assets.Events;
+using UnityEngine;
 
 namespace Assets.API.Netvar
 {
@@ -23,6 +23,7 @@ namespace Assets.API.Netvar
 
         public void RegisterNetvar(Netvar netvar)
         {
+            Debug.Log("Registering Netvar: " + netvar.Name);
             if (GetNetvar(netvar.Name) != null)
             {
                 throw new ArgumentException("Netvar already exists: " + netvar.Name);
@@ -43,7 +44,7 @@ namespace Assets.API.Netvar
         [EventFramework.EventHandler(Priority = EventPriority.MONITOR)]
         public void OnNetvarChange<T>(NetvarChangedEvent @event)
         {
-            Debug.WriteLine("Netvar \"" + @event.Name + "\" updated:" + @event.OldValue + " -> " + @event.NewValue);
+            Debug.Log("Netvar \"" + @event.Name + "\" updated:" + @event.OldValue + " -> " + @event.NewValue);
         }
     }
 }

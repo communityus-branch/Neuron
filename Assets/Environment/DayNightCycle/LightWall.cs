@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
 
-namespace Assets.Environment.DayNightCircle
+namespace Assets.Environment.DayNightCycle
 {
     public class LightWall : MonoBehaviour {
 
-        Renderer renderer;
-        Material mat;
+        Renderer @renderer;
 
         // Use this for initialization
         void Start () 
         {
-	
-            renderer = GetComponent<Renderer>();
+
+            @renderer = GetComponent<Renderer>();
             //mat = renderer.material;
 
             //mat.SetColor("_EmissionColor", Color.black);
@@ -23,7 +22,7 @@ namespace Assets.Environment.DayNightCircle
         {
             if (!Input.GetKeyDown(KeyCode.L)) return;
             Color final = Color.white * Mathf.LinearToGammaSpace(4);
-            renderer.material.SetColor("_EmissionColor", final);
+            @renderer.material.SetColor("_EmissionColor", final);
             DynamicGI.SetEmissive(renderer, final);
         }
     }

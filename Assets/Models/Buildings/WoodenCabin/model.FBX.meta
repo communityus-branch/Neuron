@@ -1,0 +1,266 @@
+fileFormatVersion: 2
+guid: 5525621fe8fe37f4f8c6557f08cbf442
+timeCreated: 1451848524
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: 0      011
+    100002: 1      011
+    100004: 10     011
+    100006: 10     012
+    100008: 12     011
+    100010: 2      011
+    100012: 2      012
+    100014: 2      013
+    100016: 6      011
+    100018: 8      011
+    100020: 9      011
+    100022: ATiles001
+    100024: ATiles002
+    100026: ATiles003
+    100028: ATiles004
+    100030: ATiles005
+    100032: ATiles006
+    100034: ATiles007
+    100036: ATiles008
+    100038: ATiles009
+    100040: ATiles010
+    100042: ATiles011
+    100044: ATiles012
+    100046: //RootNode
+    100048: Object001
+    100050: Object002
+    100052: Object005
+    100054: Object006
+    100056: Object007
+    100058: Object008
+    100060: Object009
+    100062: Object010
+    100064: Object010_MeshPart0
+    100066: Object010_MeshPart1
+    100068: Object013
+    100070: Object014
+    100072: Object015
+    100074: Object018
+    100076: Object019
+    100078: Object020
+    400000: 0      011
+    400002: 1      011
+    400004: 10     011
+    400006: 10     012
+    400008: 12     011
+    400010: 2      011
+    400012: 2      012
+    400014: 2      013
+    400016: 6      011
+    400018: 8      011
+    400020: 9      011
+    400022: ATiles001
+    400024: ATiles002
+    400026: ATiles003
+    400028: ATiles004
+    400030: ATiles005
+    400032: ATiles006
+    400034: ATiles007
+    400036: ATiles008
+    400038: ATiles009
+    400040: ATiles010
+    400042: ATiles011
+    400044: ATiles012
+    400046: //RootNode
+    400048: Object001
+    400050: Object002
+    400052: Object005
+    400054: Object006
+    400056: Object007
+    400058: Object008
+    400060: Object009
+    400062: Object010
+    400064: Object010_MeshPart0
+    400066: Object010_MeshPart1
+    400068: Object013
+    400070: Object014
+    400072: Object015
+    400074: Object018
+    400076: Object019
+    400078: Object020
+    2300000: 0      011
+    2300002: 1      011
+    2300004: 10     011
+    2300006: 10     012
+    2300008: 12     011
+    2300010: 2      011
+    2300012: 2      012
+    2300014: 2      013
+    2300016: 6      011
+    2300018: 8      011
+    2300020: 9      011
+    2300022: ATiles001
+    2300024: ATiles002
+    2300026: ATiles003
+    2300028: ATiles004
+    2300030: ATiles005
+    2300032: ATiles006
+    2300034: ATiles007
+    2300036: ATiles008
+    2300038: ATiles009
+    2300040: ATiles010
+    2300042: ATiles011
+    2300044: ATiles012
+    2300046: Object001
+    2300048: Object002
+    2300050: Object005
+    2300052: Object006
+    2300054: Object007
+    2300056: Object008
+    2300058: Object009
+    2300060: Object010_MeshPart0
+    2300062: Object010_MeshPart1
+    2300064: Object013
+    2300066: Object014
+    2300068: Object015
+    2300070: Object018
+    2300072: Object019
+    2300074: Object020
+    3300000: 0      011
+    3300002: 1      011
+    3300004: 10     011
+    3300006: 10     012
+    3300008: 12     011
+    3300010: 2      011
+    3300012: 2      012
+    3300014: 2      013
+    3300016: 6      011
+    3300018: 8      011
+    3300020: 9      011
+    3300022: ATiles001
+    3300024: ATiles002
+    3300026: ATiles003
+    3300028: ATiles004
+    3300030: ATiles005
+    3300032: ATiles006
+    3300034: ATiles007
+    3300036: ATiles008
+    3300038: ATiles009
+    3300040: ATiles010
+    3300042: ATiles011
+    3300044: ATiles012
+    3300046: Object001
+    3300048: Object002
+    3300050: Object005
+    3300052: Object006
+    3300054: Object007
+    3300056: Object008
+    3300058: Object009
+    3300060: Object010_MeshPart0
+    3300062: Object010_MeshPart1
+    3300064: Object013
+    3300066: Object014
+    3300068: Object015
+    3300070: Object018
+    3300072: Object019
+    3300074: Object020
+    4300000: 0      011
+    4300002: 1      011
+    4300004: 2      011
+    4300006: 2      012
+    4300008: 2      013
+    4300010: 6      011
+    4300012: 8      011
+    4300014: 9      011
+    4300016: 10     011
+    4300018: 10     012
+    4300020: 12     011
+    4300022: Object001
+    4300024: ATiles001
+    4300026: ATiles002
+    4300028: ATiles003
+    4300030: ATiles004
+    4300032: ATiles005
+    4300034: ATiles006
+    4300036: ATiles007
+    4300038: ATiles008
+    4300040: ATiles009
+    4300042: ATiles010
+    4300044: ATiles011
+    4300046: ATiles012
+    4300048: Object002
+    4300050: Object005
+    4300052: Object006
+    4300054: Object007
+    4300056: Object008
+    4300058: Object009
+    4300060: Object010_MeshPart0
+    4300062: Object010_MeshPart1
+    4300064: Object013
+    4300066: Object014
+    4300068: Object015
+    4300070: Object018
+    4300072: Object019
+    4300074: Object020
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

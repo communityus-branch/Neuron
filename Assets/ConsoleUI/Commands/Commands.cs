@@ -27,6 +27,8 @@ namespace Assets.ConsoleUI.Commands
                 return;
             }
 
+            Console.Instance.Print("Setting \"" + netvar.Name + "\" to " + value);
+
             netvar.Value = value;
         }
 

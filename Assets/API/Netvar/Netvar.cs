@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using Assets.Events;
+using UnityEngine;
 
 namespace Assets.API.Netvar
 {
@@ -27,13 +27,14 @@ namespace Assets.API.Netvar
             set
             {
                 ValidateType(value, true);
+                Debug.Log("Type validated");
                 NetvarChangedEvent @event = new NetvarChangedEvent(this, _value, value);
                 if (@event.IsCancelled())
                 {
-                    Debug.WriteLine("Netvar Event cancelled (" + Name + ")");
+                    Debug.Log("Netvar Event cancelled (" + Name + ")");
                     return;
                 }
-                Debug.WriteLine("OnSetValue (" + Name + ")");
+                Debug.Log("OnSetValue (" + Name + ")");
                 OnSetValue(_value, value);
                 _value = value;
             }

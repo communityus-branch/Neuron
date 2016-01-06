@@ -1,4 +1,7 @@
+using Assets.API.EventFramework;
 using Assets.CrossPlatformInput.Scripts;
+using Assets.Events;
+using Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI;
 using Assets.Utility;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -40,7 +43,7 @@ namespace Assets.Characters.FirstPersonCharacter.Scripts
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
-
+        private bool isInWater = false;
         // Use this for initialization
         private void Start()
         {
@@ -60,6 +63,27 @@ namespace Assets.Characters.FirstPersonCharacter.Scripts
         // Update is called once per frame
         private void Update()
         {
+            if (ConsoleGUI.Instance.isOpen)
+            {
+                return;
+            }
+
+            if (transform.position.y < World.Instance.water.position.y)
+            {
+                Debug.Log("Player entered water");
+                isInWater = true;
+                PlayerEnteredWaterEvent @event = new PlayerEnteredWaterEvent();
+                EventManager.GetInstance().CallEvent(@event);
+            }
+            else if (isInWater)
+            {
+                Debug.Log("Player left water");
+                isInWater = false;
+                PlayerLeftWaterEvent @event = new PlayerLeftWaterEvent();
+                EventManager.GetInstance().CallEvent(@event);
+            }
+
+
             RotateView();
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
@@ -93,6 +117,11 @@ namespace Assets.Characters.FirstPersonCharacter.Scripts
 
         private void FixedUpdate()
         {
+            if (ConsoleGUI.Instance.isOpen)
+            {
+                return;
+            }
+
             float speed;
             GetInput(out speed);
             // always move along the camera forward as it is the direction that it being aimed at

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Environment.DayNightCircle
+namespace Assets.Environment.DayNightCycle
 {
     public class AutoIntensity : MonoBehaviour {
 

@@ -1,0 +1,324 @@
+fileFormatVersion: 2
+guid: ee59709a049a92a41a8ff2536e9e55aa
+timeCreated: 1452024239
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: 0      011
+    100002: 1      011
+    100004: 10     011
+    100006: 11     011
+    100008: 12     011
+    100010: 13     011
+    100012: 14     011
+    100014: 15     011
+    100016: 16     011
+    100018: 17     011
+    100020: 18     011
+    100022: 19     011
+    100024: 2      011
+    100026: 20     011
+    100028: 21     011
+    100030: 22     011
+    100032: 23     011
+    100034: 24     011
+    100036: 25     011
+    100038: 26     011
+    100040: 3      011
+    100042: 4      011
+    100044: 5      011
+    100046: 6      011
+    100048: 7      011
+    100050: 8      011
+    100052: 9      011
+    100054: ATiles001
+    100056: Box001
+    100058: Box002
+    100060: Box003
+    100062: Box005
+    100064: Box006
+    100066: Box007
+    100068: ChamferCy0
+    100070: ChamferCy1
+    100072: ChamferCy2
+    100074: ChamferCy3
+    100076: ChamferCy4
+    100078: ChamferCy5
+    100080: ChamferCy6
+    100082: ChamferCy7
+    100084: ChamferCy8
+    100086: ChamferCyl
+    100088: //RootNode
+    100090: Object001
+    100092: Object002
+    100094: Object003
+    100096: Plane002
+    100098: Plane003
+    100100: Railing001
+    100102: Railing002
+    100104: Railing003
+    400000: 0      011
+    400002: 1      011
+    400004: 10     011
+    400006: 11     011
+    400008: 12     011
+    400010: 13     011
+    400012: 14     011
+    400014: 15     011
+    400016: 16     011
+    400018: 17     011
+    400020: 18     011
+    400022: 19     011
+    400024: 2      011
+    400026: 20     011
+    400028: 21     011
+    400030: 22     011
+    400032: 23     011
+    400034: 24     011
+    400036: 25     011
+    400038: 26     011
+    400040: 3      011
+    400042: 4      011
+    400044: 5      011
+    400046: 6      011
+    400048: 7      011
+    400050: 8      011
+    400052: 9      011
+    400054: ATiles001
+    400056: Box001
+    400058: Box002
+    400060: Box003
+    400062: Box005
+    400064: Box006
+    400066: Box007
+    400068: ChamferCy0
+    400070: ChamferCy1
+    400072: ChamferCy2
+    400074: ChamferCy3
+    400076: ChamferCy4
+    400078: ChamferCy5
+    400080: ChamferCy6
+    400082: ChamferCy7
+    400084: ChamferCy8
+    400086: ChamferCyl
+    400088: //RootNode
+    400090: Object001
+    400092: Object002
+    400094: Object003
+    400096: Plane002
+    400098: Plane003
+    400100: Railing001
+    400102: Railing002
+    400104: Railing003
+    2300000: 0      011
+    2300002: 1      011
+    2300004: 10     011
+    2300006: 11     011
+    2300008: 12     011
+    2300010: 13     011
+    2300012: 14     011
+    2300014: 15     011
+    2300016: 16     011
+    2300018: 17     011
+    2300020: 18     011
+    2300022: 19     011
+    2300024: 2      011
+    2300026: 20     011
+    2300028: 21     011
+    2300030: 22     011
+    2300032: 23     011
+    2300034: 24     011
+    2300036: 25     011
+    2300038: 26     011
+    2300040: 3      011
+    2300042: 4      011
+    2300044: 5      011
+    2300046: 6      011
+    2300048: 7      011
+    2300050: 8      011
+    2300052: 9      011
+    2300054: ATiles001
+    2300056: Box001
+    2300058: Box002
+    2300060: Box003
+    2300062: Box005
+    2300064: Box006
+    2300066: Box007
+    2300068: ChamferCy0
+    2300070: ChamferCy1
+    2300072: ChamferCy2
+    2300074: ChamferCy3
+    2300076: ChamferCy4
+    2300078: ChamferCy5
+    2300080: ChamferCy6
+    2300082: ChamferCy7
+    2300084: ChamferCy8
+    2300086: ChamferCyl
+    2300088: Object001
+    2300090: Object002
+    2300092: Object003
+    2300094: Plane002
+    2300096: Plane003
+    2300098: Railing001
+    2300100: Railing002
+    2300102: Railing003
+    3300000: 0      011
+    3300002: 1      011
+    3300004: 10     011
+    3300006: 11     011
+    3300008: 12     011
+    3300010: 13     011
+    3300012: 14     011
+    3300014: 15     011
+    3300016: 16     011
+    3300018: 17     011
+    3300020: 18     011
+    3300022: 19     011
+    3300024: 2      011
+    3300026: 20     011
+    3300028: 21     011
+    3300030: 22     011
+    3300032: 23     011
+    3300034: 24     011
+    3300036: 25     011
+    3300038: 26     011
+    3300040: 3      011
+    3300042: 4      011
+    3300044: 5      011
+    3300046: 6      011
+    3300048: 7      011
+    3300050: 8      011
+    3300052: 9      011
+    3300054: ATiles001
+    3300056: Box001
+    3300058: Box002
+    3300060: Box003
+    3300062: Box005
+    3300064: Box006
+    3300066: Box007
+    3300068: ChamferCy0
+    3300070: ChamferCy1
+    3300072: ChamferCy2
+    3300074: ChamferCy3
+    3300076: ChamferCy4
+    3300078: ChamferCy5
+    3300080: ChamferCy6
+    3300082: ChamferCy7
+    3300084: ChamferCy8
+    3300086: ChamferCyl
+    3300088: Object001
+    3300090: Object002
+    3300092: Object003
+    3300094: Plane002
+    3300096: Plane003
+    3300098: Railing001
+    3300100: Railing002
+    3300102: Railing003
+    4300000: 0      011
+    4300002: 1      011
+    4300004: 2      011
+    4300006: 3      011
+    4300008: 4      011
+    4300010: 5      011
+    4300012: 6      011
+    4300014: 7      011
+    4300016: 8      011
+    4300018: 9      011
+    4300020: 10     011
+    4300022: 11     011
+    4300024: 12     011
+    4300026: 13     011
+    4300028: 14     011
+    4300030: 15     011
+    4300032: 16     011
+    4300034: 17     011
+    4300036: 18     011
+    4300038: 19     011
+    4300040: 20     011
+    4300042: 21     011
+    4300044: 22     011
+    4300046: 23     011
+    4300048: 24     011
+    4300050: 25     011
+    4300052: 26     011
+    4300054: ATiles001
+    4300056: Box001
+    4300058: Box002
+    4300060: Box003
+    4300062: Box005
+    4300064: Box006
+    4300066: Box007
+    4300068: ChamferCyl
+    4300070: Object001
+    4300072: Object002
+    4300074: Object003
+    4300076: Plane002
+    4300078: Plane003
+    4300080: Railing001
+    4300082: Railing002
+    4300084: Railing003
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System;
+using UnityEngine;
 
 namespace Assets.API.EventFramework
 {
@@ -75,6 +76,7 @@ namespace Assets.API.EventFramework
 
         public void CallEvent(Event evnt)
         {
+            Debug.Log("Firing event:" + evnt.Name);
             Type t = evnt.GetType();
             List<MethodInfo> methods;
 
@@ -106,13 +108,13 @@ namespace Assets.API.EventFramework
                     ThreadPool.QueueUserWorkItem(
                         delegate
                         {
-                            info.Invoke(instance, BindingFlags.InvokeMethod, null, new Object[] { evnt }, CultureInfo.CurrentCulture);
+                            info.Invoke(instance, BindingFlags.InvokeMethod, null, new object[] { evnt }, CultureInfo.CurrentCulture);
                         }
                     );
                 }
                 else
                 {
-                    info.Invoke(instance, BindingFlags.InvokeMethod, null, new Object[] { evnt }, CultureInfo.CurrentCulture);
+                    info.Invoke(instance, BindingFlags.InvokeMethod, null, new object[] { evnt }, CultureInfo.CurrentCulture);
                 }
             }
         }

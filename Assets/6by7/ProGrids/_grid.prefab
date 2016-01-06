@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400000}
+  - 114: {fileID: 11400000}
+  m_Layer: 0
+  m_Name: _grid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &400000
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0742f166b14f3534981442b3dab9c371, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridLineColor_XY: {r: .231343269, g: .709737659, b: 1, a: .0980392173}
+  gridLineColor_XZ: {r: .298507452, g: 1, b: .470201463, a: .0980392173}
+  gridLineColor_YZ: {r: 1, g: .320895493, b: .392130226, a: .137254909}
+  showAngles: 1
+  showGrid: 1
+  drawGrid_XZ: 0
+  drawGrid_XY: 0
+  drawGrid_YZ: 0
+  snapToGrid: 1
+  gridSnapSize_Factored: .25
+  gridCenterPos: {x: .75, y: 1.25, z: -8.75}
+  superUnitSize: 0a0000000a0000000a0000000c000000
+  camView: {x: -.00614949642, y: -.00347899715, z: -.999975026}
+  gridObjPos: {x: 0, y: 0, z: 0}
+  nearestSnapPos: {x: .75, y: 1.25, z: -8.75}
+  activePoint: {x: 0, y: 0, z: 0}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 100000}
+  m_IsPrefabParent: 1
+  m_IsExploded: 1

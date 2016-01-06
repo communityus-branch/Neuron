@@ -1,5 +1,6 @@
 using System;
 using Assets.CrossPlatformInput.Scripts;
+using Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
@@ -129,6 +130,8 @@ namespace Assets.Characters.FirstPersonCharacter.Scripts
 
         private void Update()
         {
+            if (ConsoleGUI.Instance.isOpen) return;
+
             RotateView();
 
             if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
@@ -140,6 +143,8 @@ namespace Assets.Characters.FirstPersonCharacter.Scripts
 
         private void FixedUpdate()
         {
+            if (ConsoleGUI.Instance.isOpen) return;
+
             GroundCheck();
             Vector2 input = GetInput();
 
