@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/FPSControlAssets/Scenes/SaveTest/_StartScene.unity
+    path: Assets/Plugins/FPSControlAssets/Scenes/SaveTest/_StartScene.unity
   - enabled: 0
-    path: Assets/FPSControlAssets/Scenes/SaveTest/SaveTestA.unity
+    path: Assets/Plugins/FPSControlAssets/Scenes/SaveTest/SaveTestA.unity
   - enabled: 0
-    path: Assets/FPSControlAssets/Scenes/SaveTest/SaveTestB.unity
+    path: Assets/Plugins/FPSControlAssets/Scenes/SaveTest/SaveTestB.unity
   - enabled: 0
-    path: Assets/FPSControlAssets/Scenes/ShellShock.unity
+    path: Assets/Plugins/FPSControlAssets/Scenes/ShellShock.unity
   - enabled: 1
     path: Assets/Normal map.unity
