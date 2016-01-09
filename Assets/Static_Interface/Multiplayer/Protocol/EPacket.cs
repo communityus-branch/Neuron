@@ -1,0 +1,26 @@
+﻿namespace Static_Interface.Objects
+{
+    public enum EPacket
+    {
+        SHUTDOWN,
+        WORKSHOP,
+        CONNECT,
+        VERIFY,
+        AUTHENTICATE,
+        REJECTED,
+        ACCEPTED,
+        CONNECTED,
+        DISCONNECTED,
+        TICK,
+        TIME,
+        UPDATE_RELIABLE_BUFFER,
+        UPDATE_UNRELIABLE_BUFFER,
+        UPDATE_RELIABLE_INSTANT,
+        UPDATE_UNRELIABLE_INSTANT,
+        UPDATE_RELIABLE_CHUNK_BUFFER,
+        UPDATE_UNRELIABLE_CHUNK_BUFFER,
+        UPDATE_RELIABLE_CHUNK_INSTANT,
+        UPDATE_UNRELIABLE_CHUNK_INSTANT,
+        UPDATE_VOICE
+    }
+}

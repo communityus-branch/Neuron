@@ -6,5 +6,6 @@ namespace Static_Interface
     {
         public const string NAME = "Unwalked";
         public const string VERSION = "1.0";
+        public const uint ID = 0;
     }
 }
