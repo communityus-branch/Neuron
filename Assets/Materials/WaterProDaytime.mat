@@ -68,15 +68,15 @@ Material:
       data:
         first:
           name: _WaveScale
-        second: 0.15
+        second: 0.05
       data:
         first:
           name: _ReflDistort
-        second: 1.5
+        second: 0
       data:
         first:
           name: _RefrDistort
-        second: 1.5
+        second: 0
     m_Colors:
       data:
         first:
@@ -93,7 +93,7 @@ Material:
       data:
         first:
           name: WaveSpeed
-        second: {r: 9, g: 4.5, b: -8, a: -3.5}
+        second: {r: 1, g: 1, b: 1, a: -3.5}
       data:
         first:
           name: _HorizonColor
