@@ -9,7 +9,7 @@ namespace Static_Interface.Menus.MainMenu
         {
             GameObject persistentScripts = GameObject.Find("PersistentScripts");
             DontDestroyOnLoad(persistentScripts);
-            LevelManager.Instance.LoadLevel(this, "DefaultMap", false);
+            LevelManager.Instance.LoadLevel("DefaultMap");
         }
     }
 }

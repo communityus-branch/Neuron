@@ -1,4 +1,4 @@
-﻿namespace Static_Interface.Objects
+﻿namespace Static_Interface.Multiplayer.Protocol
 {
     public enum ECall
     {

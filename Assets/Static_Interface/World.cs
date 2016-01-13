@@ -9,7 +9,7 @@ namespace Static_Interface
 {
     public class World : MonoBehaviour
     {
-        public Transform water;
+        public Transform Water;
         public static World Instance;
 
 

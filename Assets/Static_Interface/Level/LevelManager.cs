@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Static_Interface.Menus;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,7 +7,7 @@ namespace Static_Interface.Level
 {
     public class LevelManager : MonoBehaviour
     {
-        public const string LevelDirs = "Static_Interface/Menus/";
+        public const string MenuDir = "Static_Interface/Menus/";
         private string _currentLevel;
 
         public string CurrentLevel
@@ -41,19 +40,19 @@ namespace Static_Interface.Level
             _instance = this;
         }
 
-        public void LoadLevel(MonoBehaviour behaviour, string name, bool isInLevelsDir = true)
+        public void LoadLevel(string name, bool isMenu = false)
         {
-            behaviour.StartCoroutine(LoadLevelInternal(name, isInLevelsDir));
+            StartCoroutine(LoadLevelInternal(name, isMenu));
         }
 
-        protected IEnumerator LoadLevelInternal(string name, bool isInLevelsDir)
+        protected IEnumerator LoadLevelInternal(string name, bool isMenu)
         {
             _isLoading = true;
-            _pendingLevel = isInLevelsDir ? LevelDirs + name : name;
+            _pendingLevel = isMenu ? MenuDir + name : name;
             Fading fading = GameObject.Find("PersistentScripts").GetComponent<Fading>();
             fading.BeginFade(1);
             yield return new WaitForSeconds(fading.FadeSpeed * Time.deltaTime * 64);
-            SceneManager.LoadScene(LevelDirs + "LoadingMenu/LoadingMenu");
+            SceneManager.LoadScene(MenuDir + "LoadingMenu/LoadingMenu");
         }
 
         void OnLevelWasLoaded(int scene)
@@ -67,6 +66,11 @@ namespace Static_Interface.Level
             _currentLevel = _pendingLevel;
             _pendingLevel = null;
             Debug.Log("Level has been loaded: " + _currentLevel);
+        }
+
+        public void GoToMainMenu()
+        {
+            LoadLevel("MainMenu/MainMenu", true);
         }
     }
 }

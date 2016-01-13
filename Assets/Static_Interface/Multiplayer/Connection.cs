@@ -1,23 +1,68 @@
 ﻿using System.Collections.Generic;
+using System.Text;
+using Static_Interface.Multiplayer.Protocol;
 using Static_Interface.Objects;
-using Static_Interface.Multiplayer.Server.Impl.Steamworks;
+using Static_Interface.Multiplayer.Service.ConnectionProviderService;
+using Static_Interface.PlayerFramework;
 using Steamworks;
+using SteamUser = Static_Interface.PlayerFramework.SteamUser;
 using UnityEngine;
 
 namespace Static_Interface.Multiplayer
 {
     public abstract class Connection : MonoBehaviour
     {
-        public CSteamID ServerID = CSteamID.Nil;
+        public const float CHECKRATE = 1f;
+        public static readonly int CLIENT_TIMEOUT = 30;
+        public static readonly int SERVER_TIMEOUT = 30;
+        public static readonly int PENDING_TIMEOUT = 30;
+        public static Connection CurrentConnection;
 
-        protected CSteamID ClientIDInternal;
+        protected byte[] Buffer  = new byte[Block.BUFFER_SIZE];
+
+        private CSteamID _serverId;
+        public CSteamID ServerID
+        {
+            get { return _serverId;}
+            protected set { _serverId = value; }
+        }
+
+        protected float LastPing;
+        protected float LastNet;
+        protected float LastCheck;
+        protected float OffsetNet;
+
+        private string _clientName;
+
+        public string ClientName
+        {
+            get { return _clientName;}
+            protected set { _clientName = value; }
+        }
+        private uint _currentTime;
+        public uint CurrentTime
+        {
+            get { return _currentTime; }
+            protected set { _currentTime = value; }
+        }
+        public abstract MultiplayerProvider Provider { get; }
+
+        private CSteamID _clientId;
         public CSteamID ClientID
         {
-            get { return ClientIDInternal; }
+            get { return _clientId; }
+            internal set { _clientId = value; }
         }
+
         private int _channels = 1;
-        private List<SteamWrappedUser> _clients;
-        private static bool isInitialized;
+
+        public int Channels
+        {
+            get { return _channels; }
+        }
+
+        private List<User> _clients;
+        private static bool _isInitialized;
 
         protected bool IsConnectedInternal;
         public bool IsConnected
@@ -25,39 +70,50 @@ namespace Static_Interface.Multiplayer
             get { return IsConnectedInternal; } 
         }
 
-        public ICollection<SteamWrappedUser> Clients
+        protected void OnAPIWarningMessage(int severity, StringBuilder warning)
         {
-            get { return _clients.AsReadOnly(); }
+            Console.Instance.Print("Warning: " + warning + " (Severity: " + severity + ")");
         }
 
-        protected Connection(CSteamID id)
+        public ICollection<User> Clients
         {
-            ClientIDInternal = id;
+            get { return _clients == null ? null : _clients.AsReadOnly(); }
+        }
+
+        protected Connection()
+        {
+            CurrentConnection = this;
         }
 
         private void Awake()
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
                 Destroy(this);
                 return;
             }
 
-            isInitialized = true;
+            _isInitialized = true;
             DontDestroyOnLoad(this);
             OnAwake();
             SteamFriends.SetRichPresence("status", "Menu");
         }
 
         protected abstract void OnAwake();
-
+        protected abstract void Receive(CSteamID source, byte[] packet, int offset, int size, int channel);
         private static List<Channel> _receivers;
-        public static List<Channel> Receivers
+        public static ICollection<Channel> Receivers
         {
             get
             {
-                return _receivers;
+                return _receivers == null ? null : _receivers.AsReadOnly();
             }
+        }
+
+        protected void AddReceiver(Channel ch)
+        {
+            _receivers.Add(ch);
+            _channels++;
         }
 
         protected void ResetChannels()
@@ -69,41 +125,94 @@ namespace Static_Interface.Multiplayer
             {
                 OpenChannel(ch);
             }
-            _clients = new List<SteamWrappedUser>();
+            _clients = new List<User>();
             //pending = new List<SteamPending>();
         }
 
 
         public void Update()
         {
-            if (!IsConnected || !isInitialized) return;
+            if (!IsConnected || !_isInitialized) return;
             Listen();
+            Listen(0);
+            foreach (Channel ch in Receivers)
+            {
+                Listen(ch.ID);
+            }
+        }
+
+        protected void Listen(int channelId)
+        {
+            CSteamID user;
+            ulong length;
+            while (Provider.Read(out user, Buffer, out length, channelId))
+            {
+                Receive(user, Buffer, 0, (int)length, channelId);
+            }
         }
 
         protected abstract void Listen();
 
-        public abstract void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id);
+        protected virtual Transform AddPlayer(UserIdentity ident, Vector3 point, byte angle, int channel)
+        {
+            Transform newModel = ((GameObject)Instantiate(Resources.Load("Player"), point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
+            _clients.Add(new SteamUser(this, ident, newModel, channel));
+            return newModel;
+            //Todo!! Add Player prefab with "Channel" and "Player" components
+            //Todo: OnPlayerConnected
+        }
 
+        protected void RemovePlayer(byte index)
+        {
+            if ((index >= _clients.Count))
+            {
+                Debug.LogError("Failed to find player: " + index);
+                return;
+            }
+            //Todo: on player disconnected event
+            Destroy(_clients[index].Model.gameObject);
+            _clients.RemoveAt(index);
+        }
 
-        public abstract void Disconnect();
+        public virtual void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id)
+        {
+            if (!IsConnected) return;
+            if (receiver.m_SteamID == 0)
+            {
+                Debug.LogError("Failed to send to invalid steam ID.");
+            }
+            else if (type.IsUnreliable())
+            {
+                if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendUnreliable : EP2PSend.k_EP2PSendUnreliableNoDelay, id))
+                {
+                    Debug.LogError("Failed to send UDP packet to " + receiver + "!");
+                }
+            }
+            else if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendReliableWithBuffering : EP2PSend.k_EP2PSendReliable, id))
+            {
+                Debug.LogError("Failed to send TCP packet to " + receiver + "!");
+            }
+        }
 
-        public void OpenChannel(Channel ch)
+        public abstract void Disconnect(string reason = null);
+
+        internal void OpenChannel(Channel ch)
         {
             if (Receivers == null)
             {
                 ResetChannels();
                 return;
             }
-            Receivers.Add(ch);
+            _receivers.Add(ch);
             _channels++;
         }
 
-        public void CloseChannel(Channel ch)
+        internal void CloseChannel(Channel ch)
         {
             for (var i = 0; i < Receivers.Count; i++)
             {
-                if (Receivers[i].ID != ch.ID) continue;
-                Receivers.RemoveAt(i);
+                if (_receivers[i].ID != ch.ID) continue;
+                _receivers.RemoveAt(i);
                 return;
             }
             _channels--;

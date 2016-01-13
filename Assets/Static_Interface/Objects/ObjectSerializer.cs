@@ -17,7 +17,7 @@ namespace Static_Interface.Objects
         public static readonly Type INT32_ARRAY_TYPE = typeof(int[]);
         public static readonly Type INT32_TYPE = typeof(int);
         public static readonly Type INT64_TYPE = typeof(long);
-        public static readonly byte[] SHIFTS = new byte[] { 1, 2, 4, 8, 0x10, 0x20, 0x40, 0x80 };
+        public static readonly byte[] SHIFTS = { 1, 2, 4, 8, 0x10, 0x20, 0x40, 0x80 };
         public static readonly Type SINGLE_TYPE = typeof(float);
         public static readonly Type STEAM_ID_TYPE = typeof(CSteamID);
         public static readonly Type STRING_TYPE = typeof(string);

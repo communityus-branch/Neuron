@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using UnityEngine;
 
-namespace Static_Interface.Objects
+namespace Static_Interface.Multiplayer.Protocol
 {
     public class ChannelMethod
     {
-        private Component _component;
-        private MethodInfo _method;
-        private System.Type[] _types;
+        private readonly Component _component;
+        private readonly MethodInfo _method;
+        private readonly System.Type[] _types;
 
         public ChannelMethod(Component newComponent, MethodInfo newMethod, System.Type[] newTypes)
         {

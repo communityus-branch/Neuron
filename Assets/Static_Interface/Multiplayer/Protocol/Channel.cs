@@ -3,33 +3,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Static_Interface.Multiplayer;
 using Static_Interface.Multiplayer.Client;
 using Static_Interface.Multiplayer.Server;
-using Static_Interface.Multiplayer.Server.Impl.Steamworks;
+using Static_Interface.Objects;
+using Static_Interface.PlayerFramework;
 using UnityEngine;
 
-namespace Static_Interface.Objects
+namespace Static_Interface.Multiplayer.Protocol
 {
     public class Channel : MonoBehaviour
     {
-        public readonly Connection Connection;
-
-        public Channel(Connection connection)
+        private Connection _connection;
+        public Connection Connection
         {
-            Connection = connection;
+            get { return _connection; }
         }
 
         private ChannelMethod[] _calls;
         public int ID;
         public bool IsOwner;
-        public SteamWrappedUser Owner;
+        public User Owner;
         private static readonly object[] Voice = new object[3];
 
         void Awake()
         {
             Build();
             Init();
+            _connection = Connection;
         }
 
         public void Build()
@@ -43,7 +43,7 @@ namespace Static_Interface.Objects
                 {
                     if (m.MemberType != MemberTypes.Method) continue;
                     var newMethod = (MethodInfo) m;
-                    if (newMethod.GetCustomAttributes(typeof (NetworkMethod), true).Length <= 0) continue;
+                    if (newMethod.GetCustomAttributes(typeof (RPCCall), true).Length <= 0) continue;
                     var parameters = newMethod.GetParameters();
                     var newTypes = new Type[parameters.Length];
                     for (var k = 0; k < parameters.Length; k++)
@@ -62,7 +62,7 @@ namespace Static_Interface.Objects
             {
                 return false;
             }
-            return (steamID == Owner.SteamID);
+            return (steamID == Owner.Identity.ID);
         }
 
         public bool ValidateServer(CSteamID steamID)
@@ -225,7 +225,7 @@ namespace Static_Interface.Objects
                             (packet2 == EPacket.UPDATE_RELIABLE_CHUNK_BUFFER))
                         {
                             ObjectSerializer.OpenRead(offset + 2, packet);
-                            object[] parameters = new object[] {steamID};
+                            object[] parameters = {steamID};
                             Calls[index].Method.Invoke(Calls[index].Component, parameters);
                             ObjectSerializer.CloseRead();
                         }
@@ -276,11 +276,11 @@ namespace Static_Interface.Objects
                 {
                     Connection.Send(Connection.ServerID, type, packet, size, ID);
                 }
-                foreach (SteamWrappedUser user in Connection.Clients)
+                foreach (User user in Connection.Clients)
                 {
-                    if (user.SteamID != Connection.ClientID)
+                    if (user.Identity.ID != Connection.ClientID)
                     {
-                        Connection.Send(user.SteamID, type, packet, size, ID);
+                        Connection.Send(user.Identity.ID, type, packet, size, ID);
                     }
                 }
                 if (Connection is ServerConnection)
@@ -299,20 +299,20 @@ namespace Static_Interface.Objects
                     Connection.Send(Connection.ServerID, type, packet, size, ID);
                 }
 
-                foreach (var t in Connection.Clients.Where(t => t.SteamID != Connection.ClientID))
+                foreach (var t in Connection.Clients.Where(t => t.Identity.ID != Connection.ClientID))
                 {
-                    Connection.Send(t.SteamID, type, packet, size, ID);
+                    Connection.Send(t.Identity.ID, type, packet, size, ID);
                 }
             }
             else if (mode == ECall.OWNER)
             {
                 if (IsOwner)
                 {
-                    Receive(Owner.SteamID, packet, 0, size);
+                    Receive(Owner.Identity.ID, packet, 0, size);
                 }
                 else
                 {
-                    Connection.Send(Owner.SteamID, type, packet, size, ID);
+                    Connection.Send(Owner.Identity.ID, type, packet, size, ID);
                 }
             }
             else if (mode == ECall.NOT_OWNER)
@@ -321,18 +321,18 @@ namespace Static_Interface.Objects
                 {
                     Connection.Send(Connection.ServerID, type, packet, size, ID);
                 }
-                foreach (SteamWrappedUser user in Connection.Clients.Where(user => user.SteamID != Owner.SteamID))
+                foreach (User user in Connection.Clients.Where(user => user.Identity.ID != Owner.Identity.ID))
                 {
-                    Connection.Send(user.SteamID, type, packet, size, ID);
+                    Connection.Send(user.Identity.ID, type, packet, size, ID);
                 }
             }
             else if (mode == ECall.CLIENTS)
             {
-                foreach (SteamWrappedUser user in Connection.Clients)
+                foreach (User user in Connection.Clients)
                 {
-                    if (user.SteamID != Connection.ClientID)
+                    if (user.Identity.ID != Connection.ClientID)
                     {
-                        Connection.Send(user.SteamID, type, packet, size, ID);
+                        Connection.Send(user.Identity.ID, type, packet, size, ID);
                     }
                 }
                 if (Connection is ClientConnection)
@@ -342,11 +342,11 @@ namespace Static_Interface.Objects
             }
             else if (mode == ECall.PEERS)
             {
-                foreach (SteamWrappedUser user in Connection.Clients)
+                foreach (User user in Connection.Clients)
                 {
-                    if (user.SteamID != Connection.ClientID)
+                    if (user.Identity.ID != Connection.ClientID)
                     {
-                        Connection.Send(user.SteamID, type, packet, size, ID);
+                        Connection.Send(user.Identity.ID, type, packet, size, ID);
                     }
                 }
             }
@@ -402,12 +402,12 @@ namespace Static_Interface.Objects
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if (((user.SteamID != Connection.ClientID) &&
-                             (user.Character != null)) && (user.Character.MovementController.Bound == bound))
+                        if (((user.Identity.ID != Connection.ClientID) &&
+                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     if (Connection is ServerConnection)
@@ -424,23 +424,23 @@ namespace Static_Interface.Objects
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if (((user.SteamID != Connection.ClientID) &&
-                             (user.Character != null)) && (user.Character.MovementController.Bound == bound))
+                        if (((user.Identity.ID != Connection.ClientID) &&
+                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.OWNER:
                     if (IsOwner)
                     {
-                        Receive(Owner.SteamID, packet, 0, size);
+                        Receive(Owner.Identity.ID, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.SteamID, type, packet, size, ID);
+                        Connection.Send(Owner.Identity.ID, type, packet, size, ID);
                     }
                     break;
                 case ECall.NOT_OWNER:
@@ -448,22 +448,22 @@ namespace Static_Interface.Objects
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if (((user.SteamID != Owner.SteamID) &&
-                             (user.Character != null)) && (user.Character.MovementController.Bound == bound))
+                        if (((user.Identity.ID != Owner.Identity.ID) &&
+                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.CLIENTS:
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if (((user.SteamID != Connection.ClientID) &&
-                             (user.Character != null)) && (user.Character.MovementController.Bound == bound))
+                        if (((user.Identity.ID != Connection.ClientID) &&
+                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     if (Connection is ClientConnection)
@@ -472,12 +472,12 @@ namespace Static_Interface.Objects
                     }
                     break;
                 case ECall.PEERS:
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if (((user.SteamID != Connection.ClientID) &&
-                             (user.Character != null)) && (user.Character.MovementController.Bound == bound))
+                        if (((user.Identity.ID != Connection.ClientID) &&
+                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     break;
@@ -524,13 +524,13 @@ namespace Static_Interface.Objects
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if ((user.SteamID == Connection.ClientID) || (user.Character == null)) continue;
-                        Vector3 vector = user.Character.transform.position - point;
+                        if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
+                        Vector3 vector = user.Player.transform.position - point;
                         if (vector.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     if (Connection is ServerConnection)
@@ -547,24 +547,24 @@ namespace Static_Interface.Objects
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if ((user.SteamID == Connection.ClientID) || (user.Character == null)) continue;
-                        Vector3 vector2 = user.Character.transform.position - point;
+                        if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
+                        Vector3 vector2 = user.Player.transform.position - point;
                         if (vector2.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.OWNER:
                     if (IsOwner)
                     {
-                        Receive(Owner.SteamID, packet, 0, size);
+                        Receive(Owner.Identity.ID, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.SteamID, type, packet, size, ID);
+                        Connection.Send(Owner.Identity.ID, type, packet, size, ID);
                     }
                     break;
                 case ECall.NOT_OWNER:
@@ -572,24 +572,24 @@ namespace Static_Interface.Objects
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if ((user.SteamID == Owner.SteamID) || (user.Character == null)) continue;
-                        Vector3 vector3 = user.Character.transform.position - point;
+                        if ((user.Identity.ID == Owner.Identity.ID) || (user.Player == null)) continue;
+                        Vector3 vector3 = user.Player.transform.position - point;
                         if (vector3.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.CLIENTS:
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if ((user.SteamID == Connection.ClientID) || (user.Character == null)) continue;
-                        Vector3 vector4 = user.Character.transform.position - point;
+                        if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
+                        Vector3 vector4 = user.Player.transform.position - point;
                         if (vector4.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     if (Connection is ServerConnection)
@@ -598,13 +598,13 @@ namespace Static_Interface.Objects
                     }
                     break;
                 case ECall.PEERS:
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if ((user.SteamID == Connection.ClientID) || (user.Character == null)) continue;
-                        Vector3 vector5 = user.Character.transform.position - point;
+                        if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
+                        Vector3 vector5 = user.Player.transform.position - point;
                         if (vector5.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     break;
@@ -653,12 +653,12 @@ namespace Static_Interface.Objects
                     }
                     foreach (var user in Connection.Clients)
                     {
-                        if (((user.SteamID != Connection.ClientID) &&
-                             (user.Character != null)) &&
-                            Regions.CheckArea(x, y, user.Character.MovementController.RegionX,
-                                user.Character.MovementController.RegionY, area))
+                        if (((user.Identity.ID != Connection.ClientID) &&
+                             (user.Player != null)) &&
+                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
+                                user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     if (Connection is ServerConnection)
@@ -675,25 +675,25 @@ namespace Static_Interface.Objects
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if (((user.SteamID != Connection.ClientID) &&
-                             (user.Character != null)) &&
-                            Regions.CheckArea(x, y, user.Character.MovementController.RegionX,
-                                user.Character.MovementController.RegionY, area))
+                        if (((user.Identity.ID != Connection.ClientID) &&
+                             (user.Player != null)) &&
+                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
+                                user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.OWNER:
                     if (IsOwner)
                     {
-                        Receive(Owner.SteamID, packet, 0, size);
+                        Receive(Owner.Identity.ID, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.SteamID, type, packet, size, ID);
+                        Connection.Send(Owner.Identity.ID, type, packet, size, ID);
                     }
                     break;
                 case ECall.NOT_OWNER:
@@ -701,31 +701,26 @@ namespace Static_Interface.Objects
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if (((user.SteamID != Owner.SteamID) &&
-                             (user.Character != null)) &&
-                            Regions.CheckArea(x, y, user.Character.MovementController.RegionX,
-                            user.Character.MovementController.RegionY, area))
+                        if (((user.Identity.ID != Owner.Identity.ID) &&
+                             (user.Player != null)) &&
+                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
+                            user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
-                    }
-
-                    for (int k = 0; k < Connection.Clients.Count; k++)
-                    {
-
                     }
                     break;
                 case ECall.CLIENTS:
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if (((user.SteamID != Connection.ClientID) &&
-                             (user.Character != null)) &&
-                            Regions.CheckArea(x, y, user.Character.MovementController.RegionX,
-                                user.Character.MovementController.RegionY, area))
+                        if (((user.Identity.ID != Connection.ClientID) &&
+                             (user.Player != null)) &&
+                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
+                                user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     if (Connection is ClientConnection)
@@ -734,14 +729,14 @@ namespace Static_Interface.Objects
                     }
                     break;
                 case ECall.PEERS:
-                    foreach (SteamWrappedUser user in Connection.Clients)
+                    foreach (User user in Connection.Clients)
                     {
-                        if (((user.SteamID != Connection.ClientID) &&
-                             (user.Character != null)) &&
-                            Regions.CheckArea(x, y, user.Character.MovementController.RegionX,
-                                user.Character.MovementController.RegionY, area))
+                        if (((user.Identity.ID != Connection.ClientID) &&
+                             (user.Player != null)) &&
+                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
+                                user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.SteamID, type, packet, size, ID);
+                            Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
                     break;
@@ -787,12 +782,9 @@ namespace Static_Interface.Objects
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, arguments);
-            foreach (SteamWrappedUser user in Connection.Clients)
+            foreach (User user in Connection.Clients.Where(user => user.Identity.ID != steamID))
             {
-                if (user.SteamID != steamID)
-                {
-                    Connection.Send(user.SteamID, type, buffer, size, ID);
-                }
+                Connection.Send(user.Identity.ID, type, buffer, size, ID);
             }
         }
 
