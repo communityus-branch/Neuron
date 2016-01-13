@@ -2,7 +2,7 @@
 using Static_Interface.Multiplayer.Server;
 using Steamworks;
 
-namespace Static_Interface.Multiplayer.Service.ConnectionProviderService
+namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
 {
     public class ClientMultiplayerProvider : MultiplayerProvider
     {
@@ -28,7 +28,7 @@ namespace Static_Interface.Multiplayer.Service.ConnectionProviderService
 
         public void Disconnect()
         {
-            // Do nothing
+            // Todo
         }
     }
 }

@@ -2,7 +2,7 @@
 using Static_Interface.PlayerFramework;
 using Steamworks;
 
-namespace Static_Interface.Multiplayer.Service.ConnectionProviderService
+namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
 {
     public abstract class MultiplayerProvider : Service
     {

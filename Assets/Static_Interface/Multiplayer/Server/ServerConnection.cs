@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.Level;
 using Static_Interface.Multiplayer.Protocol;
-using Static_Interface.Multiplayer.Service.ConnectionProviderService;
+using Static_Interface.Multiplayer.Service.MultiplayerProviderService;
 using Static_Interface.Objects;
 using Static_Interface.PlayerFramework;
 using Steamworks;
@@ -219,13 +219,9 @@ namespace Static_Interface.Multiplayer.Server
             }
             else
             {
-                var srcOffset = BitConverter.ToUInt16(packet, 1);
-                var dst = new byte[srcOffset];
-                System.Buffer.BlockCopy(packet, 3, dst, 0, srcOffset);
-                var count2 = BitConverter.ToUInt16(packet, 3 + srcOffset);
-                byte[] count = new byte[count2];
-                System.Buffer.BlockCopy(packet, 5 + count2, count, 0, count2);
-                if (!VerifyTicket(source, dst))
+                object[] args = ObjectSerializer.GetObjects(source, offset, 0, packet, Types.BYTE_TYPE,
+                    Types.BYTE_ARRAY_TYPE);
+                if (!VerifyTicket(source, (byte[])args[1]))
                 {
                     Reject(source, ERejectionReason.AUTH_VERIFICATION);
                 }
@@ -290,13 +286,14 @@ namespace Static_Interface.Multiplayer.Server
             base.Send(receiver, type, data, length, id);
         }
 
-        protected override void OnAwake()
+        protected override void Awake()
         {
-            _provider = new ServerMultiplayerProvider();
+            base.Awake();
             Callback<GSPolicyResponse_t>.CreateGameServer(OnGsPolicyResponse);
             Callback<P2PSessionConnectFail_t>.CreateGameServer(OnP2PSessionConnectFail);
             Callback<ValidateAuthTicketResponse_t>.CreateGameServer(OnValidateAuthTicketResponse);
             _port = 27015;
+            IsReady = true;
         }
 
         private void OnGsPolicyResponse(GSPolicyResponse_t callback)
@@ -404,6 +401,7 @@ namespace Static_Interface.Multiplayer.Server
 
         public void OpenGameServer()
         {
+            if(_provider == null) _provider = new ServerMultiplayerProvider();
             try
             {
                 _provider.Open(_bindIP, Port);
@@ -437,9 +435,11 @@ namespace Static_Interface.Multiplayer.Server
         {
             //Todo: OnServerShutdown
             _provider.Close();
+            Destroy(this);
+            enabled = false;
         }
 
-        public bool VerifyTicket(CSteamID user, byte[] ticket)
+        private bool VerifyTicket(CSteamID user, byte[] ticket)
         {
             return (SteamGameServer.BeginAuthSession(ticket, ticket.Length, user) == EBeginAuthSessionResult.k_EBeginAuthSessionResultOK);
         }

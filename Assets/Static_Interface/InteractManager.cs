@@ -7,9 +7,9 @@ namespace Static_Interface
 {
     public class InteractManager : MonoBehaviour
     {
-        public const float InteractRange = 5.0f;
+        public const float INTERACT_RANGE = 5.0f;
         public KeyCode InteractKey = KeyCode.F;
-        private RaycastHit hit;
+        private RaycastHit _hit;
         public Interactable CurrentInteractable;
         public static InteractManager Instance;
 
@@ -29,18 +29,18 @@ namespace Static_Interface
         void Update()
         {
             Vector3 p = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane));
-            if (!Physics.Raycast(p, Camera.main.transform.forward, out hit, InteractRange))
+            if (!Physics.Raycast(p, Camera.main.transform.forward, out _hit, INTERACT_RANGE))
             {
                 Reset();
                 return;
             }
 
             Interactable previousInteractable = CurrentInteractable;
-            CurrentInteractable = hit.collider.gameObject.GetComponent<Interactable>();
+            CurrentInteractable = _hit.collider.gameObject.GetComponent<Interactable>();
 
             if (CurrentInteractable == null)
             {
-                Transform currentGameObject = hit.collider.gameObject.transform;
+                Transform currentGameObject = _hit.collider.gameObject.transform;
                 while (currentGameObject != null)
                 {
                     CurrentInteractable = currentGameObject.GetComponent<Interactable>();

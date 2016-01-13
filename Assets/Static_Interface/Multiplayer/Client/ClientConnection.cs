@@ -4,7 +4,7 @@ using System.Linq;
 using Static_Interface.Level;
 using Static_Interface.Multiplayer.Protocol;
 using Static_Interface.Multiplayer.Server;
-using Static_Interface.Multiplayer.Service.ConnectionProviderService;
+using Static_Interface.Multiplayer.Service.MultiplayerProviderService;
 using Static_Interface.Objects;
 using Static_Interface.PlayerFramework;
 using Static_Interface.Utils;
@@ -91,17 +91,20 @@ namespace Static_Interface.Multiplayer.Client
                 SteamNetworking.CloseP2PSessionWithUser(user.Identity.ID);
             }
 
-            IsConnectedInternal = false;
+            CloseTicket();
+            IsConnected = false;
 
             //Todo: OnDisconnectedFromServer()
             LevelManager.Instance.GoToMainMenu();
 
             SteamFriends.SetRichPresence("connect", null);
             SteamFriends.SetRichPresence("status", "Menu");
+            enabled = false;
         }
 
-        protected override void OnAwake()
+        protected override void Awake()
         {
+            base.Awake();
             _serverPingResponse = new ISteamMatchmakingPingResponse(OnPingResponded, OnPingFailedToRespond);
 
             if (SteamAPI.RestartAppIfNecessary((AppId_t)Game.ID))
@@ -123,6 +126,7 @@ namespace Static_Interface.Multiplayer.Client
             ClientID = _user;
             _clientHash = Hash.SHA1(ClientID);
             ClientName = SteamFriends.GetPersonaName();
+            IsReady = true;
         }
 
         private void OnPersonaStateChange(PersonaStateChange_t callback)
@@ -260,7 +264,7 @@ namespace Static_Interface.Multiplayer.Client
             _serverQuery = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), this._serverPingResponse);
             _serverQueryAttempts++;
             //Todo: OnConnect event?
-            IsConnectedInternal = true;
+            IsConnected = true;
         }
 
         private void CleanupServerQuery()
@@ -273,7 +277,7 @@ namespace Static_Interface.Multiplayer.Client
         private void OnPingResponded(gameserveritem_t data)
         {
             CleanupServerQuery();
-            if (data.m_nAppID == Game.ID)
+            if (data.m_nAppID == Game.ID.m_AppId)
             {
                 ServerInfo info = new ServerInfo(data);
 
@@ -314,7 +318,7 @@ namespace Static_Interface.Multiplayer.Client
         private void Connect(ServerInfo info)
         {
             if (IsConnected) return;
-            IsConnectedInternal = true;
+            IsConnected = true;
             ResetChannels();
             _currentServerInfo = info;
             ServerID = info.SteamID;
@@ -407,6 +411,13 @@ namespace Static_Interface.Multiplayer.Client
                             return;
                         }
                     case EPacket.VERIFY:
+                        byte[] ticket = OpenTicket();
+                        if (ticket == null)
+                        {
+                            Disconnect();
+                            return;
+                        }
+                        Send(ServerID, EPacket.AUTHENTICATE, ticket, ticket.Length, 0);
                         break;
                     case EPacket.DISCONNECTED:
                         RemovePlayer(packet[offset + 1]);
@@ -458,6 +469,31 @@ namespace Static_Interface.Multiplayer.Client
                     }
                 }
             }
+        }
+        private HAuthTicket _ticketHandle = HAuthTicket.Invalid;
+        private byte[] OpenTicket()
+        {
+            uint size;
+            if (_ticketHandle != HAuthTicket.Invalid)
+            {
+                return null;
+            }
+            byte[] pTicket = new byte[1024];
+            _ticketHandle = Steamworks.SteamUser.GetAuthSessionTicket(pTicket, pTicket.Length, out size);
+            if (size == 0)
+            {
+                return null;
+            }
+            byte[] dst = new byte[size];
+            System.Buffer.BlockCopy(pTicket, 0, dst, 0, (int)size);
+            return dst;
+        }
+
+        private void CloseTicket()
+        {
+            if (_ticketHandle == HAuthTicket.Invalid) return;
+            Steamworks.SteamUser.CancelAuthTicket(_ticketHandle);
+            _ticketHandle = HAuthTicket.Invalid;
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
+using Steamworks;
 
 namespace Static_Interface
 {
     public class Game
     {
         public const string NAME = "Unwalked";
-        public const string VERSION = "1.0";
-        public const uint ID = 0;
+        public const string VERSION = "1.0.0.0";
+        public static AppId_t ID = new AppId_t(480);
     }
 }

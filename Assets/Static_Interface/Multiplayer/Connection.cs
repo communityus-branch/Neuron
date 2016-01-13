@@ -2,7 +2,7 @@
 using System.Text;
 using Static_Interface.Multiplayer.Protocol;
 using Static_Interface.Objects;
-using Static_Interface.Multiplayer.Service.ConnectionProviderService;
+using Static_Interface.Multiplayer.Service.MultiplayerProviderService;
 using Static_Interface.PlayerFramework;
 using Steamworks;
 using SteamUser = Static_Interface.PlayerFramework.SteamUser;
@@ -17,7 +17,12 @@ namespace Static_Interface.Multiplayer
         public static readonly int SERVER_TIMEOUT = 30;
         public static readonly int PENDING_TIMEOUT = 30;
         public static Connection CurrentConnection;
-
+        private bool _isReady;
+        public bool IsReady
+        {
+            get { return _isReady;}
+            protected set { _isReady = value; }
+        }
         protected byte[] Buffer  = new byte[Block.BUFFER_SIZE];
 
         private CSteamID _serverId;
@@ -62,12 +67,12 @@ namespace Static_Interface.Multiplayer
         }
 
         private List<User> _clients;
-        private static bool _isInitialized;
 
-        protected bool IsConnectedInternal;
+        private bool _isConnected;
         public bool IsConnected
         {
-            get { return IsConnectedInternal; } 
+            get { return _isConnected; }
+            protected set { _isConnected = value; }
         }
 
         protected void OnAPIWarningMessage(int severity, StringBuilder warning)
@@ -85,21 +90,12 @@ namespace Static_Interface.Multiplayer
             CurrentConnection = this;
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
-            if (_isInitialized)
-            {
-                Destroy(this);
-                return;
-            }
-
-            _isInitialized = true;
             DontDestroyOnLoad(this);
-            OnAwake();
             SteamFriends.SetRichPresence("status", "Menu");
         }
 
-        protected abstract void OnAwake();
         protected abstract void Receive(CSteamID source, byte[] packet, int offset, int size, int channel);
         private static List<Channel> _receivers;
         public static ICollection<Channel> Receivers
@@ -132,7 +128,7 @@ namespace Static_Interface.Multiplayer
 
         public void Update()
         {
-            if (!IsConnected || !_isInitialized) return;
+            if (!IsConnected) return;
             Listen();
             Listen(0);
             foreach (Channel ch in Receivers)
