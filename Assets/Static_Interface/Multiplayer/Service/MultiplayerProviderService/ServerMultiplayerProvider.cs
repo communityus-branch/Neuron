@@ -19,7 +19,7 @@ namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
 
         public void Open(uint ip, ushort port)
         {
-            if (!GameServer.Init(ip, (ushort)(port+ 2), port, (ushort)(port + 1), EServerMode.eServerModeNoAuthentication,
+            if (!GameServer.Init(ip, (ushort)(port+ 2), port, (ushort)(port + 1), EServerMode.eServerModeAuthenticationAndSecure,
                     Game.VERSION))
             {
                 throw new ServerInitializationFailedException("Couldn't start server (Steamworks API initialization failed)");

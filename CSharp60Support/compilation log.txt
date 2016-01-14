@@ -1,0 +1,104 @@
+********************************************************************************
+*                     Friday, January 15, 2016 12:08:52 AM                     *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 1.6.1.0
+Platform: Windows
+Target assembly: Assembly-CSharp-firstpass.dll
+Project directory: H:\Users\Trojaner\UnityProjects\The Collapse
+Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
+Compiler: Microsoft C# 6.0
+
+- Compilation -----------------------------------------------
+
+Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-429a6ebdabbae1145ae803e0e6981814
+Exit code: 0
+Elapsed time: 6.11 sec
+
+- Compiler output (2 lines):
+0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
+1: Copyright (C) Microsoft Corporation. All rights reserved.
+
+- Compiler errors (8 lines):
+0: Assets\Plugins\Environment\DayNightCycle\LightWall.cs(7,18): warning CS0108: 'LightWall.renderer' hides inherited member 'Component.renderer'. Use the new keyword if hiding was intended.
+1: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\GameSaveExample.cs(58,35): warning CS0618: 'Application.loadedLevelName' is obsolete: 'Use SceneManager to determine what scenes have been loaded'
+2: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\OnOpenDoor.cs(16,9): warning CS0618: 'Application.LoadLevel(string)' is obsolete: 'Use SceneManager.LoadScene'
+3: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\GameSaveExample.cs(98,9): warning CS0618: 'Application.LoadLevel(string)' is obsolete: 'Use SceneManager.LoadScene'
+4: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\GameSaveExample.cs(110,9): warning CS0618: 'Application.LoadLevel(string)' is obsolete: 'Use SceneManager.LoadScene'
+5: Assets\Plugins\Standard Assets\Effects\ImageEffects\Scripts\Blur.cs(42,18): warning CS0618: 'Material.Material(string)' is obsolete: 'Creating materials from shader source string will be removed in the future. Use Shader assets instead.'
+6: Assets\Plugins\ConsoleUI\FrontEnd\UnityGUI\ConsoleGUI.cs(215,138): warning CS0618: 'TextEditor.content' is obsolete: 'Please use 'text' instead of 'content''
+7: Assets\Plugins\ConsoleUI\FrontEnd\UnityGUI\ConsoleGUI.cs(15,27): warning CS0649: Field 'ConsoleGUI.Character' is never assigned to, and will always have its default value null
+
+- PDB to MDB conversion --------------------------------------
+
+Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp-firstpass.dll
+Exit code: 0
+Elapsed time: 0.23 sec
+
+- pdb2mdb.exe output (0 lines):
+********************************************************************************
+*                     Friday, January 15, 2016 12:09:00 AM                     *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 1.6.1.0
+Platform: Windows
+Target assembly: Assembly-CSharp.dll
+Project directory: H:\Users\Trojaner\UnityProjects\The Collapse
+Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
+Compiler: Microsoft C# 6.0
+
+- Compilation -----------------------------------------------
+
+Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-c4124a248bc989748a3c162e1e3ae730
+Exit code: 0
+Elapsed time: 4.22 sec
+
+- Compiler output (2 lines):
+0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
+1: Copyright (C) Microsoft Corporation. All rights reserved.
+
+- Compiler errors (3 lines):
+0: Assets\Static_Interface\Utils\Highlighter.cs(25,13): warning CS0162: Unreachable code detected
+1: Assets\Static_Interface\Utils\Highlighter.cs(32,13): warning CS0162: Unreachable code detected
+2: Assets\Static_Interface\Utils\Highlighter.cs(40,13): warning CS0162: Unreachable code detected
+
+- PDB to MDB conversion --------------------------------------
+
+Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp.dll
+Exit code: 0
+Elapsed time: 0.17 sec
+
+- pdb2mdb.exe output (0 lines):
+********************************************************************************
+*                     Friday, January 15, 2016 12:09:00 AM                     *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 1.6.1.0
+Platform: Windows
+Target assembly: Assembly-CSharp-Editor-firstpass.dll
+Project directory: H:\Users\Trojaner\UnityProjects\The Collapse
+Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
+Compiler: Microsoft C# 6.0
+
+- Compilation -----------------------------------------------
+
+Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-354227108d32cfc43a4712db406738d9
+Exit code: 0
+Elapsed time: 3.83 sec
+
+- Compiler output (2 lines):
+0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
+1: Copyright (C) Microsoft Corporation. All rights reserved.
+
+- Compiler errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp-Editor-firstpass.dll
+Exit code: 0
+Elapsed time: 0.14 sec
+
+- pdb2mdb.exe output (0 lines):

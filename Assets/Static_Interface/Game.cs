@@ -1,5 +1,4 @@
-﻿using System;
-using Steamworks;
+﻿using Steamworks;
 
 namespace Static_Interface
 {
