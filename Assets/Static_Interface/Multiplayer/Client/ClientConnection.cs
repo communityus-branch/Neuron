@@ -15,7 +15,7 @@ using Time = UnityEngine.Time;
 
 namespace Static_Interface.Multiplayer.Client
 {
-    public class ClientConnection : Connection
+    public class ClientConnection : Connection<ClientMultiplayerProvider>
     {
         private float[] _pings;
         private float _ping;
@@ -25,34 +25,13 @@ namespace Static_Interface.Multiplayer.Client
         private int _serverQueryAttempts;
         private ISteamMatchmakingPingResponse _serverPingResponse;
         private HServerQuery _serverQuery = HServerQuery.Invalid;
-        private static byte[] _clientHash;
         private string _currentPassword;
         private uint _currentIp;
         private ushort _currentPort;
-        private ServerInfo _currentServerInfo;
 
-        public ServerInfo CurrentServerInfo
-        {
-            get { return _currentServerInfo; }
-        }
-
-        private ClientMultiplayerProvider _provider;
-        private bool _isFavoritedServer;
-
-        public bool IsFavoritedServer
-        {
-            get { return _isFavoritedServer; }
-        }
-
-        public override MultiplayerProvider Provider
-        {
-            get { return _provider; }
-        }
-
-        public static byte[] ClientHash
-        {
-            get { return _clientHash;  }
-        }
+        public ServerInfo CurrentServerInfo { get; private set; }
+        public bool IsFavoritedServer { get; private set; }
+        public static byte[] ClientHash { get; private set; }
 
         public override void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id)
         {
@@ -107,7 +86,7 @@ namespace Static_Interface.Multiplayer.Client
             base.Awake();
             _serverPingResponse = new ISteamMatchmakingPingResponse(OnPingResponded, OnPingFailedToRespond);
 
-            if (SteamAPI.RestartAppIfNecessary((AppId_t)Game.ID))
+            if (SteamAPI.RestartAppIfNecessary(Game.ID))
             {
                 throw new Exception("Restarting app from Steam.");
             }
@@ -116,15 +95,14 @@ namespace Static_Interface.Multiplayer.Client
                 throw new Exception("Steam API initialization failed.");
             }
 
-            SteamAPIWarningMessageHook_t _apiWarningMessageHook = OnAPIWarningMessage;
-            SteamUtils.SetWarningMessageHook(_apiWarningMessageHook);
+            SteamUtils.SetWarningMessageHook(OnAPIWarningMessage);
             CurrentTime = SteamUtils.GetServerRealTime();
             Callback<PersonaStateChange_t>.Create(OnPersonaStateChange);
             Callback<GameServerChangeRequested_t>.Create(OnGameServerChangeRequested);
             Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
             _user = Steamworks.SteamUser.GetSteamID();
             ClientID = _user;
-            _clientHash = Hash.SHA1(ClientID);
+            ClientHash = Hash.SHA1(ClientID);
             ClientName = SteamFriends.GetPersonaName();
             IsReady = true;
         }
@@ -261,7 +239,7 @@ namespace Static_Interface.Multiplayer.Client
             _currentPort = port;
             _currentPassword = password;
   
-            _serverQuery = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), this._serverPingResponse);
+            _serverQuery = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), _serverPingResponse);
             _serverQueryAttempts++;
             //Todo: OnConnect event?
             IsConnected = true;
@@ -289,10 +267,7 @@ namespace Static_Interface.Multiplayer.Client
                     return;
                     // Todo: server full
                 }
-                else
-                {
-                    // Todo: no password
-                }
+                // Todo: no password
             }
             else
             {
@@ -320,11 +295,11 @@ namespace Static_Interface.Multiplayer.Client
             if (IsConnected) return;
             IsConnected = true;
             ResetChannels();
-            _currentServerInfo = info;
+            CurrentServerInfo = info;
             ServerID = info.SteamID;
             _pings = new float[4];
             Lag((info.Ping) / 1000f);
-            _provider = new ClientMultiplayerProvider(info);
+            Provider = new ClientMultiplayerProvider(info);
 
             LastNet = Time.realtimeSinceStartup;
             OffsetNet = 0f;
@@ -342,7 +317,7 @@ namespace Static_Interface.Multiplayer.Client
             const string serverPasswordHash = "";
             CSteamID group = CSteamID.Nil;
 
-            object[] args = { ClientName, serverPasswordHash, Game.VERSION, _currentServerInfo.Ping / 1000f, group};
+            object[] args = { ClientName, serverPasswordHash, Game.VERSION, CurrentServerInfo.Ping / 1000f, group};
             byte[] packet = ObjectSerializer.GetBytes(0, out size, args);
             Send(ServerID, EPacket.CONNECT, packet, size, 0);
         }
@@ -447,7 +422,7 @@ namespace Static_Interface.Multiplayer.Client
                         SteamFriends.SetRichPresence("connect", string.Concat("+connect ", ip, ":", port));
                         var favoriteIP = ip;
                         var favoritePort = port;
-                        _isFavoritedServer = false;
+                        IsFavoritedServer = false;
                         for (var game = 0; game < SteamMatchmaking.GetFavoriteGameCount(); game++)
                         {
                             AppId_t appIdT;
@@ -458,12 +433,12 @@ namespace Static_Interface.Multiplayer.Client
                             uint lastPlayedOnServer;
                             SteamMatchmaking.GetFavoriteGame(game, out appIdT, out pnIp, out connPort, out pnQueryPort,
                                 out punFlags, out lastPlayedOnServer);
-                            if (((appIdT != (AppId_t) Game.ID) || (pnIp != favoriteIP)) ||
+                            if (((appIdT != Game.ID) || (pnIp != favoriteIP)) ||
                                 (favoritePort != connPort)) continue;
-                            _isFavoritedServer = true;
+                            IsFavoritedServer = true;
                             break;
                         }
-                        SteamMatchmaking.AddFavoriteGame((AppId_t) Game.ID, ip, port, (ushort) (port + 1), 2,
+                        SteamMatchmaking.AddFavoriteGame(Game.ID, ip, port, (ushort) (port + 1), 2,
                             SteamUtils.GetServerRealTime());
                         break;
                     }

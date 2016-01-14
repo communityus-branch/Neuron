@@ -10,7 +10,7 @@ namespace Static_Interface.Menus.LoadingMenu
     {
         public CanvasRenderer Text;
 
-        private AsyncOperation loadingOperation;
+        private AsyncOperation _loadingOperation;
         void Start()
         {
             if (!LevelManager.Instance.IsLoading)
@@ -18,14 +18,14 @@ namespace Static_Interface.Menus.LoadingMenu
                 throw new Exception("Not loading??");
             }
 
-            loadingOperation = SceneManager.LoadSceneAsync(LevelManager.Instance.PendingLevel);
+            _loadingOperation = SceneManager.LoadSceneAsync(LevelManager.Instance.PendingLevel);
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (loadingOperation == null) return;
-            double progress = Math.Round(loadingOperation.progress*100);
+            if (_loadingOperation == null) return;
+            double progress = Math.Round(_loadingOperation.progress*100);
             Text.GetComponent<Text>().text = "Loading... (" + progress + "%)";
         }
     }

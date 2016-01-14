@@ -4,7 +4,7 @@ namespace Static_Interface.PlayerFramework
 {
     public abstract class PendingUser
     {
-        public abstract UserIdentity Identity {get;}
+        public UserIdentity Identity {get; protected set; }
         public readonly float Joined;
         internal bool HasAuthentication;
 

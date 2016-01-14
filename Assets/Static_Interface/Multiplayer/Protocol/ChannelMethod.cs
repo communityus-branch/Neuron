@@ -5,39 +5,17 @@ namespace Static_Interface.Multiplayer.Protocol
 {
     public class ChannelMethod
     {
-        private readonly Component _component;
-        private readonly MethodInfo _method;
-        private readonly System.Type[] _types;
-
         public ChannelMethod(Component newComponent, MethodInfo newMethod, System.Type[] newTypes)
         {
-            _component = newComponent;
-            _method = newMethod;
-            _types = newTypes;
+            Component = newComponent;
+            Method = newMethod;
+            Types = newTypes;
         }
 
-        public Component Component
-        {
-            get
-            {
-                return _component;
-            }
-        }
+        public Component Component { get; }
 
-        public MethodInfo Method
-        {
-            get
-            {
-                return _method;
-            }
-        }
+        public MethodInfo Method { get; }
 
-        public System.Type[] Types
-        {
-            get
-            {
-                return _types;
-            }
-        }
+        public System.Type[] Types { get; }
     }
 }

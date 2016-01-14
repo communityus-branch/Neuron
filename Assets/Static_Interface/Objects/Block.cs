@@ -10,7 +10,7 @@ namespace Static_Interface.Objects
     {
         private byte[] _block;
 
-        public static readonly int BUFFER_SIZE = 0x8000;
+        public const int BUFFER_SIZE = 0x8000;
         private static readonly byte[] Buffer = new byte[BUFFER_SIZE];
 
         private int _step;

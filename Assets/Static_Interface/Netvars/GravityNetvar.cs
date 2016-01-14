@@ -10,10 +10,8 @@ namespace Static_Interface.Scripts.Netvars
         {
             _defaultValue = Physics.gravity.y;
         }
-        public override string Name
-        {
-            get { return "sv_gravity"; }
-        }
+
+        public override string Name => "sv_gravity";
 
         protected override void OnSetValue(object oldValue, object newValue)
         {

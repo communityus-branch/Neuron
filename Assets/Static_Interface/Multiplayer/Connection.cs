@@ -4,91 +4,58 @@ using Static_Interface.Multiplayer.Protocol;
 using Static_Interface.Objects;
 using Static_Interface.Multiplayer.Service.MultiplayerProviderService;
 using Static_Interface.PlayerFramework;
+using Static_Interface.Utils;
 using Steamworks;
 using SteamUser = Static_Interface.PlayerFramework.SteamUser;
 using UnityEngine;
 
 namespace Static_Interface.Multiplayer
 {
-    public abstract class Connection : MonoBehaviour
+    public abstract class Connection<T> : MonoBehaviour where T : MultiplayerProvider
     {
         public const float CHECKRATE = 1f;
-        public static readonly int CLIENT_TIMEOUT = 30;
-        public static readonly int SERVER_TIMEOUT = 30;
-        public static readonly int PENDING_TIMEOUT = 30;
-        public static Connection CurrentConnection;
-        private bool _isReady;
-        public bool IsReady
-        {
-            get { return _isReady;}
-            protected set { _isReady = value; }
-        }
+        public const int CLIENT_TIMEOUT = 30;
+        public const int SERVER_TIMEOUT = 30;
+        public const int PENDING_TIMEOUT = 30;
+        public static Connection<MultiplayerProvider> CurrentConnection { get; set; }
+        public bool IsReady { get; protected set; }
+
         protected byte[] Buffer  = new byte[Block.BUFFER_SIZE];
 
-        private CSteamID _serverId;
-        public CSteamID ServerID
-        {
-            get { return _serverId;}
-            protected set { _serverId = value; }
-        }
+        public CSteamID ServerID { get; protected set; }
 
         protected float LastPing;
         protected float LastNet;
         protected float LastCheck;
         protected float OffsetNet;
 
-        private string _clientName;
+        public string ClientName { get; protected set; }
 
-        public string ClientName
-        {
-            get { return _clientName;}
-            protected set { _clientName = value; }
-        }
-        private uint _currentTime;
-        public uint CurrentTime
-        {
-            get { return _currentTime; }
-            protected set { _currentTime = value; }
-        }
-        public abstract MultiplayerProvider Provider { get; }
+        public uint CurrentTime { get; protected set; }
 
-        private CSteamID _clientId;
-        public CSteamID ClientID
-        {
-            get { return _clientId; }
-            internal set { _clientId = value; }
-        }
+        public T Provider { get; protected set; }
 
-        private int _channels = 1;
+        public CSteamID ClientID { get; internal set; }
 
-        public int Channels
-        {
-            get { return _channels; }
-        }
+        public int Channels { get; private set; } = 1;
 
         private List<User> _clients;
 
-        private bool _isConnected;
-        public bool IsConnected
-        {
-            get { return _isConnected; }
-            protected set { _isConnected = value; }
-        }
+        public bool IsConnected { get; protected set; }
 
         protected void OnAPIWarningMessage(int severity, StringBuilder warning)
         {
             Console.Instance.Print("Warning: " + warning + " (Severity: " + severity + ")");
         }
 
-        public ICollection<User> Clients
-        {
-            get { return _clients == null ? null : _clients.AsReadOnly(); }
-        }
+        public ICollection<User> Clients => _clients?.AsReadOnly();
 
         protected Connection()
         {
-            CurrentConnection = this;
+            CurrentConnection = Generic;
         }
+
+        public Connection<MultiplayerProvider> Generic => this.CastTo<Connection<MultiplayerProvider>>();
 
         protected virtual void Awake()
         {
@@ -98,23 +65,17 @@ namespace Static_Interface.Multiplayer
 
         protected abstract void Receive(CSteamID source, byte[] packet, int offset, int size, int channel);
         private static List<Channel> _receivers;
-        public static ICollection<Channel> Receivers
-        {
-            get
-            {
-                return _receivers == null ? null : _receivers.AsReadOnly();
-            }
-        }
+        public static ICollection<Channel> Receivers => _receivers?.AsReadOnly();
 
         protected void AddReceiver(Channel ch)
         {
             _receivers.Add(ch);
-            _channels++;
+            Channels++;
         }
 
         protected void ResetChannels()
         {
-            _channels = 1;
+            Channels = 1;
             _receivers = new List<Channel>();
             var channelArray = FindObjectsOfType<Channel>();
             foreach (var ch in channelArray)
@@ -152,7 +113,7 @@ namespace Static_Interface.Multiplayer
         protected virtual Transform AddPlayer(UserIdentity ident, Vector3 point, byte angle, int channel)
         {
             Transform newModel = ((GameObject)Instantiate(Resources.Load("Player"), point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
-            _clients.Add(new SteamUser(this, ident, newModel, channel));
+            _clients.Add(new SteamUser(Generic, ident, newModel, channel));
             return newModel;
             //Todo!! Add Player prefab with "Channel" and "Player" components
             //Todo: OnPlayerConnected
@@ -200,7 +161,7 @@ namespace Static_Interface.Multiplayer
                 return;
             }
             _receivers.Add(ch);
-            _channels++;
+            Channels++;
         }
 
         internal void CloseChannel(Channel ch)
@@ -211,7 +172,7 @@ namespace Static_Interface.Multiplayer
                 _receivers.RemoveAt(i);
                 return;
             }
-            _channels--;
+            Channels--;
         }
     }
 }

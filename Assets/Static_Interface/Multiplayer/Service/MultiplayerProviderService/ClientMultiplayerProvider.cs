@@ -1,29 +1,22 @@
-﻿using System.IO;
-using Static_Interface.Multiplayer.Server;
-using Steamworks;
+﻿using Static_Interface.Multiplayer.Server;
 
 namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
 {
     public class ClientMultiplayerProvider : MultiplayerProvider
     {
-        private ServerInfo _info;
-
         public bool IsAttempting;
         public bool IsConnected;
 
-        public ServerInfo CurrentServer
-        {
-            get { return _info; }
-        }
+        public ServerInfo CurrentServer { get; protected set; }
 
         public ClientMultiplayerProvider(ServerInfo info)
         {
-            _info = info;
+            CurrentServer = info;
         }
 
         public void Connect(ServerInfo serverInfo)
         {
-            _info = serverInfo;
+            CurrentServer = serverInfo;
         }
 
         public void Disconnect()

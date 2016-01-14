@@ -12,7 +12,6 @@ namespace Static_Interface
         public Transform Water;
         public static World Instance;
 
-
         private void Start ()
         {
             if (Instance != null) throw new Exception("Only one instance allowed");

@@ -32,8 +32,8 @@ namespace Static_Interface.Menus.MainMenu
         private IEnumerator HostCoroutine()
         {
             GameObject serverObject = GameObject.Find("Server");
-            ServerConnection conn = serverObject.GetComponent<ServerConnection>() ??
-                                    serverObject.AddComponent<ServerConnection>();
+            DestroyImmediate(serverObject.GetComponent<ServerConnection>());
+            ServerConnection conn = serverObject.AddComponent<ServerConnection>();
             if (!conn.IsReady) yield return new WaitForSeconds(0.5f);
             conn.OpenGameServer();
             GameObject.Find("Host Button").GetComponent<Button>().enabled = false;

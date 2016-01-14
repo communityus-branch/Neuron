@@ -3,95 +3,38 @@ namespace Static_Interface.Multiplayer.Server
 {
     public class ServerInfo
     {
-        private readonly bool _hasPassword;
-        private readonly bool _isSecure;
-        private readonly string _map;
-        private readonly int _maxPlayers;
-        private readonly string _name;
-        private readonly int _ping;
-        private readonly int _players;
-        private readonly CSteamID _steamID;
-
         public ServerInfo(gameserveritem_t data)
         {
-            _steamID = data.m_steamID;
-            _name = data.GetServerName();
-            _map = data.GetMap();
-            _ping = data.m_nPing;
-            _players = data.m_nPlayers;
-            _maxPlayers = data.m_nMaxPlayers;
-            _hasPassword = data.m_bPassword;
-            _isSecure = data.m_bSecure;
+            SteamID = data.m_steamID;
+            Name = data.GetServerName();
+            Map = data.GetMap();
+            Ping = data.m_nPing;
+            Players = data.m_nPlayers;
+            MaxPlayers = data.m_nMaxPlayers;
+            HasPassword = data.m_bPassword;
+            IsSecure = data.m_bSecure;
         }
 
         public ServerInfo(string newName, bool newSecure)
         {
-            _name = newName;
-            _isSecure = newSecure;
+            Name = newName;
+            IsSecure = newSecure;
         }
 
-        public bool HasPassword
-        {
-            get
-            {
-                return _hasPassword;
-            }
-        }
+        public bool HasPassword { get; }
 
-        public bool IsSecure
-        {
-            get
-            {
-                return _isSecure;
-            }
-        }
+        public bool IsSecure { get; }
 
-        public string Map
-        {
-            get
-            {
-                return _map;
-            }
-        }
+        public string Map { get; }
 
-        public int MaxPlayers
-        {
-            get
-            {
-                return _maxPlayers;
-            }
-        }
+        public int MaxPlayers { get; }
 
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-        }
+        public string Name { get; }
 
-        public int Ping
-        {
-            get
-            {
-                return _ping;
-            }
-        }
+        public int Ping { get; }
 
-        public int Players
-        {
-            get
-            {
-                return _players;
-            }
-        }
+        public int Players { get; }
 
-        public CSteamID SteamID
-        {
-            get
-            {
-                return _steamID;
-            }
-        }
+        public CSteamID SteamID { get; }
     }
 }

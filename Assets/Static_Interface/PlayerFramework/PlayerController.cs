@@ -2,8 +2,8 @@
 {
     public class PlayerController
     {
-        public byte RegionX;
-        public byte RegionY;
-        public byte Bound;
+        public byte RegionX { get; protected set; }
+        public byte RegionY { get; protected set; }
+        public byte Bound { get; protected set; }
     }
 }

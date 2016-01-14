@@ -15,7 +15,7 @@ namespace Static_Interface.Utils
             var array = new byte[hashes.Length * 20];
             for (var i = 0; i < hashes.Length; i++)
             {
-                hashes[i].CopyTo(array, (int)(i * 20));
+                hashes[i].CopyTo(array, (i * 20));
             }
             return SHA1(array);
         }

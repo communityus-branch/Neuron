@@ -12,56 +12,24 @@ using Types = Static_Interface.Objects.Types;
 
 namespace Static_Interface.Multiplayer.Server
 {
-    public class ServerConnection : Connection
+    public class ServerConnection : Connection<ServerMultiplayerProvider>
     {
-        private const string _map = "DefaultMap";
+        public string Map { get; } = "DefaultMap";
 
-        public string Map
-        {
-            get { return _map; }
-        }
-
-        private const uint _bindIP = 0;
-
-        public uint BindIP
-        {
-            get { return _bindIP;}
-        }
+        public uint BindIP { get; } = 0;
 
         public int MaxPlayers = 8;
 
         private const float Timeout = 0.75f;
-        private ushort _port;
 
-        public ushort Port
-        {
-            get { return _port;}
-        }
+        public ushort Port { get; private set; }
 
-        public uint PublicIP
-        {
-            get { return SteamGameServer.GetPublicIP(); }
-        }
+        public uint PublicIP => SteamGameServer.GetPublicIP();
 
         private readonly List<PendingUser> _pendingPlayers = new List<PendingUser>();
+        public ICollection<PendingUser> PendingPlayers => _pendingPlayers.AsReadOnly();
 
-        public ICollection<PendingUser> PendingPlayers
-        {
-            get { return _pendingPlayers.AsReadOnly(); }
-        } 
-
-        private ServerMultiplayerProvider _provider;
-        public override MultiplayerProvider Provider
-        {
-            get { return _provider; }
-        }
-
-        private bool _isSecure;
-
-        public bool IsSecure
-        {
-            get { return _isSecure;}
-        }
+        public bool IsSecure { get; private set; }
 
         protected override void Listen()
         {
@@ -292,7 +260,7 @@ namespace Static_Interface.Multiplayer.Server
             Callback<GSPolicyResponse_t>.CreateGameServer(OnGsPolicyResponse);
             Callback<P2PSessionConnectFail_t>.CreateGameServer(OnP2PSessionConnectFail);
             Callback<ValidateAuthTicketResponse_t>.CreateGameServer(OnValidateAuthTicketResponse);
-            _port = 27015;
+            Port = 27015;
             IsReady = true;
         }
 
@@ -300,11 +268,11 @@ namespace Static_Interface.Multiplayer.Server
         {
             if (callback.m_bSecure != 0)
             {
-                _isSecure = true;
+                IsSecure = true;
             }
-            else if (_isSecure)
+            else if (IsSecure)
             {
-                _isSecure = false;
+                IsSecure = false;
             }
         }
 
@@ -401,10 +369,10 @@ namespace Static_Interface.Multiplayer.Server
 
         public void OpenGameServer()
         {
-            if(_provider == null) _provider = new ServerMultiplayerProvider();
+            if(Provider == null) Provider = new ServerMultiplayerProvider();
             try
             {
-                _provider.Open(_bindIP, Port);
+                Provider.Open(BindIP, Port);
             }
             catch (Exception exception)
             {
@@ -412,14 +380,14 @@ namespace Static_Interface.Multiplayer.Server
                 Application.Quit();
                 return;
             }
-            SteamAPIWarningMessageHook_t apiWarningMessageHook = OnAPIWarningMessage;
-            SteamUtils.SetWarningMessageHook(apiWarningMessageHook);
+
+            SteamUtils.SetWarningMessageHook(OnAPIWarningMessage);
             CurrentTime = SteamGameServerUtils.GetServerRealTime();
-            LevelManager.Instance.LoadLevel(_map); //Todo
+            LevelManager.Instance.LoadLevel(Map); //Todo
             SteamGameServer.SetMaxPlayerCount(MaxPlayers);
-            SteamGameServer.SetServerName(_provider.Description);
+            SteamGameServer.SetServerName(Provider.Description);
             SteamGameServer.SetPasswordProtected(false); //Todo
-            SteamGameServer.SetMapName(_map);
+            SteamGameServer.SetMapName(Map);
 
             ServerID = SteamGameServer.GetSteamID();
             ClientID = ServerID;
@@ -434,7 +402,7 @@ namespace Static_Interface.Multiplayer.Server
         public void CloseGameServer()
         {
             //Todo: OnServerShutdown
-            _provider.Close();
+            Provider.Close();
             Destroy(this);
             enabled = false;
         }

@@ -9,19 +9,16 @@ namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
         public const int MIN_PLAYERS = 0;
         public const int MAX_PLAYERS = 16;
 
-        public BinaryReader Deserializer { get { return _deserializer; } }
-        public MemoryStream Stream { get { return _stream; } }
-        public BinaryWriter Serializer { get { return _serializer; } }
+        public BinaryReader Deserializer { get; }
+        public MemoryStream Stream { get; }
+        public BinaryWriter Serializer { get; }
         protected byte[] Buffer = new byte[1024];
-        private readonly MemoryStream _stream;
-        private readonly BinaryReader _deserializer;
-        private readonly BinaryWriter _serializer;
 
         protected MultiplayerProvider()
         {
-            _stream = new MemoryStream(Buffer);
-            _deserializer = new BinaryReader(_stream);
-            _serializer = new BinaryWriter(_stream);
+            Stream = new MemoryStream(Buffer);
+            Deserializer = new BinaryReader(Stream);
+            Serializer = new BinaryWriter(Stream);
 
             Callback<P2PSessionRequest_t>.CreateGameServer(OnP2PSessionRequest);
         }
@@ -50,7 +47,7 @@ namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
 
         public void Write(User user, byte[] data, ulong length)
         {
-            SteamGameServerNetworking.SendP2PPacket(user.Identity.ID, data, (uint)length, EP2PSend.k_EP2PSendUnreliable, 0);
+            SteamGameServerNetworking.SendP2PPacket(user.Identity.ID, data, (uint)length, EP2PSend.k_EP2PSendUnreliable);
         }
 
         public void Write(User user, byte[] data, ulong length, EP2PSend method, int channel)

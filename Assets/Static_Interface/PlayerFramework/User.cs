@@ -5,29 +5,9 @@ namespace Static_Interface.PlayerFramework
 {
     public abstract class User
     {
-        private float _lastChat;
-
-        public float LastChat
-        {
-            get { return _lastChat; }
-            internal set { _lastChat = value; }
-        }
-
-        private float _lastNet;
-
-        public float LastNet
-        {
-            get { return _lastNet; }
-            internal set { _lastNet = value;  }
-        }
-
-        private float _lastPing;
-
-        public float LastPing
-        {
-            get { return _lastPing; }
-            internal set { _lastPing = value;  }
-        }
+        public float LastChat { get; internal set; }
+        public float LastNet { get; internal set; }
+        public float LastPing { get; internal set; }
 
         public readonly float Joined;
         private readonly float[] _pings = new float[4];
@@ -35,17 +15,19 @@ namespace Static_Interface.PlayerFramework
         protected User()
         {
             Joined = Time.realtimeSinceStartup;
-            _lastNet = Time.realtimeSinceStartup;
-            _lastChat = Time.realtimeSinceStartup;
+            LastNet = Time.realtimeSinceStartup;
+            LastChat = Time.realtimeSinceStartup;
         }
 
         public void Lag(float value)
         {
-            NetworkUtils.GetAveragePing(value, out _lastPing, _pings);
+            float lastPing;
+            NetworkUtils.GetAveragePing(value, out lastPing, _pings);
+            LastPing = lastPing;
         }
 
-        public abstract Player Player { get; }
-        public abstract UserIdentity Identity { get; }
-        public abstract Transform Model { get;  }
+        public Transform Model { get; protected set; }
+        public UserIdentity Identity { get; protected set; }
+        public Player Player { get; protected set; }
     }
 }
