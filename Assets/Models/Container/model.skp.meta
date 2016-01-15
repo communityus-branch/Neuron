@@ -1,0 +1,904 @@
+fileFormatVersion: 2
+guid: a3eef5360a4a53b4192d339ffe6f25bb
+timeCreated: 1452891045
+licenseType: Free
+SketchUpImporter:
+  generateBackFace: 0
+  mergeCoplanarFaces: 0
+  selectedNodes: 00000000010000000200000003000000040000000500000006000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000230000002400000025000000260000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f000000300000003100000032000000330000003400000035000000360000003700000038000000390000003a0000003b0000003c0000003d0000003e0000003f000000400000004100000042000000430000004400000045000000460000004b0000004c00000075000000760000007700000078000000790000007a0000007d0000007e0000007f000000800000008100000082000000830000008400000085000000860000008700000088000000890000008a0000008b0000008c0000008d0000008e0000008f000000900000009100000092000000930000009400000095000000960000009700000098000000990000009a0000009b0000009c0000009d0000009e0000009f000000a0000000a1000000a2000000a3000000a4000000a5000000a6000000a7000000a8000000a9000000aa000000ab000000ac000000ad000000ae000000af000000b0000000b1000000b2000000b3000000b4000000b5000000b6000000b7000000b8000000b9000000ba000000bb000000bc000000bd000000be000000bf000000c0000000c1000000c2000000c3000000c4000000c5000000c6000000c7000000c8000000c9000000ca000000cb000000cc000000cd000000ce000000cf000000d0000000d1000000d2000000d3000000d4000000d5000000d6000000d7000000d8000000d9000000da000000db000000dc000000dd000000de000000df000000e0000000e1000000e2000000e3000000e4000000e5000000e6000000e7000000e8000000e9000000ea000000eb000000ec000000ed000000ee000000ef000000f0000000f5000000f6000000f7000000f8000000f9000000fa000000fb000000fc000000fd000000fe000000ff000000000100000101000002010000030100000401000005010000060100000701000008010000090100000a0100000b0100000c0100000d0100000e0100000f010000100100001101000012010000130100001401000015010000160100001701000018010000190100001a0100001b0100001c0100001d0100001e0100004701000048010000490100004a0100004b0100004c0100008101000082010000830100008401000085010000860100008701000088010000890100008a0100008b0100008c0100008d0100008e0100008f010000900100009101000092010000930100009401000095010000960100009701000098010000990100009a0100009b0100009c0100009d0100009e0100009f010000a0010000a1010000a2010000a3010000a4010000a5010000a6010000a7010000a8010000a9010000aa010000ab010000ac010000ad010000ae010000af010000b0010000b1010000b2010000b3010000b4010000b5010000b6010000b7010000b8010000b9010000ba010000bb010000bc010000bd010000be010000bf010000c0010000c1010000c2010000c3010000c4010000c5010000c6010000c7010000c8010000c9010000ca010000cb010000cc010000cd010000ce010000cf010000d0010000d1010000d2010000d3010000d4010000d5010000d6010000db010000dc010000dd010000de010000df010000e0010000e1010000e2010000e3010000e4010000e5010000e6010000e7010000e8010000e9010000ea010000eb010000ec010000ed010000ee010000ef010000f0010000f1010000f2010000f3010000f4010000f5010000f6010000f7010000f8010000f9010000fa010000fb010000fc010000fd010000fe010000ff010000000200000102000002020000030200000402000005020000060200000702000008020000090200000a0200000b0200000c0200000d0200000e0200000f020000100200001102000012020000130200001402000015020000160200002b0200002c0200002d0200002e0200002f0200003002000031020000320200003302000034020000
+  assetHash:
+    serializedVersion: 2
+    Hash: fc0631a11f7c949c28c0e1ea9710542f
+  longitude: -105.283
+  latitude: 40.017
+  northCorrection: -0
+  fileUnit: 0
+  sketchUpImportData:
+    defaultCamera:
+      position: {x: 6.105189, y: 4.198384, z: -3.4574478}
+      lookAt: {x: -0.74522907, y: -0.15252675, z: 4.702246}
+      up: {x: -0.2430939, y: 0.9257772, z: 0.28955486}
+      fov: 35
+      aspectRatio: 0
+      orthoSize: 1
+      isPerspective: 1
+    scenes: []
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: 40ft top side tube
+    100002: 40ft top side tube 1
+    100004: 40ft_Side Rail
+    100006: 40ft_Side Rail 1
+    100008: 40x9.6ft_Side_wall
+    100010: 9ft6 door.seal_3sides
+    100012: 9ft6 door.seal_3sides 1
+    100014: 9ft6 door.seal_3sides 2
+    100016: 9ft6 door.seal_center
+    100018: 9ft6_Container front#b
+    100020: 9ft6_container.door
+    100022: 9ft6_container.door 1
+    100024: 9ft6_container.doorset
+    100026: 9ft6_Corner_frame
+    100028: 9ft6_Corner_frame 1
+    100030: 9ft6_Cornerpost_outer#b
+    100032: 9ft6_Cornerpost_outer#b 1
+    100034: 9ft6_Locking bar
+    100036: 9ft6_Locking bar 1
+    100038: 9ft6_Locking bar 2
+    100040: 9ft6_Locking bar 3
+    100042: 9ft6_Locking bar 4
+    100044: Container_header
+    100046: Container_roof40
+    100048: Container_sill
+    100050: Corner_lock
+    100052: Corner_lock 1
+    100054: Corner_lock 2
+    100056: Corner_lock 3
+    100058: Corner_lock 4
+    100060: Corner_lock 5
+    100062: Corner_lock 6
+    100064: Corner_lock 7
+    100066: Crossmember wide
+    100068: Crossmember wide 1
+    100070: Crossmember wide 2
+    100072: Crossmember#b
+    100074: Crossmember#b 1
+    100076: Crossmember#b 10
+    100078: Crossmember#b 11
+    100080: Crossmember#b 12
+    100082: Crossmember#b 13
+    100084: Crossmember#b 14
+    100086: Crossmember#b 15
+    100088: Crossmember#b 16
+    100090: Crossmember#b 17
+    100092: Crossmember#b 18
+    100094: Crossmember#b 19
+    100096: Crossmember#b 2
+    100098: Crossmember#b 20
+    100100: Crossmember#b 21
+    100102: Crossmember#b 22
+    100104: Crossmember#b 3
+    100106: Crossmember#b 4
+    100108: Crossmember#b 5
+    100110: Crossmember#b 6
+    100112: Crossmember#b 7
+    100114: Crossmember#b 8
+    100116: Crossmember#b 9
+    100118: Cylinder rim
+    100120: Cylinder rim 1
+    100122: Door seal_780x2115
+    100124: Door_handle
+    100126: Door_handle 1
+    100128: Door_handle 2
+    100130: Door_handle 3
+    100132: Door_handle 4
+    100134: Door_hinge1
+    100136: Door_hinge1 1
+    100138: Door_hinge1 10
+    100140: Door_hinge1 11
+    100142: Door_hinge1 2
+    100144: Door_hinge1 3
+    100146: Door_hinge1 4
+    100148: Door_hinge1 5
+    100150: Door_hinge1 6
+    100152: Door_hinge1 7
+    100154: Door_hinge1 8
+    100156: Door_hinge1 9
+    100158: "Doorknob_\xD866.d55"
+    100160: Doorlatch round 135x60
+    100162: Doorlock
+    100164: Doorlock.catch
+    100166: Floorstrip
+    100168: Floorstrip 1
+    100170: Forklift_tunnel
+    100172: Forklift_tunnel 1
+    100174: Front bottom piece
+    100176: Front bottom piece 1
+    100178: Gooseneck crossmember
+    100180: "Gooseneck plate & ribs\u20142"
+    100182: Gooseneck rail
+    100184: Gooseneck rail 1
+    100186: Group 1
+    100188: Group 25
+    100190: Group 26
+    100192: Group 3
+    100194: Group 32
+    100196: Group 33
+    100198: Group 39
+    100200: Group 41
+    100202: Group 43
+    100204: Group 45
+    100206: Group 5
+    100208: Group 54
+    100210: Handle_catch
+    100212: Handle_catch 1
+    100214: Handle_catch 2
+    100216: Handle_catch 3
+    100218: Handle_catch 4
+    100220: Hinge_90baas
+    100222: Hinge_90baas 1
+    100224: Hinge_90baas 2
+    100226: Hinge_90saab
+    100228: Hinge_90saab 1
+    100230: Hinge_90saab 2
+    100232: Housedoor_780x2115_1
+    100234: Lock.box
+    100236: Lock.catch
+    100238: Lock.catch 1
+    100240: Lock_cam
+    100242: Lock_cam 1
+    100244: Lock_cam 2
+    100246: Lock_cam 3
+    100248: Lock_cam 4
+    100250: Lock_cam 5
+    100252: Lock_cam 6
+    100254: Lock_cam 7
+    100256: Lock_cam 8
+    100258: Lock_cam 9
+    100260: Lock_camkeeper
+    100262: Lock_camkeeper 1
+    100264: Lock_camkeeper 2
+    100266: Lock_camkeeper 3
+    100268: Lock_camkeeper 4
+    100270: Lock_camkeeper 5
+    100272: Lock_camkeeper 6
+    100274: Lock_camkeeper 7
+    100276: Locking_bracket
+    100278: Locking_bracket 1
+    100280: Locking_bracket 2
+    100282: Locking_bracket 3
+    100284: Locking_bracket 4
+    100286: Locking_bracket 5
+    100288: Locking_bracket 6
+    100290: Locking_bracket 7
+    100292: Locking_bracket 8
+    100294: Locking_bracket 9
+    100296: Locking_guide
+    100298: Locking_guide 1
+    100300: Locking_guide 2
+    100302: Locking_guide 3
+    100304: Locking_guide 4
+    100306: Locking_guide 5
+    100308: Locking_guide 6
+    100310: Locking_guide 7
+    100312: Locking_guide 8
+    100314: Locking_guide 9
+    100316: //RootNode
+    100318: Outrigger1
+    100320: Outrigger1 1
+    100322: Outrigger1 10
+    100324: Outrigger1 11
+    100326: Outrigger1 12
+    100328: Outrigger1 13
+    100330: Outrigger1 14
+    100332: Outrigger1 15
+    100334: Outrigger1 16
+    100336: Outrigger1 17
+    100338: Outrigger1 2
+    100340: Outrigger1 3
+    100342: Outrigger1 4
+    100344: Outrigger1 5
+    100346: Outrigger1 6
+    100348: Outrigger1 7
+    100350: Outrigger1 8
+    100352: Outrigger1 9
+    100354: Roof gusset front
+    100356: Roof gusset front 1
+    100358: Roof gusset rear
+    100360: Roof gusset rear 1
+    100362: Side gusset
+    100364: Side gusset 1
+    100366: Side gusset 2
+    100368: Side gusset 3
+    100370: Warning tape
+    100372: Warning tape 1
+    100374: Warning tape 2
+    100376: Warning tape 3
+    100378: Warning tape 4
+    100380: Warning tape 5
+    100382: Warning tape 6
+    100384: Warning tape 7
+    400000: 40ft top side tube
+    400002: 40ft top side tube 1
+    400004: 40ft_Side Rail
+    400006: 40ft_Side Rail 1
+    400008: 40x9.6ft_Side_wall
+    400010: 9ft6 door.seal_3sides
+    400012: 9ft6 door.seal_3sides 1
+    400014: 9ft6 door.seal_3sides 2
+    400016: 9ft6 door.seal_center
+    400018: 9ft6_Container front#b
+    400020: 9ft6_container.door
+    400022: 9ft6_container.door 1
+    400024: 9ft6_container.doorset
+    400026: 9ft6_Corner_frame
+    400028: 9ft6_Corner_frame 1
+    400030: 9ft6_Cornerpost_outer#b
+    400032: 9ft6_Cornerpost_outer#b 1
+    400034: 9ft6_Locking bar
+    400036: 9ft6_Locking bar 1
+    400038: 9ft6_Locking bar 2
+    400040: 9ft6_Locking bar 3
+    400042: 9ft6_Locking bar 4
+    400044: Container_header
+    400046: Container_roof40
+    400048: Container_sill
+    400050: Corner_lock
+    400052: Corner_lock 1
+    400054: Corner_lock 2
+    400056: Corner_lock 3
+    400058: Corner_lock 4
+    400060: Corner_lock 5
+    400062: Corner_lock 6
+    400064: Corner_lock 7
+    400066: Crossmember wide
+    400068: Crossmember wide 1
+    400070: Crossmember wide 2
+    400072: Crossmember#b
+    400074: Crossmember#b 1
+    400076: Crossmember#b 10
+    400078: Crossmember#b 11
+    400080: Crossmember#b 12
+    400082: Crossmember#b 13
+    400084: Crossmember#b 14
+    400086: Crossmember#b 15
+    400088: Crossmember#b 16
+    400090: Crossmember#b 17
+    400092: Crossmember#b 18
+    400094: Crossmember#b 19
+    400096: Crossmember#b 2
+    400098: Crossmember#b 20
+    400100: Crossmember#b 21
+    400102: Crossmember#b 22
+    400104: Crossmember#b 3
+    400106: Crossmember#b 4
+    400108: Crossmember#b 5
+    400110: Crossmember#b 6
+    400112: Crossmember#b 7
+    400114: Crossmember#b 8
+    400116: Crossmember#b 9
+    400118: Cylinder rim
+    400120: Cylinder rim 1
+    400122: Door seal_780x2115
+    400124: Door_handle
+    400126: Door_handle 1
+    400128: Door_handle 2
+    400130: Door_handle 3
+    400132: Door_handle 4
+    400134: Door_hinge1
+    400136: Door_hinge1 1
+    400138: Door_hinge1 10
+    400140: Door_hinge1 11
+    400142: Door_hinge1 2
+    400144: Door_hinge1 3
+    400146: Door_hinge1 4
+    400148: Door_hinge1 5
+    400150: Door_hinge1 6
+    400152: Door_hinge1 7
+    400154: Door_hinge1 8
+    400156: Door_hinge1 9
+    400158: "Doorknob_\xD866.d55"
+    400160: Doorlatch round 135x60
+    400162: Doorlock
+    400164: Doorlock.catch
+    400166: Floorstrip
+    400168: Floorstrip 1
+    400170: Forklift_tunnel
+    400172: Forklift_tunnel 1
+    400174: Front bottom piece
+    400176: Front bottom piece 1
+    400178: Gooseneck crossmember
+    400180: "Gooseneck plate & ribs\u20142"
+    400182: Gooseneck rail
+    400184: Gooseneck rail 1
+    400186: Group 1
+    400188: Group 25
+    400190: Group 26
+    400192: Group 3
+    400194: Group 32
+    400196: Group 33
+    400198: Group 39
+    400200: Group 41
+    400202: Group 43
+    400204: Group 45
+    400206: Group 5
+    400208: Group 54
+    400210: Handle_catch
+    400212: Handle_catch 1
+    400214: Handle_catch 2
+    400216: Handle_catch 3
+    400218: Handle_catch 4
+    400220: Hinge_90baas
+    400222: Hinge_90baas 1
+    400224: Hinge_90baas 2
+    400226: Hinge_90saab
+    400228: Hinge_90saab 1
+    400230: Hinge_90saab 2
+    400232: Housedoor_780x2115_1
+    400234: Lock.box
+    400236: Lock.catch
+    400238: Lock.catch 1
+    400240: Lock_cam
+    400242: Lock_cam 1
+    400244: Lock_cam 2
+    400246: Lock_cam 3
+    400248: Lock_cam 4
+    400250: Lock_cam 5
+    400252: Lock_cam 6
+    400254: Lock_cam 7
+    400256: Lock_cam 8
+    400258: Lock_cam 9
+    400260: Lock_camkeeper
+    400262: Lock_camkeeper 1
+    400264: Lock_camkeeper 2
+    400266: Lock_camkeeper 3
+    400268: Lock_camkeeper 4
+    400270: Lock_camkeeper 5
+    400272: Lock_camkeeper 6
+    400274: Lock_camkeeper 7
+    400276: Locking_bracket
+    400278: Locking_bracket 1
+    400280: Locking_bracket 2
+    400282: Locking_bracket 3
+    400284: Locking_bracket 4
+    400286: Locking_bracket 5
+    400288: Locking_bracket 6
+    400290: Locking_bracket 7
+    400292: Locking_bracket 8
+    400294: Locking_bracket 9
+    400296: Locking_guide
+    400298: Locking_guide 1
+    400300: Locking_guide 2
+    400302: Locking_guide 3
+    400304: Locking_guide 4
+    400306: Locking_guide 5
+    400308: Locking_guide 6
+    400310: Locking_guide 7
+    400312: Locking_guide 8
+    400314: Locking_guide 9
+    400316: //RootNode
+    400318: Outrigger1
+    400320: Outrigger1 1
+    400322: Outrigger1 10
+    400324: Outrigger1 11
+    400326: Outrigger1 12
+    400328: Outrigger1 13
+    400330: Outrigger1 14
+    400332: Outrigger1 15
+    400334: Outrigger1 16
+    400336: Outrigger1 17
+    400338: Outrigger1 2
+    400340: Outrigger1 3
+    400342: Outrigger1 4
+    400344: Outrigger1 5
+    400346: Outrigger1 6
+    400348: Outrigger1 7
+    400350: Outrigger1 8
+    400352: Outrigger1 9
+    400354: Roof gusset front
+    400356: Roof gusset front 1
+    400358: Roof gusset rear
+    400360: Roof gusset rear 1
+    400362: Side gusset
+    400364: Side gusset 1
+    400366: Side gusset 2
+    400368: Side gusset 3
+    400370: Warning tape
+    400372: Warning tape 1
+    400374: Warning tape 2
+    400376: Warning tape 3
+    400378: Warning tape 4
+    400380: Warning tape 5
+    400382: Warning tape 6
+    400384: Warning tape 7
+    2300000: 40ft top side tube
+    2300002: 40ft top side tube 1
+    2300004: 40ft_Side Rail
+    2300006: 40ft_Side Rail 1
+    2300008: 40x9.6ft_Side_wall
+    2300010: 9ft6 door.seal_3sides
+    2300012: 9ft6 door.seal_3sides 1
+    2300014: 9ft6 door.seal_3sides 2
+    2300016: 9ft6 door.seal_center
+    2300018: 9ft6_Container front#b
+    2300020: 9ft6_container.door
+    2300022: 9ft6_container.door 1
+    2300024: 9ft6_container.doorset
+    2300026: 9ft6_Corner_frame
+    2300028: 9ft6_Corner_frame 1
+    2300030: 9ft6_Cornerpost_outer#b
+    2300032: 9ft6_Cornerpost_outer#b 1
+    2300034: 9ft6_Locking bar
+    2300036: 9ft6_Locking bar 1
+    2300038: 9ft6_Locking bar 2
+    2300040: 9ft6_Locking bar 3
+    2300042: 9ft6_Locking bar 4
+    2300044: Container_header
+    2300046: Container_roof40
+    2300048: Container_sill
+    2300050: Corner_lock
+    2300052: Corner_lock 1
+    2300054: Corner_lock 2
+    2300056: Corner_lock 3
+    2300058: Corner_lock 4
+    2300060: Corner_lock 5
+    2300062: Corner_lock 6
+    2300064: Corner_lock 7
+    2300066: Crossmember wide
+    2300068: Crossmember wide 1
+    2300070: Crossmember wide 2
+    2300072: Crossmember#b
+    2300074: Crossmember#b 1
+    2300076: Crossmember#b 10
+    2300078: Crossmember#b 11
+    2300080: Crossmember#b 12
+    2300082: Crossmember#b 13
+    2300084: Crossmember#b 14
+    2300086: Crossmember#b 15
+    2300088: Crossmember#b 16
+    2300090: Crossmember#b 17
+    2300092: Crossmember#b 18
+    2300094: Crossmember#b 19
+    2300096: Crossmember#b 2
+    2300098: Crossmember#b 20
+    2300100: Crossmember#b 21
+    2300102: Crossmember#b 22
+    2300104: Crossmember#b 3
+    2300106: Crossmember#b 4
+    2300108: Crossmember#b 5
+    2300110: Crossmember#b 6
+    2300112: Crossmember#b 7
+    2300114: Crossmember#b 8
+    2300116: Crossmember#b 9
+    2300118: Cylinder rim
+    2300120: Cylinder rim 1
+    2300122: Door seal_780x2115
+    2300124: Door_handle
+    2300126: Door_handle 1
+    2300128: Door_handle 2
+    2300130: Door_handle 3
+    2300132: Door_handle 4
+    2300134: Door_hinge1
+    2300136: Door_hinge1 1
+    2300138: Door_hinge1 10
+    2300140: Door_hinge1 11
+    2300142: Door_hinge1 2
+    2300144: Door_hinge1 3
+    2300146: Door_hinge1 4
+    2300148: Door_hinge1 5
+    2300150: Door_hinge1 6
+    2300152: Door_hinge1 7
+    2300154: Door_hinge1 8
+    2300156: Door_hinge1 9
+    2300158: "Doorknob_\xD866.d55"
+    2300160: Doorlatch round 135x60
+    2300162: Doorlock
+    2300164: Doorlock.catch
+    2300166: Floorstrip
+    2300168: Floorstrip 1
+    2300170: Forklift_tunnel
+    2300172: Forklift_tunnel 1
+    2300174: Front bottom piece
+    2300176: Front bottom piece 1
+    2300178: Gooseneck crossmember
+    2300180: "Gooseneck plate & ribs\u20142"
+    2300182: Gooseneck rail
+    2300184: Gooseneck rail 1
+    2300186: Group 1
+    2300188: Group 26
+    2300190: Group 3
+    2300192: Group 33
+    2300194: Group 39
+    2300196: Group 41
+    2300198: Group 43
+    2300200: Group 5
+    2300202: Handle_catch
+    2300204: Handle_catch 1
+    2300206: Handle_catch 2
+    2300208: Handle_catch 3
+    2300210: Handle_catch 4
+    2300212: Hinge_90baas
+    2300214: Hinge_90baas 1
+    2300216: Hinge_90baas 2
+    2300218: Hinge_90saab
+    2300220: Hinge_90saab 1
+    2300222: Hinge_90saab 2
+    2300224: Housedoor_780x2115_1
+    2300226: Lock.box
+    2300228: Lock.catch
+    2300230: Lock.catch 1
+    2300232: Lock_cam
+    2300234: Lock_cam 1
+    2300236: Lock_cam 2
+    2300238: Lock_cam 3
+    2300240: Lock_cam 4
+    2300242: Lock_cam 5
+    2300244: Lock_cam 6
+    2300246: Lock_cam 7
+    2300248: Lock_cam 8
+    2300250: Lock_cam 9
+    2300252: Lock_camkeeper
+    2300254: Lock_camkeeper 1
+    2300256: Lock_camkeeper 2
+    2300258: Lock_camkeeper 3
+    2300260: Lock_camkeeper 4
+    2300262: Lock_camkeeper 5
+    2300264: Lock_camkeeper 6
+    2300266: Lock_camkeeper 7
+    2300268: Locking_bracket
+    2300270: Locking_bracket 1
+    2300272: Locking_bracket 2
+    2300274: Locking_bracket 3
+    2300276: Locking_bracket 4
+    2300278: Locking_bracket 5
+    2300280: Locking_bracket 6
+    2300282: Locking_bracket 7
+    2300284: Locking_bracket 8
+    2300286: Locking_bracket 9
+    2300288: Locking_guide
+    2300290: Locking_guide 1
+    2300292: Locking_guide 2
+    2300294: Locking_guide 3
+    2300296: Locking_guide 4
+    2300298: Locking_guide 5
+    2300300: Locking_guide 6
+    2300302: Locking_guide 7
+    2300304: Locking_guide 8
+    2300306: Locking_guide 9
+    2300308: Outrigger1
+    2300310: Outrigger1 1
+    2300312: Outrigger1 10
+    2300314: Outrigger1 11
+    2300316: Outrigger1 12
+    2300318: Outrigger1 13
+    2300320: Outrigger1 14
+    2300322: Outrigger1 15
+    2300324: Outrigger1 16
+    2300326: Outrigger1 17
+    2300328: Outrigger1 2
+    2300330: Outrigger1 3
+    2300332: Outrigger1 4
+    2300334: Outrigger1 5
+    2300336: Outrigger1 6
+    2300338: Outrigger1 7
+    2300340: Outrigger1 8
+    2300342: Outrigger1 9
+    2300344: Roof gusset front
+    2300346: Roof gusset front 1
+    2300348: Roof gusset rear
+    2300350: Roof gusset rear 1
+    2300352: Side gusset
+    2300354: Side gusset 1
+    2300356: Side gusset 2
+    2300358: Side gusset 3
+    2300360: Warning tape
+    2300362: Warning tape 1
+    2300364: Warning tape 2
+    2300366: Warning tape 3
+    2300368: Warning tape 4
+    2300370: Warning tape 5
+    2300372: Warning tape 6
+    2300374: Warning tape 7
+    3300000: 40ft top side tube
+    3300002: 40ft top side tube 1
+    3300004: 40ft_Side Rail
+    3300006: 40ft_Side Rail 1
+    3300008: 40x9.6ft_Side_wall
+    3300010: 9ft6 door.seal_3sides
+    3300012: 9ft6 door.seal_3sides 1
+    3300014: 9ft6 door.seal_3sides 2
+    3300016: 9ft6 door.seal_center
+    3300018: 9ft6_Container front#b
+    3300020: 9ft6_container.door
+    3300022: 9ft6_container.door 1
+    3300024: 9ft6_container.doorset
+    3300026: 9ft6_Corner_frame
+    3300028: 9ft6_Corner_frame 1
+    3300030: 9ft6_Cornerpost_outer#b
+    3300032: 9ft6_Cornerpost_outer#b 1
+    3300034: 9ft6_Locking bar
+    3300036: 9ft6_Locking bar 1
+    3300038: 9ft6_Locking bar 2
+    3300040: 9ft6_Locking bar 3
+    3300042: 9ft6_Locking bar 4
+    3300044: Container_header
+    3300046: Container_roof40
+    3300048: Container_sill
+    3300050: Corner_lock
+    3300052: Corner_lock 1
+    3300054: Corner_lock 2
+    3300056: Corner_lock 3
+    3300058: Corner_lock 4
+    3300060: Corner_lock 5
+    3300062: Corner_lock 6
+    3300064: Corner_lock 7
+    3300066: Crossmember wide
+    3300068: Crossmember wide 1
+    3300070: Crossmember wide 2
+    3300072: Crossmember#b
+    3300074: Crossmember#b 1
+    3300076: Crossmember#b 10
+    3300078: Crossmember#b 11
+    3300080: Crossmember#b 12
+    3300082: Crossmember#b 13
+    3300084: Crossmember#b 14
+    3300086: Crossmember#b 15
+    3300088: Crossmember#b 16
+    3300090: Crossmember#b 17
+    3300092: Crossmember#b 18
+    3300094: Crossmember#b 19
+    3300096: Crossmember#b 2
+    3300098: Crossmember#b 20
+    3300100: Crossmember#b 21
+    3300102: Crossmember#b 22
+    3300104: Crossmember#b 3
+    3300106: Crossmember#b 4
+    3300108: Crossmember#b 5
+    3300110: Crossmember#b 6
+    3300112: Crossmember#b 7
+    3300114: Crossmember#b 8
+    3300116: Crossmember#b 9
+    3300118: Cylinder rim
+    3300120: Cylinder rim 1
+    3300122: Door seal_780x2115
+    3300124: Door_handle
+    3300126: Door_handle 1
+    3300128: Door_handle 2
+    3300130: Door_handle 3
+    3300132: Door_handle 4
+    3300134: Door_hinge1
+    3300136: Door_hinge1 1
+    3300138: Door_hinge1 10
+    3300140: Door_hinge1 11
+    3300142: Door_hinge1 2
+    3300144: Door_hinge1 3
+    3300146: Door_hinge1 4
+    3300148: Door_hinge1 5
+    3300150: Door_hinge1 6
+    3300152: Door_hinge1 7
+    3300154: Door_hinge1 8
+    3300156: Door_hinge1 9
+    3300158: "Doorknob_\xD866.d55"
+    3300160: Doorlatch round 135x60
+    3300162: Doorlock
+    3300164: Doorlock.catch
+    3300166: Floorstrip
+    3300168: Floorstrip 1
+    3300170: Forklift_tunnel
+    3300172: Forklift_tunnel 1
+    3300174: Front bottom piece
+    3300176: Front bottom piece 1
+    3300178: Gooseneck crossmember
+    3300180: "Gooseneck plate & ribs\u20142"
+    3300182: Gooseneck rail
+    3300184: Gooseneck rail 1
+    3300186: Group 1
+    3300188: Group 26
+    3300190: Group 3
+    3300192: Group 33
+    3300194: Group 39
+    3300196: Group 41
+    3300198: Group 43
+    3300200: Group 5
+    3300202: Handle_catch
+    3300204: Handle_catch 1
+    3300206: Handle_catch 2
+    3300208: Handle_catch 3
+    3300210: Handle_catch 4
+    3300212: Hinge_90baas
+    3300214: Hinge_90baas 1
+    3300216: Hinge_90baas 2
+    3300218: Hinge_90saab
+    3300220: Hinge_90saab 1
+    3300222: Hinge_90saab 2
+    3300224: Housedoor_780x2115_1
+    3300226: Lock.box
+    3300228: Lock.catch
+    3300230: Lock.catch 1
+    3300232: Lock_cam
+    3300234: Lock_cam 1
+    3300236: Lock_cam 2
+    3300238: Lock_cam 3
+    3300240: Lock_cam 4
+    3300242: Lock_cam 5
+    3300244: Lock_cam 6
+    3300246: Lock_cam 7
+    3300248: Lock_cam 8
+    3300250: Lock_cam 9
+    3300252: Lock_camkeeper
+    3300254: Lock_camkeeper 1
+    3300256: Lock_camkeeper 2
+    3300258: Lock_camkeeper 3
+    3300260: Lock_camkeeper 4
+    3300262: Lock_camkeeper 5
+    3300264: Lock_camkeeper 6
+    3300266: Lock_camkeeper 7
+    3300268: Locking_bracket
+    3300270: Locking_bracket 1
+    3300272: Locking_bracket 2
+    3300274: Locking_bracket 3
+    3300276: Locking_bracket 4
+    3300278: Locking_bracket 5
+    3300280: Locking_bracket 6
+    3300282: Locking_bracket 7
+    3300284: Locking_bracket 8
+    3300286: Locking_bracket 9
+    3300288: Locking_guide
+    3300290: Locking_guide 1
+    3300292: Locking_guide 2
+    3300294: Locking_guide 3
+    3300296: Locking_guide 4
+    3300298: Locking_guide 5
+    3300300: Locking_guide 6
+    3300302: Locking_guide 7
+    3300304: Locking_guide 8
+    3300306: Locking_guide 9
+    3300308: Outrigger1
+    3300310: Outrigger1 1
+    3300312: Outrigger1 10
+    3300314: Outrigger1 11
+    3300316: Outrigger1 12
+    3300318: Outrigger1 13
+    3300320: Outrigger1 14
+    3300322: Outrigger1 15
+    3300324: Outrigger1 16
+    3300326: Outrigger1 17
+    3300328: Outrigger1 2
+    3300330: Outrigger1 3
+    3300332: Outrigger1 4
+    3300334: Outrigger1 5
+    3300336: Outrigger1 6
+    3300338: Outrigger1 7
+    3300340: Outrigger1 8
+    3300342: Outrigger1 9
+    3300344: Roof gusset front
+    3300346: Roof gusset front 1
+    3300348: Roof gusset rear
+    3300350: Roof gusset rear 1
+    3300352: Side gusset
+    3300354: Side gusset 1
+    3300356: Side gusset 2
+    3300358: Side gusset 3
+    3300360: Warning tape
+    3300362: Warning tape 1
+    3300364: Warning tape 2
+    3300366: Warning tape 3
+    3300368: Warning tape 4
+    3300370: Warning tape 5
+    3300372: Warning tape 6
+    3300374: Warning tape 7
+    4300000: Mesh Group 1
+    4300002: Mesh Group 3
+    4300004: Mesh Group 5
+    4300006: Mesh Group 26
+    4300008: Mesh Handle_catch
+    4300010: Mesh Door_handle
+    4300012: Mesh Corner_lock
+    4300014: Mesh 40ft top side tube
+    4300016: Mesh Outrigger1
+    4300018: "Mesh Gooseneck plate & ribs\u20142"
+    4300020: Mesh Floorstrip
+    4300022: Mesh Crossmember#b
+    4300024: Mesh Crossmember wide
+    4300026: Mesh Forklift_tunnel
+    4300028: Mesh 40ft_Side Rail
+    4300030: Mesh Front bottom piece
+    4300032: Mesh 9ft6_Cornerpost_outer#b
+    4300034: Mesh 9ft6_Container front#b
+    4300036: Mesh Container_roof40
+    4300038: Mesh Gooseneck crossmember
+    4300040: Mesh Gooseneck rail
+    4300042: Mesh 40x9.6ft_Side_wall
+    4300044: Mesh Roof gusset rear
+    4300046: Mesh Side gusset
+    4300048: Mesh Container_header
+    4300050: Mesh Lock_camkeeper
+    4300052: Mesh Roof gusset front
+    4300054: Mesh Warning tape
+    4300056: Mesh Container_sill
+    4300058: Mesh 9ft6_Corner_frame
+    4300060: Mesh Lock.catch
+    4300062: Mesh 9ft6_Locking bar
+    4300064: Mesh Lock_cam
+    4300066: Mesh 9ft6_container.door
+    4300068: Mesh Door_hinge1
+    4300070: Mesh Locking_bracket
+    4300072: Mesh Locking_guide
+    4300074: Mesh 9ft6 door.seal_3sides
+    4300076: Mesh Lock.box
+    4300078: Mesh 9ft6 door.seal_center
+    4300080: Mesh 9ft6_container.doorset
+    4300082: Mesh Housedoor_780x2115_1
+    4300084: Mesh Hinge_90saab
+    4300086: Mesh Door seal_780x2115
+    4300088: "Mesh Doorknob_\xD866.d55"
+    4300090: Mesh Cylinder rim
+    4300092: Mesh Doorlatch round 135x60
+    4300094: Mesh Doorlock
+    4300096: Mesh Hinge_90baas
+    4300098: Mesh Doorlock.catch
+    4300100: Mesh Warning tape
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.0254
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
