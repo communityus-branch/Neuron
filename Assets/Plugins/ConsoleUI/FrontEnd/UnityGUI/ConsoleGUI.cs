@@ -4,12 +4,11 @@
  **/
 
 using FPSControl;
-using FPSControl.States.Player;
 using UnityEngine;
 
 namespace Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI
 {
-    class ConsoleGUI : MonoBehaviour
+    public class ConsoleGUI : MonoBehaviour
     {
         public KeyCode openKey = KeyCode.P;
         public GameObject Character;
@@ -281,8 +280,11 @@ namespace Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI
                 Event.current.type = EventType.used;
                 wasCursorVisible = Cursor.visible;
                 previousLockmode = Cursor.lockState;
-                wasControllerEnabled = Character.GetComponent<FPSControlPlayer>().enabled;
-                Character.GetComponent<FPSControlPlayer>().enabled = false;
+                if (Character != null)
+                {
+                    wasControllerEnabled = Character.GetComponent<FPSControlPlayer>().enabled;
+                    Character.GetComponent<FPSControlPlayer>().enabled = false;
+                }
             }
 
             if (isOpen)
@@ -296,7 +298,10 @@ namespace Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI
                 isOpen = false;
                 Cursor.visible = wasCursorVisible;
                 Cursor.lockState = previousLockmode;
-                Character.GetComponent<FPSControlPlayer>().enabled = wasControllerEnabled;
+                if (Character != null)
+                {
+                    Character.GetComponent<FPSControlPlayer>().enabled = wasControllerEnabled;
+                }
             }
 
             // refocus the textfield if focus is lost

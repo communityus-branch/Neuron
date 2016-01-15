@@ -3,6 +3,7 @@ using Static_Interface.API.Netvar;
 using Static_Interface.Commands;
 using Static_Interface.Netvars;
 using Static_Interface.Scripts.Netvars;
+using Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI;
 using UnityEngine;
 
 namespace Static_Interface
@@ -20,6 +21,7 @@ namespace Static_Interface
 	        NetvarManager.GetInstance().RegisterNetvar(new GravityNetvar());
             NetvarManager.GetInstance().RegisterNetvar(new GameSpeedNetvar());
             new ConsoleCommands().RegisterCommands();
+            GameObject.Find("Console").GetComponent<ConsoleGUI>().Character = GameObject.Find("MainPlayer");
         }
     }
 }

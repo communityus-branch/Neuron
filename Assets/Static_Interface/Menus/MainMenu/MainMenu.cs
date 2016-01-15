@@ -20,6 +20,7 @@ namespace Static_Interface.Menus.MainMenu
         {
             DontDestroyOnLoad(GameObject.Find("PersistentScripts"));
             DontDestroyOnLoad(GameObject.Find("Server"));
+            DontDestroyOnLoad(GameObject.Find("Console"));
             LevelManager.Instance.LoadLevel("DefaultMap");
         }
 
@@ -28,6 +29,10 @@ namespace Static_Interface.Menus.MainMenu
             StartCoroutine(HostCoroutine());
         }
 
+        public void Quit()
+        {
+            Application.Quit();
+        }
 
         private IEnumerator HostCoroutine()
         {
