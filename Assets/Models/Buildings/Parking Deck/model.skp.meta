@@ -1,0 +1,1375 @@
+fileFormatVersion: 2
+guid: 4c9326ad61b069644bec20ff40871c05
+timeCreated: 1453060226
+licenseType: Free
+SketchUpImporter:
+  generateBackFace: 0
+  mergeCoplanarFaces: 0
+  selectedNodes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000230000002400000025000000260000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f000000300000003100000032000000330000003400000035000000360000003700000038000000390000003a0000003b0000003c0000003d0000003e0000003f000000400000004100000042000000430000004400000045000000460000004700000048000000490000004a0000004b0000004c0000004d0000004e0000004f000000500000005100000052000000530000005400000055000000560000005700000058000000
+  assetHash:
+    serializedVersion: 2
+    Hash: 629b3df631becbde947ca10296b47d35
+  longitude: -105.283
+  latitude: 40.017
+  northCorrection: -0
+  fileUnit: 0
+  sketchUpImportData:
+    defaultCamera:
+      position: {x: 10.545035, y: 8.537234, z: 51.47855}
+      lookAt: {x: 18.422745, y: -3.3027987, z: 9.841914}
+      up: {x: 0.050026897, y: 0.96311176, z: -0.2644108}
+      fov: 35
+      aspectRatio: 0
+      orthoSize: 1
+      isPerspective: 1
+    scenes: []
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: '*1'
+    100002: '*1 1'
+    100004: 2
+    100006: 2 1
+    100008: 3
+    100010: 3 1
+    100012: 4
+    100014: 4 1
+    100016: 5
+    100018: 5 1
+    100020: << DOWN << << PA
+    100022: << DOWN << << PA#1
+    100024: '<< DOWN << PARK '
+    100026: << ELEVATOR << >
+    100028: << ELEVATOR << >#1
+    100030: << ELEVATOR << >#2
+    100032: << ELEVATOR << >#3
+    100034: <<< ELEVATOR <<<
+    100036: <<< ELEVATOR <<< 1
+    100038: <<< ELEVATOR <<< 10
+    100040: <<< ELEVATOR <<< 11
+    100042: <<< ELEVATOR <<< 12
+    100044: <<< ELEVATOR <<< 13
+    100046: <<< ELEVATOR <<< 14
+    100048: <<< ELEVATOR <<< 15
+    100050: <<< ELEVATOR <<< 16
+    100052: <<< ELEVATOR <<< 17
+    100054: <<< ELEVATOR <<< 18
+    100056: <<< ELEVATOR <<< 19
+    100058: <<< ELEVATOR <<< 2
+    100060: <<< ELEVATOR <<< 20
+    100062: <<< ELEVATOR <<< 21
+    100064: <<< ELEVATOR <<< 22
+    100066: <<< ELEVATOR <<< 23
+    100068: <<< ELEVATOR <<< 24
+    100070: <<< ELEVATOR <<< 3
+    100072: <<< ELEVATOR <<< 4
+    100074: <<< ELEVATOR <<< 5
+    100076: <<< ELEVATOR <<< 6
+    100078: <<< ELEVATOR <<< 7
+    100080: <<< ELEVATOR <<< 8
+    100082: <<< ELEVATOR <<< 9
+    100084: <<< EXIT <<<
+    100086: <<< EXIT <<< 1
+    100088: <<< EXIT <<< 2
+    100090: <<< EXIT <<<#1
+    100092: <<< EXIT <<<#1 1
+    100094: <<< EXIT <<<#1 2
+    100096: <<< EXIT <<<#1 3
+    100098: <<< EXIT <<<#2
+    100100: <<< EXIT <<<#3
+    100102: <<< EXIT <<<#4
+    100104: <<< EXIT <<<#5
+    100106: <<< EXIT <<<#5 1
+    100108: <<< EXIT <<<#5 2
+    100110: '>> EXIT >> << PA'
+    100112: '>>> ELEVATOR >>>'
+    100114: '>>> ELEVATOR >>> 1'
+    100116: '>>> ELEVATOR >>> 10'
+    100118: '>>> ELEVATOR >>> 11'
+    100120: '>>> ELEVATOR >>> 12'
+    100122: '>>> ELEVATOR >>> 13'
+    100124: '>>> ELEVATOR >>> 14'
+    100126: '>>> ELEVATOR >>> 15'
+    100128: '>>> ELEVATOR >>> 16'
+    100130: '>>> ELEVATOR >>> 17'
+    100132: '>>> ELEVATOR >>> 18'
+    100134: '>>> ELEVATOR >>> 19'
+    100136: '>>> ELEVATOR >>> 2'
+    100138: '>>> ELEVATOR >>> 20'
+    100140: '>>> ELEVATOR >>> 21'
+    100142: '>>> ELEVATOR >>> 22'
+    100144: '>>> ELEVATOR >>> 23'
+    100146: '>>> ELEVATOR >>> 24'
+    100148: '>>> ELEVATOR >>> 25'
+    100150: '>>> ELEVATOR >>> 3'
+    100152: '>>> ELEVATOR >>> 4'
+    100154: '>>> ELEVATOR >>> 5'
+    100156: '>>> ELEVATOR >>> 6'
+    100158: '>>> ELEVATOR >>> 7'
+    100160: '>>> ELEVATOR >>> 8'
+    100162: '>>> ELEVATOR >>> 9'
+    100164: '>>> EXIT >>>'
+    100166: '>>> EXIT >>> 1'
+    100168: '>>> EXIT >>> 2'
+    100170: '>>> EXIT >>> 3'
+    100172: '>>> EXIT >>> 4'
+    100174: '>>> EXIT >>> 5'
+    100176: '>>> EXIT >>> 6'
+    100178: '>>> EXIT >>>#1'
+    100180: '>>> EXIT >>>#1 1'
+    100182: '>>> EXIT >>>#1 2'
+    100184: ^^ EXIT ^^ ^^ UP
+    100186: ^^ PARK ^^
+    100188: ^^ PARK ^^ << DO#1
+    100190: ^^ PARK ^^ << DO#2
+    100192: ^^ PARK ^^ << DO#3
+    100194: ^^ PARK ^^ << UP
+    100196: ^^ PARK ^^ << UP 1
+    100198: ^^ PARK ^^ << UP#1
+    100200: ^^ PARK ^^ << UP#2
+    100202: ^^ PARK ^^ >> DO
+    100204: ^^ PARK ^^ >> DO#1
+    100206: ^^ PARK ^^ >> DO#2
+    100208: ^^ PARK ^^ >> DO#3
+    100210: ^^ PARK ^^ >> UP
+    100212: ^^ PARK ^^ >> UP 1
+    100214: ^^ PARK ^^ >> UP#1
+    100216: ^^ PARK ^^ >> UP#2
+    100218: ^^ PARK ^^ ^^ EL
+    100220: ^^ PARK ^^ ^^ EL#1
+    100222: ^^ PARK ^^ ^^ EL#2
+    100224: ^^ PARK ^^ ^^ EL#3
+    100226: ^^ PARK ^^ ^^ EL#4
+    100228: ^^ PARK ^^ ^^ EL#5
+    100230: ^^ PARK ^^ ^^ EX
+    100232: ^^ PARK ^^ ^^ EX#1
+    100234: ^^ PARK ^^ ^^ EX#2
+    100236: ^^ PARK ^^ ^^ EX#3
+    100238: ^^ PARK ^^ ^^ EX#4
+    100240: ^^ PARK ^^ ^^ EX#5
+    100242: ^^ PARK ^^ ^^ EX#6
+    100244: ^^ PARK ^^#1
+    100246: '^^ PARK/EXIT ^^ '
+    100248: ^^ UP ONLY ^^ <<
+    100250: by mmo vies
+    100252: DECK LEVEL
+    100254: DECK LEVEL 1
+    100256: DECK LEVEL 2
+    100258: DECK LEVEL 3
+    100260: DO NOT ENTER
+    100262: DO NOT ENTER#1
+    100264: DO NOT ENTER#2
+    100266: DO NOT ENTER#3
+    100268: DO NOT ENTER#5
+    100270: DO NOT ENTER#6
+    100272: DO NOT ENTER#7
+    100274: DOWN ONLY
+    100276: DOWN ONLY#1
+    100278: DOWN ONLY#2
+    100280: ELEVATORS
+    100282: 'ELEVATORS LEVEL '
+    100284: ELEVATORS#1
+    100286: ELEVATORS#2
+    100288: ELEVATORS#3
+    100290: EXIT >>>
+    100292: Image 2
+    100294: LEVEL 1
+    100296: LEVEL 1#1
+    100298: LEVEL 1#2
+    100300: LEVEL 1#3
+    100302: LEVEL 1#4
+    100304: LEVEL 1#4 1
+    100306: LEVEL 1#4 10
+    100308: LEVEL 1#4 11
+    100310: LEVEL 1#4 12
+    100312: LEVEL 1#4 2
+    100314: LEVEL 1#4 3
+    100316: LEVEL 1#4 4
+    100318: LEVEL 1#4 5
+    100320: LEVEL 1#4 6
+    100322: LEVEL 1#4 7
+    100324: LEVEL 1#4 8
+    100326: LEVEL 1#4 9
+    100328: LEVEL 1#5
+    100330: LEVEL 1#6
+    100332: LEVEL 2
+    100334: LEVEL 2#1
+    100336: LEVEL 2#2
+    100338: LEVEL 2#3
+    100340: LEVEL 2#4
+    100342: LEVEL 2#5
+    100344: LEVEL 2#6
+    100346: LEVEL 2#6 1
+    100348: LEVEL 2#6 10
+    100350: LEVEL 2#6 11
+    100352: LEVEL 2#6 12
+    100354: LEVEL 2#6 13
+    100356: LEVEL 2#6 14
+    100358: LEVEL 2#6 2
+    100360: LEVEL 2#6 3
+    100362: LEVEL 2#6 4
+    100364: LEVEL 2#6 5
+    100366: LEVEL 2#6 6
+    100368: LEVEL 2#6 7
+    100370: LEVEL 2#6 8
+    100372: LEVEL 2#6 9
+    100374: LEVEL 3
+    100376: LEVEL 3 1
+    100378: LEVEL 3 2
+    100380: LEVEL 3 3
+    100382: LEVEL 3 4
+    100384: LEVEL 3 5
+    100386: LEVEL 3 6
+    100388: LEVEL 3 7
+    100390: LEVEL 3 8
+    100392: LEVEL 3 9
+    100394: LEVEL 3#1
+    100396: LEVEL 3#2
+    100398: LEVEL 3#3
+    100400: LEVEL 3#4
+    100402: LEVEL 3#5
+    100404: LEVEL 3#6
+    100406: LEVEL 3#6 1
+    100408: LEVEL 3#6 2
+    100410: LEVEL 3#6 3
+    100412: LEVEL 3#6 4
+    100414: LEVEL 3#6 5
+    100416: LEVEL 4
+    100418: LEVEL 4 1
+    100420: LEVEL 4#1
+    100422: LEVEL 4#2
+    100424: LEVEL 4#3
+    100426: LEVEL 4#4
+    100428: LEVEL 4#5
+    100430: LEVEL 4#5 1
+    100432: LEVEL 4#5 10
+    100434: LEVEL 4#5 11
+    100436: LEVEL 4#5 12
+    100438: LEVEL 4#5 13
+    100440: LEVEL 4#5 2
+    100442: LEVEL 4#5 3
+    100444: LEVEL 4#5 4
+    100446: LEVEL 4#5 5
+    100448: LEVEL 4#5 6
+    100450: LEVEL 4#5 7
+    100452: LEVEL 4#5 8
+    100454: LEVEL 4#5 9
+    100456: LEVEL 5
+    100458: LEVEL 5#1
+    100460: //RootNode
+    100462: PARKING DECK
+    100464: Parking Deck Top Level
+    100466: PAY UP FRONT $15
+    100468: PAY UP FRONT CAS
+    100470: SKIDATA
+    100472: UP >> << PARK >>
+    100474: UP >> << PARK >>#1
+    100476: UP >> << PARK >>#2
+    100478: UP ONLY
+    100480: UP ONLY#1
+    100482: UP ONLY#2
+    100484: 3_10_Double_Door
+    100486: 3_10_Double_Door 1
+    100488: Aurora_TerminalHallLanternWithRoundLens
+    100490: Aurora_TerminalHallLanternWithRoundLens 1
+    100492: Aurora_TerminalHallLanternWithRoundLens#1
+    100494: Aurora_TerminalHallLanternWithRoundLens#1 1
+    100496: Aurora_TerminalHallStation
+    100498: Aurora_TerminalHallStation 1
+    100500: Aurora_TerminalHallStation#1
+    100502: Aurora_TerminalHallStation#1 1
+    100504: Component#2
+    100506: Component#2 1
+    100508: Component#2 2
+    100510: Component#2 3
+    100512: Disabled logo
+    100514: Disabled logo 1
+    100516: Disabled logo 2
+    100518: Disabled parking sign
+    100520: Disabled parking sign 1
+    100522: Disabled parking sign 2
+    100524: Disabled parking sign 3
+    100526: Disabled parking sign 4
+    100528: Disabled parking sign 5
+    100530: Disabled parking sign 6
+    100532: Door3
+    100534: Door3 1
+    100536: Image 31
+    100538: Image 35
+    100540: Image 39
+    100542: Image 53
+    100544: Image 57
+    100546: Image 61
+    100548: Image 65
+    100550: NO PARKING
+    100552: NO PARKING#2
+    100554: One way left sign
+    100556: Post
+    100558: Post 1
+    100560: Post 2
+    100562: Post 3
+    100564: Post 4
+    100566: Sang
+    100568: sign-no parking
+    100570: SignPostFull
+    100572: SignPostFull 1
+    100574: SignPostFull 2
+    100576: SignPostFull 3
+    100578: SignPostFull 4
+    100580: SignPostFull 5
+    100582: SignPostFull 6
+    100584: Stop sign
+    100586: Wrong way sign
+    100588: Wrong way sign 1
+    100590: Wrong way sign 2
+    400000: '*1'
+    400002: '*1 1'
+    400004: 2
+    400006: 2 1
+    400008: 3
+    400010: 3 1
+    400012: 4
+    400014: 4 1
+    400016: 5
+    400018: 5 1
+    400020: << DOWN << << PA
+    400022: << DOWN << << PA#1
+    400024: '<< DOWN << PARK '
+    400026: << ELEVATOR << >
+    400028: << ELEVATOR << >#1
+    400030: << ELEVATOR << >#2
+    400032: << ELEVATOR << >#3
+    400034: <<< ELEVATOR <<<
+    400036: <<< ELEVATOR <<< 1
+    400038: <<< ELEVATOR <<< 10
+    400040: <<< ELEVATOR <<< 11
+    400042: <<< ELEVATOR <<< 12
+    400044: <<< ELEVATOR <<< 13
+    400046: <<< ELEVATOR <<< 14
+    400048: <<< ELEVATOR <<< 15
+    400050: <<< ELEVATOR <<< 16
+    400052: <<< ELEVATOR <<< 17
+    400054: <<< ELEVATOR <<< 18
+    400056: <<< ELEVATOR <<< 19
+    400058: <<< ELEVATOR <<< 2
+    400060: <<< ELEVATOR <<< 20
+    400062: <<< ELEVATOR <<< 21
+    400064: <<< ELEVATOR <<< 22
+    400066: <<< ELEVATOR <<< 23
+    400068: <<< ELEVATOR <<< 24
+    400070: <<< ELEVATOR <<< 3
+    400072: <<< ELEVATOR <<< 4
+    400074: <<< ELEVATOR <<< 5
+    400076: <<< ELEVATOR <<< 6
+    400078: <<< ELEVATOR <<< 7
+    400080: <<< ELEVATOR <<< 8
+    400082: <<< ELEVATOR <<< 9
+    400084: <<< EXIT <<<
+    400086: <<< EXIT <<< 1
+    400088: <<< EXIT <<< 2
+    400090: <<< EXIT <<<#1
+    400092: <<< EXIT <<<#1 1
+    400094: <<< EXIT <<<#1 2
+    400096: <<< EXIT <<<#1 3
+    400098: <<< EXIT <<<#2
+    400100: <<< EXIT <<<#3
+    400102: <<< EXIT <<<#4
+    400104: <<< EXIT <<<#5
+    400106: <<< EXIT <<<#5 1
+    400108: <<< EXIT <<<#5 2
+    400110: '>> EXIT >> << PA'
+    400112: '>>> ELEVATOR >>>'
+    400114: '>>> ELEVATOR >>> 1'
+    400116: '>>> ELEVATOR >>> 10'
+    400118: '>>> ELEVATOR >>> 11'
+    400120: '>>> ELEVATOR >>> 12'
+    400122: '>>> ELEVATOR >>> 13'
+    400124: '>>> ELEVATOR >>> 14'
+    400126: '>>> ELEVATOR >>> 15'
+    400128: '>>> ELEVATOR >>> 16'
+    400130: '>>> ELEVATOR >>> 17'
+    400132: '>>> ELEVATOR >>> 18'
+    400134: '>>> ELEVATOR >>> 19'
+    400136: '>>> ELEVATOR >>> 2'
+    400138: '>>> ELEVATOR >>> 20'
+    400140: '>>> ELEVATOR >>> 21'
+    400142: '>>> ELEVATOR >>> 22'
+    400144: '>>> ELEVATOR >>> 23'
+    400146: '>>> ELEVATOR >>> 24'
+    400148: '>>> ELEVATOR >>> 25'
+    400150: '>>> ELEVATOR >>> 3'
+    400152: '>>> ELEVATOR >>> 4'
+    400154: '>>> ELEVATOR >>> 5'
+    400156: '>>> ELEVATOR >>> 6'
+    400158: '>>> ELEVATOR >>> 7'
+    400160: '>>> ELEVATOR >>> 8'
+    400162: '>>> ELEVATOR >>> 9'
+    400164: '>>> EXIT >>>'
+    400166: '>>> EXIT >>> 1'
+    400168: '>>> EXIT >>> 2'
+    400170: '>>> EXIT >>> 3'
+    400172: '>>> EXIT >>> 4'
+    400174: '>>> EXIT >>> 5'
+    400176: '>>> EXIT >>> 6'
+    400178: '>>> EXIT >>>#1'
+    400180: '>>> EXIT >>>#1 1'
+    400182: '>>> EXIT >>>#1 2'
+    400184: ^^ EXIT ^^ ^^ UP
+    400186: ^^ PARK ^^
+    400188: ^^ PARK ^^ << DO#1
+    400190: ^^ PARK ^^ << DO#2
+    400192: ^^ PARK ^^ << DO#3
+    400194: ^^ PARK ^^ << UP
+    400196: ^^ PARK ^^ << UP 1
+    400198: ^^ PARK ^^ << UP#1
+    400200: ^^ PARK ^^ << UP#2
+    400202: ^^ PARK ^^ >> DO
+    400204: ^^ PARK ^^ >> DO#1
+    400206: ^^ PARK ^^ >> DO#2
+    400208: ^^ PARK ^^ >> DO#3
+    400210: ^^ PARK ^^ >> UP
+    400212: ^^ PARK ^^ >> UP 1
+    400214: ^^ PARK ^^ >> UP#1
+    400216: ^^ PARK ^^ >> UP#2
+    400218: ^^ PARK ^^ ^^ EL
+    400220: ^^ PARK ^^ ^^ EL#1
+    400222: ^^ PARK ^^ ^^ EL#2
+    400224: ^^ PARK ^^ ^^ EL#3
+    400226: ^^ PARK ^^ ^^ EL#4
+    400228: ^^ PARK ^^ ^^ EL#5
+    400230: ^^ PARK ^^ ^^ EX
+    400232: ^^ PARK ^^ ^^ EX#1
+    400234: ^^ PARK ^^ ^^ EX#2
+    400236: ^^ PARK ^^ ^^ EX#3
+    400238: ^^ PARK ^^ ^^ EX#4
+    400240: ^^ PARK ^^ ^^ EX#5
+    400242: ^^ PARK ^^ ^^ EX#6
+    400244: ^^ PARK ^^#1
+    400246: '^^ PARK/EXIT ^^ '
+    400248: ^^ UP ONLY ^^ <<
+    400250: by mmo vies
+    400252: DECK LEVEL
+    400254: DECK LEVEL 1
+    400256: DECK LEVEL 2
+    400258: DECK LEVEL 3
+    400260: DO NOT ENTER
+    400262: DO NOT ENTER#1
+    400264: DO NOT ENTER#2
+    400266: DO NOT ENTER#3
+    400268: DO NOT ENTER#5
+    400270: DO NOT ENTER#6
+    400272: DO NOT ENTER#7
+    400274: DOWN ONLY
+    400276: DOWN ONLY#1
+    400278: DOWN ONLY#2
+    400280: ELEVATORS
+    400282: 'ELEVATORS LEVEL '
+    400284: ELEVATORS#1
+    400286: ELEVATORS#2
+    400288: ELEVATORS#3
+    400290: EXIT >>>
+    400292: Image 2
+    400294: LEVEL 1
+    400296: LEVEL 1#1
+    400298: LEVEL 1#2
+    400300: LEVEL 1#3
+    400302: LEVEL 1#4
+    400304: LEVEL 1#4 1
+    400306: LEVEL 1#4 10
+    400308: LEVEL 1#4 11
+    400310: LEVEL 1#4 12
+    400312: LEVEL 1#4 2
+    400314: LEVEL 1#4 3
+    400316: LEVEL 1#4 4
+    400318: LEVEL 1#4 5
+    400320: LEVEL 1#4 6
+    400322: LEVEL 1#4 7
+    400324: LEVEL 1#4 8
+    400326: LEVEL 1#4 9
+    400328: LEVEL 1#5
+    400330: LEVEL 1#6
+    400332: LEVEL 2
+    400334: LEVEL 2#1
+    400336: LEVEL 2#2
+    400338: LEVEL 2#3
+    400340: LEVEL 2#4
+    400342: LEVEL 2#5
+    400344: LEVEL 2#6
+    400346: LEVEL 2#6 1
+    400348: LEVEL 2#6 10
+    400350: LEVEL 2#6 11
+    400352: LEVEL 2#6 12
+    400354: LEVEL 2#6 13
+    400356: LEVEL 2#6 14
+    400358: LEVEL 2#6 2
+    400360: LEVEL 2#6 3
+    400362: LEVEL 2#6 4
+    400364: LEVEL 2#6 5
+    400366: LEVEL 2#6 6
+    400368: LEVEL 2#6 7
+    400370: LEVEL 2#6 8
+    400372: LEVEL 2#6 9
+    400374: LEVEL 3
+    400376: LEVEL 3 1
+    400378: LEVEL 3 2
+    400380: LEVEL 3 3
+    400382: LEVEL 3 4
+    400384: LEVEL 3 5
+    400386: LEVEL 3 6
+    400388: LEVEL 3 7
+    400390: LEVEL 3 8
+    400392: LEVEL 3 9
+    400394: LEVEL 3#1
+    400396: LEVEL 3#2
+    400398: LEVEL 3#3
+    400400: LEVEL 3#4
+    400402: LEVEL 3#5
+    400404: LEVEL 3#6
+    400406: LEVEL 3#6 1
+    400408: LEVEL 3#6 2
+    400410: LEVEL 3#6 3
+    400412: LEVEL 3#6 4
+    400414: LEVEL 3#6 5
+    400416: LEVEL 4
+    400418: LEVEL 4 1
+    400420: LEVEL 4#1
+    400422: LEVEL 4#2
+    400424: LEVEL 4#3
+    400426: LEVEL 4#4
+    400428: LEVEL 4#5
+    400430: LEVEL 4#5 1
+    400432: LEVEL 4#5 10
+    400434: LEVEL 4#5 11
+    400436: LEVEL 4#5 12
+    400438: LEVEL 4#5 13
+    400440: LEVEL 4#5 2
+    400442: LEVEL 4#5 3
+    400444: LEVEL 4#5 4
+    400446: LEVEL 4#5 5
+    400448: LEVEL 4#5 6
+    400450: LEVEL 4#5 7
+    400452: LEVEL 4#5 8
+    400454: LEVEL 4#5 9
+    400456: LEVEL 5
+    400458: LEVEL 5#1
+    400460: //RootNode
+    400462: PARKING DECK
+    400464: Parking Deck Top Level
+    400466: PAY UP FRONT $15
+    400468: PAY UP FRONT CAS
+    400470: SKIDATA
+    400472: UP >> << PARK >>
+    400474: UP >> << PARK >>#1
+    400476: UP >> << PARK >>#2
+    400478: UP ONLY
+    400480: UP ONLY#1
+    400482: UP ONLY#2
+    400484: 3_10_Double_Door
+    400486: 3_10_Double_Door 1
+    400488: Aurora_TerminalHallLanternWithRoundLens
+    400490: Aurora_TerminalHallLanternWithRoundLens 1
+    400492: Aurora_TerminalHallLanternWithRoundLens#1
+    400494: Aurora_TerminalHallLanternWithRoundLens#1 1
+    400496: Aurora_TerminalHallStation
+    400498: Aurora_TerminalHallStation 1
+    400500: Aurora_TerminalHallStation#1
+    400502: Aurora_TerminalHallStation#1 1
+    400504: Component#2
+    400506: Component#2 1
+    400508: Component#2 2
+    400510: Component#2 3
+    400512: Disabled logo
+    400514: Disabled logo 1
+    400516: Disabled logo 2
+    400518: Disabled parking sign
+    400520: Disabled parking sign 1
+    400522: Disabled parking sign 2
+    400524: Disabled parking sign 3
+    400526: Disabled parking sign 4
+    400528: Disabled parking sign 5
+    400530: Disabled parking sign 6
+    400532: Door3
+    400534: Door3 1
+    400536: Image 31
+    400538: Image 35
+    400540: Image 39
+    400542: Image 53
+    400544: Image 57
+    400546: Image 61
+    400548: Image 65
+    400550: NO PARKING
+    400552: NO PARKING#2
+    400554: One way left sign
+    400556: Post
+    400558: Post 1
+    400560: Post 2
+    400562: Post 3
+    400564: Post 4
+    400566: Sang
+    400568: sign-no parking
+    400570: SignPostFull
+    400572: SignPostFull 1
+    400574: SignPostFull 2
+    400576: SignPostFull 3
+    400578: SignPostFull 4
+    400580: SignPostFull 5
+    400582: SignPostFull 6
+    400584: Stop sign
+    400586: Wrong way sign
+    400588: Wrong way sign 1
+    400590: Wrong way sign 2
+    2300000: '*1'
+    2300002: '*1 1'
+    2300004: 2
+    2300006: 2 1
+    2300008: 3
+    2300010: 3 1
+    2300012: 4
+    2300014: 4 1
+    2300016: 5
+    2300018: 5 1
+    2300020: << DOWN << << PA
+    2300022: << DOWN << << PA#1
+    2300024: '<< DOWN << PARK '
+    2300026: << ELEVATOR << >
+    2300028: << ELEVATOR << >#1
+    2300030: << ELEVATOR << >#2
+    2300032: << ELEVATOR << >#3
+    2300034: <<< ELEVATOR <<<
+    2300036: <<< ELEVATOR <<< 1
+    2300038: <<< ELEVATOR <<< 10
+    2300040: <<< ELEVATOR <<< 11
+    2300042: <<< ELEVATOR <<< 12
+    2300044: <<< ELEVATOR <<< 13
+    2300046: <<< ELEVATOR <<< 14
+    2300048: <<< ELEVATOR <<< 15
+    2300050: <<< ELEVATOR <<< 16
+    2300052: <<< ELEVATOR <<< 17
+    2300054: <<< ELEVATOR <<< 18
+    2300056: <<< ELEVATOR <<< 19
+    2300058: <<< ELEVATOR <<< 2
+    2300060: <<< ELEVATOR <<< 20
+    2300062: <<< ELEVATOR <<< 21
+    2300064: <<< ELEVATOR <<< 22
+    2300066: <<< ELEVATOR <<< 23
+    2300068: <<< ELEVATOR <<< 24
+    2300070: <<< ELEVATOR <<< 3
+    2300072: <<< ELEVATOR <<< 4
+    2300074: <<< ELEVATOR <<< 5
+    2300076: <<< ELEVATOR <<< 6
+    2300078: <<< ELEVATOR <<< 7
+    2300080: <<< ELEVATOR <<< 8
+    2300082: <<< ELEVATOR <<< 9
+    2300084: <<< EXIT <<<
+    2300086: <<< EXIT <<< 1
+    2300088: <<< EXIT <<< 2
+    2300090: <<< EXIT <<<#1
+    2300092: <<< EXIT <<<#1 1
+    2300094: <<< EXIT <<<#1 2
+    2300096: <<< EXIT <<<#1 3
+    2300098: <<< EXIT <<<#2
+    2300100: <<< EXIT <<<#3
+    2300102: <<< EXIT <<<#4
+    2300104: <<< EXIT <<<#5
+    2300106: <<< EXIT <<<#5 1
+    2300108: <<< EXIT <<<#5 2
+    2300110: '>> EXIT >> << PA'
+    2300112: '>>> ELEVATOR >>>'
+    2300114: '>>> ELEVATOR >>> 1'
+    2300116: '>>> ELEVATOR >>> 10'
+    2300118: '>>> ELEVATOR >>> 11'
+    2300120: '>>> ELEVATOR >>> 12'
+    2300122: '>>> ELEVATOR >>> 13'
+    2300124: '>>> ELEVATOR >>> 14'
+    2300126: '>>> ELEVATOR >>> 15'
+    2300128: '>>> ELEVATOR >>> 16'
+    2300130: '>>> ELEVATOR >>> 17'
+    2300132: '>>> ELEVATOR >>> 18'
+    2300134: '>>> ELEVATOR >>> 19'
+    2300136: '>>> ELEVATOR >>> 2'
+    2300138: '>>> ELEVATOR >>> 20'
+    2300140: '>>> ELEVATOR >>> 21'
+    2300142: '>>> ELEVATOR >>> 22'
+    2300144: '>>> ELEVATOR >>> 23'
+    2300146: '>>> ELEVATOR >>> 24'
+    2300148: '>>> ELEVATOR >>> 25'
+    2300150: '>>> ELEVATOR >>> 3'
+    2300152: '>>> ELEVATOR >>> 4'
+    2300154: '>>> ELEVATOR >>> 5'
+    2300156: '>>> ELEVATOR >>> 6'
+    2300158: '>>> ELEVATOR >>> 7'
+    2300160: '>>> ELEVATOR >>> 8'
+    2300162: '>>> ELEVATOR >>> 9'
+    2300164: '>>> EXIT >>>'
+    2300166: '>>> EXIT >>> 1'
+    2300168: '>>> EXIT >>> 2'
+    2300170: '>>> EXIT >>> 3'
+    2300172: '>>> EXIT >>> 4'
+    2300174: '>>> EXIT >>> 5'
+    2300176: '>>> EXIT >>> 6'
+    2300178: '>>> EXIT >>>#1'
+    2300180: '>>> EXIT >>>#1 1'
+    2300182: '>>> EXIT >>>#1 2'
+    2300184: ^^ EXIT ^^ ^^ UP
+    2300186: ^^ PARK ^^
+    2300188: ^^ PARK ^^ << DO#1
+    2300190: ^^ PARK ^^ << DO#2
+    2300192: ^^ PARK ^^ << DO#3
+    2300194: ^^ PARK ^^ << UP
+    2300196: ^^ PARK ^^ << UP 1
+    2300198: ^^ PARK ^^ << UP#1
+    2300200: ^^ PARK ^^ << UP#2
+    2300202: ^^ PARK ^^ >> DO
+    2300204: ^^ PARK ^^ >> DO#1
+    2300206: ^^ PARK ^^ >> DO#2
+    2300208: ^^ PARK ^^ >> DO#3
+    2300210: ^^ PARK ^^ >> UP
+    2300212: ^^ PARK ^^ >> UP 1
+    2300214: ^^ PARK ^^ >> UP#1
+    2300216: ^^ PARK ^^ >> UP#2
+    2300218: ^^ PARK ^^ ^^ EL
+    2300220: ^^ PARK ^^ ^^ EL#1
+    2300222: ^^ PARK ^^ ^^ EL#2
+    2300224: ^^ PARK ^^ ^^ EL#3
+    2300226: ^^ PARK ^^ ^^ EL#4
+    2300228: ^^ PARK ^^ ^^ EL#5
+    2300230: ^^ PARK ^^ ^^ EX
+    2300232: ^^ PARK ^^ ^^ EX#1
+    2300234: ^^ PARK ^^ ^^ EX#2
+    2300236: ^^ PARK ^^ ^^ EX#3
+    2300238: ^^ PARK ^^ ^^ EX#4
+    2300240: ^^ PARK ^^ ^^ EX#5
+    2300242: ^^ PARK ^^ ^^ EX#6
+    2300244: ^^ PARK ^^#1
+    2300246: '^^ PARK/EXIT ^^ '
+    2300248: ^^ UP ONLY ^^ <<
+    2300250: by mmo vies
+    2300252: DECK LEVEL
+    2300254: DECK LEVEL 1
+    2300256: DECK LEVEL 2
+    2300258: DECK LEVEL 3
+    2300260: DO NOT ENTER
+    2300262: DO NOT ENTER#1
+    2300264: DO NOT ENTER#2
+    2300266: DO NOT ENTER#3
+    2300268: DO NOT ENTER#5
+    2300270: DO NOT ENTER#6
+    2300272: DO NOT ENTER#7
+    2300274: DOWN ONLY
+    2300276: DOWN ONLY#1
+    2300278: DOWN ONLY#2
+    2300280: ELEVATORS
+    2300282: 'ELEVATORS LEVEL '
+    2300284: ELEVATORS#1
+    2300286: ELEVATORS#2
+    2300288: ELEVATORS#3
+    2300290: EXIT >>>
+    2300292: Image 2
+    2300294: LEVEL 1
+    2300296: LEVEL 1#1
+    2300298: LEVEL 1#2
+    2300300: LEVEL 1#3
+    2300302: LEVEL 1#4
+    2300304: LEVEL 1#4 1
+    2300306: LEVEL 1#4 10
+    2300308: LEVEL 1#4 11
+    2300310: LEVEL 1#4 12
+    2300312: LEVEL 1#4 2
+    2300314: LEVEL 1#4 3
+    2300316: LEVEL 1#4 4
+    2300318: LEVEL 1#4 5
+    2300320: LEVEL 1#4 6
+    2300322: LEVEL 1#4 7
+    2300324: LEVEL 1#4 8
+    2300326: LEVEL 1#4 9
+    2300328: LEVEL 1#5
+    2300330: LEVEL 1#6
+    2300332: LEVEL 2
+    2300334: LEVEL 2#1
+    2300336: LEVEL 2#2
+    2300338: LEVEL 2#3
+    2300340: LEVEL 2#4
+    2300342: LEVEL 2#5
+    2300344: LEVEL 2#6
+    2300346: LEVEL 2#6 1
+    2300348: LEVEL 2#6 10
+    2300350: LEVEL 2#6 11
+    2300352: LEVEL 2#6 12
+    2300354: LEVEL 2#6 13
+    2300356: LEVEL 2#6 14
+    2300358: LEVEL 2#6 2
+    2300360: LEVEL 2#6 3
+    2300362: LEVEL 2#6 4
+    2300364: LEVEL 2#6 5
+    2300366: LEVEL 2#6 6
+    2300368: LEVEL 2#6 7
+    2300370: LEVEL 2#6 8
+    2300372: LEVEL 2#6 9
+    2300374: LEVEL 3
+    2300376: LEVEL 3 1
+    2300378: LEVEL 3 2
+    2300380: LEVEL 3 3
+    2300382: LEVEL 3 4
+    2300384: LEVEL 3 5
+    2300386: LEVEL 3 6
+    2300388: LEVEL 3 7
+    2300390: LEVEL 3 8
+    2300392: LEVEL 3 9
+    2300394: LEVEL 3#1
+    2300396: LEVEL 3#2
+    2300398: LEVEL 3#3
+    2300400: LEVEL 3#4
+    2300402: LEVEL 3#5
+    2300404: LEVEL 3#6
+    2300406: LEVEL 3#6 1
+    2300408: LEVEL 3#6 2
+    2300410: LEVEL 3#6 3
+    2300412: LEVEL 3#6 4
+    2300414: LEVEL 3#6 5
+    2300416: LEVEL 4
+    2300418: LEVEL 4 1
+    2300420: LEVEL 4#1
+    2300422: LEVEL 4#2
+    2300424: LEVEL 4#3
+    2300426: LEVEL 4#4
+    2300428: LEVEL 4#5
+    2300430: LEVEL 4#5 1
+    2300432: LEVEL 4#5 10
+    2300434: LEVEL 4#5 11
+    2300436: LEVEL 4#5 12
+    2300438: LEVEL 4#5 13
+    2300440: LEVEL 4#5 2
+    2300442: LEVEL 4#5 3
+    2300444: LEVEL 4#5 4
+    2300446: LEVEL 4#5 5
+    2300448: LEVEL 4#5 6
+    2300450: LEVEL 4#5 7
+    2300452: LEVEL 4#5 8
+    2300454: LEVEL 4#5 9
+    2300456: LEVEL 5
+    2300458: LEVEL 5#1
+    2300460: //RootNode
+    2300462: PARKING DECK
+    2300464: Parking Deck Top Level
+    2300466: PAY UP FRONT $15
+    2300468: PAY UP FRONT CAS
+    2300470: SKIDATA
+    2300472: UP >> << PARK >>
+    2300474: UP >> << PARK >>#1
+    2300476: UP >> << PARK >>#2
+    2300478: UP ONLY
+    2300480: UP ONLY#1
+    2300482: UP ONLY#2
+    2300484: 3_10_Double_Door
+    2300486: 3_10_Double_Door 1
+    2300488: Aurora_TerminalHallLanternWithRoundLens
+    2300490: Aurora_TerminalHallLanternWithRoundLens 1
+    2300492: Aurora_TerminalHallStation
+    2300494: Aurora_TerminalHallStation 1
+    2300496: Component#2
+    2300498: Component#2 1
+    2300500: Component#2 2
+    2300502: Component#2 3
+    2300504: Disabled logo
+    2300506: Disabled logo 1
+    2300508: Disabled logo 2
+    2300510: Image 31
+    2300512: Image 35
+    2300514: Image 39
+    2300516: Image 53
+    2300518: Image 57
+    2300520: Image 61
+    2300522: Image 65
+    2300524: NO PARKING
+    2300526: NO PARKING#2
+    2300528: One way left sign
+    2300530: Post
+    2300532: Post 1
+    2300534: Post 2
+    2300536: Post 3
+    2300538: Post 4
+    2300540: Sang
+    2300542: SignPostFull
+    2300544: SignPostFull 1
+    2300546: SignPostFull 2
+    2300548: SignPostFull 3
+    2300550: SignPostFull 4
+    2300552: SignPostFull 5
+    2300554: SignPostFull 6
+    2300556: Stop sign
+    2300558: Wrong way sign
+    2300560: Wrong way sign 1
+    2300562: Wrong way sign 2
+    3300000: '*1'
+    3300002: '*1 1'
+    3300004: 2
+    3300006: 2 1
+    3300008: 3
+    3300010: 3 1
+    3300012: 4
+    3300014: 4 1
+    3300016: 5
+    3300018: 5 1
+    3300020: << DOWN << << PA
+    3300022: << DOWN << << PA#1
+    3300024: '<< DOWN << PARK '
+    3300026: << ELEVATOR << >
+    3300028: << ELEVATOR << >#1
+    3300030: << ELEVATOR << >#2
+    3300032: << ELEVATOR << >#3
+    3300034: <<< ELEVATOR <<<
+    3300036: <<< ELEVATOR <<< 1
+    3300038: <<< ELEVATOR <<< 10
+    3300040: <<< ELEVATOR <<< 11
+    3300042: <<< ELEVATOR <<< 12
+    3300044: <<< ELEVATOR <<< 13
+    3300046: <<< ELEVATOR <<< 14
+    3300048: <<< ELEVATOR <<< 15
+    3300050: <<< ELEVATOR <<< 16
+    3300052: <<< ELEVATOR <<< 17
+    3300054: <<< ELEVATOR <<< 18
+    3300056: <<< ELEVATOR <<< 19
+    3300058: <<< ELEVATOR <<< 2
+    3300060: <<< ELEVATOR <<< 20
+    3300062: <<< ELEVATOR <<< 21
+    3300064: <<< ELEVATOR <<< 22
+    3300066: <<< ELEVATOR <<< 23
+    3300068: <<< ELEVATOR <<< 24
+    3300070: <<< ELEVATOR <<< 3
+    3300072: <<< ELEVATOR <<< 4
+    3300074: <<< ELEVATOR <<< 5
+    3300076: <<< ELEVATOR <<< 6
+    3300078: <<< ELEVATOR <<< 7
+    3300080: <<< ELEVATOR <<< 8
+    3300082: <<< ELEVATOR <<< 9
+    3300084: <<< EXIT <<<
+    3300086: <<< EXIT <<< 1
+    3300088: <<< EXIT <<< 2
+    3300090: <<< EXIT <<<#1
+    3300092: <<< EXIT <<<#1 1
+    3300094: <<< EXIT <<<#1 2
+    3300096: <<< EXIT <<<#1 3
+    3300098: <<< EXIT <<<#2
+    3300100: <<< EXIT <<<#3
+    3300102: <<< EXIT <<<#4
+    3300104: <<< EXIT <<<#5
+    3300106: <<< EXIT <<<#5 1
+    3300108: <<< EXIT <<<#5 2
+    3300110: '>> EXIT >> << PA'
+    3300112: '>>> ELEVATOR >>>'
+    3300114: '>>> ELEVATOR >>> 1'
+    3300116: '>>> ELEVATOR >>> 10'
+    3300118: '>>> ELEVATOR >>> 11'
+    3300120: '>>> ELEVATOR >>> 12'
+    3300122: '>>> ELEVATOR >>> 13'
+    3300124: '>>> ELEVATOR >>> 14'
+    3300126: '>>> ELEVATOR >>> 15'
+    3300128: '>>> ELEVATOR >>> 16'
+    3300130: '>>> ELEVATOR >>> 17'
+    3300132: '>>> ELEVATOR >>> 18'
+    3300134: '>>> ELEVATOR >>> 19'
+    3300136: '>>> ELEVATOR >>> 2'
+    3300138: '>>> ELEVATOR >>> 20'
+    3300140: '>>> ELEVATOR >>> 21'
+    3300142: '>>> ELEVATOR >>> 22'
+    3300144: '>>> ELEVATOR >>> 23'
+    3300146: '>>> ELEVATOR >>> 24'
+    3300148: '>>> ELEVATOR >>> 25'
+    3300150: '>>> ELEVATOR >>> 3'
+    3300152: '>>> ELEVATOR >>> 4'
+    3300154: '>>> ELEVATOR >>> 5'
+    3300156: '>>> ELEVATOR >>> 6'
+    3300158: '>>> ELEVATOR >>> 7'
+    3300160: '>>> ELEVATOR >>> 8'
+    3300162: '>>> ELEVATOR >>> 9'
+    3300164: '>>> EXIT >>>'
+    3300166: '>>> EXIT >>> 1'
+    3300168: '>>> EXIT >>> 2'
+    3300170: '>>> EXIT >>> 3'
+    3300172: '>>> EXIT >>> 4'
+    3300174: '>>> EXIT >>> 5'
+    3300176: '>>> EXIT >>> 6'
+    3300178: '>>> EXIT >>>#1'
+    3300180: '>>> EXIT >>>#1 1'
+    3300182: '>>> EXIT >>>#1 2'
+    3300184: ^^ EXIT ^^ ^^ UP
+    3300186: ^^ PARK ^^
+    3300188: ^^ PARK ^^ << DO#1
+    3300190: ^^ PARK ^^ << DO#2
+    3300192: ^^ PARK ^^ << DO#3
+    3300194: ^^ PARK ^^ << UP
+    3300196: ^^ PARK ^^ << UP 1
+    3300198: ^^ PARK ^^ << UP#1
+    3300200: ^^ PARK ^^ << UP#2
+    3300202: ^^ PARK ^^ >> DO
+    3300204: ^^ PARK ^^ >> DO#1
+    3300206: ^^ PARK ^^ >> DO#2
+    3300208: ^^ PARK ^^ >> DO#3
+    3300210: ^^ PARK ^^ >> UP
+    3300212: ^^ PARK ^^ >> UP 1
+    3300214: ^^ PARK ^^ >> UP#1
+    3300216: ^^ PARK ^^ >> UP#2
+    3300218: ^^ PARK ^^ ^^ EL
+    3300220: ^^ PARK ^^ ^^ EL#1
+    3300222: ^^ PARK ^^ ^^ EL#2
+    3300224: ^^ PARK ^^ ^^ EL#3
+    3300226: ^^ PARK ^^ ^^ EL#4
+    3300228: ^^ PARK ^^ ^^ EL#5
+    3300230: ^^ PARK ^^ ^^ EX
+    3300232: ^^ PARK ^^ ^^ EX#1
+    3300234: ^^ PARK ^^ ^^ EX#2
+    3300236: ^^ PARK ^^ ^^ EX#3
+    3300238: ^^ PARK ^^ ^^ EX#4
+    3300240: ^^ PARK ^^ ^^ EX#5
+    3300242: ^^ PARK ^^ ^^ EX#6
+    3300244: ^^ PARK ^^#1
+    3300246: '^^ PARK/EXIT ^^ '
+    3300248: ^^ UP ONLY ^^ <<
+    3300250: by mmo vies
+    3300252: DECK LEVEL
+    3300254: DECK LEVEL 1
+    3300256: DECK LEVEL 2
+    3300258: DECK LEVEL 3
+    3300260: DO NOT ENTER
+    3300262: DO NOT ENTER#1
+    3300264: DO NOT ENTER#2
+    3300266: DO NOT ENTER#3
+    3300268: DO NOT ENTER#5
+    3300270: DO NOT ENTER#6
+    3300272: DO NOT ENTER#7
+    3300274: DOWN ONLY
+    3300276: DOWN ONLY#1
+    3300278: DOWN ONLY#2
+    3300280: ELEVATORS
+    3300282: 'ELEVATORS LEVEL '
+    3300284: ELEVATORS#1
+    3300286: ELEVATORS#2
+    3300288: ELEVATORS#3
+    3300290: EXIT >>>
+    3300292: Image 2
+    3300294: LEVEL 1
+    3300296: LEVEL 1#1
+    3300298: LEVEL 1#2
+    3300300: LEVEL 1#3
+    3300302: LEVEL 1#4
+    3300304: LEVEL 1#4 1
+    3300306: LEVEL 1#4 10
+    3300308: LEVEL 1#4 11
+    3300310: LEVEL 1#4 12
+    3300312: LEVEL 1#4 2
+    3300314: LEVEL 1#4 3
+    3300316: LEVEL 1#4 4
+    3300318: LEVEL 1#4 5
+    3300320: LEVEL 1#4 6
+    3300322: LEVEL 1#4 7
+    3300324: LEVEL 1#4 8
+    3300326: LEVEL 1#4 9
+    3300328: LEVEL 1#5
+    3300330: LEVEL 1#6
+    3300332: LEVEL 2
+    3300334: LEVEL 2#1
+    3300336: LEVEL 2#2
+    3300338: LEVEL 2#3
+    3300340: LEVEL 2#4
+    3300342: LEVEL 2#5
+    3300344: LEVEL 2#6
+    3300346: LEVEL 2#6 1
+    3300348: LEVEL 2#6 10
+    3300350: LEVEL 2#6 11
+    3300352: LEVEL 2#6 12
+    3300354: LEVEL 2#6 13
+    3300356: LEVEL 2#6 14
+    3300358: LEVEL 2#6 2
+    3300360: LEVEL 2#6 3
+    3300362: LEVEL 2#6 4
+    3300364: LEVEL 2#6 5
+    3300366: LEVEL 2#6 6
+    3300368: LEVEL 2#6 7
+    3300370: LEVEL 2#6 8
+    3300372: LEVEL 2#6 9
+    3300374: LEVEL 3
+    3300376: LEVEL 3 1
+    3300378: LEVEL 3 2
+    3300380: LEVEL 3 3
+    3300382: LEVEL 3 4
+    3300384: LEVEL 3 5
+    3300386: LEVEL 3 6
+    3300388: LEVEL 3 7
+    3300390: LEVEL 3 8
+    3300392: LEVEL 3 9
+    3300394: LEVEL 3#1
+    3300396: LEVEL 3#2
+    3300398: LEVEL 3#3
+    3300400: LEVEL 3#4
+    3300402: LEVEL 3#5
+    3300404: LEVEL 3#6
+    3300406: LEVEL 3#6 1
+    3300408: LEVEL 3#6 2
+    3300410: LEVEL 3#6 3
+    3300412: LEVEL 3#6 4
+    3300414: LEVEL 3#6 5
+    3300416: LEVEL 4
+    3300418: LEVEL 4 1
+    3300420: LEVEL 4#1
+    3300422: LEVEL 4#2
+    3300424: LEVEL 4#3
+    3300426: LEVEL 4#4
+    3300428: LEVEL 4#5
+    3300430: LEVEL 4#5 1
+    3300432: LEVEL 4#5 10
+    3300434: LEVEL 4#5 11
+    3300436: LEVEL 4#5 12
+    3300438: LEVEL 4#5 13
+    3300440: LEVEL 4#5 2
+    3300442: LEVEL 4#5 3
+    3300444: LEVEL 4#5 4
+    3300446: LEVEL 4#5 5
+    3300448: LEVEL 4#5 6
+    3300450: LEVEL 4#5 7
+    3300452: LEVEL 4#5 8
+    3300454: LEVEL 4#5 9
+    3300456: LEVEL 5
+    3300458: LEVEL 5#1
+    3300460: //RootNode
+    3300462: PARKING DECK
+    3300464: Parking Deck Top Level
+    3300466: PAY UP FRONT $15
+    3300468: PAY UP FRONT CAS
+    3300470: SKIDATA
+    3300472: UP >> << PARK >>
+    3300474: UP >> << PARK >>#1
+    3300476: UP >> << PARK >>#2
+    3300478: UP ONLY
+    3300480: UP ONLY#1
+    3300482: UP ONLY#2
+    3300484: 3_10_Double_Door
+    3300486: 3_10_Double_Door 1
+    3300488: Aurora_TerminalHallLanternWithRoundLens
+    3300490: Aurora_TerminalHallLanternWithRoundLens 1
+    3300492: Aurora_TerminalHallStation
+    3300494: Aurora_TerminalHallStation 1
+    3300496: Component#2
+    3300498: Component#2 1
+    3300500: Component#2 2
+    3300502: Component#2 3
+    3300504: Disabled logo
+    3300506: Disabled logo 1
+    3300508: Disabled logo 2
+    3300510: Image 31
+    3300512: Image 35
+    3300514: Image 39
+    3300516: Image 53
+    3300518: Image 57
+    3300520: Image 61
+    3300522: Image 65
+    3300524: NO PARKING
+    3300526: NO PARKING#2
+    3300528: One way left sign
+    3300530: Post
+    3300532: Post 1
+    3300534: Post 2
+    3300536: Post 3
+    3300538: Post 4
+    3300540: Sang
+    3300542: SignPostFull
+    3300544: SignPostFull 1
+    3300546: SignPostFull 2
+    3300548: SignPostFull 3
+    3300550: SignPostFull 4
+    3300552: SignPostFull 5
+    3300554: SignPostFull 6
+    3300556: Stop sign
+    3300558: Wrong way sign
+    3300560: Wrong way sign 1
+    3300562: Wrong way sign 2
+    4300000: Mesh model
+    4300002: Mesh model
+    4300004: Mesh DECK LEVEL
+    4300006: Mesh Parking Deck Top Level
+    4300008: Mesh DO NOT ENTER
+    4300010: Mesh UP ONLY
+    4300012: Mesh UP ONLY#1
+    4300014: Mesh UP ONLY#2
+    4300016: Mesh DO NOT ENTER#1
+    4300018: Mesh DO NOT ENTER#2
+    4300020: Mesh DO NOT ENTER#3
+    4300022: Mesh DOWN ONLY
+    4300024: Mesh DO NOT ENTER#5
+    4300026: Mesh DOWN ONLY#1
+    4300028: Mesh DO NOT ENTER#6
+    4300030: Mesh DOWN ONLY#2
+    4300032: Mesh DO NOT ENTER#7
+    4300034: Mesh << DOWN << << PA
+    4300036: 'Mesh << DOWN << PARK '
+    4300038: Mesh >> EXIT >> << PA
+    4300040: Mesh UP >> << PARK >>
+    4300042: Mesh UP >> << PARK >>#1
+    4300044: Mesh ELEVATORS
+    4300046: Mesh UP >> << PARK >>#2
+    4300048: Mesh ^^ UP ONLY ^^ <<
+    4300050: Mesh SKIDATA
+    4300052: Mesh PAY UP FRONT CAS
+    4300054: Mesh << DOWN << << PA#1
+    4300056: Mesh PAY UP FRONT $15
+    4300058: Mesh << ELEVATOR << >
+    4300060: Mesh << ELEVATOR << >#1
+    4300062: Mesh << ELEVATOR << >#2
+    4300064: Mesh << ELEVATOR << >#3
+    4300066: Mesh ^^ PARK ^^ >> UP
+    4300068: Mesh ^^ PARK ^^ << UP
+    4300070: Mesh ^^ PARK ^^ >> DO
+    4300072: 'Mesh ^^ PARK/EXIT ^^ '
+    4300074: Mesh ^^ PARK ^^ << DO#1
+    4300076: Mesh ^^ PARK ^^ >> DO#1
+    4300078: Mesh LEVEL 2
+    4300080: Mesh LEVEL 1
+    4300082: Mesh LEVEL 1#1
+    4300084: Mesh LEVEL 1#2
+    4300086: Mesh LEVEL 2#1
+    4300088: Mesh LEVEL 2#2
+    4300090: Mesh LEVEL 2#3
+    4300092: Mesh LEVEL 3
+    4300094: Mesh LEVEL 3#1
+    4300096: Mesh LEVEL 3#2
+    4300098: Mesh LEVEL 3#3
+    4300100: Mesh LEVEL 4
+    4300102: Mesh LEVEL 4#1
+    4300104: Mesh LEVEL 4#2
+    4300106: Mesh LEVEL 5
+    4300108: Mesh LEVEL 1#3
+    4300110: Mesh LEVEL 1#4
+    4300112: Mesh LEVEL 2#4
+    4300114: Mesh LEVEL 2#5
+    4300116: Mesh LEVEL 2#6
+    4300118: Mesh LEVEL 3#4
+    4300120: Mesh LEVEL 3#5
+    4300122: Mesh LEVEL 3#6
+    4300124: Mesh LEVEL 4#3
+    4300126: Mesh LEVEL 4#4
+    4300128: Mesh LEVEL 4#5
+    4300130: Mesh LEVEL 5#1
+    4300132: Mesh LEVEL 1#5
+    4300134: Mesh LEVEL 1#6
+    4300136: Mesh EXIT >>>
+    4300138: 'Mesh ELEVATORS LEVEL '
+    4300140: Mesh 4
+    4300142: Mesh 5
+    4300144: Mesh 3
+    4300146: Mesh ELEVATORS#1
+    4300148: Mesh 2
+    4300150: Mesh ELEVATORS#2
+    4300152: Mesh *1
+    4300154: Mesh ELEVATORS#3
+    4300156: Mesh <<< ELEVATOR <<<
+    4300158: Mesh >>> ELEVATOR >>>
+    4300160: Mesh ^^ PARK ^^ << DO#2
+    4300162: Mesh ^^ PARK ^^ >> DO#2
+    4300164: Mesh ^^ PARK ^^ >> UP#1
+    4300166: Mesh ^^ PARK ^^ << UP#1
+    4300168: Mesh ^^ PARK ^^ << DO#3
+    4300170: Mesh ^^ PARK ^^ >> DO#3
+    4300172: Mesh ^^ PARK ^^ >> UP#2
+    4300174: Mesh ^^ PARK ^^ << UP#2
+    4300176: Mesh ^^ PARK ^^ ^^ EL
+    4300178: Mesh ^^ PARK ^^ ^^ EX
+    4300180: Mesh ^^ EXIT ^^ ^^ UP
+    4300182: Mesh ^^ PARK ^^ ^^ EL#1
+    4300184: Mesh ^^ PARK ^^ ^^ EX#1
+    4300186: Mesh ^^ PARK ^^ ^^ EL#2
+    4300188: Mesh ^^ PARK ^^ ^^ EL#3
+    4300190: Mesh ^^ PARK ^^ ^^ EX#2
+    4300192: Mesh >>> EXIT >>>
+    4300194: Mesh <<< EXIT <<<
+    4300196: Mesh <<< EXIT <<<#1
+    4300198: Mesh <<< EXIT <<<#2
+    4300200: Mesh >>> EXIT >>>#1
+    4300202: Mesh <<< EXIT <<<#3
+    4300204: Mesh <<< EXIT <<<#4
+    4300206: Mesh ^^ PARK ^^ ^^ EX#3
+    4300208: Mesh ^^ PARK ^^
+    4300210: Mesh ^^ PARK ^^#1
+    4300212: Mesh ^^ PARK ^^ ^^ EX#4
+    4300214: Mesh ^^ PARK ^^ ^^ EL#4
+    4300216: Mesh ^^ PARK ^^ ^^ EX#5
+    4300218: Mesh ^^ PARK ^^ ^^ EX#6
+    4300220: Mesh ^^ PARK ^^ ^^ EL#5
+    4300222: Mesh <<< EXIT <<<#5
+    4300224: Mesh PARKING DECK
+    4300226: Mesh by mmo vies
+    4300228: Mesh Sang
+    4300230: Mesh 3_10_Double_Door
+    4300232: Mesh Component#2
+    4300234: Mesh Aurora_TerminalHallStation
+    4300236: Mesh Aurora_TerminalHallLanternWithRoundLens
+    4300238: Mesh Disabled logo
+    4300240: Mesh Disabled parking sign
+    4300242: Mesh SignPostFull
+    4300244: Mesh NO PARKING
+    4300246: Mesh NO PARKING#2
+    4300248: Mesh One way left sign
+    4300250: Mesh Post
+    4300252: Mesh Stop sign
+    4300254: Mesh Wrong way sign
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.0254
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,17 +1,8 @@
-﻿using UnityEngine;
-
-namespace Static_Interface.Interactables
+﻿namespace Static_Interface.Interactables
 {
-    public class Gate : Openable
+    public class Gate : AnimatedOpenable
     {
-        public override string Name
-        {
-            get { return "Gate"; }
-        }
-
-        protected override Vector3 GetOpenRotation(Vector3 defaultRotation)
-        {
-            return new Vector3(defaultRotation.x, defaultRotation.y, defaultRotation.z + Angle);
-        }
+        protected override string OpenAnimation => "GateOpen";
+        public override string Name => "Gate";
     }
 }

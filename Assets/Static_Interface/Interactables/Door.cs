@@ -1,17 +1,8 @@
-﻿using UnityEngine;
-
-namespace Static_Interface.Interactables
+﻿namespace Static_Interface.Interactables
 {
-    public class Door : Openable
+    public class Door : AnimatedOpenable
     {
-        public override string Name
-        {
-            get { return "Door"; }
-        }
-
-        protected override Vector3 GetOpenRotation(Vector3 defaultRotation)
-        {
-            return new Vector3(defaultRotation.x, defaultRotation.y + Angle, defaultRotation.z);
-        }
+        protected override string OpenAnimation => "DoorOpen";
+        public override string Name => "Door";
     }
 }

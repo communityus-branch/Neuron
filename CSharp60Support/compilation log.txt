@@ -1,5 +1,5 @@
 ********************************************************************************
-*                     Friday, January 15, 2016 5:53:20 PM                      *
+*                     Sunday, January 17, 2016 10:17:16 PM                     *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 1.6.1.0
 Platform: Windows
@@ -11,32 +11,47 @@ Compiler: Microsoft C# 6.0
 - Compilation -----------------------------------------------
 
 Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-edbac5e015e3dc54ba671f8a9d500fba
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-4d2f1766d66d7744ca36ac6b6b45ed74
 Exit code: 0
-Elapsed time: 6.93 sec
+Elapsed time: 9.76 sec
 
 - Compiler output (2 lines):
 0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
 1: Copyright (C) Microsoft Corporation. All rights reserved.
 
-- Compiler errors (6 lines):
-0: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\OnOpenDoor.cs(16,9): warning CS0618: 'Application.LoadLevel(string)' is obsolete: 'Use SceneManager.LoadScene'
-1: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\GameSaveExample.cs(58,35): warning CS0618: 'Application.loadedLevelName' is obsolete: 'Use SceneManager to determine what scenes have been loaded'
-2: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\GameSaveExample.cs(98,9): warning CS0618: 'Application.LoadLevel(string)' is obsolete: 'Use SceneManager.LoadScene'
-3: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\GameSaveExample.cs(110,9): warning CS0618: 'Application.LoadLevel(string)' is obsolete: 'Use SceneManager.LoadScene'
-4: Assets\Plugins\Standard Assets\Effects\ImageEffects\Scripts\Blur.cs(42,18): warning CS0618: 'Material.Material(string)' is obsolete: 'Creating materials from shader source string will be removed in the future. Use Shader assets instead.'
-5: Assets\Plugins\ConsoleUI\FrontEnd\UnityGUI\ConsoleGUI.cs(214,138): warning CS0618: 'TextEditor.content' is obsolete: 'Please use 'text' instead of 'content''
+- Compiler errors (21 lines):
+0: Assets\Plugins\Environment\DayNightCycle\LightWall.cs(7,18): warning CS0108: 'LightWall.renderer' hides inherited member 'Component.renderer'. Use the new keyword if hiding was intended.
+1: Assets\Plugins\ConsoleUI\FrontEnd\UnityGUI\ConsoleGUI.cs(213,138): warning CS0618: 'TextEditor.content' is obsolete: 'Please use 'text' instead of 'content''
+2: Assets\Standard Assets\Utility\WaypointProgressTracker.cs(14,50): warning CS0649: Field 'WaypointProgressTracker.circuit' is never assigned to, and will always have its default value null
+3: Assets\Standard Assets\Utility\SmoothFollow.cs(10,21): warning CS0649: Field 'SmoothFollow.target' is never assigned to, and will always have its default value null
+4: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(23,39): warning CS0649: Field 'FirstPersonController.m_UseHeadBob' is never assigned to, and will always have its default value false
+5: Assets\Standard Assets\Utility\PlatformSpecificContent.cs(24,39): warning CS0649: Field 'PlatformSpecificContent.m_ChildrenOfThisObject' is never assigned to, and will always have its default value false
+6: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(28,44): warning CS0649: Field 'FirstPersonController.m_JumpSound' is never assigned to, and will always have its default value null
+7: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(26,40): warning CS0649: Field 'FirstPersonController.m_StepInterval' is never assigned to, and will always have its default value 0
+8: Assets\Standard Assets\Utility\PlatformSpecificContent.cs(21,51): warning CS0649: Field 'PlatformSpecificContent.m_BuildTargetGroup' is never assigned to, and will always have its default value
+9: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(29,44): warning CS0649: Field 'FirstPersonController.m_LandSound' is never assigned to, and will always have its default value null
+10: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(16,56): warning CS0649: Field 'FirstPersonController.m_RunstepLenghten' is never assigned to, and will always have its default value 0
+11: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(19,40): warning CS0649: Field 'FirstPersonController.m_GravityMultiplier' is never assigned to, and will always have its default value 0
+12: Assets\Standard Assets\Utility\SmoothFollow.cs(19,17): warning CS0649: Field 'SmoothFollow.rotationDamping' is never assigned to, and will always have its default value 0
+13: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(27,46): warning CS0649: Field 'FirstPersonController.m_FootstepSounds' is never assigned to, and will always have its default value null
+14: Assets\Standard Assets\Utility\SmoothFollow.cs(21,17): warning CS0649: Field 'SmoothFollow.heightDamping' is never assigned to, and will always have its default value 0
+15: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(15,40): warning CS0649: Field 'FirstPersonController.m_RunSpeed' is never assigned to, and will always have its default value 0
+16: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(14,40): warning CS0649: Field 'FirstPersonController.m_WalkSpeed' is never assigned to, and will always have its default value 0
+17: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(18,40): warning CS0649: Field 'FirstPersonController.m_StickToGroundForce' is never assigned to, and will always have its default value 0
+18: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(21,39): warning CS0649: Field 'FirstPersonController.m_UseFovKick' is never assigned to, and will always have its default value false
+19: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(20,44): warning CS0649: Field 'FirstPersonController.m_MouseLook' is never assigned to, and will always have its default value null
+20: Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs(17,40): warning CS0649: Field 'FirstPersonController.m_JumpSpeed' is never assigned to, and will always have its default value 0
 
 - PDB to MDB conversion --------------------------------------
 
 Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
 Arguments: Temp\Assembly-CSharp-firstpass.dll
 Exit code: 0
-Elapsed time: 0.46 sec
+Elapsed time: 0.31 sec
 
 - pdb2mdb.exe output (0 lines):
 ********************************************************************************
-*                     Friday, January 15, 2016 5:53:29 PM                      *
+*                     Sunday, January 17, 2016 10:17:46 PM                     *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 1.6.1.0
 Platform: Windows
@@ -48,9 +63,9 @@ Compiler: Microsoft C# 6.0
 - Compilation -----------------------------------------------
 
 Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-5fa2eefb73dcb194d9bc1d9c06a83c38
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-9a427cbf7384ab04d95378551f758d70
 Exit code: 0
-Elapsed time: 4.41 sec
+Elapsed time: 5.81 sec
 
 - Compiler output (2 lines):
 0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
@@ -70,79 +85,7 @@ Elapsed time: 0.18 sec
 
 - pdb2mdb.exe output (0 lines):
 ********************************************************************************
-*                     Friday, January 15, 2016 5:54:08 PM                      *
-********************************************************************************
-CSharpCompilerWrapper.exe version: 1.6.1.0
-Platform: Windows
-Target assembly: Assembly-CSharp-firstpass.dll
-Project directory: H:\Users\Trojaner\UnityProjects\The Collapse
-Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
-Compiler: Microsoft C# 6.0
-
-- Compilation -----------------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-b041f16c68efb6d4696a3821d4220083
-Exit code: 0
-Elapsed time: 6.11 sec
-
-- Compiler output (2 lines):
-0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
-1: Copyright (C) Microsoft Corporation. All rights reserved.
-
-- Compiler errors (7 lines):
-0: Assets\Plugins\Environment\DayNightCycle\LightWall.cs(7,18): warning CS0108: 'LightWall.renderer' hides inherited member 'Component.renderer'. Use the new keyword if hiding was intended.
-1: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\GameSaveExample.cs(58,35): warning CS0618: 'Application.loadedLevelName' is obsolete: 'Use SceneManager to determine what scenes have been loaded'
-2: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\GameSaveExample.cs(98,9): warning CS0618: 'Application.LoadLevel(string)' is obsolete: 'Use SceneManager.LoadScene'
-3: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\GameSaveExample.cs(110,9): warning CS0618: 'Application.LoadLevel(string)' is obsolete: 'Use SceneManager.LoadScene'
-4: Assets\Plugins\FPSControlAssets\Scripts\Examples\Level Examples\OnOpenDoor.cs(16,9): warning CS0618: 'Application.LoadLevel(string)' is obsolete: 'Use SceneManager.LoadScene'
-5: Assets\Plugins\Standard Assets\Effects\ImageEffects\Scripts\Blur.cs(42,18): warning CS0618: 'Material.Material(string)' is obsolete: 'Creating materials from shader source string will be removed in the future. Use Shader assets instead.'
-6: Assets\Plugins\ConsoleUI\FrontEnd\UnityGUI\ConsoleGUI.cs(214,138): warning CS0618: 'TextEditor.content' is obsolete: 'Please use 'text' instead of 'content''
-
-- PDB to MDB conversion --------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
-Arguments: Temp\Assembly-CSharp-firstpass.dll
-Exit code: 0
-Elapsed time: 0.28 sec
-
-- pdb2mdb.exe output (0 lines):
-********************************************************************************
-*                     Friday, January 15, 2016 5:54:15 PM                      *
-********************************************************************************
-CSharpCompilerWrapper.exe version: 1.6.1.0
-Platform: Windows
-Target assembly: Assembly-CSharp.dll
-Project directory: H:\Users\Trojaner\UnityProjects\The Collapse
-Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
-Compiler: Microsoft C# 6.0
-
-- Compilation -----------------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-99a155d0db3c7974aa3b2247d7ff3bfd
-Exit code: 0
-Elapsed time: 6.04 sec
-
-- Compiler output (2 lines):
-0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
-1: Copyright (C) Microsoft Corporation. All rights reserved.
-
-- Compiler errors (3 lines):
-0: Assets\Static_Interface\Utils\Highlighter.cs(25,13): warning CS0162: Unreachable code detected
-1: Assets\Static_Interface\Utils\Highlighter.cs(32,13): warning CS0162: Unreachable code detected
-2: Assets\Static_Interface\Utils\Highlighter.cs(40,13): warning CS0162: Unreachable code detected
-
-- PDB to MDB conversion --------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
-Arguments: Temp\Assembly-CSharp.dll
-Exit code: 0
-Elapsed time: 0.19 sec
-
-- pdb2mdb.exe output (0 lines):
-********************************************************************************
-*                     Friday, January 15, 2016 5:54:15 PM                      *
+*                     Sunday, January 17, 2016 10:17:46 PM                     *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 1.6.1.0
 Platform: Windows
@@ -154,9 +97,9 @@ Compiler: Microsoft C# 6.0
 - Compilation -----------------------------------------------
 
 Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-f3bc72b9cfb2c5442bd3bc703fafcd2e
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-124890e80110e9e488bdf089b98a303d
 Exit code: 0
-Elapsed time: 5.64 sec
+Elapsed time: 5.67 sec
 
 - Compiler output (2 lines):
 0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
@@ -169,6 +112,37 @@ Elapsed time: 5.64 sec
 Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
 Arguments: Temp\Assembly-CSharp-Editor-firstpass.dll
 Exit code: 0
-Elapsed time: 0.18 sec
+Elapsed time: 0.20 sec
+
+- pdb2mdb.exe output (0 lines):
+********************************************************************************
+*                     Sunday, January 17, 2016 10:17:53 PM                     *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 1.6.1.0
+Platform: Windows
+Target assembly: Assembly-CSharp-Editor.dll
+Project directory: H:\Users\Trojaner\UnityProjects\The Collapse
+Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
+Compiler: Microsoft C# 6.0
+
+- Compilation -----------------------------------------------
+
+Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-f17536f875633494aaf56dc183edd7bf
+Exit code: 0
+Elapsed time: 4.37 sec
+
+- Compiler output (2 lines):
+0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
+1: Copyright (C) Microsoft Corporation. All rights reserved.
+
+- Compiler errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp-Editor.dll
+Exit code: 0
+Elapsed time: 0.16 sec
 
 - pdb2mdb.exe output (0 lines):

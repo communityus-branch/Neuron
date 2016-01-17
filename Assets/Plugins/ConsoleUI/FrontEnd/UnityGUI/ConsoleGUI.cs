@@ -3,7 +3,6 @@
  * Copyright 2012
  **/
 
-using FPSControl;
 using UnityEngine;
 
 namespace Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI
@@ -282,8 +281,8 @@ namespace Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI
                 previousLockmode = Cursor.lockState;
                 if (Character != null)
                 {
-                    wasControllerEnabled = Character.GetComponent<FPSControlPlayer>().enabled;
-                    Character.GetComponent<FPSControlPlayer>().enabled = false;
+                    //wasControllerEnabled = Character.GetComponent<FPSControlPlayer>().enabled;
+                    //Character.GetComponent<FPSControlPlayer>().enabled = false;
                 }
             }
 
@@ -300,7 +299,7 @@ namespace Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI
                 Cursor.lockState = previousLockmode;
                 if (Character != null)
                 {
-                    Character.GetComponent<FPSControlPlayer>().enabled = wasControllerEnabled;
+                    //Character.GetComponent<FPSControlPlayer>().enabled = wasControllerEnabled;
                 }
             }
 
