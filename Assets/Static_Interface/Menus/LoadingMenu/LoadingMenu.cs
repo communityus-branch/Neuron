@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Static_Interface.Level;
+using Static_Interface.Utils;
 using UnityEngine.SceneManagement;
 
 namespace Static_Interface.Menus.LoadingMenu
@@ -13,6 +14,8 @@ namespace Static_Interface.Menus.LoadingMenu
         private AsyncOperation _loadingOperation;
         void Start()
         {
+            ObjectUtils.CheckObjects();
+
             if (!LevelManager.Instance.IsLoading)
             {
                 throw new Exception("Not loading??");

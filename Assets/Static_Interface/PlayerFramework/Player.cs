@@ -4,6 +4,6 @@ namespace Static_Interface.PlayerFramework
 {
     public class Player : MonoBehaviour
     {
-        public PlayerController MovementController { get; protected set; }
+        public PlayerController MovementController => GetComponent<PlayerController>();
     }
 }

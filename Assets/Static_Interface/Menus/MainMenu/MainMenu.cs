@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Static_Interface.Level;
 using Static_Interface.Multiplayer.Server;
+using Static_Interface.Utils;
 using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ namespace Static_Interface.Menus.MainMenu
     {
         void Awake()
         {
+            ObjectUtils.CheckObjects();
             if (!Debug.isDebugBuild && SteamAPI.RestartAppIfNecessary(Game.ID))
             {
                 Application.Quit();
@@ -18,9 +20,6 @@ namespace Static_Interface.Menus.MainMenu
         }
         public void StartGame(string scene)
         {
-            DontDestroyOnLoad(GameObject.Find("PersistentScripts"));
-            DontDestroyOnLoad(GameObject.Find("Server"));
-            DontDestroyOnLoad(GameObject.Find("Console"));
             LevelManager.Instance.LoadLevel("DefaultMap");
         }
 

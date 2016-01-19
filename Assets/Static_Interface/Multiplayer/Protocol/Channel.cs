@@ -6,6 +6,7 @@ using System.Reflection;
 using Static_Interface.Multiplayer.Service.MultiplayerProviderService;
 using Static_Interface.Objects;
 using Static_Interface.PlayerFramework;
+using Static_Interface.Utils;
 using UnityEngine;
 
 namespace Static_Interface.Multiplayer.Protocol
@@ -99,7 +100,7 @@ namespace Static_Interface.Multiplayer.Protocol
                 {
                     Receive(Connection.ClientID, buffer, 0, length);
                 }
-                else if (Connection.Provider is ServerMultiplayerProvider && (steamID == Connection.ServerID))
+                else if (ConnectionUtils.IsServer() && (steamID == Connection.ServerID))
                 {
                     Receive(Connection.ServerID, buffer, 0, length);
                 }
@@ -255,7 +256,7 @@ namespace Static_Interface.Multiplayer.Protocol
         {
             if (mode == ECall.SERVER)
             {
-                if (Connection.Provider is ServerMultiplayerProvider)
+                if (ConnectionUtils.IsServer())
                 {
                     Receive(Connection.ServerID, packet, 0, size);
                 }
@@ -266,7 +267,7 @@ namespace Static_Interface.Multiplayer.Protocol
             }
             else if (mode == ECall.ALL)
             {
-                if (!(Connection.Provider is ServerMultiplayerProvider))
+                if (!(ConnectionUtils.IsServer()))
                 {
                     Connection.Send(Connection.ServerID, type, packet, size, ID);
                 }
@@ -277,7 +278,7 @@ namespace Static_Interface.Multiplayer.Protocol
                         Connection.Send(user.Identity.ID, type, packet, size, ID);
                     }
                 }
-                if (Connection.Provider is ServerMultiplayerProvider)
+                if (ConnectionUtils.IsServer())
                 {
                     Receive(Connection.ServerID, packet, 0, size);
                 }
@@ -288,7 +289,7 @@ namespace Static_Interface.Multiplayer.Protocol
             }
             else if (mode == ECall.OTHERS)
             {
-                if (!(Connection.Provider is ServerMultiplayerProvider))
+                if (!(ConnectionUtils.IsServer()))
                 {
                     Connection.Send(Connection.ServerID, type, packet, size, ID);
                 }
@@ -311,7 +312,7 @@ namespace Static_Interface.Multiplayer.Protocol
             }
             else if (mode == ECall.NOT_OWNER)
             {
-                if (!(Connection.Provider is ServerMultiplayerProvider))
+                if (!(ConnectionUtils.IsServer()))
                 {
                     Connection.Send(Connection.ServerID, type, packet, size, ID);
                 }
@@ -329,7 +330,7 @@ namespace Static_Interface.Multiplayer.Protocol
                         Connection.Send(user.Identity.ID, type, packet, size, ID);
                     }
                 }
-                if (Connection.Provider is ClientMultiplayerProvider)
+                if (ConnectionUtils.IsClient())
                 {
                     Receive(Connection.ClientID, packet, 0, size);
                 }
@@ -367,7 +368,7 @@ namespace Static_Interface.Multiplayer.Protocol
             {
                 Receive(Connection.ClientID, buffer, 0, size);
             }
-            else if (Connection.Provider is ServerMultiplayerProvider && (steamID == Connection.ServerID))
+            else if (ConnectionUtils.IsServer() && (steamID == Connection.ServerID))
             {
                 Receive(Connection.ServerID, buffer, 0, size);
             }
@@ -382,7 +383,7 @@ namespace Static_Interface.Multiplayer.Protocol
             switch (mode)
             {
                 case ECall.SERVER:
-                    if (Connection.Provider is ServerMultiplayerProvider)
+                    if (ConnectionUtils.IsServer())
                     {
                         Receive(Connection.ServerID, packet, 0, size);
                     }
@@ -392,7 +393,7 @@ namespace Static_Interface.Multiplayer.Protocol
                     }
                     break;
                 case ECall.ALL:
-                    if (!(Connection.Provider is ServerMultiplayerProvider))
+                    if (!(ConnectionUtils.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
@@ -404,7 +405,7 @@ namespace Static_Interface.Multiplayer.Protocol
                             Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
-                    if (Connection.Provider is ServerMultiplayerProvider)
+                    if (ConnectionUtils.IsServer())
                     {
                         Receive(Connection.ServerID, packet, 0, size);
                     }
@@ -414,7 +415,7 @@ namespace Static_Interface.Multiplayer.Protocol
                     }
                     break;
                 case ECall.OTHERS:
-                    if (!(Connection.Provider is ServerMultiplayerProvider))
+                    if (!(ConnectionUtils.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
@@ -438,7 +439,7 @@ namespace Static_Interface.Multiplayer.Protocol
                     }
                     break;
                 case ECall.NOT_OWNER:
-                    if (!(Connection.Provider is ServerMultiplayerProvider))
+                    if (!(ConnectionUtils.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
@@ -460,7 +461,7 @@ namespace Static_Interface.Multiplayer.Protocol
                             Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
-                    if (Connection.Provider is ClientMultiplayerProvider)
+                    if (ConnectionUtils.IsClient())
                     {
                         Receive(Connection.ClientID, packet, 0, size);
                     }
@@ -504,7 +505,7 @@ namespace Static_Interface.Multiplayer.Protocol
             switch (mode)
             {
                 case ECall.SERVER:
-                    if (Connection.Provider is ServerMultiplayerProvider)
+                    if (ConnectionUtils.IsServer())
                     {
                         Receive(Connection.ServerID, packet, 0, size);
                     }
@@ -514,7 +515,7 @@ namespace Static_Interface.Multiplayer.Protocol
                     }
                     break;
                 case ECall.ALL:
-                    if (!(Connection.Provider is ServerMultiplayerProvider))
+                    if (!(ConnectionUtils.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
@@ -527,7 +528,7 @@ namespace Static_Interface.Multiplayer.Protocol
                             Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
-                    if (Connection.Provider is ServerMultiplayerProvider)
+                    if (ConnectionUtils.IsServer())
                     {
                         Receive(Connection.ServerID, packet, 0, size);
                     }
@@ -537,7 +538,7 @@ namespace Static_Interface.Multiplayer.Protocol
                     }
                     break;
                 case ECall.OTHERS:
-                    if (!(Connection.Provider is ServerMultiplayerProvider))
+                    if (!(ConnectionUtils.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
@@ -562,7 +563,7 @@ namespace Static_Interface.Multiplayer.Protocol
                     }
                     break;
                 case ECall.NOT_OWNER:
-                    if (!(Connection.Provider is ServerMultiplayerProvider))
+                    if (!(ConnectionUtils.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
@@ -586,7 +587,7 @@ namespace Static_Interface.Multiplayer.Protocol
                             Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
-                    if (Connection.Provider is ServerMultiplayerProvider)
+                    if (ConnectionUtils.IsServer())
                     {
                         Receive(Connection.ClientID, packet, 0, size);
                     }
@@ -631,7 +632,7 @@ namespace Static_Interface.Multiplayer.Protocol
             switch (mode)
             {
                 case ECall.SERVER:
-                    if (Connection.Provider is ServerMultiplayerProvider)
+                    if (ConnectionUtils.IsServer())
                     {
                         Receive(Connection.ServerID, packet, 0, size);
                     }
@@ -641,7 +642,7 @@ namespace Static_Interface.Multiplayer.Protocol
                     }
                     break;
                 case ECall.ALL:
-                    if (!(Connection.Provider is ServerMultiplayerProvider))
+                    if (!(ConnectionUtils.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
@@ -655,7 +656,7 @@ namespace Static_Interface.Multiplayer.Protocol
                             Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
-                    if (Connection.Provider is ServerMultiplayerProvider)
+                    if (ConnectionUtils.IsServer())
                     {
                         Receive(Connection.ServerID, packet, 0, size);
                     }
@@ -665,7 +666,7 @@ namespace Static_Interface.Multiplayer.Protocol
                     }
                     break;
                 case ECall.OTHERS:
-                    if (!(Connection.Provider is ServerMultiplayerProvider))
+                    if (!(ConnectionUtils.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
@@ -691,7 +692,7 @@ namespace Static_Interface.Multiplayer.Protocol
                     }
                     break;
                 case ECall.NOT_OWNER:
-                    if (!(Connection.Provider is ServerMultiplayerProvider))
+                    if (!(ConnectionUtils.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
@@ -717,7 +718,7 @@ namespace Static_Interface.Multiplayer.Protocol
                             Connection.Send(user.Identity.ID, type, packet, size, ID);
                         }
                     }
-                    if (Connection.Provider is ClientMultiplayerProvider)
+                    if (ConnectionUtils.IsClient())
                     {
                         Receive(Connection.ClientID, packet, 0, size);
                     }

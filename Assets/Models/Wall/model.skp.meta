@@ -1,0 +1,184 @@
+fileFormatVersion: 2
+guid: b8717cb8545fbfe49a11cf17e223db8c
+timeCreated: 1453126146
+licenseType: Free
+SketchUpImporter:
+  generateBackFace: 0
+  mergeCoplanarFaces: 0
+  selectedNodes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000
+  assetHash:
+    serializedVersion: 2
+    Hash: fae11d50f1d12328741c0491ba99c1ce
+  longitude: -105.283
+  latitude: 40.017
+  northCorrection: -0
+  fileUnit: 0
+  sketchUpImportData:
+    defaultCamera:
+      position: {x: -0.6059249, y: 1.3020421, z: -1.2387459}
+      lookAt: {x: 0.028289447, y: 0.67394406, z: -0.41368613}
+      up: {x: 0.31492078, y: 0.8561441, z: 0.40968558}
+      fov: 35
+      aspectRatio: 0
+      orthoSize: 1
+      isPerspective: 1
+    scenes:
+    - camera:
+        position: {x: -0.6059249, y: 1.3020421, z: -1.2387459}
+        lookAt: {x: 0.028289447, y: 0.67394406, z: -0.41368613}
+        up: {x: 0.31492078, y: 0.8561441, z: 0.40968558}
+        fov: 35
+        aspectRatio: 0
+        orthoSize: 1
+        isPerspective: 1
+      name: Scene 1
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: 8 Inch Core Web
+    100002: 8 Inch Core Web 1
+    100004: 8 Inch Core Web 2
+    100006: 8 Inch Core Web 3
+    100008: 8 Inch Core Web 4
+    100010: 8 Inch Core Web 5
+    100012: 8 Inch Staright
+    100014: Group 15
+    100016: Group 19
+    100018: Group 23
+    100020: Group 27
+    100022: Group 31
+    100024: Group 5
+    100026: Group#6
+    100028: Group#6 1
+    100030: Image 11
+    100032: Image 14
+    100034: Image 18
+    100036: Image 22
+    100038: Image 26
+    100040: Image 30
+    100042: Image 4
+    100044: Image 8
+    100046: //RootNode
+    400000: 8 Inch Core Web
+    400002: 8 Inch Core Web 1
+    400004: 8 Inch Core Web 2
+    400006: 8 Inch Core Web 3
+    400008: 8 Inch Core Web 4
+    400010: 8 Inch Core Web 5
+    400012: 8 Inch Staright
+    400014: Group 15
+    400016: Group 19
+    400018: Group 23
+    400020: Group 27
+    400022: Group 31
+    400024: Group 5
+    400026: Group#6
+    400028: Group#6 1
+    400030: Image 11
+    400032: Image 14
+    400034: Image 18
+    400036: Image 22
+    400038: Image 26
+    400040: Image 30
+    400042: Image 4
+    400044: Image 8
+    400046: //RootNode
+    2300000: 8 Inch Core Web
+    2300002: 8 Inch Core Web 1
+    2300004: 8 Inch Core Web 2
+    2300006: 8 Inch Core Web 3
+    2300008: 8 Inch Core Web 4
+    2300010: 8 Inch Core Web 5
+    2300012: Group#6
+    2300014: Group#6 1
+    2300016: Image 11
+    2300018: Image 14
+    2300020: Image 18
+    2300022: Image 22
+    2300024: Image 26
+    2300026: Image 30
+    2300028: Image 4
+    2300030: Image 8
+    3300000: 8 Inch Core Web
+    3300002: 8 Inch Core Web 1
+    3300004: 8 Inch Core Web 2
+    3300006: 8 Inch Core Web 3
+    3300008: 8 Inch Core Web 4
+    3300010: 8 Inch Core Web 5
+    3300012: Group#6
+    3300014: Group#6 1
+    3300016: Image 11
+    3300018: Image 14
+    3300020: Image 18
+    3300022: Image 22
+    3300024: Image 26
+    3300026: Image 30
+    3300028: Image 4
+    3300030: Image 8
+    4300000: Mesh 8 Inch Core Web
+    4300002: Mesh 8 Inch Core Web
+    4300004: Mesh Group#6
+    4300006: Mesh Group#6
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.0254
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
