@@ -70,6 +70,8 @@ namespace Static_Interface.Multiplayer.Server
             var net = ((OffsetNet + Time.realtimeSinceStartup) - LastNet);
 
             EPacket parsedPacket = (EPacket)packet[offset];
+			Debug.Log("Received packet: " + parsedPacket);
+
             if (parsedPacket.IsUpdate())
             {
                 if (source == ServerID)
@@ -148,7 +150,7 @@ namespace Static_Interface.Multiplayer.Server
 
                     var args = ObjectSerializer.GetObjects(source, offset, 0, packet, argTypes);
                     UserIdentity playerIdent = new UserIdentity(source, (string) args[1], (CSteamID) args[3]);
-
+					Debug.Log("Player connecting: " + playerIdent.PlayerName);
                     if (((string)args[4]) != Game.VERSION)
                     {
                         Reject(source, ERejectionReason.WRONG_VERSION);
@@ -338,7 +340,8 @@ namespace Static_Interface.Multiplayer.Server
         public void Accept(PendingUser user)
         {
             UserIdentity ident = user.Identity;
-            if (!user.HasAuthentication) return;
+			Debug.Log("Player accepted: " + ident.PlayerName);
+			if (!user.HasAuthentication) return;
             _pendingPlayers.Remove(user);
             SteamGameServer.BUpdateUserData(ident.ID, ident.PlayerName, 0);
             Vector3 spawn = Vector3.zero;

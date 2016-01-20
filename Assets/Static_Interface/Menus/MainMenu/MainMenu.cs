@@ -38,6 +38,7 @@ namespace Static_Interface.Menus.MainMenu
             GameObject serverObject = GameObject.Find("Server");
             DestroyImmediate(serverObject.GetComponent<ServerConnection>());
             ServerConnection conn = serverObject.AddComponent<ServerConnection>();
+			DontDestroyOnLoad (conn);
             if (!conn.IsReady) yield return new WaitForSeconds(0.5f);
             conn.OpenGameServer();
             GameObject.Find("Host Button").GetComponent<Button>().enabled = false;

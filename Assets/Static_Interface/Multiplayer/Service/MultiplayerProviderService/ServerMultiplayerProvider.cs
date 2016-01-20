@@ -35,7 +35,7 @@ namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
             SteamGameServer.EnableHeartbeats(true);
 
             Application.targetFrameRate = 60;
-            Application.
+          
         }
     }
 }

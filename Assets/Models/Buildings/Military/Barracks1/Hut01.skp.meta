@@ -1,0 +1,437 @@
+fileFormatVersion: 2
+guid: bfa06c865c58b3b4780f88a4d88f7fea
+timeCreated: 1453126954
+licenseType: Free
+SketchUpImporter:
+  generateBackFace: 0
+  mergeCoplanarFaces: 0
+  selectedNodes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000230000002400000025000000260000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f000000300000003100000032000000330000003400000035000000360000003700000038000000390000003a0000003b0000003c0000003d0000003e0000003f000000400000004100000042000000430000004400000045000000460000004700000048000000490000004a0000004b0000004c0000004d0000004e0000004f000000500000005100000052000000530000005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f000000600000006100000062000000630000006400000065000000660000006700000068000000690000006a0000006b0000006c0000006d0000006e0000006f000000700000007100000072000000730000007400000075000000760000007700000078000000790000007a0000007b0000007c0000007d0000007e0000007f000000800000008100000082000000830000008400000085000000860000008700000088000000890000008a0000008b0000008c0000008d0000008e0000008f000000900000009100000092000000930000009400000095000000960000009700000098000000990000009a0000009b0000009c0000009d0000009e0000009f000000
+  assetHash:
+    serializedVersion: 2
+    Hash: 98c8d6b787e25ef581a965ab13f8b993
+  longitude: -105.283
+  latitude: 40.017
+  northCorrection: -0
+  fileUnit: 0
+  sketchUpImportData:
+    defaultCamera:
+      position: {x: 5.8952484, y: 1.8163484, z: -13.224639}
+      lookAt: {x: -1.8603647, y: 0.9650836, z: -1.24905}
+      up: {x: -0.03237484, y: 0.99822485, z: 0.049990606}
+      fov: 35
+      aspectRatio: 0
+      orthoSize: 1
+      isPerspective: 1
+    scenes: []
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: DoorSingle
+    100002: DoorSingle 1
+    100004: //RootNode
+    100006: HutEnd1
+    100008: HutEnd1 1
+    100010: HutFloor1
+    100012: HutInner
+    100014: HutInner 1
+    100016: HutSide1
+    100018: HutSide1 1
+    100020: HutTop1
+    100022: HutWinFrame01
+    100024: HutWinFrame01 1
+    100026: HutWinFrame01 2
+    100028: HutWinFrame01 3
+    100030: HutWinFrame01 4
+    100032: HutWinFrame01 5
+    100034: HutWinFrame01 6
+    100036: HutWinFrame01 7
+    100038: HutWinFrame01 8
+    100040: HutWinFrame01 9
+    100042: LightBulb
+    100044: LightBulb 1
+    100046: LightBulb 2
+    100048: LightBulb 3
+    100050: LightBulb 4
+    100052: LightBulb01
+    100054: LightBulb01 1
+    100056: LightBulb01 2
+    100058: LightBulb01 3
+    100060: LightBulb01 4
+    100062: LightCable01
+    100064: LightCable01 1
+    100066: LightCable01 2
+    100068: LightCable01 3
+    100070: LightCable01 4
+    100072: LightSocket01
+    100074: LightSocket01 1
+    100076: LightSocket01 2
+    100078: LightSocket01 3
+    100080: LightSocket01 4
+    100082: LightSwitch01
+    100084: LightSwitch01 1
+    100086: Poster01
+    100088: Poster02
+    100090: Poster03
+    100092: Poster04
+    100094: Poster05
+    100096: Poster06
+    100098: Poster07
+    100100: Poster08
+    100102: Poster09
+    100104: Poster10
+    100106: Poster11
+    100108: Poster11 1
+    100110: WinInner
+    100112: WinInner 1
+    100114: WinInner 2
+    100116: WinInner 3
+    100118: WinInner 4
+    100120: WinInner 5
+    100122: WinPanes01
+    100124: WinPanes01 1
+    100126: WinPanes01 2
+    100128: WinPanes01 3
+    100130: WinPanes01 4
+    100132: WinPanes01 5
+    100134: WinPanes01 6
+    100136: WinPanes01 7
+    100138: WinPanes01 8
+    100140: WinPanes01 9
+    100142: WinRoof01
+    100144: WinRoof01 1
+    100146: WinRoof01 2
+    100148: WinRoof01 3
+    100150: WinRoof01 4
+    100152: WinRoof01 5
+    100154: WinSides01
+    100156: WinSides01 1
+    100158: WinSides01 2
+    100160: WinSides01 3
+    100162: WinSides01 4
+    100164: WinSides01 5
+    400000: DoorSingle
+    400002: DoorSingle 1
+    400004: //RootNode
+    400006: HutEnd1
+    400008: HutEnd1 1
+    400010: HutFloor1
+    400012: HutInner
+    400014: HutInner 1
+    400016: HutSide1
+    400018: HutSide1 1
+    400020: HutTop1
+    400022: HutWinFrame01
+    400024: HutWinFrame01 1
+    400026: HutWinFrame01 2
+    400028: HutWinFrame01 3
+    400030: HutWinFrame01 4
+    400032: HutWinFrame01 5
+    400034: HutWinFrame01 6
+    400036: HutWinFrame01 7
+    400038: HutWinFrame01 8
+    400040: HutWinFrame01 9
+    400042: LightBulb
+    400044: LightBulb 1
+    400046: LightBulb 2
+    400048: LightBulb 3
+    400050: LightBulb 4
+    400052: LightBulb01
+    400054: LightBulb01 1
+    400056: LightBulb01 2
+    400058: LightBulb01 3
+    400060: LightBulb01 4
+    400062: LightCable01
+    400064: LightCable01 1
+    400066: LightCable01 2
+    400068: LightCable01 3
+    400070: LightCable01 4
+    400072: LightSocket01
+    400074: LightSocket01 1
+    400076: LightSocket01 2
+    400078: LightSocket01 3
+    400080: LightSocket01 4
+    400082: LightSwitch01
+    400084: LightSwitch01 1
+    400086: Poster01
+    400088: Poster02
+    400090: Poster03
+    400092: Poster04
+    400094: Poster05
+    400096: Poster06
+    400098: Poster07
+    400100: Poster08
+    400102: Poster09
+    400104: Poster10
+    400106: Poster11
+    400108: Poster11 1
+    400110: WinInner
+    400112: WinInner 1
+    400114: WinInner 2
+    400116: WinInner 3
+    400118: WinInner 4
+    400120: WinInner 5
+    400122: WinPanes01
+    400124: WinPanes01 1
+    400126: WinPanes01 2
+    400128: WinPanes01 3
+    400130: WinPanes01 4
+    400132: WinPanes01 5
+    400134: WinPanes01 6
+    400136: WinPanes01 7
+    400138: WinPanes01 8
+    400140: WinPanes01 9
+    400142: WinRoof01
+    400144: WinRoof01 1
+    400146: WinRoof01 2
+    400148: WinRoof01 3
+    400150: WinRoof01 4
+    400152: WinRoof01 5
+    400154: WinSides01
+    400156: WinSides01 1
+    400158: WinSides01 2
+    400160: WinSides01 3
+    400162: WinSides01 4
+    400164: WinSides01 5
+    2300000: DoorSingle
+    2300002: DoorSingle 1
+    2300004: HutEnd1
+    2300006: HutEnd1 1
+    2300008: HutFloor1
+    2300010: HutInner
+    2300012: HutInner 1
+    2300014: HutSide1
+    2300016: HutSide1 1
+    2300018: HutTop1
+    2300020: HutWinFrame01
+    2300022: HutWinFrame01 1
+    2300024: HutWinFrame01 2
+    2300026: HutWinFrame01 3
+    2300028: HutWinFrame01 4
+    2300030: HutWinFrame01 5
+    2300032: HutWinFrame01 6
+    2300034: HutWinFrame01 7
+    2300036: HutWinFrame01 8
+    2300038: HutWinFrame01 9
+    2300040: LightBulb01
+    2300042: LightBulb01 1
+    2300044: LightBulb01 2
+    2300046: LightBulb01 3
+    2300048: LightBulb01 4
+    2300050: LightCable01
+    2300052: LightCable01 1
+    2300054: LightCable01 2
+    2300056: LightCable01 3
+    2300058: LightCable01 4
+    2300060: LightSocket01
+    2300062: LightSocket01 1
+    2300064: LightSocket01 2
+    2300066: LightSocket01 3
+    2300068: LightSocket01 4
+    2300070: LightSwitch01
+    2300072: LightSwitch01 1
+    2300074: Poster01
+    2300076: Poster02
+    2300078: Poster03
+    2300080: Poster04
+    2300082: Poster05
+    2300084: Poster06
+    2300086: Poster07
+    2300088: Poster08
+    2300090: Poster09
+    2300092: Poster10
+    2300094: Poster11
+    2300096: Poster11 1
+    2300098: WinInner
+    2300100: WinInner 1
+    2300102: WinInner 2
+    2300104: WinInner 3
+    2300106: WinInner 4
+    2300108: WinInner 5
+    2300110: WinPanes01
+    2300112: WinPanes01 1
+    2300114: WinPanes01 2
+    2300116: WinPanes01 3
+    2300118: WinPanes01 4
+    2300120: WinPanes01 5
+    2300122: WinPanes01 6
+    2300124: WinPanes01 7
+    2300126: WinPanes01 8
+    2300128: WinPanes01 9
+    2300130: WinRoof01
+    2300132: WinRoof01 1
+    2300134: WinRoof01 2
+    2300136: WinRoof01 3
+    2300138: WinRoof01 4
+    2300140: WinRoof01 5
+    2300142: WinSides01
+    2300144: WinSides01 1
+    2300146: WinSides01 2
+    2300148: WinSides01 3
+    2300150: WinSides01 4
+    2300152: WinSides01 5
+    3300000: DoorSingle
+    3300002: DoorSingle 1
+    3300004: HutEnd1
+    3300006: HutEnd1 1
+    3300008: HutFloor1
+    3300010: HutInner
+    3300012: HutInner 1
+    3300014: HutSide1
+    3300016: HutSide1 1
+    3300018: HutTop1
+    3300020: HutWinFrame01
+    3300022: HutWinFrame01 1
+    3300024: HutWinFrame01 2
+    3300026: HutWinFrame01 3
+    3300028: HutWinFrame01 4
+    3300030: HutWinFrame01 5
+    3300032: HutWinFrame01 6
+    3300034: HutWinFrame01 7
+    3300036: HutWinFrame01 8
+    3300038: HutWinFrame01 9
+    3300040: LightBulb01
+    3300042: LightBulb01 1
+    3300044: LightBulb01 2
+    3300046: LightBulb01 3
+    3300048: LightBulb01 4
+    3300050: LightCable01
+    3300052: LightCable01 1
+    3300054: LightCable01 2
+    3300056: LightCable01 3
+    3300058: LightCable01 4
+    3300060: LightSocket01
+    3300062: LightSocket01 1
+    3300064: LightSocket01 2
+    3300066: LightSocket01 3
+    3300068: LightSocket01 4
+    3300070: LightSwitch01
+    3300072: LightSwitch01 1
+    3300074: Poster01
+    3300076: Poster02
+    3300078: Poster03
+    3300080: Poster04
+    3300082: Poster05
+    3300084: Poster06
+    3300086: Poster07
+    3300088: Poster08
+    3300090: Poster09
+    3300092: Poster10
+    3300094: Poster11
+    3300096: Poster11 1
+    3300098: WinInner
+    3300100: WinInner 1
+    3300102: WinInner 2
+    3300104: WinInner 3
+    3300106: WinInner 4
+    3300108: WinInner 5
+    3300110: WinPanes01
+    3300112: WinPanes01 1
+    3300114: WinPanes01 2
+    3300116: WinPanes01 3
+    3300118: WinPanes01 4
+    3300120: WinPanes01 5
+    3300122: WinPanes01 6
+    3300124: WinPanes01 7
+    3300126: WinPanes01 8
+    3300128: WinPanes01 9
+    3300130: WinRoof01
+    3300132: WinRoof01 1
+    3300134: WinRoof01 2
+    3300136: WinRoof01 3
+    3300138: WinRoof01 4
+    3300140: WinRoof01 5
+    3300142: WinSides01
+    3300144: WinSides01 1
+    3300146: WinSides01 2
+    3300148: WinSides01 3
+    3300150: WinSides01 4
+    3300152: WinSides01 5
+    4300000: Mesh HutSide1
+    4300002: Mesh HutEnd1
+    4300004: Mesh HutTop1
+    4300006: Mesh HutFloor1
+    4300008: Mesh HutInner
+    4300010: Mesh DoorSingle
+    4300012: Mesh HutWinFrame01
+    4300014: Mesh WinPanes01
+    4300016: Mesh WinRoof01
+    4300018: Mesh WinSides01
+    4300020: Mesh WinInner
+    4300022: Mesh LightBulb01
+    4300024: Mesh Poster01
+    4300026: Mesh Poster02
+    4300028: Mesh Poster03
+    4300030: Mesh Poster04
+    4300032: Mesh Poster05
+    4300034: Mesh Poster06
+    4300036: Mesh Poster07
+    4300038: Mesh Poster08
+    4300040: Mesh Poster09
+    4300042: Mesh Poster10
+    4300044: Mesh Poster11
+    4300046: Mesh LightSocket01
+    4300048: Mesh LightCable01
+    4300050: Mesh LightSwitch01
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.0254
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

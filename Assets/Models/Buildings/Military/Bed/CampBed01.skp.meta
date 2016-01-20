@@ -1,0 +1,551 @@
+fileFormatVersion: 2
+guid: 275ad11b502f94a4d989bf9ec6303d0b
+timeCreated: 1453127140
+licenseType: Free
+SketchUpImporter:
+  generateBackFace: 0
+  mergeCoplanarFaces: 0
+  selectedNodes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000230000002400000025000000260000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f000000300000003100000032000000330000003400000035000000360000003700000038000000390000003a0000003b0000003c0000003d0000003e0000003f000000400000004100000042000000430000004400000045000000460000004700000048000000490000004a0000004b0000004c0000004d0000004e0000004f000000500000005100000052000000530000005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f000000600000006100000062000000630000006400000065000000660000006700000068000000690000006a0000006b0000006c0000006d0000006e0000006f000000700000007100000072000000730000007400000075000000760000007700000078000000790000007a0000007b0000007c0000007d0000007e0000007f000000800000008100000082000000830000008400000085000000860000008700000088000000890000008a0000008b0000008c0000008d0000008e0000008f000000900000009100000092000000930000009400000095000000960000009700000098000000990000009a0000009b0000009c0000009d0000009e0000009f000000a0000000a1000000a2000000a3000000a4000000a5000000a6000000a7000000a8000000a9000000aa000000ab000000ac000000ad000000ae000000af000000b0000000b1000000b2000000b3000000b4000000b5000000b6000000b7000000b8000000b9000000ba000000bb000000bc000000bd000000be000000bf000000c0000000c1000000c2000000c3000000c4000000c5000000c6000000c7000000c8000000c9000000ca000000cb000000cc000000cd000000ce000000cf000000d0000000d1000000d2000000d3000000d4000000d5000000d6000000d7000000d8000000d9000000da000000db000000dc000000dd000000de000000df000000e0000000
+  assetHash:
+    serializedVersion: 2
+    Hash: bc74cc5776a6931a18fb5efd9b4be4f6
+  longitude: -105.283
+  latitude: 40.017
+  northCorrection: -0
+  fileUnit: 0
+  sketchUpImportData:
+    defaultCamera:
+      position: {x: -1.8129996, y: 2.233759, z: -1.8447245}
+      lookAt: {x: 0.5964019, y: 0.0021930023, z: -0.05711103}
+      up: {x: 0.47930834, y: 0.80237263, z: 0.35561448}
+      fov: 35
+      aspectRatio: 0
+      orthoSize: 1
+      isPerspective: 1
+    scenes: []
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: BedFrame
+    100002: BedFrame 1
+    100004: BedLegs
+    100006: BedLegs 1
+    100008: BedLegs 2
+    100010: BedLegs 3
+    100012: BedProps
+    100014: BedProps 1
+    100016: BedProps 2
+    100018: BedProps 3
+    100020: Blanket
+    100022: Blanket 1
+    100024: Blanket01
+    100026: Blanket02
+    100028: Blanket02 1
+    100030: BoltSmall
+    100032: BoltSmall 1
+    100034: BoltSmall 10
+    100036: BoltSmall 11
+    100038: BoltSmall 12
+    100040: BoltSmall 13
+    100042: BoltSmall 14
+    100044: BoltSmall 15
+    100046: BoltSmall 16
+    100048: BoltSmall 17
+    100050: BoltSmall 18
+    100052: BoltSmall 19
+    100054: BoltSmall 2
+    100056: BoltSmall 20
+    100058: BoltSmall 21
+    100060: BoltSmall 22
+    100062: BoltSmall 23
+    100064: BoltSmall 24
+    100066: BoltSmall 25
+    100068: BoltSmall 26
+    100070: BoltSmall 27
+    100072: BoltSmall 28
+    100074: BoltSmall 29
+    100076: BoltSmall 3
+    100078: BoltSmall 30
+    100080: BoltSmall 31
+    100082: BoltSmall 4
+    100084: BoltSmall 5
+    100086: BoltSmall 6
+    100088: BoltSmall 7
+    100090: BoltSmall 8
+    100092: BoltSmall 9
+    100094: //RootNode
+    100096: Mattress01
+    100098: NutSmall
+    100100: NutSmall 1
+    100102: NutSmall 10
+    100104: NutSmall 11
+    100106: NutSmall 12
+    100108: NutSmall 13
+    100110: NutSmall 14
+    100112: NutSmall 15
+    100114: NutSmall 2
+    100116: NutSmall 3
+    100118: NutSmall 4
+    100120: NutSmall 5
+    100122: NutSmall 6
+    100124: NutSmall 7
+    100126: NutSmall 8
+    100128: NutSmall 9
+    100130: Pillow01
+    100132: SmallWasher
+    100134: SmallWasher 1
+    100136: SmallWasher 10
+    100138: SmallWasher 11
+    100140: SmallWasher 12
+    100142: SmallWasher 13
+    100144: SmallWasher 14
+    100146: SmallWasher 15
+    100148: SmallWasher 16
+    100150: SmallWasher 17
+    100152: SmallWasher 18
+    100154: SmallWasher 19
+    100156: SmallWasher 2
+    100158: SmallWasher 20
+    100160: SmallWasher 21
+    100162: SmallWasher 22
+    100164: SmallWasher 23
+    100166: SmallWasher 24
+    100168: SmallWasher 25
+    100170: SmallWasher 26
+    100172: SmallWasher 27
+    100174: SmallWasher 28
+    100176: SmallWasher 29
+    100178: SmallWasher 3
+    100180: SmallWasher 30
+    100182: SmallWasher 31
+    100184: SmallWasher 32
+    100186: SmallWasher 33
+    100188: SmallWasher 34
+    100190: SmallWasher 35
+    100192: SmallWasher 36
+    100194: SmallWasher 37
+    100196: SmallWasher 38
+    100198: SmallWasher 39
+    100200: SmallWasher 4
+    100202: SmallWasher 40
+    100204: SmallWasher 41
+    100206: SmallWasher 42
+    100208: SmallWasher 43
+    100210: SmallWasher 44
+    100212: SmallWasher 45
+    100214: SmallWasher 46
+    100216: SmallWasher 47
+    100218: SmallWasher 5
+    100220: SmallWasher 6
+    100222: SmallWasher 7
+    100224: SmallWasher 8
+    100226: SmallWasher 9
+    400000: BedFrame
+    400002: BedFrame 1
+    400004: BedLegs
+    400006: BedLegs 1
+    400008: BedLegs 2
+    400010: BedLegs 3
+    400012: BedProps
+    400014: BedProps 1
+    400016: BedProps 2
+    400018: BedProps 3
+    400020: Blanket
+    400022: Blanket 1
+    400024: Blanket01
+    400026: Blanket02
+    400028: Blanket02 1
+    400030: BoltSmall
+    400032: BoltSmall 1
+    400034: BoltSmall 10
+    400036: BoltSmall 11
+    400038: BoltSmall 12
+    400040: BoltSmall 13
+    400042: BoltSmall 14
+    400044: BoltSmall 15
+    400046: BoltSmall 16
+    400048: BoltSmall 17
+    400050: BoltSmall 18
+    400052: BoltSmall 19
+    400054: BoltSmall 2
+    400056: BoltSmall 20
+    400058: BoltSmall 21
+    400060: BoltSmall 22
+    400062: BoltSmall 23
+    400064: BoltSmall 24
+    400066: BoltSmall 25
+    400068: BoltSmall 26
+    400070: BoltSmall 27
+    400072: BoltSmall 28
+    400074: BoltSmall 29
+    400076: BoltSmall 3
+    400078: BoltSmall 30
+    400080: BoltSmall 31
+    400082: BoltSmall 4
+    400084: BoltSmall 5
+    400086: BoltSmall 6
+    400088: BoltSmall 7
+    400090: BoltSmall 8
+    400092: BoltSmall 9
+    400094: //RootNode
+    400096: Mattress01
+    400098: NutSmall
+    400100: NutSmall 1
+    400102: NutSmall 10
+    400104: NutSmall 11
+    400106: NutSmall 12
+    400108: NutSmall 13
+    400110: NutSmall 14
+    400112: NutSmall 15
+    400114: NutSmall 2
+    400116: NutSmall 3
+    400118: NutSmall 4
+    400120: NutSmall 5
+    400122: NutSmall 6
+    400124: NutSmall 7
+    400126: NutSmall 8
+    400128: NutSmall 9
+    400130: Pillow01
+    400132: SmallWasher
+    400134: SmallWasher 1
+    400136: SmallWasher 10
+    400138: SmallWasher 11
+    400140: SmallWasher 12
+    400142: SmallWasher 13
+    400144: SmallWasher 14
+    400146: SmallWasher 15
+    400148: SmallWasher 16
+    400150: SmallWasher 17
+    400152: SmallWasher 18
+    400154: SmallWasher 19
+    400156: SmallWasher 2
+    400158: SmallWasher 20
+    400160: SmallWasher 21
+    400162: SmallWasher 22
+    400164: SmallWasher 23
+    400166: SmallWasher 24
+    400168: SmallWasher 25
+    400170: SmallWasher 26
+    400172: SmallWasher 27
+    400174: SmallWasher 28
+    400176: SmallWasher 29
+    400178: SmallWasher 3
+    400180: SmallWasher 30
+    400182: SmallWasher 31
+    400184: SmallWasher 32
+    400186: SmallWasher 33
+    400188: SmallWasher 34
+    400190: SmallWasher 35
+    400192: SmallWasher 36
+    400194: SmallWasher 37
+    400196: SmallWasher 38
+    400198: SmallWasher 39
+    400200: SmallWasher 4
+    400202: SmallWasher 40
+    400204: SmallWasher 41
+    400206: SmallWasher 42
+    400208: SmallWasher 43
+    400210: SmallWasher 44
+    400212: SmallWasher 45
+    400214: SmallWasher 46
+    400216: SmallWasher 47
+    400218: SmallWasher 5
+    400220: SmallWasher 6
+    400222: SmallWasher 7
+    400224: SmallWasher 8
+    400226: SmallWasher 9
+    2300000: BedFrame
+    2300002: BedFrame 1
+    2300004: BedLegs
+    2300006: BedLegs 1
+    2300008: BedLegs 2
+    2300010: BedLegs 3
+    2300012: BedProps
+    2300014: BedProps 1
+    2300016: BedProps 2
+    2300018: BedProps 3
+    2300020: Blanket01
+    2300022: Blanket02
+    2300024: Blanket02 1
+    2300026: BoltSmall
+    2300028: BoltSmall 1
+    2300030: BoltSmall 10
+    2300032: BoltSmall 11
+    2300034: BoltSmall 12
+    2300036: BoltSmall 13
+    2300038: BoltSmall 14
+    2300040: BoltSmall 15
+    2300042: BoltSmall 16
+    2300044: BoltSmall 17
+    2300046: BoltSmall 18
+    2300048: BoltSmall 19
+    2300050: BoltSmall 2
+    2300052: BoltSmall 20
+    2300054: BoltSmall 21
+    2300056: BoltSmall 22
+    2300058: BoltSmall 23
+    2300060: BoltSmall 24
+    2300062: BoltSmall 25
+    2300064: BoltSmall 26
+    2300066: BoltSmall 27
+    2300068: BoltSmall 28
+    2300070: BoltSmall 29
+    2300072: BoltSmall 3
+    2300074: BoltSmall 30
+    2300076: BoltSmall 31
+    2300078: BoltSmall 4
+    2300080: BoltSmall 5
+    2300082: BoltSmall 6
+    2300084: BoltSmall 7
+    2300086: BoltSmall 8
+    2300088: BoltSmall 9
+    2300090: Mattress01
+    2300092: NutSmall
+    2300094: NutSmall 1
+    2300096: NutSmall 10
+    2300098: NutSmall 11
+    2300100: NutSmall 12
+    2300102: NutSmall 13
+    2300104: NutSmall 14
+    2300106: NutSmall 15
+    2300108: NutSmall 2
+    2300110: NutSmall 3
+    2300112: NutSmall 4
+    2300114: NutSmall 5
+    2300116: NutSmall 6
+    2300118: NutSmall 7
+    2300120: NutSmall 8
+    2300122: NutSmall 9
+    2300124: Pillow01
+    2300126: SmallWasher
+    2300128: SmallWasher 1
+    2300130: SmallWasher 10
+    2300132: SmallWasher 11
+    2300134: SmallWasher 12
+    2300136: SmallWasher 13
+    2300138: SmallWasher 14
+    2300140: SmallWasher 15
+    2300142: SmallWasher 16
+    2300144: SmallWasher 17
+    2300146: SmallWasher 18
+    2300148: SmallWasher 19
+    2300150: SmallWasher 2
+    2300152: SmallWasher 20
+    2300154: SmallWasher 21
+    2300156: SmallWasher 22
+    2300158: SmallWasher 23
+    2300160: SmallWasher 24
+    2300162: SmallWasher 25
+    2300164: SmallWasher 26
+    2300166: SmallWasher 27
+    2300168: SmallWasher 28
+    2300170: SmallWasher 29
+    2300172: SmallWasher 3
+    2300174: SmallWasher 30
+    2300176: SmallWasher 31
+    2300178: SmallWasher 32
+    2300180: SmallWasher 33
+    2300182: SmallWasher 34
+    2300184: SmallWasher 35
+    2300186: SmallWasher 36
+    2300188: SmallWasher 37
+    2300190: SmallWasher 38
+    2300192: SmallWasher 39
+    2300194: SmallWasher 4
+    2300196: SmallWasher 40
+    2300198: SmallWasher 41
+    2300200: SmallWasher 42
+    2300202: SmallWasher 43
+    2300204: SmallWasher 44
+    2300206: SmallWasher 45
+    2300208: SmallWasher 46
+    2300210: SmallWasher 47
+    2300212: SmallWasher 5
+    2300214: SmallWasher 6
+    2300216: SmallWasher 7
+    2300218: SmallWasher 8
+    2300220: SmallWasher 9
+    3300000: BedFrame
+    3300002: BedFrame 1
+    3300004: BedLegs
+    3300006: BedLegs 1
+    3300008: BedLegs 2
+    3300010: BedLegs 3
+    3300012: BedProps
+    3300014: BedProps 1
+    3300016: BedProps 2
+    3300018: BedProps 3
+    3300020: Blanket01
+    3300022: Blanket02
+    3300024: Blanket02 1
+    3300026: BoltSmall
+    3300028: BoltSmall 1
+    3300030: BoltSmall 10
+    3300032: BoltSmall 11
+    3300034: BoltSmall 12
+    3300036: BoltSmall 13
+    3300038: BoltSmall 14
+    3300040: BoltSmall 15
+    3300042: BoltSmall 16
+    3300044: BoltSmall 17
+    3300046: BoltSmall 18
+    3300048: BoltSmall 19
+    3300050: BoltSmall 2
+    3300052: BoltSmall 20
+    3300054: BoltSmall 21
+    3300056: BoltSmall 22
+    3300058: BoltSmall 23
+    3300060: BoltSmall 24
+    3300062: BoltSmall 25
+    3300064: BoltSmall 26
+    3300066: BoltSmall 27
+    3300068: BoltSmall 28
+    3300070: BoltSmall 29
+    3300072: BoltSmall 3
+    3300074: BoltSmall 30
+    3300076: BoltSmall 31
+    3300078: BoltSmall 4
+    3300080: BoltSmall 5
+    3300082: BoltSmall 6
+    3300084: BoltSmall 7
+    3300086: BoltSmall 8
+    3300088: BoltSmall 9
+    3300090: Mattress01
+    3300092: NutSmall
+    3300094: NutSmall 1
+    3300096: NutSmall 10
+    3300098: NutSmall 11
+    3300100: NutSmall 12
+    3300102: NutSmall 13
+    3300104: NutSmall 14
+    3300106: NutSmall 15
+    3300108: NutSmall 2
+    3300110: NutSmall 3
+    3300112: NutSmall 4
+    3300114: NutSmall 5
+    3300116: NutSmall 6
+    3300118: NutSmall 7
+    3300120: NutSmall 8
+    3300122: NutSmall 9
+    3300124: Pillow01
+    3300126: SmallWasher
+    3300128: SmallWasher 1
+    3300130: SmallWasher 10
+    3300132: SmallWasher 11
+    3300134: SmallWasher 12
+    3300136: SmallWasher 13
+    3300138: SmallWasher 14
+    3300140: SmallWasher 15
+    3300142: SmallWasher 16
+    3300144: SmallWasher 17
+    3300146: SmallWasher 18
+    3300148: SmallWasher 19
+    3300150: SmallWasher 2
+    3300152: SmallWasher 20
+    3300154: SmallWasher 21
+    3300156: SmallWasher 22
+    3300158: SmallWasher 23
+    3300160: SmallWasher 24
+    3300162: SmallWasher 25
+    3300164: SmallWasher 26
+    3300166: SmallWasher 27
+    3300168: SmallWasher 28
+    3300170: SmallWasher 29
+    3300172: SmallWasher 3
+    3300174: SmallWasher 30
+    3300176: SmallWasher 31
+    3300178: SmallWasher 32
+    3300180: SmallWasher 33
+    3300182: SmallWasher 34
+    3300184: SmallWasher 35
+    3300186: SmallWasher 36
+    3300188: SmallWasher 37
+    3300190: SmallWasher 38
+    3300192: SmallWasher 39
+    3300194: SmallWasher 4
+    3300196: SmallWasher 40
+    3300198: SmallWasher 41
+    3300200: SmallWasher 42
+    3300202: SmallWasher 43
+    3300204: SmallWasher 44
+    3300206: SmallWasher 45
+    3300208: SmallWasher 46
+    3300210: SmallWasher 47
+    3300212: SmallWasher 5
+    3300214: SmallWasher 6
+    3300216: SmallWasher 7
+    3300218: SmallWasher 8
+    3300220: SmallWasher 9
+    4300000: Mesh BedFrame
+    4300002: Mesh BedLegs
+    4300004: Mesh BedProps
+    4300006: Mesh Mattress01
+    4300008: Mesh BoltSmall
+    4300010: Mesh NutSmall
+    4300012: Mesh SmallWasher
+    4300014: Mesh Pillow01
+    4300016: Mesh Blanket01
+    4300018: Mesh Blanket02
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.0254
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
