@@ -12,7 +12,7 @@ using Types = Static_Interface.Objects.Types;
 
 namespace Static_Interface.Multiplayer.Server
 {
-    public class ServerConnection : Connection<ServerMultiplayerProvider>
+    public class ServerConnection : Connection
     {
         public string Map { get; } = "DefaultMap";
 
@@ -372,7 +372,7 @@ namespace Static_Interface.Multiplayer.Server
             if(Provider == null) Provider = new ServerMultiplayerProvider();
             try
             {
-                Provider.Open(BindIP, Port);
+                ((ServerMultiplayerProvider)Provider).Open(BindIP, Port);
             }
             catch (Exception exception)
             {
@@ -385,7 +385,7 @@ namespace Static_Interface.Multiplayer.Server
             CurrentTime = SteamGameServerUtils.GetServerRealTime();
             LevelManager.Instance.LoadLevel(Map); //Todo
             SteamGameServer.SetMaxPlayerCount(MaxPlayers);
-            SteamGameServer.SetServerName(Provider.Description);
+            SteamGameServer.SetServerName(((ServerMultiplayerProvider)Provider).Description);
             SteamGameServer.SetPasswordProtected(false); //Todo
             SteamGameServer.SetMapName(Map);
 
@@ -402,7 +402,7 @@ namespace Static_Interface.Multiplayer.Server
         public void CloseGameServer()
         {
             //Todo: OnServerShutdown
-            Provider.Close();
+            ((ServerMultiplayerProvider)Provider).Close();
             Destroy(this);
             enabled = false;
         }

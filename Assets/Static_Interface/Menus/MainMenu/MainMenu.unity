@@ -753,7 +753,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 108249315}
-        m_MethodName: Quit
+        m_MethodName: Host
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2859,7 +2859,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: UNWALKED
+  m_Text: THE COLLAPSE
 --- !u!222 &2038428975
 CanvasRenderer:
   m_ObjectHideFlags: 0

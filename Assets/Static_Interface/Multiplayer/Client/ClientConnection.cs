@@ -15,7 +15,7 @@ using Time = UnityEngine.Time;
 
 namespace Static_Interface.Multiplayer.Client
 {
-    public class ClientConnection : Connection<ClientMultiplayerProvider>
+    public class ClientConnection : Connection
     {
         private float[] _pings;
         private float _ping;

@@ -1,4 +1,5 @@
-﻿using Static_Interface.Multiplayer.Protocol;
+﻿using Static_Interface.Multiplayer;
+using Static_Interface.Multiplayer.Protocol;
 using Static_Interface.Utils;
 using UnityEngine;
 
@@ -12,13 +13,13 @@ namespace Static_Interface.PlayerFramework
         protected virtual void Start()
         {
             _controller = GetComponent<CharacterController>();
-            if (ConnectionUtils.IsServer() || !Channel.IsOwner)
+            if (Connection.IsServer() || !Channel.IsOwner)
             {
                 Destroy(_controller);
                 _controller = null;
             }
 
-            if (ConnectionUtils.IsServer())
+            if (Connection.IsServer())
             {
                 serverCollider = gameObject.AddComponent<CapsuleCollider>();
                 serverCollider.isTrigger = true;
@@ -32,7 +33,7 @@ namespace Static_Interface.PlayerFramework
                 return;
             }
 
-            nsb = new NetworkSnapshotBuffer(ConnectionUtils.UPDATE_TIME, ConnectionUtils.UPDATE_TIME * 2.33f);
+            nsb = new NetworkSnapshotBuffer(Connection.UPDATE_TIME, Connection.UPDATE_TIME * 2.33f);
         }
 
         private CharacterController _controller;
@@ -43,6 +44,12 @@ namespace Static_Interface.PlayerFramework
         public bool IsOnGround()
         {
             return _controller.isGrounded;
+        }
+
+        public void HandleInput(PlayerInput input)
+        {
+            if (Player.Health.IsDead) return;
+
         }
     }
 }

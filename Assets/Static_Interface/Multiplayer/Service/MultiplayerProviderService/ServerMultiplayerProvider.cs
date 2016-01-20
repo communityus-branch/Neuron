@@ -1,5 +1,6 @@
 ﻿using Static_Interface.Multiplayer.Server;
 using Steamworks;
+using UnityEngine;
 
 namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
 {
@@ -32,6 +33,9 @@ namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
             SteamGameServer.SetServerName(Description);
             SteamGameServer.LogOnAnonymous();
             SteamGameServer.EnableHeartbeats(true);
+
+            Application.targetFrameRate = 60;
+            Application.
         }
     }
 }

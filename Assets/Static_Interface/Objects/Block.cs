@@ -121,6 +121,10 @@ namespace Static_Interface.Objects
             {
                 return ReadSingleVector3();
             }
+            if (type == Types.KEYSTATE_TYPE)
+            {
+                return ReadKeyState();
+            }
             if (type == Types.COLOR_TYPE)
             {
                 return ReadColor();
@@ -266,6 +270,11 @@ namespace Static_Interface.Objects
         public Vector3 ReadSingleVector3()
         {
             return new Vector3(ReadSingle(), ReadSingle(), ReadSingle());
+        }
+
+        public KeyState ReadKeyState()
+        {
+            return new KeyState {KeyCode = ReadInt32(), IsDown = ReadBoolean(), IsPressed = ReadBoolean()};
         }
 
         public CSteamID ReadSteamID()
@@ -419,6 +428,10 @@ namespace Static_Interface.Objects
             {
                 WriteSingleVector3((Vector3) objects);
             }
+            else if (type == Types.KEYSTATE_TYPE)
+            {
+                WriteKeyState((KeyState) objects);
+            }
             else if (type == Types.COLOR_TYPE)
             {
                 WriteColor((Color) objects);
@@ -537,6 +550,13 @@ namespace Static_Interface.Objects
             WriteSingle(value.x);
             WriteSingle(value.y);
             WriteSingle(value.z);
+        }
+
+        public void WriteKeyState(KeyState value)
+        {
+            WriteInt32(value.KeyCode);
+            WriteBoolean(value.IsDown);
+            WriteBoolean(value.IsPressed);
         }
 
         public void WriteSteamID(CSteamID steamID)

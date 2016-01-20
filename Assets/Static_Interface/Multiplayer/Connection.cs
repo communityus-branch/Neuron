@@ -11,13 +11,25 @@ using UnityEngine;
 
 namespace Static_Interface.Multiplayer
 {
-    public abstract class Connection<T> : MonoBehaviour where T : MultiplayerProvider
+    public abstract class Connection : MonoBehaviour
     {
         public const float CHECKRATE = 1f;
         public const int CLIENT_TIMEOUT = 30;
         public const int SERVER_TIMEOUT = 30;
         public const int PENDING_TIMEOUT = 30;
-        public static Connection<MultiplayerProvider> CurrentConnection { get; set; }
+        public const float UPDATE_TIME = 0.15f;
+
+        public static bool IsServer()
+        {
+            return Connection.CurrentConnection.Provider is ServerMultiplayerProvider;
+        }
+
+        public static bool IsClient()
+        {
+            return Connection.CurrentConnection.Provider is ClientMultiplayerProvider;
+        }
+
+        public static Connection CurrentConnection { get; set; }
         public bool IsReady { get; protected set; }
 
         protected byte[] Buffer  = new byte[Block.BUFFER_SIZE];
@@ -33,7 +45,7 @@ namespace Static_Interface.Multiplayer
 
         public uint CurrentTime { get; protected set; }
 
-        public T Provider { get; protected set; }
+        public MultiplayerProvider Provider { get; protected set; }
 
         public CSteamID ClientID { get; internal set; }
 
@@ -49,14 +61,7 @@ namespace Static_Interface.Multiplayer
         }
 
         public ICollection<User> Clients => _clients?.AsReadOnly();
-
-        protected Connection()
-        {
-            CurrentConnection = Generic;
-        }
-
-        public Connection<MultiplayerProvider> Generic => this.CastTo<Connection<MultiplayerProvider>>();
-
+        
         protected virtual void Awake()
         {
             DontDestroyOnLoad(this);
@@ -113,9 +118,9 @@ namespace Static_Interface.Multiplayer
         protected virtual Transform AddPlayer(UserIdentity ident, Vector3 point, byte angle, int channel)
         {
             Transform newModel = ((GameObject)Instantiate(Resources.Load("Player"), point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
-            _clients.Add(new SteamUser(Generic, ident, newModel, channel));
+            _clients.Add(new SteamUser(CurrentConnection, ident, newModel, channel));
             return newModel;
-            //Todo!! Add Player prefab with "Channel" and "Player" components
+            //Todo!! Add Player prefab with "Channel", "Input", "Health" and "Player" components
             //Todo: OnPlayerConnected
         }
 

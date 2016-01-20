@@ -1,6 +1,6 @@
 ﻿namespace Static_Interface.Utils
 {
-    public class KeyState
+    public struct KeyState
     {
         public int KeyCode { get; set; }
         public bool IsDown { get; set; }

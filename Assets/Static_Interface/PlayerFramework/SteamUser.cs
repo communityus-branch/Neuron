@@ -7,10 +7,9 @@ namespace Static_Interface.PlayerFramework
 {
     public class SteamUser : User
     {
-        public SteamUser(Connection<MultiplayerProvider> connection, UserIdentity ident, Transform model, int channelId)
+        public SteamUser(Connection connection, UserIdentity ident, Transform model, int channelId)
         {
             Identity = ident;
-            Player = new Player();
             Model = model;
             Channel ch = model.GetComponent<Channel>();
             ch.ID = channelId;
@@ -18,6 +17,7 @@ namespace Static_Interface.PlayerFramework
             ch.IsOwner = ident.ID == connection.ClientID;
             ch.Setup();
             Player = model.GetComponent<Player>();
+            Player.User = this;
         }
     }
 }

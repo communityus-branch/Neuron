@@ -28,6 +28,7 @@ namespace Static_Interface
 
         void Update()
         {
+            if (Camera.main == null) return;
             Vector3 p = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane));
             if (!Physics.Raycast(p, Camera.main.transform.forward, out _hit, INTERACT_RANGE))
             {
