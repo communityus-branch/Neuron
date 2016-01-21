@@ -64,7 +64,8 @@ namespace Static_Interface.Multiplayer.Client
         {
             if (((Time.realtimeSinceStartup - LastNet) > CLIENT_TIMEOUT))
             {
-                Disconnect(); //Timeout
+                Debug.Log("Timeout occurred");
+                //Disconnect(); //Timeout
             }
             else if (((Time.realtimeSinceStartup - LastCheck) > CHECKRATE) && (((Time.realtimeSinceStartup - LastPing) > 1f) || (LastPing < 0f)))
             {
@@ -90,13 +91,14 @@ namespace Static_Interface.Multiplayer.Client
 
             SteamFriends.SetRichPresence("connect", null);
             SteamFriends.SetRichPresence("status", "Menu");
-            Provider = null;
+            ((ClientMultiplayerProvider)Provider).CurrentServer = null;
             Destroy(this);
         }
 
         internal override void Awake()
         {
             base.Awake();
+            Provider = new ClientMultiplayerProvider();
             _serverPingResponse = new ISteamMatchmakingPingResponse(OnPingResponded, OnPingFailedToRespond);
 
             if (SteamAPI.RestartAppIfNecessary(Game.ID))
@@ -191,7 +193,6 @@ namespace Static_Interface.Multiplayer.Client
             _currentPassword = password;
   
             _serverQuery = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), _serverPingResponse);
-            _serverQueryAttempts++;
             //Todo: OnConnect event?
         }
 
@@ -229,12 +230,16 @@ namespace Static_Interface.Multiplayer.Client
 
         private void OnPingFailedToRespond()
         {
+            Debug.Log("Connection failed");
             if (_serverQueryAttempts < CONNECTION_TRIES)
             {
+                _serverQueryAttempts++;
+                Debug.Log("Retrying #" + _serverQueryAttempts);
                 AttemptConnect(_currentIp, _currentPort, _currentPassword);
             }
             else
             {
+                Debug.Log("Couldn't connect to host");
                 CleanupServerQuery();
                 LevelManager.Instance.GoToMainMenu();
                 //Todo: Timeout
@@ -244,13 +249,13 @@ namespace Static_Interface.Multiplayer.Client
         private void Connect(ServerInfo info)
         {
             if (IsConnected) return;
+            ((ClientMultiplayerProvider) Provider).CurrentServer = info;
             IsConnected = true;
             ResetChannels();
             CurrentServerInfo = info;
             ServerID = info.SteamID;
             _pings = new float[4];
             Lag((info.Ping) / 1000f);
-            Provider = new ClientMultiplayerProvider(info);
             LastNet = Time.realtimeSinceStartup;
             OffsetNet = 0f;
             Send(ServerID, EPacket.WORKSHOP, new byte[] {}, 0, 0);

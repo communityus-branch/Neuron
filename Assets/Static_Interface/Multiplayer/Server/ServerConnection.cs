@@ -217,6 +217,7 @@ namespace Static_Interface.Multiplayer.Server
             RemovePlayer(index);
             byte[] packet = { index };
             AnnounceToAll(EPacket.DISCONNECTED, packet, packet.Length, 0);
+            SteamGameServerNetworking.CloseP2PSessionWithUser(user);
         }
 
         public byte GetUserIndex(CSteamID user)

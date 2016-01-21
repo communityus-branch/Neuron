@@ -9,11 +9,10 @@ namespace Static_Interface.Multiplayer.Service.MultiplayerProviderService
         public bool IsAttempting;
         public bool IsConnected;
 
-        public ServerInfo CurrentServer { get; protected set; }
+        public ServerInfo CurrentServer { get; internal set; }
 
-        public ClientMultiplayerProvider(ServerInfo info)
+        public ClientMultiplayerProvider()
         {
-            CurrentServer = info;
             Callback<P2PSessionRequest_t>.Create(OnP2PSessionRequest);
         }
 

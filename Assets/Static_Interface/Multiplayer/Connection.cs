@@ -51,7 +51,7 @@ namespace Static_Interface.Multiplayer
 
         public int Channels { get; private set; } = 1;
 
-        private List<User> _clients;
+        private List<User> _clients = new List<User>();
 
         public bool IsConnected { get; protected set; }
 
@@ -84,7 +84,7 @@ namespace Static_Interface.Multiplayer
             }
         }
 
-        private static List<Channel> _receivers;
+        private static List<Channel> _receivers = new List<Channel>();
         public static ICollection<Channel> Receivers => _receivers?.AsReadOnly();
 
         protected void AddReceiver(Channel ch)
