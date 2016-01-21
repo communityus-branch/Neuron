@@ -75,7 +75,15 @@ namespace Static_Interface.Multiplayer
             Debug.Log("Destroying connection...");
         }
 
-        internal abstract void Receive(CSteamID source, byte[] packet, int offset, int size, int channel);
+        internal virtual void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
+        {
+            if (!IsConnected) return;
+            if (packet.Length > 0)
+            {
+                Debug.Log("Received packet: " + (EPacket) packet[0]);
+            }
+        }
+
         private static List<Channel> _receivers;
         public static ICollection<Channel> Receivers => _receivers?.AsReadOnly();
 
@@ -149,8 +157,7 @@ namespace Static_Interface.Multiplayer
                 Debug.LogError("Failed to send to invalid steam ID.");
                 return;
             }
-
-
+            Debug.Log("Sending packet: " + type);
         }
 
         public abstract void Disconnect(string reason = null);

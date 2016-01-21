@@ -68,10 +68,10 @@ namespace Static_Interface.Multiplayer.Server
 
         internal override void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
         {
+            base.Receive(source, packet, offset, size, channel);
             var net = ((OffsetNet + Time.realtimeSinceStartup) - LastNet);
 
             EPacket parsedPacket = (EPacket)packet[offset];
-			Debug.Log("Received packet: " + parsedPacket);
 
             if (parsedPacket.IsUpdate())
             {
@@ -397,6 +397,7 @@ namespace Static_Interface.Multiplayer.Server
                 return;
             }
 
+            IsConnected = true;
             SteamUtils.SetWarningMessageHook(OnAPIWarningMessage);
             CurrentTime = SteamGameServerUtils.GetServerRealTime();
             LevelManager.Instance.LoadLevel(Map); //Todo

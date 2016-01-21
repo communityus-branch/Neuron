@@ -90,6 +90,7 @@ namespace Static_Interface.Multiplayer.Client
 
             SteamFriends.SetRichPresence("connect", null);
             SteamFriends.SetRichPresence("status", "Menu");
+            Provider = null;
             Destroy(this);
         }
 
@@ -250,12 +251,9 @@ namespace Static_Interface.Multiplayer.Client
             _pings = new float[4];
             Lag((info.Ping) / 1000f);
             Provider = new ClientMultiplayerProvider(info);
-
             LastNet = Time.realtimeSinceStartup;
             OffsetNet = 0f;
-
             Send(ServerID, EPacket.WORKSHOP, new byte[] {}, 0, 0);
-
             //Todo: Load Level specified by server
             LevelManager.Instance.LoadLevel("DefaultMap");    
         }
@@ -288,6 +286,7 @@ namespace Static_Interface.Multiplayer.Client
 
         internal override void Receive(CSteamID id, byte[] packet, int offset, int size, int channel)
         {
+            base.Receive(id, packet, offset, size, channel);
             EPacket parsedPacket = (EPacket) packet[offset];
             if (parsedPacket.IsUpdate())
             {

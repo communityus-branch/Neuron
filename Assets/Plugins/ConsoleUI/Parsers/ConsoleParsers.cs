@@ -17,7 +17,7 @@ class ConsoleParsers : MonoBehaviour
     IEnumerator InitParsers()
     {
         yield return null; // make sure we wait 1 frame because the console also initializes itself during onEnable
-
+        yield return null;
         Console.Instance.RegisterParser(typeof(Vector3), parseVector3);
     }
 
