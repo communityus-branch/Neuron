@@ -37,7 +37,7 @@ namespace Static_Interface.Commands
 
         public bool ParseNetvar(string line, out object obj)
         {
-            Netvar netVar = NetvarManager.GetInstance().GetNetvar(line);
+            Netvar netVar = NetvarManager.Instance.GetNetvar(line);
             obj = netVar;
             return netVar != null;
         }

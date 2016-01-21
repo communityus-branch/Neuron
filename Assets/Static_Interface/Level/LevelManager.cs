@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Static_Interface.API.Netvar;
 using Static_Interface.Menus;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -70,6 +71,7 @@ namespace Static_Interface.Level
 
         public void GoToMainMenu()
         {
+            NetvarManager.Instance.ClearNetvars();
             LoadLevel("MainMenu/MainMenu", true);
         }
     }

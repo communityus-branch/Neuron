@@ -46,9 +46,21 @@ namespace Static_Interface.Multiplayer.Client
                 return;
             }
             base.Send(receiver, type, data, length, id);
+
+            if (type.IsUnreliable())
+            {
+                if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendUnreliable : EP2PSend.k_EP2PSendUnreliableNoDelay, id))
+                {
+                    Debug.LogError("Failed to send UDP packet to " + receiver + "!");
+                }
+            }
+            else if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendReliableWithBuffering : EP2PSend.k_EP2PSendReliable, id))
+            {
+                Debug.LogError("Failed to send TCP packet to " + receiver + "!");
+            }
         }
 
-        protected override void Listen()
+        internal override void Listen()
         {
             if (((Time.realtimeSinceStartup - LastNet) > CLIENT_TIMEOUT))
             {
@@ -78,10 +90,10 @@ namespace Static_Interface.Multiplayer.Client
 
             SteamFriends.SetRichPresence("connect", null);
             SteamFriends.SetRichPresence("status", "Menu");
-            enabled = false;
+            Destroy(this);
         }
 
-        protected override void Awake()
+        internal override void Awake()
         {
             base.Awake();
             _serverPingResponse = new ISteamMatchmakingPingResponse(OnPingResponded, OnPingFailedToRespond);
@@ -140,69 +152,7 @@ namespace Static_Interface.Multiplayer.Client
             ip = 0;
             port = 0;
             pass = string.Empty;
-            var index = line.ToLower().IndexOf("+connect", StringComparison.Ordinal);
-            if (index == -1)
-            {
-                return false;
-            }
-            var num2 = line.IndexOf(':', index + 9);
-            string str = line.Substring(index + 9, (num2 - index) - 9);
-            if (CheckIp(str))
-            {
-                ip = GetUInt32FromIp(str);
-            }
-            else if (!uint.TryParse(str, out ip))
-            {
-                return false;
-            }
-            var num3 = line.IndexOf(' ', num2 + 1);
-            if (num3 == -1)
-            {
-                if (!ushort.TryParse(line.Substring(num2 + 1, (line.Length - num2) - 1), out port))
-                {
-                    return false;
-                }
-                var pwIndex = line.ToLower().IndexOf("+password", StringComparison.Ordinal);
-                if (pwIndex != -1)
-                {
-                    pass = line.Substring(pwIndex + 10, (line.Length - pwIndex) - 10);
-                }
-                return true;
-            }
-            if (!ushort.TryParse(line.Substring(num2 + 1, (num3 - num2) - 1), out port))
-            {
-                return false;
-            }
-            var passwordIndex = line.ToLower().IndexOf("+password", StringComparison.Ordinal);
-            if (passwordIndex != -1)
-            {
-                pass = line.Substring(passwordIndex + 10, (line.Length - passwordIndex) - 10);
-            }
-            return true;
-        }
-
-        private static bool CheckIp(string ip)
-        {
-            int index = ip.IndexOf('.');
-            if (index == -1)
-            {
-                return false;
-            }
-            int num2 = ip.IndexOf('.', index + 1);
-            if (num2 == -1)
-            {
-                return false;
-            }
-            int num3 = ip.IndexOf('.', num2 + 1);
-            if (num3 == -1)
-            {
-                return false;
-            }
-            if (ip.IndexOf('.', num3 + 1) != -1)
-            {
-                return false;
-            }
-            return true;
+            return true; //TODO
         }
 
         public static uint GetUInt32FromIp(string ip)
@@ -231,7 +181,7 @@ namespace Static_Interface.Multiplayer.Client
 
         public void AttemptConnect(uint ip, ushort port, string password)
         {
-            if (!IsConnected) return;
+            if (IsConnected) return;
             _serverQueryAttempts = 0;
             CleanupServerQuery();
             
@@ -242,7 +192,6 @@ namespace Static_Interface.Multiplayer.Client
             _serverQuery = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), _serverPingResponse);
             _serverQueryAttempts++;
             //Todo: OnConnect event?
-            IsConnected = true;
         }
 
         private void CleanupServerQuery()
@@ -286,6 +235,7 @@ namespace Static_Interface.Multiplayer.Client
             else
             {
                 CleanupServerQuery();
+                LevelManager.Instance.GoToMainMenu();
                 //Todo: Timeout
             }
         }
@@ -336,7 +286,7 @@ namespace Static_Interface.Multiplayer.Client
             return base.AddPlayer(ident, point, angle, channel);
         }
 
-        protected override void Receive(CSteamID id, byte[] packet, int offset, int size, int channel)
+        internal override void Receive(CSteamID id, byte[] packet, int offset, int size, int channel)
         {
             EPacket parsedPacket = (EPacket) packet[offset];
             if (parsedPacket.IsUpdate())

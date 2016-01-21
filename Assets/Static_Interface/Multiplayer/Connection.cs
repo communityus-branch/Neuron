@@ -21,15 +21,15 @@ namespace Static_Interface.Multiplayer
 
         public static bool IsServer()
         {
-            return Connection.CurrentConnection.Provider is ServerMultiplayerProvider;
+            return CurrentConnection.Provider is ServerMultiplayerProvider;
         }
 
         public static bool IsClient()
         {
-            return Connection.CurrentConnection.Provider is ClientMultiplayerProvider;
+            return CurrentConnection.Provider is ClientMultiplayerProvider;
         }
 
-        public static Connection CurrentConnection { get; set; }
+        public static Connection CurrentConnection { get; private set; }
         public bool IsReady { get; protected set; }
 
         protected byte[] Buffer  = new byte[Block.BUFFER_SIZE];
@@ -61,14 +61,21 @@ namespace Static_Interface.Multiplayer
         }
 
         public ICollection<User> Clients => _clients?.AsReadOnly();
-        
-        protected virtual void Awake()
+
+        internal virtual void Awake()
         {
+            Debug.Log("Initializing connection...");
+            CurrentConnection = this;
             DontDestroyOnLoad(this);
-            SteamFriends.SetRichPresence("status", "Menu");
         }
 
-        protected abstract void Receive(CSteamID source, byte[] packet, int offset, int size, int channel);
+        protected virtual void OnDestroy()
+        {
+            if (CurrentConnection == this) CurrentConnection = null;
+            Debug.Log("Destroying connection...");
+        }
+
+        internal abstract void Receive(CSteamID source, byte[] packet, int offset, int size, int channel);
         private static List<Channel> _receivers;
         public static ICollection<Channel> Receivers => _receivers?.AsReadOnly();
 
@@ -92,7 +99,7 @@ namespace Static_Interface.Multiplayer
         }
 
 
-        public void Update()
+        internal virtual void Update()
         {
             if (!IsConnected) return;
             Listen();
@@ -113,15 +120,13 @@ namespace Static_Interface.Multiplayer
             }
         }
 
-        protected abstract void Listen();
+        internal abstract void Listen();
 
         protected virtual Transform AddPlayer(UserIdentity ident, Vector3 point, byte angle, int channel)
         {
             Transform newModel = ((GameObject)Instantiate(Resources.Load("Player"), point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
             _clients.Add(new SteamUser(CurrentConnection, ident, newModel, channel));
             return newModel;
-            //Todo!! Add Player prefab with "Channel", "Input", "Health" and "Player" components
-            //Todo: OnPlayerConnected
         }
 
         protected void RemovePlayer(byte index)
@@ -142,18 +147,10 @@ namespace Static_Interface.Multiplayer
             if (receiver.m_SteamID == 0)
             {
                 Debug.LogError("Failed to send to invalid steam ID.");
+                return;
             }
-            else if (type.IsUnreliable())
-            {
-                if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendUnreliable : EP2PSend.k_EP2PSendUnreliableNoDelay, id))
-                {
-                    Debug.LogError("Failed to send UDP packet to " + receiver + "!");
-                }
-            }
-            else if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendReliableWithBuffering : EP2PSend.k_EP2PSendReliable, id))
-            {
-                Debug.LogError("Failed to send TCP packet to " + receiver + "!");
-            }
+
+
         }
 
         public abstract void Disconnect(string reason = null);

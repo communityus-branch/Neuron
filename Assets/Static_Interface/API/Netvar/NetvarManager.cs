@@ -10,15 +10,12 @@ namespace Static_Interface.API.Netvar
     public class NetvarManager
     {
         private static NetvarManager _instance;
+        public static NetvarManager Instance => _instance ?? (_instance = new NetvarManager());
+
         private readonly List<object> _netvars = new List<object>();
         public NetvarManager()
         {
             EventManager.GetInstance().RegisterEvents(this);
-        }
-
-        public static NetvarManager GetInstance()
-        {
-            return _instance ?? (_instance = new NetvarManager());
         }
 
         public void RegisterNetvar(Netvar netvar)

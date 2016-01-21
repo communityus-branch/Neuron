@@ -31,7 +31,7 @@ namespace Static_Interface.Multiplayer.Server
 
         public bool IsSecure { get; private set; }
 
-        protected override void Listen()
+        internal override void Listen()
         {
             if ((Time.realtimeSinceStartup - LastCheck) > CHECKRATE)
             {
@@ -63,9 +63,10 @@ namespace Static_Interface.Multiplayer.Server
         public override void Disconnect(string reason = null)
         {
             CloseGameServer();
+            Destroy(this);
         }
 
-        protected override void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
+        internal override void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
         {
             var net = ((OffsetNet + Time.realtimeSinceStartup) - LastNet);
 
@@ -254,9 +255,21 @@ namespace Static_Interface.Multiplayer.Server
                 return;
             }
             base.Send(receiver, type, data, length, id);
+
+            if (type.IsUnreliable())
+            {
+                if (!SteamGameServerNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendUnreliable : EP2PSend.k_EP2PSendUnreliableNoDelay, id))
+                {
+                    Debug.LogError("Failed to send UDP packet to " + receiver + "!");
+                }
+            }
+            else if (!SteamGameServerNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendReliableWithBuffering : EP2PSend.k_EP2PSendReliable, id))
+            {
+                Debug.LogError("Failed to send TCP packet to " + receiver + "!");
+            }
         }
 
-        protected override void Awake()
+        internal override void Awake()
         {
             base.Awake();
             Callback<GSPolicyResponse_t>.CreateGameServer(OnGsPolicyResponse);
@@ -370,12 +383,12 @@ namespace Static_Interface.Multiplayer.Server
             //Todo: OnUserConnectedEvent
         }
 
-        public void OpenGameServer()
+        public void OpenGameServer(bool lan = false)
         {
             if(Provider == null) Provider = new ServerMultiplayerProvider();
             try
             {
-                ((ServerMultiplayerProvider)Provider).Open(BindIP, Port);
+                ((ServerMultiplayerProvider)Provider).Open(BindIP, Port, lan);
             }
             catch (Exception exception)
             {
@@ -406,8 +419,6 @@ namespace Static_Interface.Multiplayer.Server
         {
             //Todo: OnServerShutdown
             ((ServerMultiplayerProvider)Provider).Close();
-            Destroy(this);
-            enabled = false;
         }
 
         private bool VerifyTicket(CSteamID user, byte[] ticket)

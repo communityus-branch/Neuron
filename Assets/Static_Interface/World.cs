@@ -20,8 +20,8 @@ namespace Static_Interface
             if (Instance != null) throw new Exception("Only one instance allowed");
             Instance = this;
             Debug.Log("Initializing World...");
-	        NetvarManager.GetInstance().RegisterNetvar(new GravityNetvar());
-            NetvarManager.GetInstance().RegisterNetvar(new GameSpeedNetvar());
+	        NetvarManager.Instance.RegisterNetvar(new GravityNetvar());
+            NetvarManager.Instance.RegisterNetvar(new GameSpeedNetvar());
             new ConsoleCommands().RegisterCommands();
             GameObject.Find("Console").GetComponent<ConsoleGUI>().Character = GameObject.Find("MainPlayer");
         }

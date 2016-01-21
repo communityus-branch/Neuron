@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using Static_Interface.Level;
+using Static_Interface.Multiplayer;
+using Static_Interface.Multiplayer.Client;
 using Static_Interface.Multiplayer.Server;
 using Static_Interface.Utils;
 using Steamworks;
@@ -17,10 +19,17 @@ namespace Static_Interface.Menus.MainMenu
             {
                 Application.Quit();
             }
+            GetComponent<AudioSource>().Play();
         }
         public void StartGame(string scene)
         {
-            LevelManager.Instance.LoadLevel("DefaultMap");
+            GameObject serverObject = GameObject.Find("Server");
+            DestroyImmediate(serverObject.GetComponent<ClientConnection>());
+            DestroyImmediate(serverObject.GetComponent<ServerConnection>());
+            ClientConnection conn = serverObject.AddComponent<ClientConnection>();
+            //SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
+            //conn.Start();
+            conn.AttemptConnect(ClientConnection.GetUInt32FromIp("88.233.146.58"), 27015, string.Empty);
         }
 
         public void Host()
@@ -36,9 +45,9 @@ namespace Static_Interface.Menus.MainMenu
         private IEnumerator HostCoroutine()
         {
             GameObject serverObject = GameObject.Find("Server");
+            DestroyImmediate(serverObject.GetComponent<ClientConnection>());
             DestroyImmediate(serverObject.GetComponent<ServerConnection>());
             ServerConnection conn = serverObject.AddComponent<ServerConnection>();
-			DontDestroyOnLoad (conn);
             if (!conn.IsReady) yield return new WaitForSeconds(0.5f);
             conn.OpenGameServer();
             GameObject.Find("Host Button").GetComponent<Button>().enabled = false;
