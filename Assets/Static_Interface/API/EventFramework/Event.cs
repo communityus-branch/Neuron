@@ -3,14 +3,7 @@
     public abstract class Event
     {
         public string Name { get; private set; }
-
-        private bool _async;
-
-        public bool IsAsync
-        {
-            get { return _async; }
-            set { _async = value; } 
-        }
+        public bool IsAsync { get; private set; }
 
         protected Event() : this(false) { }
 

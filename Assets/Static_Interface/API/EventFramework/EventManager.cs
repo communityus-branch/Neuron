@@ -91,7 +91,7 @@ namespace Static_Interface.API.EventFramework
 
             methods.Sort(EventComprarer.Compare);
 
-            foreach (MethodInfo info in from info in methods let handler = info.GetCustomAttributes(false).OfType<EventHandler>().FirstOrDefault() where handler != null where !(evnt is ICancellable) || !((ICancellable)evnt).IsCancelled() || handler.IgnoreCancelled select info)
+            foreach (MethodInfo info in from info in methods let handler = info.GetCustomAttributes(false).OfType<EventHandler>().FirstOrDefault() where handler != null where !(evnt is ICancellable) || !((ICancellable)evnt).IsCancelled || handler.IgnoreCancelled select info)
             {
                 object instance;
                 try

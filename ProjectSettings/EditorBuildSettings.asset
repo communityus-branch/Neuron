@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Static_Interface/Menus/MainMenu/MainMenu.unity
+    path: Assets/Static_Interface/Menus/MainMenu.unity
   - enabled: 1
-    path: Assets/Static_Interface/Menus/LoadingMenu/LoadingMenu.unity
+    path: Assets/Static_Interface/Menus/LoadingMenu.unity
   - enabled: 1
     path: Assets/DefaultMap.unity
