@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Static_Interface.API.PlayerFramework;
-using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 using Static_Interface.Internal.Multiplayer;
 using Static_Interface.Internal.Objects;
 using UnityEngine;
 
-namespace Static_Interface.API.NetworkFramework
+namespace Static_Interface.Internal
 {
     public class Channel : MonoBehaviour
     {

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Static_Interface.API.Utils
+namespace Static_Interface.Internal
 {
     public class ObjectUtils
     {

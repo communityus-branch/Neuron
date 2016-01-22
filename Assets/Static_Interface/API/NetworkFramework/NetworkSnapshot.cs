@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace Static_Interface.API.NetworkFramework
+namespace Static_Interface.Internal
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct NetworkSnapshot

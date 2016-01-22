@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Server;
 using Steamworks;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.MultiplayerFramework.Service.MultiplayerProviderService;
-using Static_Interface.API.NetworkFramework;
+using Static_Interface.Internal;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.Internal.Multiplayer;
 using Static_Interface.Internal.Objects;

@@ -1,4 +1,4 @@
-﻿namespace Static_Interface.API.Utils
+﻿namespace Static_Interface.Internal
 {
     public struct KeyState
     {

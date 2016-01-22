@@ -1,6 +1,6 @@
 ﻿using System;
 using Static_Interface.API.LevelFramework;
-using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Static_Interface.API.NetworkFramework
+namespace Static_Interface.Internal
 {
     public class RPCCall : Attribute
     {

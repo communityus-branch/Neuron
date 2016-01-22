@@ -1,7 +1,7 @@
 ﻿using Steamworks;
 using UnityEngine;
 using System;
-using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 
 namespace Static_Interface.Internal.Objects
 {

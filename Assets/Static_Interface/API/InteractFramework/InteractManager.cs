@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 
 namespace Static_Interface.API.InteractFramework
 {

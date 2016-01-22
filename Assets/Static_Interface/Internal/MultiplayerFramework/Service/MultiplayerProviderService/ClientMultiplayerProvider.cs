@@ -1,4 +1,4 @@
-﻿using Static_Interface.API.NetworkFramework;
+﻿using Static_Interface.Internal;
 using Static_Interface.API.PlayerFramework;
 using Steamworks;
 

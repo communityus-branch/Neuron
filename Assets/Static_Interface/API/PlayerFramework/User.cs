@@ -1,4 +1,4 @@
-﻿using Static_Interface.API.Utils;
+﻿using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework

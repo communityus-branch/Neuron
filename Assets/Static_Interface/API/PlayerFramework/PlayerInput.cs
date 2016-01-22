@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Static_Interface.API.NetworkFramework;
-using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 using Steamworks;
 using UnityEngine;
 using Types = Static_Interface.Internal.Objects.Types;

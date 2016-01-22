@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Static_Interface.API.Utils
+namespace Static_Interface.Internal
 {
     public class Highlighter : MonoBehaviour
     {

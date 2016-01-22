@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using Static_Interface.API.MultiplayerFramework.Service.MultiplayerProviderService;
-using Static_Interface.API.NetworkFramework;
+using Static_Interface.Internal;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.Internal.Objects;
 using Steamworks;
