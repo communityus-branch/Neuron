@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using System.Security.Policy;
+using Static_Interface.API.ExtensionsFramework;
+
 namespace Static_Interface.ExtensionSandbox
 {
     public class Sandbox
@@ -18,7 +20,7 @@ namespace Static_Interface.ExtensionSandbox
         public static Sandbox Instance => _instance ?? (_instance = new Sandbox());
         private readonly List<string> _loadedFiles = new List<string>(); 
         private readonly Dictionary<Assembly, AppDomain> _domains = new Dictionary<Assembly, AppDomain>();  
-        public AppDomain CreateAppDomain(string path)
+        public AppDomain CreateAppDomain(string path, string allowedPath)
         {
             Evidence evidence = new Evidence();
             evidence.AddHost(new Zone(SecurityZone.Untrusted));
@@ -28,19 +30,32 @@ namespace Static_Interface.ExtensionSandbox
             {
                 permSet.AddPermission(new SecurityPermission(perm));
             }
-            permSet.AddPermission(new UIPermission(PermissionState.Unrestricted));
+            foreach (DriveInfo info in DriveInfo.GetDrives())
+            {
+                permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.NoAccess, info.Name));
+            }
 
-            //Todo: loop trough all drives
-            //Todo: whitelist for plugin directory
-            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.NoAccess, "C:\\"));
-            
+            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read, allowedPath));
+            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Write, allowedPath));
+            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.PathDiscovery, allowedPath));
             AppDomainSetup ads = new AppDomainSetup();
             ads.ApplicationBase = path;
             return AppDomain.CreateDomain("ExtensionSandbox_" + path, 
                 evidence, 
-                ads);
+                ads, permSet, GetStrongName(Assembly.GetExecutingAssembly()));
 
             //Todo: Update to .Net 4 to support better sandboxing...
+        }
+
+        private static StrongName GetStrongName(Assembly assembly)
+        {
+            AssemblyName assemblyName = assembly.GetName();
+            byte[] publicKey = assemblyName.GetPublicKey();
+            if (publicKey == null || publicKey.Length == 0)
+                throw new InvalidOperationException("Assembly is not strongly named");
+
+            StrongNamePublicKeyBlob keyBlob = new StrongNamePublicKeyBlob(publicKey); 
+            return new StrongName(keyBlob, assemblyName.Name, assemblyName.Version);
         }
 
         public bool LoadAssembly(string path, out Assembly loadedAssembly, out AppDomain domain)
@@ -49,7 +64,7 @@ namespace Static_Interface.ExtensionSandbox
             domain = null;
             if (!File.Exists(path) || _loadedFiles.Contains(path)) return false;
             Type type = typeof(Proxy);
-            domain = CreateAppDomain(Directory.GetParent(path).FullName);
+            domain = CreateAppDomain(Directory.GetParent(path).FullName, ExtensionManager.EXTENSIONS_DIR);
             var value = (Proxy)domain.CreateInstanceAndUnwrap(
                 type.Assembly.FullName,
                 type.FullName);

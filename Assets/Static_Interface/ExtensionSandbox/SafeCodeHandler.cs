@@ -16,9 +16,8 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 namespace Static_Interface.ExtensionSandbox
 {
-    public static class ApiUtils
+    public static class SafeCodeHandler
     {
-        //Todo: auto add loaded plugins namespaces (with caution for names like System.Runtime etc...)
         private static readonly List<string> AllowedNamespaces = new List<string>
         {
             "Static_Interface.*",

@@ -14,7 +14,7 @@ namespace Static_Interface.API.ExtensionsFramework
     //Todo: load at world load and unload when going back to MainMenu
     public class ExtensionManager : MonoBehaviour
     {
-        public static readonly string PLUGINS_DIR = Path.Combine(GameInfo.GameBaseDir, "Plugins");
+        public static readonly string EXTENSIONS_DIR = Path.Combine(GameInfo.GameBaseDir, "Plugins");
         public static ExtensionManager Instance { get; private set; }
         private readonly List<Extension> _loadedExtensions = new List<Extension>();
         private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
@@ -58,13 +58,13 @@ namespace Static_Interface.API.ExtensionsFramework
 
         internal void LoadExtensions()
         {
-            if (!Directory.Exists(PLUGINS_DIR))
+            if (!Directory.Exists(EXTENSIONS_DIR))
             {
-                Directory.CreateDirectory(PLUGINS_DIR);
+                Directory.CreateDirectory(EXTENSIONS_DIR);
                 return;
             }
 
-            var files = Directory.GetFiles(PLUGINS_DIR, "*.dll", SearchOption.TopDirectoryOnly);
+            var files = Directory.GetFiles(EXTENSIONS_DIR, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (string file in files.Where(file => !_loadedAssemblies.ContainsKey(file)))
             {
                 Assembly asm;

@@ -14,8 +14,8 @@ namespace Static_Interface.Tests
         {
             string illegalType;
             string failedInstruction;
-            ApiUtils.AddWhitelist(GetType().Assembly);
-            bool isSafe = ApiUtils.IsSafeAssembly(GetType().Assembly, out illegalType, out failedInstruction);
+            SafeCodeHandler.AddWhitelist(GetType().Assembly);
+            bool isSafe = SafeCodeHandler.IsSafeAssembly(GetType().Assembly, out illegalType, out failedInstruction);
             Console.WriteLine("IsSafeAssembly: " + isSafe);
             if(!isSafe) Console.WriteLine("Verify failed on " + failedInstruction + ", illegal call detected: " + illegalType);
             Console.ReadKey();
