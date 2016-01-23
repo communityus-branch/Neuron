@@ -32,6 +32,7 @@ namespace Static_Interface.Internal
 
         public static void Error(string msg)
         {
+#if UNITY_STANDALONE
             if (UnityEngine.Debug.isDebugBuild)
             {
                 UnityEngine.Debug.LogError(msg);
@@ -42,6 +43,9 @@ namespace Static_Interface.Internal
             {
                 Console.Instance.Print("[Error] " + msg);
             }
+#else
+            Console.WriteLine(msg);
+#endif
         }
 
         public static void Debug(string msg)
