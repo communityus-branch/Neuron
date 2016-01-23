@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using System.Security.Policy;
-namespace Assets.Static_Interface.API.ExtensionsFramework
+namespace Static_Interface.ExtensionSandbox
 {
     public class Sandbox
     {

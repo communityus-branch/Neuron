@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Remoting;
+using Static_Interface.API.ExtensionsFramework;
+using Static_Interface.ExtensionSandbox;
 using Static_Interface.Internal;
 using Static_Interface.The_Collapse;
 using UnityEngine;
 
-namespace Assets.Static_Interface.API.ExtensionsFramework
+namespace Static_Interface.API.ExtensionsFramework
 {
     //Todo: load at world load and unload when going back to MainMenu
     public class ExtensionManager : MonoBehaviour
@@ -16,7 +17,7 @@ namespace Assets.Static_Interface.API.ExtensionsFramework
         public static readonly string PLUGINS_DIR = Path.Combine(GameInfo.GameBaseDir, "Plugins");
         public static ExtensionManager Instance { get; private set; }
         private readonly List<Extension> _loadedExtensions = new List<Extension>();
-        private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>(); 
+        private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
         private static GameObject @object;
         public static void Init()
         {
@@ -36,7 +37,7 @@ namespace Assets.Static_Interface.API.ExtensionsFramework
                 Sandbox.Instance.UnloadAssembly(asm);
                 _loadedAssemblies.Remove(extension.Path);
             }
-            
+
             _loadedExtensions.Clear();
 
             Destroy(@object);
@@ -88,11 +89,9 @@ namespace Assets.Static_Interface.API.ExtensionsFramework
                     cancel = true;
                     break;
                 };
-                Type proxyType = typeof(Proxy);
-                var proxy = (Proxy)domain.CreateInstanceAndUnwrap(
-                    proxyType.Assembly.FullName,
-                    proxyType.FullName);
-                ext = proxy.CreateNewInstance(type);
+                ext = (Extension)domain.CreateInstanceAndUnwrap(
+                    type.Assembly.FullName,
+                    type.FullName);
                 ext.Path = path;
                 found = true;
             }
@@ -117,14 +116,6 @@ namespace Assets.Static_Interface.API.ExtensionsFramework
             foreach (Extension extension in _loadedExtensions.Where(ex => ex.Enabled))
             {
                 extension.Update();
-            }
-        }
-
-        private class Proxy : MarshalByRefObject
-        {
-            public Extension CreateNewInstance(Type t)
-            {
-                return (Extension)Activator.CreateInstance(t);
             }
         }
     }

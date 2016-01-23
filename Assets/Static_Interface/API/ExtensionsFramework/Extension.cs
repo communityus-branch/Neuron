@@ -1,7 +1,7 @@
 ﻿using System;
 using Static_Interface.Internal;
 
-namespace Assets.Static_Interface.API.ExtensionsFramework
+namespace Static_Interface.API.ExtensionsFramework
 {
     public abstract class Extension
     {
