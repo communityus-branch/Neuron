@@ -18,6 +18,7 @@ namespace Static_Interface.Internal
 
         protected override void Awake()
         {
+            base.Awake();
             _rigidbody = GetComponent<Rigidbody>();
         }
 
