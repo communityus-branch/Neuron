@@ -4,13 +4,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
-using Static_Interface.Internal;
 using Steamworks;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -18,6 +16,7 @@ namespace Static_Interface.ExtensionSandbox
 {
     public static class SafeCodeHandler
     {
+        private static readonly Disassembler _disassembler = new Disassembler();
         private static readonly List<string> AllowedNamespaces = new List<string>
         {
             "Static_Interface.*",
@@ -148,12 +147,6 @@ namespace Static_Interface.ExtensionSandbox
             return IsAllowedType(type.FullName);
         }
 
-
-        public static bool IsAllowedType(TypeDefinition type)
-        {
-            return IsAllowedType(type.FullName);
-        }
-
         public static void AddWhitelist(Assembly asm)
         {
             foreach (Type type in asm.GetTypes()
@@ -212,16 +205,10 @@ namespace Static_Interface.ExtensionSandbox
         {
             illegalInstruction = null;
             failedAt = null;
-            DefaultAssemblyResolver assemblyResolver = new DefaultAssemblyResolver();
-            var readerParameters = new ReaderParameters { AssemblyResolver = assemblyResolver };
-            AssemblyDefinition asm = AssemblyDefinition.ReadAssembly(baseAssembly.Location, readerParameters);
-            foreach (ModuleDefinition module in asm.Modules)
+
+            foreach (Type type in baseAssembly.GetTypes())
             {
-                foreach (TypeDefinition t in module.Types)
-                {
-                    Type type = baseAssembly.GetType(t.FullName);
-                    if (!CheckType(baseAssembly, type, out illegalInstruction, out failedAt)) return false;
-                }    
+                if (!CheckType(baseAssembly, type, out illegalInstruction, out failedAt)) return false;
             }
 
             return true;
@@ -240,47 +227,25 @@ namespace Static_Interface.ExtensionSandbox
                 return false;
             }
 
-            DefaultAssemblyResolver assemblyResolver = new DefaultAssemblyResolver();
-            var readerParameters = new ReaderParameters { AssemblyResolver = assemblyResolver };
-
-            AssemblyDefinition asmDef = AssemblyDefinition.ReadAssembly(asm.Location, readerParameters);
-
-            TypeDefinition t = null;
-            foreach (ModuleDefinition m in asmDef.Modules)
+            foreach (MethodInfo method in type.GetMethods())
             {
-                foreach (TypeDefinition typeDef in m.Types.Where(typeDef => typeDef.FullName.Equals(type.FullName)))
+                if (!CheckMethod(asm, type, method, out illegalInstruction, out failedAt))
                 {
-                    t = typeDef;
-                    break;
-                }
-            }
-
-            if (t == null)
-            {
-                LogUtils.Error("Assert error: TypeDefinition of type " + type.FullName + " not found");
-                illegalInstruction = type.FullName;
-                return false;
-            }
-
-            foreach (MethodDefinition def in t.Methods)
-            {
-                if (!CheckMethod(asm, type, def, out illegalInstruction, out failedAt))
-                {
-                    failedAt = def.FullName;
+                    failedAt = type.Name + "." + method.Name;
                     return false;
                 }
             }
 
-            foreach (PropertyDefinition def in t.Properties)
+            foreach (PropertyInfo def in type.GetProperties())
             {
-                if (!CheckMethod(asm, type, def.GetMethod, out illegalInstruction, out failedAt))
+                if (!CheckMethod(asm, type, def.GetGetMethod(), out illegalInstruction, out failedAt))
                 {
-                    failedAt = def.GetMethod.FullName;
+                    failedAt = type.Name + def.GetGetMethod().Name;
                     return false;
                 }
-                if (!CheckMethod(asm, type, def.SetMethod, out illegalInstruction, out failedAt))
+                if (!CheckMethod(asm, type, def.GetSetMethod(), out illegalInstruction, out failedAt))
                 {
-                    failedAt = def.SetMethod.FullName;
+                    failedAt = type.Name + def.GetSetMethod().Name;
                     return false;
                 }
             }
@@ -298,47 +263,46 @@ namespace Static_Interface.ExtensionSandbox
                 || checkType == delegateType.BaseType;
         }
 
-        private static bool CheckMethod(Assembly asm, Type type, MethodDefinition method, out string illegalInstruction, out string failedAt, bool recur = true)
+        private static bool CheckMethod(Assembly asm, Type type, MethodInfo method, out string illegalInstruction, out string failedAt, bool recur = true)
         {
             illegalInstruction = null;
             failedAt = null;
 
             if (!IsAllowedMethod(type, method.Name))
             {
-                failedAt = method.FullName;
+                failedAt = type.FullName + "." + method.Name;
                 illegalInstruction = type.FullName;
                 return false;
             }
 
-            if (CheckInvalidMethodAttributes(method.Attributes)) return false;
+            if (!CheckMethodAttributes(method.Attributes)) return false;
             if (!type.IsGenericTypeDefinition && type.IsGenericType && CheckGenericType(asm, type.GetGenericTypeDefinition(), method, out illegalInstruction, out failedAt)) return false;
-            if (method.Body == null) return true;
-            foreach (Instruction ins in method.Body.Instructions)
+
+            foreach (Instruction ins in _disassembler.ReadInstructions(method))
             {
                 if (recur)
                 {
-                    TypeReference tRef = ins.Operand as TypeReference;
-                    TypeDefinition tDef = tRef?.Resolve() ?? ins.Operand as TypeDefinition;
-                    MethodReference mRef = ins.Operand as MethodReference;
-                    MethodDefinition mDef = mRef?.Resolve() ?? ins.Operand as MethodDefinition;
-                    if (mDef == method) continue;
+                    Type t = ins.Operand as Type;
+                    MethodInfo m = ins.Operand as MethodInfo;
 
-                    if (mDef != null)
+                    if (m == method) continue;
+
+                    if (m != null)
                     {
-                        tDef = mDef.DeclaringType;
-                        if (!CheckMethod(asm, type, mDef, out illegalInstruction, out failedAt, false))
+                        t = t.DeclaringType;
+                        if (!CheckMethod(asm, type, m, out illegalInstruction, out failedAt, false))
                         {
                             return false;
                         }
                     }
                     
 
-                    if (tDef != null)
+                    if (t != null)
                     {
-                        if (!IsAllowedType(tDef))
+                        if (!IsAllowedType(t))
                         {
-                            failedAt = method.FullName;
-                            illegalInstruction = tDef.FullName;
+                            failedAt = t.FullName + "." + method.Name;
+                            illegalInstruction = t.FullName;
                             return false;
                         }
                     }
@@ -346,9 +310,9 @@ namespace Static_Interface.ExtensionSandbox
                 }
                 if (ins.OpCode == OpCodes.Calli) //can call unmanaged code
                 {
-                    var t = ((MemberReference)ins.Operand).DeclaringType;
+                    var t = ((MemberInfo)ins.Operand).DeclaringType;
                     illegalInstruction = OpCodes.Calli.ToString();
-                    failedAt = method.FullName;
+                    failedAt = t?.FullName + "." + method.Name;
                     return false;
                 }
             }
@@ -356,15 +320,12 @@ namespace Static_Interface.ExtensionSandbox
             return true;
         }
 
-        private static bool CheckGenericType(Assembly asm, Type type, MethodDefinition definition, out string illegalInstruction, out string failedAt)
+        private static bool CheckGenericType(Assembly asm, Type type, MethodInfo method, out string illegalInstruction, out string failedAt)
         {
-            if (!CheckMethod(asm, type, definition, out illegalInstruction, out failedAt)) return false;
-            if (definition == null || !definition.DeclaringType.HasGenericParameters) return true;
-            foreach (GenericParameter t in definition.DeclaringType.GenericParameters)
+            if (!CheckMethod(asm, type, method, out illegalInstruction, out failedAt)) return false;
+            if (method == null) return true;
+            foreach (var gType in method.DeclaringType.GetGenericArguments())
             {
-                TypeDefinition def = t.Resolve();
-                if (def == null) continue;
-                Type gType = asm.GetType(def.FullName);
                 if (!CheckType(asm, gType, out illegalInstruction, out failedAt))
                 {
                     return false;
@@ -374,10 +335,10 @@ namespace Static_Interface.ExtensionSandbox
             return true;
         }
 
-        public static bool CheckInvalidMethodAttributes(Mono.Cecil.MethodAttributes attributes)
+        public static bool CheckMethodAttributes(MethodAttributes attributes)
         {
-            var s = (attributes & (Mono.Cecil.MethodAttributes.PInvokeImpl | Mono.Cecil.MethodAttributes.UnmanagedExport));
-            return s != 0;
+            var val = (attributes & (MethodAttributes.PinvokeImpl | MethodAttributes.UnmanagedExport));
+            return val == 0;
         }
     }
 }

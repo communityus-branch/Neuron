@@ -20,11 +20,12 @@ namespace Static_Interface.ExtensionSandbox
         public static Sandbox Instance => _instance ?? (_instance = new Sandbox());
         private readonly List<string> _loadedFiles = new List<string>(); 
         private readonly Dictionary<Assembly, AppDomain> _domains = new Dictionary<Assembly, AppDomain>();  
-        public AppDomain CreateAppDomain(string path, string allowedPath)
+        public AppDomain CreateAppDomain(string path)
         {
             Evidence evidence = new Evidence();
             evidence.AddHost(new Zone(SecurityZone.Untrusted));
             evidence.AddHost(new Url(path));
+
             PermissionSet permSet = new PermissionSet(PermissionState.None);
             foreach (SecurityPermissionFlag perm in _permissions)
             {
@@ -35,27 +36,18 @@ namespace Static_Interface.ExtensionSandbox
                 permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.NoAccess, info.Name));
             }
 
-            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read, allowedPath));
-            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Write, allowedPath));
-            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.PathDiscovery, allowedPath));
+            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read, path));
+            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Write, path));
+            permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.PathDiscovery, path));
+
+
             AppDomainSetup ads = new AppDomainSetup();
             ads.ApplicationBase = path;
             return AppDomain.CreateDomain("ExtensionSandbox_" + path, 
                 evidence, 
-                ads, permSet, GetStrongName(Assembly.GetExecutingAssembly()));
+                ads);
 
-            //Todo: Update to .Net 4 to support better sandboxing...
-        }
-
-        private static StrongName GetStrongName(Assembly assembly)
-        {
-            AssemblyName assemblyName = assembly.GetName();
-            byte[] publicKey = assemblyName.GetPublicKey();
-            if (publicKey == null || publicKey.Length == 0)
-                throw new InvalidOperationException("Assembly is not strongly named");
-
-            StrongNamePublicKeyBlob keyBlob = new StrongNamePublicKeyBlob(publicKey); 
-            return new StrongName(keyBlob, assemblyName.Name, assemblyName.Version);
+            //Todo: Update this when updating to .NET 3.5 or higher
         }
 
         public bool LoadAssembly(string path, out Assembly loadedAssembly, out AppDomain domain)
@@ -64,7 +56,7 @@ namespace Static_Interface.ExtensionSandbox
             domain = null;
             if (!File.Exists(path) || _loadedFiles.Contains(path)) return false;
             Type type = typeof(Proxy);
-            domain = CreateAppDomain(Directory.GetParent(path).FullName, ExtensionManager.EXTENSIONS_DIR);
+            domain = CreateAppDomain(ExtensionManager.EXTENSIONS_DIR);
             var value = (Proxy)domain.CreateInstanceAndUnwrap(
                 type.Assembly.FullName,
                 type.FullName);

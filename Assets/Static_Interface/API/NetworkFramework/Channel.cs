@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Static_Interface.API.PlayerFramework;
-using Static_Interface.Internal;
 using Static_Interface.Internal.Multiplayer;
 using Static_Interface.Internal.Objects;
 using UnityEngine;
@@ -38,7 +37,7 @@ namespace Static_Interface.Internal
                 {
                     if (m.MemberType != MemberTypes.Method) continue;
                     var newMethod = (MethodInfo) m;
-                    if (newMethod.GetCustomAttributes(typeof (RPCCall), true).Length <= 0) continue;
+                    if (newMethod.GetCustomAttributes(typeof (NetworkCall), true).Length <= 0) continue;
                     var parameters = newMethod.GetParameters();
                     var newTypes = new Type[parameters.Length];
                     for (var k = 0; k < parameters.Length; k++)
@@ -199,6 +198,21 @@ namespace Static_Interface.Internal
         public void OpenWrite()
         {
             ObjectSerializer.OpenWrite(2);
+        }
+
+        public T Read<T>()
+        {
+            return (T) Read(typeof (T))[0];
+        }
+
+        public T[] Read<T>(int size)
+        {
+            T[] arr = new T[size];
+            for (int i = 0; i < size; i++)
+            {
+                arr[i] = Read<T>();
+            }
+            return arr;
         }
 
         public object[] Read(params Type[] types)

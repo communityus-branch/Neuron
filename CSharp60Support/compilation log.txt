@@ -1,9 +1,9 @@
 ********************************************************************************
-*                    Saturday, January 23, 2016 12:52:55 AM                    *
+*                     Tuesday, January 26, 2016 6:17:32 PM                     *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 1.6.1.0
 Platform: Windows
-Target assembly: Assembly-CSharp.dll
+Target assembly: Assembly-CSharp-firstpass.dll
 Project directory: H:\Users\Trojaner\UnityProjects\The Collapse
 Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
 Compiler: Microsoft C# 6.0
@@ -11,55 +11,22 @@ Compiler: Microsoft C# 6.0
 - Compilation -----------------------------------------------
 
 Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-e76f19c319376904db36039aba77b5b2
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-5270e787191f6a04093ac42280697073
 Exit code: 0
-Elapsed time: 3.95 sec
+Elapsed time: 4.58 sec
 
 - Compiler output (2 lines):
 0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
 1: Copyright (C) Microsoft Corporation. All rights reserved.
 
-- Compiler errors (3 lines):
-0: Assets\Static_Interface\API\Utils\Highlighter.cs(25,13): warning CS0162: Unreachable code detected
-1: Assets\Static_Interface\API\Utils\Highlighter.cs(32,13): warning CS0162: Unreachable code detected
-2: Assets\Static_Interface\API\Utils\Highlighter.cs(40,13): warning CS0162: Unreachable code detected
+- Compiler errors (1 line):
+0: Assets\Plugins\ConsoleUI\FrontEnd\UnityGUI\ConsoleGUI.cs(213,138): warning CS0618: 'TextEditor.content' is obsolete: 'Please use 'text' instead of 'content''
 
 - PDB to MDB conversion --------------------------------------
 
 Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
-Arguments: Temp\Assembly-CSharp.dll
-Exit code: 0
-Elapsed time: 0.18 sec
-
-- pdb2mdb.exe output (0 lines):
-********************************************************************************
-*                    Saturday, January 23, 2016 12:53:00 AM                    *
-********************************************************************************
-CSharpCompilerWrapper.exe version: 1.6.1.0
-Platform: Windows
-Target assembly: Assembly-CSharp-Editor.dll
-Project directory: H:\Users\Trojaner\UnityProjects\The Collapse
-Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
-Compiler: Microsoft C# 6.0
-
-- Compilation -----------------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-f2b0e90f190761c45bbff694b7291947
-Exit code: 0
-Elapsed time: 4.27 sec
-
-- Compiler output (2 lines):
-0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
-1: Copyright (C) Microsoft Corporation. All rights reserved.
-
-- Compiler errors (0 lines):
-
-- PDB to MDB conversion --------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
-Arguments: Temp\Assembly-CSharp-Editor.dll
-Exit code: 0
-Elapsed time: 0.15 sec
+Arguments: Temp\Assembly-CSharp-firstpass.dll
+Exit code: -532462766
+Elapsed time: 4.48 sec
 
 - pdb2mdb.exe output (0 lines):

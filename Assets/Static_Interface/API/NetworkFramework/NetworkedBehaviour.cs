@@ -9,10 +9,27 @@ namespace Static_Interface.Internal
         protected virtual void Awake()
         {
             Channel = GetComponent<Channel>();
+            // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
+            // Channel = GetComponent<Channel>() ?? gameObject.AddComponent<Channel>();
             if (Channel == null)
             {
                 Channel = gameObject.AddComponent<Channel>();
             }
+        }
+
+        protected virtual void Start()
+        {
+            
+        }
+
+        protected virtual void Update()
+        {
+            
+        }
+
+        protected virtual void FixedUpdate()
+        {
+
         }
     }
 }

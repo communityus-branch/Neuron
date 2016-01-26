@@ -10,7 +10,7 @@ namespace Static_Interface.API.PlayerFramework
     public class PlayerInput : PlayerBehaviour
     {
         private List<KeyState> _keyStates = new List<KeyState>(); 
-        private void FixedUpdate()
+        protected override void FixedUpdate()
         {
             if (Channel.IsOwner)
             {
@@ -44,7 +44,7 @@ namespace Static_Interface.API.PlayerFramework
                 {
                     Channel.Write(state);
                 }
-                Channel.CloseWrite("GetInput", ECall.SERVER, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
+                Channel.CloseWrite(nameof(ReadInput), ECall.SERVER, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
 
             }
 
@@ -53,8 +53,8 @@ namespace Static_Interface.API.PlayerFramework
         }
 
         //ServerSide
-        [RPCCall]
-        public void GetInput(CSteamID id)
+        [NetworkCall]
+        public void ReadInput(CSteamID id)
         {
             if (!Channel.CheckOwner(id)) return;
             _keyStates = new List<KeyState>();
@@ -65,7 +65,7 @@ namespace Static_Interface.API.PlayerFramework
                 _keyStates.Add(state);
                 if (state.IsDown)
                 {
-                    Console.Instance.Print(Player.User.Identity.PlayerName + " pressed " + ((KeyCode)state.KeyCode));
+                    LogUtils.Log(Player.User.Identity.PlayerName + " pressed " + ((KeyCode)state.KeyCode));
                 }
             }
 

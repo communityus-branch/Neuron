@@ -9,8 +9,9 @@ namespace Static_Interface.API.PlayerFramework
         private NetworkSnapshotBuffer nsb;
         private CapsuleCollider serverCollider;
 
-        protected virtual void Start()
+        protected override void Start()
         {
+            base.Start();
             _controller = GetComponent<CharacterController>();
             if (Connection.IsServer() || !Channel.IsOwner)
             {
@@ -48,7 +49,7 @@ namespace Static_Interface.API.PlayerFramework
         public void HandleInput(PlayerInput input)
         {
             if (Player.Health.IsDead) return;
-
+            //todo
         }
     }
 }
