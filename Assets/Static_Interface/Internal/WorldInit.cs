@@ -14,7 +14,6 @@ namespace Static_Interface.Internal
     {
         public Transform Water;
         public static WorldInit Instance;
-        private static readonly string ExtensionsDir = Path.Combine(GameInfo.GameBaseDir, "Plugins");
 
         private void Start ()
         {
@@ -26,7 +25,8 @@ namespace Static_Interface.Internal
             NetvarManager.Instance.RegisterNetvar(new GameSpeedNetvar());
             new ConsoleCommands().RegisterCommands();
             GameObject.Find("Console").GetComponent<ConsoleGUI>().Character = GameObject.Find("MainPlayer");
-            ExtensionManager.Init(ExtensionsDir);
+			var extensionsDir = Path.Combine(GameInfo.GameBaseDir, "Plugins");
+			ExtensionManager.Init(extensionsDir);
         }
     }
 }
