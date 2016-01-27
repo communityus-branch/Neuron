@@ -1,7 +1,6 @@
 ﻿using Steamworks;
 using System;
 using System.Text;
-using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.Internal.Objects

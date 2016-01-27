@@ -6,8 +6,6 @@
 
 #define VERSION_SAFE_STEAM_API_INTERFACES
 
-using System.Runtime.InteropServices;
-
 namespace Steamworks {
 	public static class Version {
 		public const string SteamworksNETVersion = "7.0.0";

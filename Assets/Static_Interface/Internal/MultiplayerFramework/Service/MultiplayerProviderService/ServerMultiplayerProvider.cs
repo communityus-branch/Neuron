@@ -4,7 +4,7 @@ using Static_Interface.The_Collapse;
 using Steamworks;
 using UnityEngine;
 
-namespace Static_Interface.API.MultiplayerFramework.Service.MultiplayerProviderService
+namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService
 {
     public class ServerMultiplayerProvider : MultiplayerProvider
     {

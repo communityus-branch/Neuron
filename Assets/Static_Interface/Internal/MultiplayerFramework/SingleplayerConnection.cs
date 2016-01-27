@@ -1,6 +1,4 @@
-﻿using Static_Interface.Internal;
-using Static_Interface.Internal.Multiplayer;
-using Static_Interface.Internal.MultiplayerFramework.Client;
+﻿using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Server;
 using Steamworks;
 
@@ -23,7 +21,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
         public void Start()
         {
             _server.OpenGameServer(true);
-            _client.AttemptConnect(0, 27015, string.Empty);
+            _client.AttemptConnect("localhost", 27015, string.Empty);
         }
 
         public override void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id)

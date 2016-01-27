@@ -1,5 +1,5 @@
 ﻿using Static_Interface.Internal;
-using Static_Interface.Internal.Multiplayer;
+using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework

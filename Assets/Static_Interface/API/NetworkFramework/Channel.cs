@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Static_Interface.API.PlayerFramework;
-using Static_Interface.Internal.Multiplayer;
+using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.Objects;
 using UnityEngine;
 

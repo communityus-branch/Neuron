@@ -27,7 +27,7 @@ namespace Static_Interface.The_Collapse.Menus
             ClientConnection conn = serverObject.AddComponent<ClientConnection>();
             //SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
             //conn.Start();
-            conn.AttemptConnect(ClientConnection.GetUInt32FromIp("88.233.146.58"), 27015, string.Empty);
+            conn.AttemptConnect("88.233.146.58", 27015, string.Empty);
         }
 
         public void Host()

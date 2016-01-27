@@ -6,7 +6,6 @@
 // Version: 1.0.3
 
 using UnityEngine;
-using System.Collections;
 using Steamworks;
 
 //

@@ -1,8 +1,7 @@
-﻿using Static_Interface.Internal;
-using Static_Interface.API.PlayerFramework;
+﻿using Static_Interface.API.PlayerFramework;
 using Steamworks;
 
-namespace Static_Interface.API.MultiplayerFramework.Service.MultiplayerProviderService
+namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService
 {
     public class ClientMultiplayerProvider : MultiplayerProvider
     {

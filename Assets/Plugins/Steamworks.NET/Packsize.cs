@@ -27,7 +27,6 @@
 	#warning You need to define STEAMWORKS_WIN, or STEAMWORKS_LIN_OSX. Refer to the readme for more details.
 #endif
 
-using System;
 using System.Runtime.InteropServices;
 
 namespace Steamworks {

@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using Static_Interface.API.MultiplayerFramework.Service.MultiplayerProviderService;
-using Static_Interface.Internal;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService;
 using Static_Interface.Internal.Objects;
 using Steamworks;
 using UnityEngine;
 using SteamUser = Static_Interface.API.PlayerFramework.SteamUser;
 
-namespace Static_Interface.Internal.Multiplayer
+namespace Static_Interface.Internal.MultiplayerFramework
 {
     public abstract class Connection : MonoBehaviour
     {
@@ -119,6 +118,7 @@ namespace Static_Interface.Internal.Multiplayer
 
         protected void Listen(int channelId)
         {
+            LogUtils.Log("Listening channel: " + channelId);
             CSteamID user;
             ulong length;
             while (Provider.Read(out user, Buffer, out length, channelId))
@@ -157,6 +157,7 @@ namespace Static_Interface.Internal.Multiplayer
                 return;
             }
             LogUtils.Debug("Sending packet: " + type);
+            LogUtils.Debug("Packet receiver: " + receiver + (receiver == ServerID ? " (Server)" : ""));
         }
 
         public abstract void Disconnect(string reason = null);

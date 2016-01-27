@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.LevelFramework;
-using Static_Interface.API.MultiplayerFramework.Service.MultiplayerProviderService;
-using Static_Interface.Internal;
 using Static_Interface.API.PlayerFramework;
-using Static_Interface.Internal.Multiplayer;
+using Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService;
 using Static_Interface.Internal.Objects;
 using Static_Interface.The_Collapse;
 using Steamworks;
@@ -182,16 +180,26 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         }
 
 
-        public void AttemptConnect(uint ip, ushort port, string password)
+        public void AttemptConnect(string ipRaw, ushort port, string password)
         {
-            if (IsConnected) return;
+            LogUtils.Log("Attempting conncetion to " + ipRaw + ":" + port + " (using password: " + (string.IsNullOrEmpty(password) ? "NO" : "YES") + ")");
+            AttemptConnect(GetUInt32FromIp(ipRaw), port, password);
+        }
+
+        private void AttemptConnect(uint ip, ushort port, string password)
+        {
+            if (IsConnected)
+            {
+                LogUtils.Debug("Already connnected");
+                return;
+            }
             _serverQueryAttempts = 0;
             CleanupServerQuery();
-            
+
             _currentIp = ip;
             _currentPort = port;
             _currentPassword = password;
-  
+
             _serverQuery = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), _serverPingResponse);
             //Todo: OnConnect event?
         }
@@ -205,8 +213,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         private void OnPingResponded(gameserveritem_t data)
         {
+            LogUtils.Log("Server is up, connecting...");
             CleanupServerQuery();
-            if (data.m_nAppID == GameInfo.ID.m_AppId)
+            if ((AppId_t)data.m_nAppID == GameInfo.ID)
             {
                 ServerInfo info = new ServerInfo(data);
 
@@ -223,6 +232,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             else
             {
                 CleanupServerQuery();
+                LogUtils.Log("Wrong game ID received: " + data.m_nAppID + ", expected: " + GameInfo.ID);
                 //Todo: Timeout
             }
         }
@@ -249,6 +259,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         private void Connect(ServerInfo info)
         {
             if (IsConnected) return;
+            LogUtils.Debug("Connected to server: " + info.Name);
             ((ClientMultiplayerProvider) Provider).CurrentServer = info;
             IsConnected = true;
             ResetChannels();

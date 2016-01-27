@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading;
 using System;
 using Static_Interface.Internal;
-using UnityEngine;
 
 namespace Static_Interface.API.EventFramework
 {

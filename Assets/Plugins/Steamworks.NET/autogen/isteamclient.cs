@@ -6,7 +6,6 @@
 // Changes to this file will be reverted when you update Steamworks.NET
 
 using System;
-using System.Runtime.InteropServices;
 
 namespace Steamworks {
 	public static class SteamClient {
