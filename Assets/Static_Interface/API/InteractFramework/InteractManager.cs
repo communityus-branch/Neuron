@@ -76,7 +76,7 @@ namespace Static_Interface.API.InteractFramework
             }
             //Todo: onInteract Event
 
-            Debug.Log("Interacting...");
+            LogUtils.Debug("Interacting...");
             CurrentInteractable.Interact();
         }
 

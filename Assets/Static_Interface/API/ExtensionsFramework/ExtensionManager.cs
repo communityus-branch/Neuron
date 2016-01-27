@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using Static_Interface.ExtensionSandbox;
 using Static_Interface.Internal;
-using Static_Interface.The_Collapse;
 using UnityEngine;
 
 namespace Static_Interface.API.ExtensionsFramework
@@ -13,17 +12,18 @@ namespace Static_Interface.API.ExtensionsFramework
     //Todo: load at world load and unload when going back to MainMenu
     public class ExtensionManager : MonoBehaviour
     {
-        public static readonly string EXTENSIONS_DIR = Path.Combine(GameInfo.GameBaseDir, "Plugins");
         public static ExtensionManager Instance { get; private set; }
         private readonly List<Extension> _loadedExtensions = new List<Extension>();
         private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
-        private static GameObject @object;
-        public static void Init()
+        private static GameObject _parentObject;
+        public string ExtensionsDir { get; private set; }
+        public static void Init(string extensionsdir)
         {
-            if (@object != null) return;
-            @object = new GameObject();
-            @object.AddComponent<ExtensionManager>();
-            DontDestroyOnLoad(@object);
+            if (_parentObject != null) return;
+            _parentObject = new GameObject();
+            var mgr = _parentObject.AddComponent<ExtensionManager>();
+            mgr.ExtensionsDir = extensionsdir;
+            DontDestroyOnLoad(_parentObject);
         }
 
         public void Shutdown()
@@ -39,9 +39,9 @@ namespace Static_Interface.API.ExtensionsFramework
 
             _loadedExtensions.Clear();
 
-            Destroy(@object);
+            Destroy(_parentObject);
             Destroy(Instance);
-            @object = null;
+            _parentObject = null;
             Instance = null;
         }
 
@@ -57,13 +57,13 @@ namespace Static_Interface.API.ExtensionsFramework
 
         internal void LoadExtensions()
         {
-            if (!Directory.Exists(EXTENSIONS_DIR))
+            if (!Directory.Exists(ExtensionsDir))
             {
-                Directory.CreateDirectory(EXTENSIONS_DIR);
+                Directory.CreateDirectory(ExtensionsDir);
                 return;
             }
 
-            var files = Directory.GetFiles(EXTENSIONS_DIR, "*.dll", SearchOption.TopDirectoryOnly);
+            var files = Directory.GetFiles(ExtensionsDir, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (string file in files.Where(file => !_loadedAssemblies.ContainsKey(file)))
             {
                 Assembly asm;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System;
+using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.API.EventFramework
@@ -76,7 +77,7 @@ namespace Static_Interface.API.EventFramework
 
         public void CallEvent(Event evnt)
         {
-            Debug.Log("Firing event:" + evnt.Name);
+            LogUtils.Debug("Firing event:" + evnt.Name);
             Type t = evnt.GetType();
             List<MethodInfo> methods;
 

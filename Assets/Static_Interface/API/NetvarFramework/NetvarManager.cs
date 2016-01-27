@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.EventFramework;
+using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.API.NetvarFramework
@@ -12,14 +13,10 @@ namespace Static_Interface.API.NetvarFramework
         public static NetvarManager Instance => _instance ?? (_instance = new NetvarManager());
 
         private readonly List<object> _netvars = new List<object>();
-        public NetvarManager()
-        {
-            EventManager.GetInstance().RegisterEvents(this);
-        }
 
         public void RegisterNetvar(Netvar netvar)
         {
-            Debug.Log("Registering Netvar: " + netvar.Name);
+            LogUtils.Log("Registering Netvar: " + netvar.Name);
             if (GetNetvar(netvar.Name) != null)
             {
                 throw new ArgumentException("Netvar already exists: " + netvar.Name);
@@ -35,12 +32,6 @@ namespace Static_Interface.API.NetvarFramework
         public Netvar GetNetvar(string name)
         {
             return _netvars.Cast<Netvar>().FirstOrDefault(tmp => tmp.Name.Equals(name));
-        }
-
-        [EventFramework.EventHandler(Priority = EventPriority.MONITOR)]
-        public void OnNetvarChange<T>(NetvarChangedEvent @event)
-        {
-            Debug.Log("Netvar \"" + @event.Name + "\" updated:" + @event.OldValue + " -> " + @event.NewValue);
         }
     }
 }

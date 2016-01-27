@@ -68,7 +68,7 @@ namespace Static_Interface.Internal
         {
             if (!IsChunk(type))
             {
-                Debug.LogError("Failed to stream non chunk.");
+                LogUtils.Error("Failed to stream non chunk: " + type);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace Static_Interface.Internal
         {
             if (!IsChunk(type))
             {
-                Debug.LogError("Failed to stream non chunk.");
+                LogUtils.Error("Failed to stream non chunk: " + type);
             }
             else
             {
@@ -114,7 +114,7 @@ namespace Static_Interface.Internal
         {
             if (!IsChunk(type))
             {
-                Debug.LogError("Failed to stream non chunk.");
+                LogUtils.Error("Failed to stream non chunk: " + type);
             }
             else
             {
@@ -133,7 +133,7 @@ namespace Static_Interface.Internal
         {
             if (!IsChunk(type))
             {
-                Debug.LogError("Failed to stream non chunk.");
+                LogUtils.Error("Failed to stream non chunk: " + type);
             }
             else
             {

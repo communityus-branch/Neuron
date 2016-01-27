@@ -1,6 +1,7 @@
 ﻿using System;
 using Homans.Console;
 using Static_Interface.API.NetvarFramework;
+using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.API.Commands
@@ -24,7 +25,7 @@ namespace Static_Interface.API.Commands
                 return;
             }
 
-            Console.Instance.Print("Setting \"" + netvar.Name + "\" to " + value);
+            LogUtils.Log("Setting \"" + netvar.Name + "\" to " + value);
 
             netvar.Value = value;
         }

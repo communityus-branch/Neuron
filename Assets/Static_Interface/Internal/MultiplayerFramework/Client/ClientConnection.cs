@@ -51,12 +51,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             {
                 if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendUnreliable : EP2PSend.k_EP2PSendUnreliableNoDelay, id))
                 {
-                    Debug.LogError("Failed to send UDP packet to " + receiver + "!");
+                    LogUtils.Error("Failed to send UDP packet to " + receiver + "!");
                 }
             }
             else if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendReliableWithBuffering : EP2PSend.k_EP2PSendReliable, id))
             {
-                Debug.LogError("Failed to send TCP packet to " + receiver + "!");
+                LogUtils.Error("Failed to send TCP packet to " + receiver + "!");
             }
         }
 
@@ -64,7 +64,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         {
             if (((Time.realtimeSinceStartup - LastNet) > CLIENT_TIMEOUT))
             {
-                Debug.Log("Timeout occurred");
+                LogUtils.Log("Timeout occurred");
                 //Disconnect(); //Timeout
             }
             else if (((Time.realtimeSinceStartup - LastCheck) > CHECKRATE) && (((Time.realtimeSinceStartup - LastPing) > 1f) || (LastPing < 0f)))
@@ -230,16 +230,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         private void OnPingFailedToRespond()
         {
-            Debug.Log("Connection failed");
+            LogUtils.Error("Connection failed");
             if (_serverQueryAttempts < CONNECTION_TRIES)
             {
                 _serverQueryAttempts++;
-                Debug.Log("Retrying #" + _serverQueryAttempts);
+                LogUtils.Log("Retrying #" + _serverQueryAttempts);
                 AttemptConnect(_currentIp, _currentPort, _currentPassword);
             }
             else
             {
-                Debug.Log("Couldn't connect to host");
+                LogUtils.Error("Couldn't connect to host");
                 CleanupServerQuery();
                 LevelManager.Instance.GoToMainMenu();
                 //Todo: Timeout

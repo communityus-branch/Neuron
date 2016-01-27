@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.Internal;
 using Steamworks;
 using Debug = UnityEngine.Debug;
 
@@ -26,7 +27,7 @@ namespace Static_Interface.API.MultiplayerFramework.Service.MultiplayerProviderS
 
         public void OnP2PSessionRequest(P2PSessionRequest_t callback)
         {
-            Debug.Log("Accepting P2P Request: " + callback.m_steamIDRemote);
+            LogUtils.Debug("Accepting P2P Request: " + callback.m_steamIDRemote);
             SteamNetworking.AcceptP2PSessionWithUser(callback.m_steamIDRemote);
         }
 

@@ -2,11 +2,11 @@
 {
     public enum EventPriority
     {
-        LOWEST = 0,
-        LOW = 1,
-        NORMAL = 2,
-        HIGH = 3,
-        HIGHEST = 4,
-        MONITOR = 5
+        Lowest = 0,
+        Low = 1,
+        Normal = 2,
+        High = 3,
+        Highest = 4,
+        Monitor = 5
     }
 }

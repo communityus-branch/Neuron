@@ -56,7 +56,7 @@ namespace Static_Interface.ExtensionSandbox
             domain = null;
             if (!File.Exists(path) || _loadedFiles.Contains(path)) return false;
             Type type = typeof(Proxy);
-            domain = CreateAppDomain(ExtensionManager.EXTENSIONS_DIR);
+            domain = CreateAppDomain(ExtensionManager.Instance.ExtensionsDir);
             var value = (Proxy)domain.CreateInstanceAndUnwrap(
                 type.Assembly.FullName,
                 type.FullName);

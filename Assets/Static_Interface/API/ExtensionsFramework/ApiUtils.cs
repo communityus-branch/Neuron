@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using UnityEngine;
-
 using Object = UnityEngine.Object;
-namespace Assets.Static_Interface.API.ExtensionsFramework
+namespace Static_Interface.API.ExtensionsFramework
 {
     public static class ApiUtils
     {

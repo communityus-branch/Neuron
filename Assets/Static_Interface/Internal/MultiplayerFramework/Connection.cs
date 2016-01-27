@@ -56,14 +56,14 @@ namespace Static_Interface.Internal.Multiplayer
 
         protected void OnAPIWarningMessage(int severity, StringBuilder warning)
         {
-            Console.Instance.Print("Warning: " + warning + " (Severity: " + severity + ")");
+            LogUtils.Log("Warning: " + warning + " (Severity: " + severity + ")");
         }
 
         public ICollection<User> Clients => _clients?.AsReadOnly();
 
         internal virtual void Awake()
         {
-            Debug.Log("Initializing connection...");
+            LogUtils.Log("Initializing connection...");
             CurrentConnection = this;
             DontDestroyOnLoad(this);
         }
@@ -71,7 +71,7 @@ namespace Static_Interface.Internal.Multiplayer
         protected virtual void OnDestroy()
         {
             if (CurrentConnection == this) CurrentConnection = null;
-            Debug.Log("Destroying connection...");
+            LogUtils.Log("Destroying connection...");
         }
 
         internal virtual void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
@@ -79,7 +79,7 @@ namespace Static_Interface.Internal.Multiplayer
             if (!IsConnected) return;
             if (packet.Length > 0)
             {
-                Debug.Log("Received packet: " + (EPacket) packet[0]);
+                LogUtils.Debug("Received packet: " + (EPacket) packet[0]);
             }
         }
 
@@ -140,7 +140,7 @@ namespace Static_Interface.Internal.Multiplayer
         {
             if ((index >= _clients.Count))
             {
-                Debug.LogError("Failed to find player: " + index);
+                LogUtils.Error("Failed to find player: " + index);
                 return;
             }
             //Todo: on player disconnected event
@@ -153,10 +153,10 @@ namespace Static_Interface.Internal.Multiplayer
             if (!IsConnected) return;
             if (receiver.m_SteamID == 0)
             {
-                Debug.LogError("Failed to send to invalid steam ID.");
+                LogUtils.Error("Failed to send to invalid steam ID.");
                 return;
             }
-            Debug.Log("Sending packet: " + type);
+            LogUtils.Debug("Sending packet: " + type);
         }
 
         public abstract void Disconnect(string reason = null);

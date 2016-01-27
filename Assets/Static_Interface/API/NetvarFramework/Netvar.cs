@@ -1,4 +1,5 @@
 ﻿using System;
+using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.API.NetvarFramework
@@ -26,15 +27,13 @@ namespace Static_Interface.API.NetvarFramework
             set
             {
                 ValidateType(value, true);
-                Debug.Log("Type validated");
                 NetvarChangedEvent @event = new NetvarChangedEvent(this, _value, value);
                 if (@event.IsCancelled)
                 {
-                    Debug.Log("Netvar Event cancelled (" + Name + ")");
                     return;
                 }
-                Debug.Log("OnSetValue (" + Name + ")");
                 OnSetValue(_value, value);
+                LogUtils.Log("Netvar \"" + @event.Name + "\" updated:" + @event.OldValue + " -> " + @event.NewValue);
                 _value = value;
             }
         }

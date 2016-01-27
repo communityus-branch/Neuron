@@ -153,7 +153,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
                     var args = ObjectSerializer.GetObjects(source, offset, 0, packet, argTypes);
                     UserIdentity playerIdent = new UserIdentity(source, (string) args[1], (CSteamID) args[3]);
-					Debug.Log("Player connecting: " + playerIdent.PlayerName);
+					LogUtils.Log("Player connecting: " + playerIdent.PlayerName);
                     if (((string)args[4]) != GameInfo.VERSION)
                     {
                         Reject(source, ERejectionReason.WRONG_VERSION);
@@ -174,7 +174,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 default:
                     if (parsedPacket != EPacket.AUTHENTICATE)
                     {
-                        Debug.LogError("Failed to handle message: " + parsedPacket);
+                        LogUtils.Error("Failed to handle message: " + parsedPacket);
                         return;
                     }
 
@@ -263,12 +263,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             {
                 if (!SteamGameServerNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendUnreliable : EP2PSend.k_EP2PSendUnreliableNoDelay, id))
                 {
-                    Debug.LogError("Failed to send UDP packet to " + receiver + "!");
+                    LogUtils.Error("Failed to send UDP packet to " + receiver + "!");
                 }
             }
             else if (!SteamGameServerNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendReliableWithBuffering : EP2PSend.k_EP2PSendReliable, id))
             {
-                Debug.LogError("Failed to send TCP packet to " + receiver + "!");
+                LogUtils.Error("Failed to send TCP packet to " + receiver + "!");
             }
         }
 
@@ -356,7 +356,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
         public void Accept(PendingUser user)
         {
             UserIdentity ident = user.Identity;
-			Debug.Log("Player accepted: " + ident.PlayerName);
+			LogUtils.Log("Player accepted: " + ident.PlayerName);
 			if (!user.HasAuthentication) return;
             _pendingPlayers.Remove(user);
             SteamGameServer.BUpdateUserData(ident.ID, ident.PlayerName, 0);
@@ -395,7 +395,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
             catch (Exception exception)
             {
-                Debug.LogError(exception.Message);
+                exception.Log();
                 Application.Quit();
                 return;
             }

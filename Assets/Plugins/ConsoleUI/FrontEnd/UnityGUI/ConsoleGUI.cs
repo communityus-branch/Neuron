@@ -5,7 +5,7 @@
 
 using UnityEngine;
 
-namespace Assets.Plugins.ConsoleUI.FrontEnd.UnityGUI
+namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
 {
     public class ConsoleGUI : MonoBehaviour
     {

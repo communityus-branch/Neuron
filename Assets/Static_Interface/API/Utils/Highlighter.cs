@@ -48,7 +48,7 @@ namespace Static_Interface.Internal
             Material m = GetCurrentMaterial();
             originalShader = m.shader;
             m.shader = GetOutlineShader();
-            if(m.shader == null) Debug.Log("Outline shader not found");
+            if(m.shader == null) LogUtils.Error("Outline shader not found");
             SetColor(color);
             SetOutlineWidth(width);
         }

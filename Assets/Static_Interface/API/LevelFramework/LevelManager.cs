@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Static_Interface.API.NetvarFramework;
+using Static_Interface.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -44,7 +45,7 @@ namespace Static_Interface.API.LevelFramework
             IsLoading = false;
             CurrentLevel = PendingLevel;
             PendingLevel = null;
-            Debug.Log("Level has been loaded: " + CurrentLevel);
+            LogUtils.Log("Level has been loaded: " + CurrentLevel);
         }
 
         public void GoToMainMenu()
