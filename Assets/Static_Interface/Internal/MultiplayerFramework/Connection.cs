@@ -76,10 +76,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
         internal virtual void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
         {
             if (!IsConnected) return;
-            if (packet.Length > 0)
-            {
-                LogUtils.Debug("Received packet: " + (EPacket) packet[0]);
-            }
+            LogUtils.Debug("Received packet, channel: " + channel + ", size: " + packet.Length);
         }
 
         private static List<Channel> _receivers = new List<Channel>();
