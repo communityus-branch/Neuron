@@ -373,6 +373,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 return;
             }
 
+            SetupPseudoChannel();
             IsConnected = true;
             SteamUtils.SetWarningMessageHook(OnAPIWarningMessage);
             CurrentTime = SteamGameServerUtils.GetServerRealTime();

@@ -245,7 +245,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             Lag((info.Ping) / 1000f);
             LastNet = Time.realtimeSinceStartup;
             OffsetNet = 0f;
-
+            SetupPseudoChannel();
             Send(ServerID, EPacket.WORKSHOP, new byte[] { }, 0, 0);
             //Todo: Load Level specified by server
             LevelManager.Instance.LoadLevel("DefaultMap");    
