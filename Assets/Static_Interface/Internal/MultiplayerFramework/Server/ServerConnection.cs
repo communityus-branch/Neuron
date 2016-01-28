@@ -294,6 +294,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         private void OnP2PSessionConnectFail(P2PSessionConnectFail_t callback)
         {
+            LogUtils.Error("P2P connection failed for: " + callback.m_steamIDRemote + ", error: " + callback.m_eP2PSessionError);
             DisconnectClient(callback.m_steamIDRemote);
         }
 

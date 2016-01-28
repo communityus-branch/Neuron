@@ -93,6 +93,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             Destroy(this);
         }
 
+
         internal override void Awake()
         {
             base.Awake();

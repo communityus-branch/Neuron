@@ -13,6 +13,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProv
         public ClientMultiplayerProvider()
         {
             Callback<P2PSessionRequest_t>.Create(OnP2PSessionRequest);
+            Callback<P2PSessionConnectFail_t>.Create(OnP2PSessionConnectFail);
         }
 
         public void Connect(ServerInfo serverInfo)
@@ -23,6 +24,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProv
         public void Disconnect()
         {
             // Todo
+        }
+
+        private void OnP2PSessionConnectFail(P2PSessionConnectFail_t callback)
+        {
+            LogUtils.Error("P2P connection failed for: " + callback.m_steamIDRemote + ", error: " + callback.m_eP2PSessionError);
         }
 
         public override bool Read(out CSteamID user, byte[] data, out ulong length, int channel)
