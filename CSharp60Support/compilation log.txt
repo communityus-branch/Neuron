@@ -1,5 +1,5 @@
 ********************************************************************************
-*                    Thursday, January 28, 2016 11:33:45 PM                    *
+*                    Thursday, January 28, 2016 11:42:36 PM                    *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 1.6.1.0
 Platform: Windows
@@ -11,9 +11,9 @@ Compiler: Microsoft C# 6.0
 - Compilation -----------------------------------------------
 
 Process: H:\Users\Trojaner\UnityProjects\The_Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-dc3726d8836c60f4281034cb28d14176
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-ee135a3b644fbf44b91f6415ff7d1af2
 Exit code: 0
-Elapsed time: 4.45 sec
+Elapsed time: 4.67 sec
 
 - Compiler output (2 lines):
 0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
@@ -30,11 +30,11 @@ Elapsed time: 4.45 sec
 Process: H:\Users\Trojaner\UnityProjects\The_Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
 Arguments: Temp\Assembly-CSharp.dll
 Exit code: -532462766
-Elapsed time: 1.60 sec
+Elapsed time: 1.74 sec
 
 - pdb2mdb.exe output (0 lines):
 ********************************************************************************
-*                    Thursday, January 28, 2016 11:33:52 PM                    *
+*                    Thursday, January 28, 2016 11:42:43 PM                    *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 1.6.1.0
 Platform: Windows
@@ -46,7 +46,7 @@ Compiler: Microsoft C# 6.0
 - Compilation -----------------------------------------------
 
 Process: H:\Users\Trojaner\UnityProjects\The_Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-030dca7d7368db14ebae98da4be6ae3a
+Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-6ec5dc9c1f5897f4287cff24c27ca230
 Exit code: 0
 Elapsed time: 4.48 sec
 
@@ -62,71 +62,5 @@ Process: H:\Users\Trojaner\UnityProjects\The_Collapse\CSharp60Support\Roslyn\pdb
 Arguments: Temp\Assembly-CSharp-Editor.dll
 Exit code: -532462766
 Elapsed time: 1.53 sec
-
-- pdb2mdb.exe output (0 lines):
-********************************************************************************
-*                    Thursday, January 28, 2016 11:35:51 PM                    *
-********************************************************************************
-CSharpCompilerWrapper.exe version: 1.6.1.0
-Platform: Windows
-Target assembly: Assembly-CSharp.dll
-Project directory: H:\Users\Trojaner\UnityProjects\The_Collapse
-Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
-Compiler: Microsoft C# 6.0
-
-- Compilation -----------------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The_Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-585646adcacecff40b93413da8ba4c6f
-Exit code: 0
-Elapsed time: 4.48 sec
-
-- Compiler output (2 lines):
-0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
-1: Copyright (C) Microsoft Corporation. All rights reserved.
-
-- Compiler errors (4 lines):
-0: Assets\Static_Interface\ExtensionSandbox\SafeCodeHandler.cs(117,20): warning CS0618: 'RPC' is obsolete: 'NetworkView RPC functions are deprecated. Refer to the new Multiplayer Networking system.'
-1: Assets\Static_Interface\API\Utils\Highlighter.cs(25,13): warning CS0162: Unreachable code detected
-2: Assets\Static_Interface\API\Utils\Highlighter.cs(32,13): warning CS0162: Unreachable code detected
-3: Assets\Static_Interface\API\Utils\Highlighter.cs(40,13): warning CS0162: Unreachable code detected
-
-- PDB to MDB conversion --------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The_Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
-Arguments: Temp\Assembly-CSharp.dll
-Exit code: -532462766
-Elapsed time: 1.87 sec
-
-- pdb2mdb.exe output (0 lines):
-********************************************************************************
-*                    Thursday, January 28, 2016 11:35:58 PM                    *
-********************************************************************************
-CSharpCompilerWrapper.exe version: 1.6.1.0
-Platform: Windows
-Target assembly: Assembly-CSharp-Editor.dll
-Project directory: H:\Users\Trojaner\UnityProjects\The_Collapse
-Unity 'Data' or 'Frameworks' directory: C:/Program Files/Unity/Editor/Data
-Compiler: Microsoft C# 6.0
-
-- Compilation -----------------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The_Collapse\CSharp60Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/mscorlib.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Core.dll" -r:"C:/Program Files/Unity/Editor/Data\Mono/lib/mono/2.0/System.Xml.dll" @Temp/UnityTempFile-c0ef8ffc09178c244b405505ff0ddc7c
-Exit code: 0
-Elapsed time: 4.57 sec
-
-- Compiler output (2 lines):
-0: Microsoft (R) Visual C# Compiler version 1.0.0.50618
-1: Copyright (C) Microsoft Corporation. All rights reserved.
-
-- Compiler errors (0 lines):
-
-- PDB to MDB conversion --------------------------------------
-
-Process: H:\Users\Trojaner\UnityProjects\The_Collapse\CSharp60Support\Roslyn\pdb2mdb.exe
-Arguments: Temp\Assembly-CSharp-Editor.dll
-Exit code: -532462766
-Elapsed time: 1.68 sec
 
 - pdb2mdb.exe output (0 lines):

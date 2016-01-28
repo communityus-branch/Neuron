@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Static_Interface.Internal
+namespace Static_Interface.API.NetworkFramework
 {
     class EPacketAttr : Attribute
     {

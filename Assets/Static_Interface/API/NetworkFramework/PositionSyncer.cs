@@ -1,7 +1,7 @@
 ﻿using Steamworks;
 using UnityEngine;
 
-namespace Static_Interface.Internal
+namespace Static_Interface.API.NetworkFramework
 {
     [RequireComponent(typeof(Rigidbody))]
     public class PositionSyncer : NetworkedBehaviour
@@ -43,7 +43,7 @@ namespace Static_Interface.Internal
             _cachedVelocity = _rigidbody.velocity;
             Channel.OpenWrite();
             Channel.Write(_cachedPosition, _cachedVelocity);
-            Channel.CloseWrite(nameof(ReadPosition), ECall.OTHERS, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
+            Channel.CloseWrite(nameof(ReadPosition), ECall.Others, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
         }
 
         [NetworkCall]

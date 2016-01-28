@@ -1,14 +1,15 @@
-﻿using Steamworks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.Internal;
 using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.Objects;
+using Steamworks;
 using UnityEngine;
 
-namespace Static_Interface.Internal
+namespace Static_Interface.API.NetworkFramework
 {
     public class Channel : MonoBehaviour
     {
@@ -268,7 +269,7 @@ namespace Static_Interface.Internal
 
         public void Send(ECall mode, EPacket type, int size, byte[] packet)
         {
-            if (mode == ECall.SERVER)
+            if (mode == ECall.Server)
             {
                 if (Connection.IsServer())
                 {
@@ -279,7 +280,7 @@ namespace Static_Interface.Internal
                     Connection.Send(Connection.ServerID, type, packet, size, ID);
                 }
             }
-            else if (mode == ECall.ALL)
+            else if (mode == ECall.All)
             {
                 if (!(Connection.IsServer()))
                 {
@@ -301,7 +302,7 @@ namespace Static_Interface.Internal
                     Receive(Connection.ClientID, packet, 0, size);
                 }
             }
-            else if (mode == ECall.OTHERS)
+            else if (mode == ECall.Others)
             {
                 if (!(Connection.IsServer()))
                 {
@@ -313,7 +314,7 @@ namespace Static_Interface.Internal
                     Connection.Send(t.Identity.ID, type, packet, size, ID);
                 }
             }
-            else if (mode == ECall.OWNER)
+            else if (mode == ECall.Owner)
             {
                 if (IsOwner)
                 {
@@ -324,7 +325,7 @@ namespace Static_Interface.Internal
                     Connection.Send(Owner.Identity.ID, type, packet, size, ID);
                 }
             }
-            else if (mode == ECall.NOT_OWNER)
+            else if (mode == ECall.NotOwner)
             {
                 if (!(Connection.IsServer()))
                 {
@@ -335,7 +336,7 @@ namespace Static_Interface.Internal
                     Connection.Send(user.Identity.ID, type, packet, size, ID);
                 }
             }
-            else if (mode == ECall.CLIENTS)
+            else if (mode == ECall.Clients)
             {
                 foreach (User user in Connection.Clients)
                 {
@@ -349,7 +350,7 @@ namespace Static_Interface.Internal
                     Receive(Connection.ClientID, packet, 0, size);
                 }
             }
-            else if (mode == ECall.PEERS)
+            else if (mode == ECall.Peers)
             {
                 foreach (User user in Connection.Clients)
                 {
@@ -396,7 +397,7 @@ namespace Static_Interface.Internal
         {
             switch (mode)
             {
-                case ECall.SERVER:
+                case ECall.Server:
                     if (Connection.IsServer())
                     {
                         Receive(Connection.ServerID, packet, 0, size);
@@ -406,7 +407,7 @@ namespace Static_Interface.Internal
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
                     break;
-                case ECall.ALL:
+                case ECall.All:
                     if (!(Connection.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
@@ -428,7 +429,7 @@ namespace Static_Interface.Internal
                         Receive(Connection.ClientID, packet, 0, size);
                     }
                     break;
-                case ECall.OTHERS:
+                case ECall.Others:
                     if (!(Connection.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
@@ -442,7 +443,7 @@ namespace Static_Interface.Internal
                         }
                     }
                     break;
-                case ECall.OWNER:
+                case ECall.Owner:
                     if (IsOwner)
                     {
                         Receive(Owner.Identity.ID, packet, 0, size);
@@ -452,7 +453,7 @@ namespace Static_Interface.Internal
                         Connection.Send(Owner.Identity.ID, type, packet, size, ID);
                     }
                     break;
-                case ECall.NOT_OWNER:
+                case ECall.NotOwner:
                     if (!(Connection.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
@@ -466,7 +467,7 @@ namespace Static_Interface.Internal
                         }
                     }
                     break;
-                case ECall.CLIENTS:
+                case ECall.Clients:
                     foreach (User user in Connection.Clients)
                     {
                         if (((user.Identity.ID != Connection.ClientID) &&
@@ -480,7 +481,7 @@ namespace Static_Interface.Internal
                         Receive(Connection.ClientID, packet, 0, size);
                     }
                     break;
-                case ECall.PEERS:
+                case ECall.Peers:
                     foreach (User user in Connection.Clients)
                     {
                         if (((user.Identity.ID != Connection.ClientID) &&
@@ -518,7 +519,7 @@ namespace Static_Interface.Internal
             radius *= radius;
             switch (mode)
             {
-                case ECall.SERVER:
+                case ECall.Server:
                     if (Connection.IsServer())
                     {
                         Receive(Connection.ServerID, packet, 0, size);
@@ -528,7 +529,7 @@ namespace Static_Interface.Internal
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
                     break;
-                case ECall.ALL:
+                case ECall.All:
                     if (!(Connection.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
@@ -551,7 +552,7 @@ namespace Static_Interface.Internal
                         Receive(Connection.ClientID, packet, 0, size);
                     }
                     break;
-                case ECall.OTHERS:
+                case ECall.Others:
                     if (!(Connection.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
@@ -566,7 +567,7 @@ namespace Static_Interface.Internal
                         }
                     }
                     break;
-                case ECall.OWNER:
+                case ECall.Owner:
                     if (IsOwner)
                     {
                         Receive(Owner.Identity.ID, packet, 0, size);
@@ -576,7 +577,7 @@ namespace Static_Interface.Internal
                         Connection.Send(Owner.Identity.ID, type, packet, size, ID);
                     }
                     break;
-                case ECall.NOT_OWNER:
+                case ECall.NotOwner:
                     if (!(Connection.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
@@ -591,7 +592,7 @@ namespace Static_Interface.Internal
                         }
                     }
                     break;
-                case ECall.CLIENTS:
+                case ECall.Clients:
                     foreach (User user in Connection.Clients)
                     {
                         if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
@@ -606,7 +607,7 @@ namespace Static_Interface.Internal
                         Receive(Connection.ClientID, packet, 0, size);
                     }
                     break;
-                case ECall.PEERS:
+                case ECall.Peers:
                     foreach (User user in Connection.Clients)
                     {
                         if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
@@ -645,7 +646,7 @@ namespace Static_Interface.Internal
         {
             switch (mode)
             {
-                case ECall.SERVER:
+                case ECall.Server:
                     if (Connection.IsServer())
                     {
                         Receive(Connection.ServerID, packet, 0, size);
@@ -655,7 +656,7 @@ namespace Static_Interface.Internal
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
                     break;
-                case ECall.ALL:
+                case ECall.All:
                     if (!(Connection.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
@@ -679,7 +680,7 @@ namespace Static_Interface.Internal
                         Receive(Connection.ClientID, packet, 0, size);
                     }
                     break;
-                case ECall.OTHERS:
+                case ECall.Others:
                     if (!(Connection.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
@@ -695,7 +696,7 @@ namespace Static_Interface.Internal
                         }
                     }
                     break;
-                case ECall.OWNER:
+                case ECall.Owner:
                     if (IsOwner)
                     {
                         Receive(Owner.Identity.ID, packet, 0, size);
@@ -705,7 +706,7 @@ namespace Static_Interface.Internal
                         Connection.Send(Owner.Identity.ID, type, packet, size, ID);
                     }
                     break;
-                case ECall.NOT_OWNER:
+                case ECall.NotOwner:
                     if (!(Connection.IsServer()))
                     {
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
@@ -721,7 +722,7 @@ namespace Static_Interface.Internal
                         }
                     }
                     break;
-                case ECall.CLIENTS:
+                case ECall.Clients:
                     foreach (User user in Connection.Clients)
                     {
                         if (((user.Identity.ID != Connection.ClientID) &&
@@ -737,7 +738,7 @@ namespace Static_Interface.Internal
                         Receive(Connection.ClientID, packet, 0, size);
                     }
                     break;
-                case ECall.PEERS:
+                case ECall.Peers:
                     foreach (User user in Connection.Clients)
                     {
                         if (((user.Identity.ID != Connection.ClientID) &&

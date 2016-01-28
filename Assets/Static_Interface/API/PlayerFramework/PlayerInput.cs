@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.Internal;
 using Steamworks;
 using UnityEngine;
@@ -44,7 +45,7 @@ namespace Static_Interface.API.PlayerFramework
                 {
                     Channel.Write(state);
                 }
-                Channel.CloseWrite(nameof(ReadInput), ECall.SERVER, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
+                Channel.CloseWrite(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
 
             }
 

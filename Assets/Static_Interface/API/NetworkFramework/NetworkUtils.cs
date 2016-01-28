@@ -1,4 +1,4 @@
-﻿namespace Static_Interface.Internal
+﻿namespace Static_Interface.API.NetworkFramework
 {
     public static class NetworkUtils
     {

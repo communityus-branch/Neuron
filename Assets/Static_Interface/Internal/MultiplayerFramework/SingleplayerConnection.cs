@@ -1,4 +1,5 @@
-﻿using Static_Interface.Internal.MultiplayerFramework.Client;
+﻿using Static_Interface.API.NetworkFramework;
+using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Server;
 using Steamworks;
 

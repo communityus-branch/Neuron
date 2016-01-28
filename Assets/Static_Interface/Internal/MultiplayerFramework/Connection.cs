@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService;
 using Static_Interface.Internal.Objects;
@@ -138,6 +139,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             _zeroChannel = new GameObject("ZeroChannel");
             var ch = _zeroChannel.AddComponent<Channel>();
             ch.ID = 0;
+            ch.Connection = this;
             ch.Setup();
             AddReceiver(ch);
             DontDestroyOnLoad(_zeroChannel);

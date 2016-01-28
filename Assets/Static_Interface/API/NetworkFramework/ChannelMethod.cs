@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using UnityEngine;
 
-namespace Static_Interface.Internal
+namespace Static_Interface.API.NetworkFramework
 {
     public class ChannelMethod
     {

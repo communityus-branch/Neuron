@@ -1,13 +1,13 @@
-﻿namespace Static_Interface.Internal
+﻿namespace Static_Interface.API.NetworkFramework
 {
     public enum ECall
     {
-        SERVER,
-        ALL,
-        OTHERS,
-        OWNER,
-        NOT_OWNER,
-        CLIENTS,
-        PEERS
+        Server,
+        All,
+        Others,
+        Owner,
+        NotOwner,
+        Clients,
+        Peers
     }
 }
