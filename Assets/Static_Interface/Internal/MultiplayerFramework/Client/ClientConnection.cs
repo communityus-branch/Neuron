@@ -44,6 +44,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 LastPing = Time.realtimeSinceStartup;
                 Send(ServerID, EPacket.TICK, new byte[] {}, 0, 0);
             }
+
+            Send(ServerID, EPacket.TICK, new byte[] {}, 0, 0);
         }
 
         public override void Disconnect(string reason = null)
@@ -243,7 +245,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             Lag((info.Ping) / 1000f);
             LastNet = Time.realtimeSinceStartup;
             OffsetNet = 0f;
-            Send(ServerID, EPacket.WORKSHOP, new byte[] {}, 0, 0);
+
+            Send(ServerID, EPacket.WORKSHOP, new byte[] { }, 0, 0);
             //Todo: Load Level specified by server
             LevelManager.Instance.LoadLevel("DefaultMap");    
         }

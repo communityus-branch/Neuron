@@ -69,12 +69,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProv
             length = 0L;
             if (!SteamGameServerNetworking.IsP2PPacketAvailable(out num, channel) || (num > data.Length))
             {
-                LogUtils.Debug("No P2P Packet available");
+                LogUtils.Debug("No P2P Packet available on channel " + channel);
                 return false;
             }
             if (!SteamGameServerNetworking.ReadP2PPacket(data, num, out num, out user, channel))
             {
-                LogUtils.Debug("P2P Packet reading failed");
+                LogUtils.Debug("P2P Packet reading failed on channel " + channel);
                 return false;
             }
             length = num;

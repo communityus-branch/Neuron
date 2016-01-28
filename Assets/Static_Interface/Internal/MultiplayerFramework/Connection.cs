@@ -76,7 +76,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         internal virtual void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
         {
-            if (!IsConnected) return;
+            //if (!IsConnected) return;
             LogUtils.Debug("Received packet, channel: " + channel + ", size: " + packet.Length);
         }
 
@@ -146,6 +146,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
             _clients.RemoveAt(index);
         }
 
+
+        public virtual void Send(CSteamID receiver, EPacket type, byte[] data, int id)
+        {
+            Send(receiver, type, data, data.Length, id);
+        }
+
         public virtual void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id)
         {
             var tmp = data.ToList();
@@ -159,13 +165,13 @@ namespace Static_Interface.Internal.MultiplayerFramework
                 return;
             }
 
-            if (!IsConnected) return;
             if (receiver.m_SteamID == 0)
             {
                 LogUtils.Error("Failed to send to invalid steam ID.");
                 return;
             }
-            LogUtils.Debug("Sending packet: " + type + ", receiver: " + receiver + (receiver == ServerID ? " (Server)" : ""));
+
+            LogUtils.Debug("Sending packet: " + type + ", receiver: " + receiver + (receiver == ServerID ? " (Server)" : "") + ", ch: " + id + ", size: " + data.Length);
 
             EP2PSend sendType;
             if (type.IsUnreliable())
@@ -180,7 +186,10 @@ namespace Static_Interface.Internal.MultiplayerFramework
                     EP2PSend.k_EP2PSendReliableWithBuffering :
                     EP2PSend.k_EP2PSendReliable;
             }
-            Provider.Write(receiver, data, (ulong)length, sendType, id);
+            if (!Provider.Write(receiver, data, (ulong) length, sendType, id))
+            {
+                LogUtils.Error("Failed to send data to " + receiver);
+            }
         }
 
         public abstract void Disconnect(string reason = null);
