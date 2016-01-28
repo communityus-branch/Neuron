@@ -23,20 +23,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProv
 
         public abstract bool Read(out CSteamID user, byte[] data, out ulong length, int channel);
 
-        public void OnP2PSessionRequest(P2PSessionRequest_t callback)
-        {
-            if (!SteamNetworking.AcceptP2PSessionWithUser(callback.m_steamIDRemote))
-            {
-                LogUtils.Debug("Failde to accept P2P Request: " + callback.m_steamIDRemote);
-            }
-            else
-            {
-                LogUtils.Debug("Accepted P2P Request: " + callback.m_steamIDRemote);
-            }
-        }
+        public abstract bool Write(CSteamID target, byte[] data, ulong length);
 
-        public abstract void Write(User user, byte[] data, ulong length);
-
-        public abstract void Write(User user, byte[] data, ulong length, EP2PSend method, int channel);
+        public abstract bool Write(CSteamID target, byte[] data, ulong length, EP2PSend method, int channel);
     }
 }

@@ -16,17 +16,31 @@ namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProv
             Callback<P2PSessionRequest_t>.CreateGameServer(OnP2PSessionRequest);
         }
 
+        public void OnP2PSessionRequest(P2PSessionRequest_t callback)
+        {
+            if (!SteamGameServerNetworking.AcceptP2PSessionWithUser(callback.m_steamIDRemote))
+            {
+                LogUtils.Debug("Failde to accept P2P Request: " + callback.m_steamIDRemote);
+            }
+            else
+            {
+                LogUtils.Debug("Accepted P2P Request: " + callback.m_steamIDRemote);
+            }
+        }
+
         public void Close()
         {
             if (!IsHosting) return;
             SteamGameServer.EnableHeartbeats(false);
             SteamGameServer.LogOff();
             GameServer.Shutdown();
+            SteamAPI.Shutdown();
             IsHosting = false;
         }
 
         public void Open(uint ip, ushort port, bool lan)
         {
+            if (IsHosting) return;
             EServerMode mode = EServerMode.eServerModeAuthenticationAndSecure;
             //if(lan) mode = EServerMode.eServerModeNoAuthentication;
             if (!GameServer.Init(ip, (ushort)(port+ 2), port, (ushort)(port + 1), mode,
@@ -41,9 +55,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProv
             SteamGameServer.SetModDir(GameInfo.NAME);
             SteamGameServer.SetServerName(Description);
             SteamGameServer.LogOnAnonymous();
+            SteamGameServer.SetPasswordProtected(false); //Todo
             SteamGameServer.EnableHeartbeats(true);
 
             Application.targetFrameRate = 60;
+            IsHosting = true;
         }
 
         public override bool Read(out CSteamID user, byte[] data, out ulong length, int channel)
@@ -65,14 +81,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProv
             return true;
         }
 
-        public override void Write(User user, byte[] data, ulong length)
+        public override bool Write(CSteamID target, byte[] data, ulong length)
         {
-            SteamGameServerNetworking.SendP2PPacket(user.Identity.ID, data, (uint)length, EP2PSend.k_EP2PSendUnreliable);
+            return SteamGameServerNetworking.SendP2PPacket(target, data, (uint)length, EP2PSend.k_EP2PSendUnreliable);
         }
 
-        public override void Write(User user, byte[] data, ulong length, EP2PSend method, int channel)
+        public override bool Write(CSteamID target, byte[] data, ulong length, EP2PSend method, int channel)
         {
-            SteamGameServerNetworking.SendP2PPacket(user.Identity.ID, data, (uint)length, method, channel);
+            return SteamGameServerNetworking.SendP2PPacket(target, data, (uint)length, method, channel);
         }
     }
 }

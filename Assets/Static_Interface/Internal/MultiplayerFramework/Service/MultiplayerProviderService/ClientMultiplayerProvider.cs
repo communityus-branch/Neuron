@@ -31,6 +31,19 @@ namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProv
             LogUtils.Error("P2P connection failed for: " + callback.m_steamIDRemote + ", error: " + callback.m_eP2PSessionError);
         }
 
+
+        public void OnP2PSessionRequest(P2PSessionRequest_t callback)
+        {
+            if (!SteamNetworking.AcceptP2PSessionWithUser(callback.m_steamIDRemote))
+            {
+                LogUtils.Debug("Failde to accept P2P Request: " + callback.m_steamIDRemote);
+            }
+            else
+            {
+                LogUtils.Debug("Accepted P2P Request: " + callback.m_steamIDRemote);
+            }
+        }
+
         public override bool Read(out CSteamID user, byte[] data, out ulong length, int channel)
         {
             uint num;
@@ -50,14 +63,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProv
             return true;
         }
 
-        public override void Write(User user, byte[] data, ulong length)
+        public override bool Write(CSteamID target, byte[] data, ulong length)
         {
-            SteamNetworking.SendP2PPacket(user.Identity.ID, data, (uint)length, EP2PSend.k_EP2PSendUnreliable);
+            return SteamNetworking.SendP2PPacket(target, data, (uint)length, EP2PSend.k_EP2PSendUnreliable);
         }
 
-        public override void Write(User user, byte[] data, ulong length, EP2PSend method, int channel)
+        public override bool Write(CSteamID target, byte[] data, ulong length, EP2PSend method, int channel)
         {
-            SteamNetworking.SendP2PPacket(user.Identity.ID, data, (uint)length, method, channel);
+            return SteamNetworking.SendP2PPacket(target, data, (uint)length, method, channel);
         }
     }
 }

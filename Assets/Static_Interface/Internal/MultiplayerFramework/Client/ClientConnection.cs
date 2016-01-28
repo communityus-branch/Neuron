@@ -31,33 +31,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         public bool IsFavoritedServer { get; private set; }
         public static byte[] ClientHash { get; private set; }
 
-        public override void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id)
-        {
-            var tmp = data.ToList();
-            tmp.Insert(0, type.GetID());
-            data = tmp.ToArray();
-            length += 1;
-
-            if (receiver == ClientID)
-            {
-                Receive(ClientID, data, 0, length, id);
-                return;
-            }
-            base.Send(receiver, type, data, length, id);
-
-            if (type.IsUnreliable())
-            {
-                if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendUnreliable : EP2PSend.k_EP2PSendUnreliableNoDelay, id))
-                {
-                    LogUtils.Error("Failed to send UDP packet to " + receiver + "!");
-                }
-            }
-            else if (!SteamNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendReliableWithBuffering : EP2PSend.k_EP2PSendReliable, id))
-            {
-                LogUtils.Error("Failed to send TCP packet to " + receiver + "!");
-            }
-        }
-
         internal override void Listen()
         {
             if (((Time.realtimeSinceStartup - LastNet) > CLIENT_TIMEOUT))

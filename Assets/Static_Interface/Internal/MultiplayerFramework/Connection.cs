@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService;
@@ -147,14 +148,39 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public virtual void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id)
         {
+            var tmp = data.ToList();
+            tmp.Insert(0, type.GetID());
+            data = tmp.ToArray();
+            length += 1;
+
+            if (IsClient() && receiver == ClientID || IsServer() && receiver == ServerID)
+            {
+                Receive(receiver, data, 0, length, id);
+                return;
+            }
+
             if (!IsConnected) return;
             if (receiver.m_SteamID == 0)
             {
                 LogUtils.Error("Failed to send to invalid steam ID.");
                 return;
             }
-            LogUtils.Debug("Sending packet: " + type);
-            LogUtils.Debug("Packet receiver: " + receiver + (receiver == ServerID ? " (Server)" : ""));
+            LogUtils.Debug("Sending packet: " + type + ", receiver: " + receiver + (receiver == ServerID ? " (Server)" : ""));
+
+            EP2PSend sendType;
+            if (type.IsUnreliable())
+            {
+                sendType = !type.IsInstant()
+                    ? EP2PSend.k_EP2PSendUnreliable
+                    : EP2PSend.k_EP2PSendUnreliableNoDelay;
+            }
+            else
+            {
+                sendType = !type.IsInstant() ?
+                    EP2PSend.k_EP2PSendReliableWithBuffering :
+                    EP2PSend.k_EP2PSendReliable;
+            }
+            Provider.Write(receiver, data, (ulong)length, sendType, id);
         }
 
         public abstract void Disconnect(string reason = null);

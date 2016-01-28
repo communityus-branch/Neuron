@@ -243,33 +243,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
         }
 
-        public override void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id)
-        {
-            var tmp = data.ToList();
-            tmp.Insert(0, type.GetID());
-            data = tmp.ToArray();
-            length += 1;
-
-            if (receiver == ServerID)
-            {
-                Receive(ServerID, data, 0, length, id);
-                return;
-            }
-            base.Send(receiver, type, data, length, id);
-
-            if (type.IsUnreliable())
-            {
-                if (!SteamGameServerNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendUnreliable : EP2PSend.k_EP2PSendUnreliableNoDelay, id))
-                {
-                    LogUtils.Error("Failed to send UDP packet to " + receiver + "!");
-                }
-            }
-            else if (!SteamGameServerNetworking.SendP2PPacket(receiver, data, (uint)length, !type.IsInstant() ? EP2PSend.k_EP2PSendReliableWithBuffering : EP2PSend.k_EP2PSendReliable, id))
-            {
-                LogUtils.Error("Failed to send TCP packet to " + receiver + "!");
-            }
-        }
-
         internal override void Awake()
         {
             base.Awake();
@@ -290,6 +263,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             {
                 IsSecure = false;
             }
+            LogUtils.Debug("OnGsPolicyResponse: IsSecure: " + IsSecure);
         }
 
         private void OnP2PSessionConnectFail(P2PSessionConnectFail_t callback)
@@ -422,6 +396,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
         {
             //Todo: OnServerShutdown
             ((ServerMultiplayerProvider)Provider).Close();
+            Application.Quit();
         }
 
         private bool VerifyTicket(CSteamID user, byte[] ticket)
