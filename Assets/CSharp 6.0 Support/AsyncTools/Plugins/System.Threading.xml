@@ -260,7 +260,7 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="key"/> is a null
             reference.</exception>
         </member>
-        <member name="M:System.Collections.Concurrent.ConcurrentDictionary`2.Clear">
+        <member name="M:System.Collections.Concurrent.ConcurrentDictionary`2.CLEAR">
             <summary>
             Removes all keys and values from the <see cref="T:System.Collections.Concurrent.ConcurrentDictionary`2"/>.
             </summary>
@@ -1167,7 +1167,7 @@
             Construct the stack from a previously seiralized one
             </summary>
         </member>
-        <member name="M:System.Collections.Concurrent.ConcurrentStack`1.Clear">
+        <member name="M:System.Collections.Concurrent.ConcurrentStack`1.CLEAR">
             <summary>
             Removes all objects from the <see cref="T:System.Collections.Concurrent.ConcurrentStack`1"/>.
             </summary>

@@ -1,4 +1,4 @@
-﻿using Static_Interface.API.InteractFramework;
+﻿using Static_Interface.API.Interact;
 
 namespace Static_Interface.The_Collapse.Interactables
 {

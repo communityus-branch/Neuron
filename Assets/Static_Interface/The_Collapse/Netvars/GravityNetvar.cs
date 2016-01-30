@@ -1,5 +1,4 @@
-﻿
-using Static_Interface.API.NetvarFramework;
+﻿using Static_Interface.API.Netvar;
 using UnityEngine;
 
 namespace Static_Interface.The_Collapse.Netvars

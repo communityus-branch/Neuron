@@ -2,9 +2,9 @@
 using System.IO;
 using Plugins.ConsoleUI.FrontEnd.UnityGUI;
 using Static_Interface.API.Commands;
-using Static_Interface.API.ExtensionsFramework;
-using Static_Interface.API.NetvarFramework;
-using Static_Interface.Internal.MultiplayerFramework;
+using Static_Interface.API.Extension;
+using Static_Interface.API.Netvar;
+using Static_Interface.API.Utils;
 using Static_Interface.The_Collapse;
 using Static_Interface.The_Collapse.Netvars;
 using UnityEngine;
@@ -28,6 +28,7 @@ namespace Static_Interface.Internal
             GameObject.Find("Console").GetComponent<ConsoleGUI>().Character = GameObject.Find("MainPlayer");
 			var extensionsDir = Path.Combine(GameInfo.GameBaseDir, "Plugins");
 			ExtensionManager.Init(extensionsDir);
+            gameObject.AddComponent<UniStormGUIMenu>();
         }
     }
 }

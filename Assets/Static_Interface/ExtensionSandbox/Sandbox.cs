@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using System.Security.Policy;
-using Static_Interface.API.ExtensionsFramework;
+using Static_Interface.API.Extension;
 
 namespace Static_Interface.ExtensionSandbox
 {

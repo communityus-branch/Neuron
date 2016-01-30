@@ -1,5 +1,5 @@
-﻿using Static_Interface.API.EventFramework;
-using Static_Interface.API.PlayerFramework;
+﻿using Static_Interface.API.Event;
+using Static_Interface.API.Player;
 
 namespace Static_Interface.The_Collapse.Events
 {

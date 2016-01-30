@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Steamworks;
 
-namespace Static_Interface.Internal
+namespace Static_Interface.API.Utils
 {
     public class Hash
     {

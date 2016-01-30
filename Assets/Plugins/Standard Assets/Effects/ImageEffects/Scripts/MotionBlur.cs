@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // This class implements simple ghosting type Motion Blur.

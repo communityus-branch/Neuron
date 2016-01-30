@@ -1,7 +1,7 @@
 ﻿using System;
 using Homans.Console;
-using Static_Interface.API.NetvarFramework;
-using Static_Interface.Internal;
+using Static_Interface.API.Netvar;
+using Static_Interface.API.Utils;
 using UnityEngine;
 
 namespace Static_Interface.API.Commands
@@ -12,11 +12,11 @@ namespace Static_Interface.API.Commands
         {
             Console.Instance.RegisterCommand("nv_set", this, "SetCommand");
             Console.Instance.RegisterCommand("exit", this, "Exit");
-            Console.Instance.RegisterParser(typeof(Netvar), ParseNetvar);
+            Console.Instance.RegisterParser(typeof(Netvar.Netvar), ParseNetvar);
         }
 
         [Help("Usage: nv_set <netvar> <param>\nSet values of netvars")]
-        public void SetCommand(Netvar netvar, string args)
+        public void SetCommand(Netvar.Netvar netvar, string args)
         {
             object value = ParseString(args);
             if (!netvar.ValidateType(value))
@@ -38,7 +38,7 @@ namespace Static_Interface.API.Commands
 
         public bool ParseNetvar(string line, out object obj)
         {
-            Netvar netVar = NetvarManager.Instance.GetNetvar(line);
+            Netvar.Netvar netVar = NetvarManager.Instance.GetNetvar(line);
             obj = netVar;
             return netVar != null;
         }

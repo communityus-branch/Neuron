@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Static_Interface.API.NetworkFramework;
-using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.Network;
+using Static_Interface.API.Player;
+using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService;
 using Static_Interface.Internal.Objects;
 using Steamworks;
 using UnityEngine;
-using SteamUser = Static_Interface.API.PlayerFramework.SteamUser;
+using SteamUser = Static_Interface.API.Player.SteamUser;
 
 namespace Static_Interface.Internal.MultiplayerFramework
 {
