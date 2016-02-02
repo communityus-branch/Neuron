@@ -1,5 +1,5 @@
 ﻿using Static_Interface.API.Player;
-using Static_Interface.The_Collapse;
+using Static_Interface.Neuron;
 
 namespace Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider
 {

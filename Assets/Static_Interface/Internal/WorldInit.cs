@@ -5,8 +5,8 @@ using Static_Interface.API.Commands;
 using Static_Interface.API.Extension;
 using Static_Interface.API.Netvar;
 using Static_Interface.API.Utils;
-using Static_Interface.The_Collapse;
-using Static_Interface.The_Collapse.Netvars;
+using Static_Interface.Neuron;
+using Static_Interface.Neuron.Netvars;
 using UnityEngine;
 
 namespace Static_Interface.Internal

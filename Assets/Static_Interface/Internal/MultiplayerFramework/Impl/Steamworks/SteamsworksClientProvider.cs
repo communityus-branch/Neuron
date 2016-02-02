@@ -1,11 +1,11 @@
 ﻿using System;
+using Static_Interface.Neuron;
 using Static_Interface.API.Level;
 using Static_Interface.API.Network;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
-using Static_Interface.The_Collapse;
 using Steamworks;
 using SteamUser = Steamworks.SteamUser;
 

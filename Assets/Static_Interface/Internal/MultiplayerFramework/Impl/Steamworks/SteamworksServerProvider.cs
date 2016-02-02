@@ -4,7 +4,7 @@ using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.MultiplayerFramework.Server;
-using Static_Interface.The_Collapse;
+using Static_Interface.Neuron;
 using Steamworks;
 using UnityEngine;
 
