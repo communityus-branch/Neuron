@@ -1,6 +1,6 @@
 ﻿namespace Static_Interface.API.Extension
 {
-    public class Gamemode : Extension
+    public class GameMode : Extension
     {
          
     }

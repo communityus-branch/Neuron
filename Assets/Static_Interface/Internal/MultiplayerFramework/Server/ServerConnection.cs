@@ -5,10 +5,10 @@ using Static_Interface.API.Level;
 using Static_Interface.API.Network;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService;
+using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
+using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
 using Static_Interface.The_Collapse;
-using Steamworks;
 using UnityEngine;
 using Types = Static_Interface.Internal.Objects.Types;
 
@@ -26,12 +26,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public ushort Port { get; private set; }
 
-        public uint PublicIP => SteamGameServer.GetPublicIP();
+        public uint PublicIP => ((ServerMultiplayerProvider)Provider).GetPublicIP();
 
         private readonly List<PendingUser> _pendingPlayers = new List<PendingUser>();
         public ICollection<PendingUser> PendingPlayers => _pendingPlayers.AsReadOnly();
 
-        public bool IsSecure { get; private set; }
+        public bool IsSecure { get; internal set; }
 
         internal override void Listen()
         {
@@ -43,7 +43,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     if (((Time.realtimeSinceStartup - c.LastPing) > 1f) || (c.LastPing < 0f))
                     {
                         c.LastPing = Time.realtimeSinceStartup;
-                        Send(c.Identity.ID, EPacket.TICK, new byte[] { }, 0, 0);
+                        Send(c.Identity, EPacket.TICK, new byte[] { }, 0, 0);
                     }
                 }
             }
@@ -52,13 +52,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 c => ((Time.realtimeSinceStartup - c.LastNet) > SERVER_TIMEOUT) ||
                 (((Time.realtimeSinceStartup - c.Joined) > SERVER_TIMEOUT) && (c.LastPing > Timeout))))
             {
-                DisconnectClient(c.Identity.ID);
+                DisconnectClient(c.Identity);
             }
 
             foreach (PendingUser c in _pendingPlayers.Where(c => 
                 (Time.realtimeSinceStartup - c.Joined) > PENDING_TIMEOUT))
             {
-                Reject(c.Identity.ID, ERejectionReason.TIMEOUT);
+                Reject(c.Identity, ERejectionReason.TIMEOUT);
             }
         }
 
@@ -68,7 +68,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             Destroy(this);
         }
 
-        internal override void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
+        internal override void Receive(Identity source, byte[] packet, int offset, int size, int channel)
         {
             base.Receive(source, packet, offset, size, channel);
             var net = ((OffsetNet + Time.realtimeSinceStartup) - LastNet);
@@ -86,7 +86,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 }
                 else
                 {
-                    if (Clients.All(client => client.Identity.ID != source)) return;
+                    if (Clients.All(client => client.Identity != source)) return;
                     foreach (Channel ch in Receivers)
                     {
                         ch.Receive(source, packet, offset, size);
@@ -122,7 +122,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     return;
                 }
                 case EPacket.TIME:
-                    foreach (User c in Clients.Where(c => c.Identity.ID == source))
+                    foreach (User c in Clients.Where(c => c.Identity == source))
                     {
                         if (!(c.LastPing > 0f)) return;
                         c.LastNet = Time.realtimeSinceStartup;
@@ -134,39 +134,41 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
                 case EPacket.CONNECT:
                 {
-                    if (_pendingPlayers.Any(p => p.Identity.ID == source))
+                    if (_pendingPlayers.Any(p => p.Identity == source))
                     {
                         Reject(source, ERejectionReason.ALREADY_PENDING);
                         return;
                     }
 
-                    if (Clients.Any(c => c.Identity.ID == source))
+                    if (Clients.Any(c => c.Identity == source))
                     {
                         Reject(source, ERejectionReason.ALREADY_CONNECTED);
                         return;
                     }
 
                     Type[] argTypes = {
-                        //[0] package id, [1] name, [2] hashedPassword, [3] group, [4] version, [5] point, [6], angle, [7] channel
-                        Types.STRING_TYPE, Types.STEAM_ID_TYPE, Types.STRING_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
+                        //[0] package, [1] name, [2] group, [3] version, [4] point, [5], angle, [6] channel
+                        Types.BYTE_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
                     };
 
                     var args = ObjectSerializer.GetObjects(source, offset, 0, packet, argTypes);
-                    UserIdentity playerIdent = new UserIdentity(source, (string) args[1], (CSteamID) args[3]);
-					LogUtils.Log("Player connecting: " + playerIdent.PlayerName);
+                    var name = (string) args[1];
+                    var group = (ulong) args[3];
+
+					LogUtils.Log("Player connecting: " + name);
                     if (((string)args[4]) != GameInfo.VERSION)
                     {
                         Reject(source, ERejectionReason.WRONG_VERSION);
                         return;
                     }
 
-                    if ((Clients.Count + 1) > MultiplayerProvider.MAX_PLAYERS)
+                    if ((Clients.Count + 1) > MultiplayerProvider.MultiplayerProvider.MAX_PLAYERS)
                     {
                         Reject(source, ERejectionReason.SERVER_FULL);
                         return;
                     }
 
-                    _pendingPlayers.Add(new SteamPendingUser(playerIdent));
+                    _pendingPlayers.Add(new PendingUser(source, name, group));
                     Send(source, EPacket.VERIFY, new byte[] { }, 0, 0);
                     return;
                 }
@@ -178,7 +180,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         return;
                     }
 
-                    currentPending = _pendingPlayers.FirstOrDefault(p => p.Identity.ID == source);
+                    currentPending = _pendingPlayers.FirstOrDefault(p => p.Identity == source);
                     break;
             }
 
@@ -186,7 +188,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             {
                 Reject(source, ERejectionReason.NOT_PENDING);
             }
-            else if ((Clients.Count + 1) > MultiplayerProvider.MAX_PLAYERS)
+            else if ((Clients.Count + 1) > MultiplayerProvider.MultiplayerProvider.MAX_PLAYERS)
             {
                 Reject(source, ERejectionReason.SERVER_FULL);
             }
@@ -194,40 +196,41 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             {
                 object[] args = ObjectSerializer.GetObjects(source, offset, 0, packet, Types.BYTE_TYPE,
                     Types.BYTE_ARRAY_TYPE);
-                if (!VerifyTicket(source, (byte[])args[1]))
+                if (!((ServerMultiplayerProvider)Provider).VerifyTicket(source, (byte[])args[1]))
                 {
                     Reject(source, ERejectionReason.AUTH_VERIFICATION);
                 }
             }
         }
 
-        public void Reject(CSteamID user, ERejectionReason reason)
+        public void Reject(Identity user, ERejectionReason reason)
         {
-            foreach (var player in _pendingPlayers.Where(player => player.Identity.ID == user))
+            foreach (var player in _pendingPlayers.Where(player => player.Identity == user))
             {
                 PendingPlayers.Remove(player);
             }
 
-            SteamGameServer.EndAuthSession(user);
+            ((ServerMultiplayerProvider) Provider).EndAuthSession(user);
+
             byte[] data = {(byte)reason};
             Send(user, EPacket.REJECTED, data, data.Length, 0);
         }
 
-        public void DisconnectClient(CSteamID user)
+        public void DisconnectClient(Identity user)
         {
             byte index = GetUserIndex(user);
             RemovePlayer(index);
             byte[] packet = { index };
             AnnounceToAll(EPacket.DISCONNECTED, packet, packet.Length, 0);
-            SteamGameServerNetworking.CloseP2PSessionWithUser(user);
+            Provider.CloseConnection(user);
         }
 
-        public byte GetUserIndex(CSteamID user)
+        public byte GetUserIndex(Identity user)
         {
             byte index = 0;
             foreach (User client in Clients)
             {
-                if (client.Identity.ID == user)
+                if (client.Identity == user)
                 {
                     return index;
                 }
@@ -241,120 +244,44 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
         {
             foreach (var c in Clients)
             {
-                Send(c.Identity.ID, packet, data, size, channel);
+                Send(c.Identity, packet, data, size, channel);
             }
         }
 
         internal override void Awake()
         {
             base.Awake();
-            Callback<GSPolicyResponse_t>.CreateGameServer(OnGsPolicyResponse);
-            Callback<P2PSessionConnectFail_t>.CreateGameServer(OnP2PSessionConnectFail);
-            Callback<ValidateAuthTicketResponse_t>.CreateGameServer(OnValidateAuthTicketResponse);
             Port = 27015;
             IsReady = true;
         }
 
-        private void OnGsPolicyResponse(GSPolicyResponse_t callback)
-        {
-            if (callback.m_bSecure != 0)
-            {
-                IsSecure = true;
-            }
-            else if (IsSecure)
-            {
-                IsSecure = false;
-            }
-            LogUtils.Debug("OnGsPolicyResponse: IsSecure: " + IsSecure);
-        }
-
-        private void OnP2PSessionConnectFail(P2PSessionConnectFail_t callback)
-        {
-            LogUtils.Error("P2P connection failed for: " + callback.m_steamIDRemote + ", error: " + callback.m_eP2PSessionError);
-            DisconnectClient(callback.m_steamIDRemote);
-        }
-
-        private void OnValidateAuthTicketResponse(ValidateAuthTicketResponse_t callback)
-        {
-            if (callback.m_eAuthSessionResponse != EAuthSessionResponse.k_EAuthSessionResponseOK)
-            {
-                if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseUserNotConnectedToSteam)
-                {
-                    Reject(callback.m_SteamID, ERejectionReason.AUTH_NO_STEAM);
-                }
-                else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseNoLicenseOrExpired)
-                {
-                    Reject(callback.m_SteamID, ERejectionReason.AUTH_LICENSE_EXPIRED);
-                }
-                else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseVACBanned)
-                {
-                    Reject(callback.m_SteamID, ERejectionReason.AUTH_VAC_BAN);
-                }
-                else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseLoggedInElseWhere)
-                {
-                    Reject(callback.m_SteamID, ERejectionReason.AUTH_ELSEWHERE);
-                }
-                else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseVACCheckTimedOut)
-                {
-                    Reject(callback.m_SteamID, ERejectionReason.AUTH_TIMED_OUT);
-                }
-                else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseAuthTicketCanceled)
-                {
-                    DisconnectClient(callback.m_SteamID);
-                }
-                else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseAuthTicketInvalidAlreadyUsed)
-                {
-                    Reject(callback.m_SteamID, ERejectionReason.AUTH_USED);
-                }
-                else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponseAuthTicketInvalid)
-                {
-                    Reject(callback.m_SteamID, ERejectionReason.AUTH_NO_USER);
-                }
-                else if (callback.m_eAuthSessionResponse == EAuthSessionResponse.k_EAuthSessionResponsePublisherIssuedBan)
-                {
-                    Reject(callback.m_SteamID, ERejectionReason.AUTH_PUB_BAN);
-                }
-                return;
-            }
-
-            PendingUser pending = _pendingPlayers.FirstOrDefault(pendingPlayer => pendingPlayer.Identity.ID == callback.m_SteamID);
-            if (pending == null)
-            {
-                Reject(callback.m_SteamID, ERejectionReason.NOT_PENDING);
-                return;
-            }
-
-            pending.HasAuthentication = true;
-            Accept(pending);
-        }
-
         public void Accept(PendingUser user)
         {
-            UserIdentity ident = user.Identity;
-			LogUtils.Log("Player accepted: " + ident.PlayerName);
+            Identity ident = user.Identity;
+			LogUtils.Log("Player accepted: " + user.Name);
 			if (!user.HasAuthentication) return;
             _pendingPlayers.Remove(user);
-            SteamGameServer.BUpdateUserData(ident.ID, ident.PlayerName, 0);
+            ((ServerMultiplayerProvider)Provider).UpdateScore(ident, 0);
             Vector3 spawn = Vector3.zero;
             byte angle = 0;
             int size;
             //Todo: savefile
 
             int channels = Channels;
-            Transform player = AddPlayer(ident, spawn, angle, channels);
+            Transform player = AddPlayer(ident, user.Name, user.Group, spawn, angle, channels);
             object[] data;
             byte[] packet;
             foreach (var c in Clients)
             {
-                data = new object[] { c.Identity.ID, c.Identity.PlayerName, c.Identity.Group, c.Model.position, c.Model.rotation.eulerAngles.y / 2f };
+                data = new object[] { c.Identity, c.Name, c.Group, c.Model.position, c.Model.rotation.eulerAngles.y / 2f };
                 packet = ObjectSerializer.GetBytes(0, out size, data);
-                Send(user.Identity.ID, EPacket.CONNECTED, packet, data.Length, 0);
+                Send(user.Identity, EPacket.CONNECTED, packet, data.Length, 0);
             }
 
             object[] objects = { PublicIP, Port };
             packet = ObjectSerializer.GetBytes(0, out size, objects);
-            Send(ident.ID, EPacket.ACCEPTED, packet, size, 0);
-            data = new object[] { ident.ID, ident.PlayerName, ident.Group, player.position, player.rotation.eulerAngles.y / 2f };
+            Send(ident, EPacket.ACCEPTED, packet, size, 0);
+            data = new object[] { ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles.y / 2f };
 
             packet = ObjectSerializer.GetBytes(0, out size, data);
             AnnounceToAll(EPacket.CONNECTED, packet, size, 0);
@@ -363,7 +290,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public void OpenGameServer(bool lan = false)
         {
-            if(Provider == null) Provider = new ServerMultiplayerProvider();
+            if(Provider == null) Provider = new SteamworksServerProvider(this);
             try
             {
                 ((ServerMultiplayerProvider)Provider).Open(BindIP, Port, lan);
@@ -377,15 +304,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
             SetupPseudoChannel();
             IsConnected = true;
-            SteamUtils.SetWarningMessageHook(OnAPIWarningMessage);
-            CurrentTime = SteamGameServerUtils.GetServerRealTime();
-            LevelManager.Instance.LoadLevel(Map); //Todo
-            SteamGameServer.SetMaxPlayerCount(MaxPlayers);
-            SteamGameServer.SetServerName(((ServerMultiplayerProvider)Provider).Description);
-            SteamGameServer.SetPasswordProtected(false); //Todo
-            SteamGameServer.SetMapName(Map);
 
-            ServerID = SteamGameServer.GetSteamID();
+            CurrentTime = ((ServerMultiplayerProvider)Provider).GetServerRealTime();
+            ((ServerMultiplayerProvider)Provider).SetMaxPlayerCount(MaxPlayers);
+            ((ServerMultiplayerProvider)Provider).SetServerName(((ServerMultiplayerProvider)Provider).Description);
+            ((ServerMultiplayerProvider)Provider).SetPasswordProtected(false); //Todo
+            ((ServerMultiplayerProvider)Provider).SetMapName(Map);
+            LevelManager.Instance.LoadLevel(Map); //Todo
+
+
+            ServerID = ((ServerMultiplayerProvider)Provider).GetServerIdentity();
             ClientID = ServerID;
 
             ClientName = "Console";
@@ -400,11 +328,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             //Todo: OnServerShutdown
             ((ServerMultiplayerProvider)Provider).Close();
             Application.Quit();
-        }
-
-        private bool VerifyTicket(CSteamID user, byte[] ticket)
-        {
-            return (SteamGameServer.BeginAuthSession(ticket, ticket.Length, user) == EBeginAuthSessionResult.k_EBeginAuthSessionResultOK);
         }
     }
 }

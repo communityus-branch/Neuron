@@ -2,23 +2,24 @@
 using Static_Interface.Internal;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Server;
-using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Static_Interface.The_Collapse.Menus
 {
+    [RequireComponent(typeof(AudioSource))]
     public class MainMenu: MonoBehaviour
     {
         void Awake()
         {
             ObjectUtils.CheckObjects();
-            if (!Debug.isDebugBuild && SteamAPI.RestartAppIfNecessary(GameInfo.ID))
-            {
-                Application.Quit();
-            }
+            //if (!Debug.isDebugBuild && SteamAPI.RestartAppIfNecessary(GameInfo.ID))
+            //{
+            //    Application.Quit();
+            //}
             GetComponent<AudioSource>().Play();
         }
+
         public void StartGame(string scene)
         {
             GameObject serverObject = GameObject.Find("Server");

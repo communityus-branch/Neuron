@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <doc>
     <assembly>
         <name>System.Threading</name>
@@ -6920,7 +6920,7 @@
         </member>
         <member name="M:System.Threading.Tasks.Task.System#Threading#Tasks#IThreadPoolWorkItem#ExecuteWorkItem">
             <summary>
-            IThreadPoolWorkItem override, which is the entry function for this task when the TP scheduler decides to run it.
+            IThreadPoolWorkItem override, which is the entry function for this task when the TP scheduler decsteamIdes to run it.
             
             </summary>
         </member>
@@ -12013,7 +12013,7 @@
         <member name="T:System.Threading.Tasks.TaskCompletionSource`1">
             <summary>
             Represents the producer side of a <see cref="T:System.Threading.Tasks.Task{TResult}"/> unbound to a
-            delegate, providing access to the consumer side through the <see cref="P:System.Threading.Tasks.TaskCompletionSource`1.Task"/> property.
+            delegate, providing access to the consumer ssteamIde through the <see cref="P:System.Threading.Tasks.TaskCompletionSource`1.Task"/> property.
             </summary>
             <remarks>
             <para>
@@ -12519,7 +12519,7 @@
             policy, which, by default, would terminate the process.
             </summary>
             <remarks>
-            This AppDomain-wide event provides a mechanism to prevent exception
+            This AppDomain-wide event provsteamIdes a mechanism to prevent exception
             escalation policy (which, by default, terminates the process) from triggering. 
             Each handler is passed a <see cref="T:System.Threading.Tasks.UnobservedTaskExceptionEventArgs"/>
             instance, which may be used to examine the exception and to mark it as observed.
@@ -13092,7 +13092,7 @@
             as complete with regards to additions.</exception>
             <exception cref="T:System.ObjectDisposedException">The <see
             cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> has been disposed.</exception>
-            <exception cref="T:System.InvalidOperationException">The underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">The underlying collection didn't accept the item.</exception>
             <remarks>
             If a bounded capacity was specified when this instance of 
             <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> was initialized, 
@@ -13111,7 +13111,7 @@
             <exception cref="T:System.InvalidOperationException">The <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> has been marked
             as complete with regards to additions.</exception>
             <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> has been disposed.</exception>
-            <exception cref="T:System.InvalidOperationException">The underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">The underlying collection didn't accept the item.</exception>
             <remarks>
             If a bounded capacity was specified when this instance of 
             <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> was initialized, 
@@ -13129,7 +13129,7 @@
             as complete with regards to additions.</exception>
             <exception cref="T:System.ObjectDisposedException">The <see
             cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> has been disposed.</exception>
-            <exception cref="T:System.InvalidOperationException">The underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">The underlying collection didn't accept the item.</exception>
         </member>
         <member name="M:System.Collections.Concurrent.BlockingCollection`1.TryAdd(`0,System.TimeSpan)">
             <summary>
@@ -13147,7 +13147,7 @@
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number
             other than -1 milliseconds, which represents an infinite time-out -or- timeout is greater than
             <see cref="F:System.Int32.MaxValue"/>.</exception>
-            <exception cref="T:System.InvalidOperationException">The underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">The underlying collection didn't accept the item.</exception>
         </member>
         <member name="M:System.Collections.Concurrent.BlockingCollection`1.TryAdd(`0,System.Int32)">
             <summary>
@@ -13162,7 +13162,7 @@
             <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> has been disposed.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a
             negative number other than -1, which represents an infinite time-out.</exception>
-            <exception cref="T:System.InvalidOperationException">The underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">The underlying collection didn't accept the item.</exception>
         </member>
         <member name="M:System.Collections.Concurrent.BlockingCollection`1.TryAdd(`0,System.Int32,System.Threading.CancellationToken)">
             <summary>
@@ -13181,7 +13181,7 @@
             <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> has been disposed.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a
             negative number other than -1, which represents an infinite time-out.</exception>
-            <exception cref="T:System.InvalidOperationException">The underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">The underlying collection didn't accept the item.</exception>
         </member>
         <member name="M:System.Collections.Concurrent.BlockingCollection`1.TryAddWithNoTimeValidation(`0,System.Int32,System.Threading.CancellationToken)">
             <summary>Adds an item into the underlying data store using its IProducerConsumerCollection&lt;T&gt;.Add 
@@ -13198,7 +13198,7 @@
             <exception cref="T:System.InvalidOperationException">the collection has already been marked
             as complete with regards to additions.</exception>
             <exception cref="T:System.ObjectDisposedException">If the collection has been disposed.</exception>
-            <exception cref="T:System.InvalidOperationException">The underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">The underlying collection didn't accept the item.</exception>
         </member>
         <member name="M:System.Collections.Concurrent.BlockingCollection`1.Take">
             <summary>Takes an item from the <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/>.</summary>
@@ -13315,7 +13315,7 @@
             marked as complete for adding.</exception>
             <exception cref="T:System.ObjectDisposedException">At least one of the <see
             cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> instances has been disposed.</exception>
-            <exception cref="T:System.InvalidOperationException">At least one underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">At least one underlying collection didn't accept the item.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException">The count of <paramref name="collections"/> is greater than the maximum size of
             62 for STA and 63 for MTA.</exception>
             <remarks>
@@ -13343,7 +13343,7 @@
             a 0-length array or contains a null element, or at least one of collections has been
             marked as complete for adding.</exception>
             <exception cref="T:System.ObjectDisposedException">At least one of the <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> instances has been disposed.</exception>
-            <exception cref="T:System.InvalidOperationException">At least one underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">At least one underlying collection didn't accept the item.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException">The count of <paramref name="collections"/> is greater than the maximum size of
             62 for STA and 63 for MTA.</exception>
             <remarks>
@@ -13369,7 +13369,7 @@
             marked as complete for adding.</exception>
             <exception cref="T:System.ObjectDisposedException">At least one of the <see
             cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> instances has been disposed.</exception>
-            <exception cref="T:System.InvalidOperationException">At least one underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">At least one underlying collection didn't accept the item.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException">The count of <paramref name="collections"/> is greater than the maximum size of
             62 for STA and 63 for MTA.</exception>
         </member>
@@ -13394,7 +13394,7 @@
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number
             other than -1 milliseconds, which represents an infinite time-out -or- timeout is greater than
             <see cref="F:System.Int32.MaxValue"/>.</exception>
-            <exception cref="T:System.InvalidOperationException">At least one underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">At least one underlying collection didn't accept the item.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException">The count of <paramref name="collections"/> is greater than the maximum size of
             62 for STA and 63 for MTA.</exception>
         </member>
@@ -13415,7 +13415,7 @@
             <exception cref="T:System.ObjectDisposedException">At least one of the <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> instances has been disposed.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a
             negative number other than -1, which represents an infinite time-out.</exception>
-            <exception cref="T:System.InvalidOperationException">At least one underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">At least one underlying collection didn't accept the item.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException">The count of <paramref name="collections"/> is greater than the maximum size of
             62 for STA and 63 for MTA.</exception>
         </member>
@@ -13440,7 +13440,7 @@
             <exception cref="T:System.ObjectDisposedException">At least one of the <see cref="T:System.Collections.Concurrent.BlockingCollection{T}"/> instances has been disposed.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a
             negative number other than -1, which represents an infinite time-out.</exception>
-            <exception cref="T:System.InvalidOperationException">At least one underlying collection didn't accept the item.</exception>
+            <exception cref="T:System.InvalsteamIdOperationException">At least one underlying collection didn't accept the item.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException">The count of <paramref name="collections"/> is greater than the maximum size of
             62 for STA and 63 for MTA.</exception>
         </member>
@@ -18606,7 +18606,7 @@
              At instantiation time, the actual data source to be partitioned is supplied; and
              then the caller will layer on top additional enumerators to represent phases in the
              computation. Eventually, a merge can then schedule enumeration of all of the
-             individual partitions in parallel by obtaining references to the individual
+             individual partitions in parallel by obtaining references to the indivsteamIdual
              partition streams.
             
              This type has a set of subclasses which implement different partitioning algorithms,

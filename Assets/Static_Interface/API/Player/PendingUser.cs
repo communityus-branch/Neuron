@@ -2,15 +2,20 @@
 
 namespace Static_Interface.API.Player
 {
-    public abstract class PendingUser
+    public class PendingUser
     {
-        public UserIdentity Identity {get; protected set; }
+        public PendingUser(Identity ident, string name, ulong group)
+        {
+            Identity = ident;
+            Joined = Time.realtimeSinceStartup;
+            Group = group;
+            Name = name;
+        }
+
+        public ulong Group { get; }
+        public Identity Identity {get;}
         public readonly float Joined;
         public bool HasAuthentication { get; internal set; }
-
-        protected PendingUser()
-        {
-            Joined = Time.realtimeSinceStartup;
-        }
+        public string Name { get; }
     }
 }

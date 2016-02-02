@@ -6,7 +6,6 @@ using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.Objects;
-using Steamworks;
 using UnityEngine;
 
 namespace Static_Interface.API.Network
@@ -51,18 +50,18 @@ namespace Static_Interface.API.Network
             Calls = list.ToArray();
         }
 
-        public bool CheckOwner(CSteamID steamID)
+        public bool CheckOwner(Identity user)
         {
             if (Owner == null)
             {
                 return false;
             }
-            return (steamID == Owner.Identity.ID);
+            return (user == Owner.Identity);
         }
 
-        public bool ValidateServer(CSteamID steamID)
+        public bool ValidateServer(Identity user)
         {
-            return (steamID == Connection.ServerID);
+            return (user == Connection.ServerID);
         }
 
         public void CloseWrite(string channelName, ECall mode, EPacket type)
@@ -83,7 +82,7 @@ namespace Static_Interface.API.Network
             }
         }
 
-        public void CloseWrite(string channelName, CSteamID steamID, EPacket type)
+        public void CloseWrite(string channelName, Identity user, EPacket type)
         {
             if (!IsChunk(type))
             {
@@ -96,17 +95,17 @@ namespace Static_Interface.API.Network
                 int length;
                 byte[] buffer;
                 GetPacket(type, index, out length, out buffer);
-                if (IsOwner && (steamID == Connection.ClientID))
+                if (IsOwner && (user == Connection.ClientID))
                 {
                     Receive(Connection.ClientID, buffer, 0, length);
                 }
-                else if (Connection.IsServer() && (steamID == Connection.ServerID))
+                else if (Connection.IsServer() && (user == Connection.ServerID))
                 {
                     Receive(Connection.ServerID, buffer, 0, length);
                 }
                 else
                 {
-                    Connection.Send(steamID, type, buffer, length, ID);
+                    Connection.Send(user, type, buffer, length, ID);
                 }
             }
         }
@@ -221,7 +220,7 @@ namespace Static_Interface.API.Network
             return ObjectSerializer.Read(types);
         }
 
-        public void Receive(CSteamID steamID, byte[] packet, int offset, int size)
+        public void Receive(Identity user, byte[] packet, int offset, int size)
         {
             if (size >= 2)
             {
@@ -235,7 +234,7 @@ namespace Static_Interface.API.Network
                             (packet2 == EPacket.UPDATE_RELIABLE_CHUNK_BUFFER))
                         {
                             ObjectSerializer.OpenRead(offset + 2, packet);
-                            object[] parameters = {steamID};
+                            object[] parameters = {user};
                             Calls[index].Method.Invoke(Calls[index].Component, parameters);
                             ObjectSerializer.CloseRead();
                         }
@@ -243,14 +242,14 @@ namespace Static_Interface.API.Network
                         {
                             if (packet2 == EPacket.UPDATE_VOICE)
                             {
-                                Voice[0] = steamID;
+                                Voice[0] = user;
                                 Voice[1] = packet;
                                 Voice[2] = BitConverter.ToUInt16(packet, offset + 2);
                                 Calls[index].Method.Invoke(Calls[index].Component, Voice);
                             }
                             else
                             {
-                                object[] objArray = ObjectSerializer.GetObjects(steamID, offset, 2, packet,
+                                object[] objArray = ObjectSerializer.GetObjects(user, offset, 2, packet,
                                     Calls[index].Types);
                                 if (objArray != null)
                                 {
@@ -288,9 +287,9 @@ namespace Static_Interface.API.Network
                 }
                 foreach (User user in Connection.Clients)
                 {
-                    if (user.Identity.ID != Connection.ClientID)
+                    if (user.Identity != Connection.ClientID)
                     {
-                        Connection.Send(user.Identity.ID, type, packet, size, ID);
+                        Connection.Send(user.Identity, type, packet, size, ID);
                     }
                 }
                 if (Connection.IsServer())
@@ -309,20 +308,20 @@ namespace Static_Interface.API.Network
                     Connection.Send(Connection.ServerID, type, packet, size, ID);
                 }
 
-                foreach (var t in Connection.Clients.Where(t => t.Identity.ID != Connection.ClientID))
+                foreach (var t in Connection.Clients.Where(t => t.Identity != Connection.ClientID))
                 {
-                    Connection.Send(t.Identity.ID, type, packet, size, ID);
+                    Connection.Send(t.Identity, type, packet, size, ID);
                 }
             }
             else if (mode == ECall.Owner)
             {
                 if (IsOwner)
                 {
-                    Receive(Owner.Identity.ID, packet, 0, size);
+                    Receive(Owner.Identity, packet, 0, size);
                 }
                 else
                 {
-                    Connection.Send(Owner.Identity.ID, type, packet, size, ID);
+                    Connection.Send(Owner.Identity, type, packet, size, ID);
                 }
             }
             else if (mode == ECall.NotOwner)
@@ -331,18 +330,18 @@ namespace Static_Interface.API.Network
                 {
                     Connection.Send(Connection.ServerID, type, packet, size, ID);
                 }
-                foreach (User user in Connection.Clients.Where(user => user.Identity.ID != Owner.Identity.ID))
+                foreach (User user in Connection.Clients.Where(user => user.Identity != Owner.Identity))
                 {
-                    Connection.Send(user.Identity.ID, type, packet, size, ID);
+                    Connection.Send(user.Identity, type, packet, size, ID);
                 }
             }
             else if (mode == ECall.Clients)
             {
                 foreach (User user in Connection.Clients)
                 {
-                    if (user.Identity.ID != Connection.ClientID)
+                    if (user.Identity != Connection.ClientID)
                     {
-                        Connection.Send(user.Identity.ID, type, packet, size, ID);
+                        Connection.Send(user.Identity, type, packet, size, ID);
                     }
                 }
                 if (Connection.IsClient())
@@ -354,9 +353,9 @@ namespace Static_Interface.API.Network
             {
                 foreach (User user in Connection.Clients)
                 {
-                    if (user.Identity.ID != Connection.ClientID)
+                    if (user.Identity != Connection.ClientID)
                     {
-                        Connection.Send(user.Identity.ID, type, packet, size, ID);
+                        Connection.Send(user.Identity, type, packet, size, ID);
                     }
                 }
             }
@@ -372,24 +371,24 @@ namespace Static_Interface.API.Network
             Send(mode, type, size, buffer);
         }
 
-        public void Send(string pName, CSteamID steamID, EPacket type, params object[] arguments)
+        public void Send(string pName, Identity user, EPacket type, params object[] arguments)
         {
             var index = GetCall(pName);
             if (index == -1) return;
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, arguments);
-            if (IsOwner && (steamID == Connection.ClientID))
+            if (IsOwner && (user == Connection.ClientID))
             {
                 Receive(Connection.ClientID, buffer, 0, size);
             }
-            else if (Connection.IsServer() && (steamID == Connection.ServerID))
+            else if (Connection.IsServer() && (user == Connection.ServerID))
             {
                 Receive(Connection.ServerID, buffer, 0, size);
             }
             else
             {
-                Connection.Send(steamID, type, buffer, size, ID);
+                Connection.Send(user, type, buffer, size, ID);
             }
         }
 
@@ -414,10 +413,10 @@ namespace Static_Interface.API.Network
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Connection.ClientID) &&
+                        if (((user.Identity != Connection.ClientID) &&
                              (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     if (Connection.IsServer())
@@ -436,21 +435,21 @@ namespace Static_Interface.API.Network
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Connection.ClientID) &&
+                        if (((user.Identity != Connection.ClientID) &&
                              (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.Owner:
                     if (IsOwner)
                     {
-                        Receive(Owner.Identity.ID, packet, 0, size);
+                        Receive(Owner.Identity, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.Identity.ID, type, packet, size, ID);
+                        Connection.Send(Owner.Identity, type, packet, size, ID);
                     }
                     break;
                 case ECall.NotOwner:
@@ -460,20 +459,20 @@ namespace Static_Interface.API.Network
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Owner.Identity.ID) &&
+                        if (((user.Identity != Owner.Identity) &&
                              (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.Clients:
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Connection.ClientID) &&
+                        if (((user.Identity != Connection.ClientID) &&
                              (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     if (Connection.IsClient())
@@ -484,10 +483,10 @@ namespace Static_Interface.API.Network
                 case ECall.Peers:
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Connection.ClientID) &&
+                        if (((user.Identity != Connection.ClientID) &&
                              (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     break;
@@ -536,11 +535,11 @@ namespace Static_Interface.API.Network
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
+                        if ((user.Identity == Connection.ClientID) || (user.Player == null)) continue;
                         Vector3 vector = user.Player.transform.position - point;
                         if (vector.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     if (Connection.IsServer())
@@ -559,22 +558,22 @@ namespace Static_Interface.API.Network
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
+                        if ((user.Identity == Connection.ClientID) || (user.Player == null)) continue;
                         Vector3 vector2 = user.Player.transform.position - point;
                         if (vector2.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.Owner:
                     if (IsOwner)
                     {
-                        Receive(Owner.Identity.ID, packet, 0, size);
+                        Receive(Owner.Identity, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.Identity.ID, type, packet, size, ID);
+                        Connection.Send(Owner.Identity, type, packet, size, ID);
                     }
                     break;
                 case ECall.NotOwner:
@@ -584,22 +583,22 @@ namespace Static_Interface.API.Network
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if ((user.Identity.ID == Owner.Identity.ID) || (user.Player == null)) continue;
+                        if ((user.Identity == Owner.Identity) || (user.Player == null)) continue;
                         Vector3 vector3 = user.Player.transform.position - point;
                         if (vector3.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.Clients:
                     foreach (User user in Connection.Clients)
                     {
-                        if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
+                        if ((user.Identity == Connection.ClientID) || (user.Player == null)) continue;
                         Vector3 vector4 = user.Player.transform.position - point;
                         if (vector4.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     if (Connection.IsServer())
@@ -610,11 +609,11 @@ namespace Static_Interface.API.Network
                 case ECall.Peers:
                     foreach (User user in Connection.Clients)
                     {
-                        if ((user.Identity.ID == Connection.ClientID) || (user.Player == null)) continue;
+                        if ((user.Identity == Connection.ClientID) || (user.Player == null)) continue;
                         Vector3 vector5 = user.Player.transform.position - point;
                         if (vector5.sqrMagnitude < radius)
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     break;
@@ -663,12 +662,12 @@ namespace Static_Interface.API.Network
                     }
                     foreach (var user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Connection.ClientID) &&
+                        if (((user.Identity != Connection.ClientID) &&
                              (user.Player != null)) &&
                             Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
                                 user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     if (Connection.IsServer())
@@ -687,23 +686,23 @@ namespace Static_Interface.API.Network
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Connection.ClientID) &&
+                        if (((user.Identity != Connection.ClientID) &&
                              (user.Player != null)) &&
                             Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
                                 user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.Owner:
                     if (IsOwner)
                     {
-                        Receive(Owner.Identity.ID, packet, 0, size);
+                        Receive(Owner.Identity, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.Identity.ID, type, packet, size, ID);
+                        Connection.Send(Owner.Identity, type, packet, size, ID);
                     }
                     break;
                 case ECall.NotOwner:
@@ -713,24 +712,24 @@ namespace Static_Interface.API.Network
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Owner.Identity.ID) &&
+                        if (((user.Identity != Owner.Identity) &&
                              (user.Player != null)) &&
                             Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
                             user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     break;
                 case ECall.Clients:
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Connection.ClientID) &&
+                        if (((user.Identity != Connection.ClientID) &&
                              (user.Player != null)) &&
                             Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
                                 user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     if (Connection.IsClient())
@@ -741,12 +740,12 @@ namespace Static_Interface.API.Network
                 case ECall.Peers:
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity.ID != Connection.ClientID) &&
+                        if (((user.Identity != Connection.ClientID) &&
                              (user.Player != null)) &&
                             Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
                                 user.Player.MovementController.RegionY, area))
                         {
-                            Connection.Send(user.Identity.ID, type, packet, size, ID);
+                            Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
                     break;
@@ -785,16 +784,16 @@ namespace Static_Interface.API.Network
             Send(mode, x, y, area, type, size, buffer);
         }
 
-        public void SendAside(string pName, CSteamID steamID, EPacket type, params object[] arguments)
+        public void SendAside(string pName, Identity u, EPacket type, params object[] arguments)
         {
             var index = GetCall(pName);
             if (index == -1) return;
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, arguments);
-            foreach (User user in Connection.Clients.Where(user => user.Identity.ID != steamID))
+            foreach (User user in Connection.Clients.Where(user => user.Identity != u))
             {
-                Connection.Send(user.Identity.ID, type, buffer, size, ID);
+                Connection.Send(user.Identity, type, buffer, size, ID);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using Steamworks;
+﻿using Static_Interface.API.Player;
 using UnityEngine;
 
 namespace Static_Interface.API.Network
@@ -47,9 +47,9 @@ namespace Static_Interface.API.Network
         }
 
         [NetworkCall]
-        protected void ReadPosition(CSteamID id)
+        protected void ReadPosition(Identity ident)
         {
-            if (!Channel.CheckOwner(id)) return;
+            if (!Channel.CheckOwner(ident)) return;
             Vector3 syncPosition = Channel.Read<Vector3>();
             Vector3 syncVelocity = Channel.Read<Vector3>();
 

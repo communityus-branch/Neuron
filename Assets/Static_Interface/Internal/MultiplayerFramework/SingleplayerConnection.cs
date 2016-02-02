@@ -1,10 +1,11 @@
 ﻿using Static_Interface.API.Network;
+using Static_Interface.API.Player;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Server;
-using Steamworks;
 
 namespace Static_Interface.Internal.MultiplayerFramework
 {
+    //Test
     public class SingleplayerConnection : Connection
     {
         private ClientConnection _client;
@@ -25,12 +26,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
             _client.AttemptConnect("localhost", 27015, string.Empty);
         }
 
-        public override void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id)
+        public override void Send(Identity receiver, EPacket type, byte[] data, int length, int id)
         {
             _client.Send(receiver, type, data, length, id);
         }
 
-        internal override void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
+        internal override void Receive(Identity source, byte[] packet, int offset, int size, int channel)
         {
             _server.Receive(source, packet, offset, size, channel);
         }

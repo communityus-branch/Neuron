@@ -42,7 +42,7 @@ namespace Static_Interface.API.Extension
             }
         }
 
-        protected virtual void OnEnable() {}
+        protected virtual void OnEnable() { }
 
         private void Disable()
         {

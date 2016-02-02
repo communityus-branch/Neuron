@@ -1,6 +1,7 @@
 ﻿using Steamworks;
 using UnityEngine;
 using System;
+using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
 
 namespace Static_Interface.Internal.Objects
@@ -48,13 +49,13 @@ namespace Static_Interface.Internal.Objects
             return block.GetBytes(out size);
         }
 
-        public static object[] GetObjects(CSteamID steamID, int offset, int prefix, byte[] bytes, params Type[] types)
+        public static object[] GetObjects(Identity ident, int offset, int prefix, byte[] bytes, params Type[] types)
         {
             block.Reset(offset + prefix, bytes);
             if (types[0] == Types.STEAM_ID_TYPE)
             {
                 object[] objArray = block.Read(1, types);
-                objArray[0] = steamID;
+                objArray[0] = ident;
                 return objArray;
             }
             return block.Read(types);

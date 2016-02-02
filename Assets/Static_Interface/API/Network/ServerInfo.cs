@@ -1,41 +1,24 @@
-﻿using Steamworks;
+﻿using Static_Interface.API.Player;
+using Steamworks;
 
 namespace Static_Interface.API.Network
 {
     public class ServerInfo
     {
-        public ServerInfo(gameserveritem_t data)
-        {
-            SteamID = data.m_steamID;
-            Name = data.GetServerName();
-            Map = data.GetMap();
-            Ping = data.m_nPing;
-            Players = data.m_nPlayers;
-            MaxPlayers = data.m_nMaxPlayers;
-            HasPassword = data.m_bPassword;
-            IsSecure = data.m_bSecure;
-        }
+        public bool HasPassword { get; internal set; }
 
-        public ServerInfo(string newName, bool newSecure)
-        {
-            Name = newName;
-            IsSecure = newSecure;
-        }
+        public bool IsSecure { get; internal set;  }
 
-        public bool HasPassword { get; }
+        public string Map { get; internal set; }
 
-        public bool IsSecure { get; }
+        public int MaxPlayers { get; internal set; }
 
-        public string Map { get; }
+        public string Name { get; internal set; }
 
-        public int MaxPlayers { get; }
+        public int Ping { get; internal set; }
 
-        public string Name { get; }
+        public int Players { get; internal set; }
 
-        public int Ping { get; }
-
-        public int Players { get; }
-
-        public CSteamID SteamID { get; }
+        public Identity ServerID { get; internal set; }
     }
 }

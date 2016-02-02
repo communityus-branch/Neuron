@@ -5,13 +5,12 @@ using Static_Interface.API.Level;
 using Static_Interface.API.Network;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService;
+using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
+using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
 using Static_Interface.The_Collapse;
-using Steamworks;
 using UnityEngine;
 using Types = Static_Interface.Internal.Objects.Types;
-using Time = UnityEngine.Time;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Client
 {
@@ -20,18 +19,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         private float[] _pings;
         private float _ping;
         public const int CONNECTION_TRIES = 5;
-        private CSteamID _user;
+        private Identity _user;
  
         private int _serverQueryAttempts;
-        private ISteamMatchmakingPingResponse _serverPingResponse;
-        private HServerQuery _serverQuery = HServerQuery.Invalid;
-        private string _currentPassword;
+
+        internal string CurrentPassword;
         private uint _currentIp;
         private ushort _currentPort;
 
         public ServerInfo CurrentServerInfo { get; private set; }
         public bool IsFavoritedServer { get; private set; }
-        public static byte[] ClientHash { get; private set; }
 
         internal override void Listen()
         {
@@ -52,21 +49,22 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public override void Disconnect(string reason = null)
         {
-            SteamNetworking.CloseP2PSessionWithUser(ServerID);
+            Provider.CloseConnection(ServerID);
             foreach(User user in Clients)
             {
-                SteamNetworking.CloseP2PSessionWithUser(user.Identity.ID);
+                Provider.CloseConnection(user.Identity);
             }
 
-            CloseTicket();
+            ((ClientMultiplayerProvider)Provider).CloseTicket();
             IsConnected = false;
 
             //Todo: OnDisconnectedFromServer()
             LevelManager.Instance.GoToMainMenu();
 
-            SteamFriends.SetRichPresence("connect", null);
-            SteamFriends.SetRichPresence("status", "Menu");
-            ((ClientMultiplayerProvider)Provider).CurrentServer = null;
+            ((ClientMultiplayerProvider) Provider).SetStatus("Menu");
+            ((ClientMultiplayerProvider)Provider).SetConnectInfo(0, 0);
+            
+            ((SteamsworksClientProvider)Provider).CurrentServer = null;
             Destroy(this);
         }
 
@@ -74,65 +72,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         internal override void Awake()
         {
             base.Awake();
-            Provider = new ClientMultiplayerProvider();
-            _serverPingResponse = new ISteamMatchmakingPingResponse(OnPingResponded, OnPingFailedToRespond);
-
-            if (SteamAPI.RestartAppIfNecessary(GameInfo.ID))
-            {
-                throw new Exception("Restarting app from Steam.");
-            }
-            if (!SteamAPI.Init())
-            {
-                throw new Exception("Steam API initialization failed.");
-            }
-
-            SteamUtils.SetWarningMessageHook(OnAPIWarningMessage);
-            CurrentTime = SteamUtils.GetServerRealTime();
-            Callback<PersonaStateChange_t>.Create(OnPersonaStateChange);
-            Callback<GameServerChangeRequested_t>.Create(OnGameServerChangeRequested);
-            Callback<GameRichPresenceJoinRequested_t>.Create(OnGameRichPresenceJoinRequested);
-            _user = Steamworks.SteamUser.GetSteamID();
+            Provider = new SteamsworksClientProvider(this);
+            CurrentTime = Provider.GetServerRealTime();
+            _user = ((ClientMultiplayerProvider) Provider).GetUserID();
             ClientID = _user;
-            ClientHash = Hash.SHA1(ClientID);
-            ClientName = SteamFriends.GetPersonaName();
+            ClientName = ((ClientMultiplayerProvider) Provider).GetClientName();
             IsReady = true;
         }
 
-        private void OnPersonaStateChange(PersonaStateChange_t callback)
-        {
-            if ((callback.m_nChangeFlags == EPersonaChange.k_EPersonaChangeName) && (callback.m_ulSteamID == ClientID.m_SteamID))
-            {
-                ClientName = SteamFriends.GetPersonaName();
-                //Todo: OnNameChangeEvent
-            }
-        }
 
-        private void OnGameServerChangeRequested(GameServerChangeRequested_t callback)
-        {
-            if (!IsConnected)
-            {
-                //Todo 
-            }
-        }
-
-        private void OnGameRichPresenceJoinRequested(GameRichPresenceJoinRequested_t callback)
-        {
-            uint ip;
-            ushort port;
-            string password;
-            if (!IsConnected && TryGetConnect(callback.m_rgchConnect, out ip, out port, out password))
-            {
-                AttemptConnect(ip, port, password);
-            }
-        }
-
-        private static bool TryGetConnect(string line, out uint ip, out ushort port, out string pass)
-        {
-            ip = 0;
-            port = 0;
-            pass = string.Empty;
-            return true; //TODO
-        }
 
         public static uint GetUInt32FromIp(string ip)
         {
@@ -164,7 +112,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             AttemptConnect(GetUInt32FromIp(ipRaw), port, password);
         }
 
-        private void AttemptConnect(uint ip, ushort port, string password)
+        public void AttemptConnect(uint ip, ushort port, string password)
         {
             if (IsConnected)
             {
@@ -172,77 +120,23 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 return;
             }
             _serverQueryAttempts = 0;
-            CleanupServerQuery();
 
             _currentIp = ip;
             _currentPort = port;
-            _currentPassword = password;
+            CurrentPassword = password;
 
-            _serverQuery = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), _serverPingResponse);
-            //Todo: OnConnect event?
+            ((ClientMultiplayerProvider) Provider).AttemptConnect(ip, port, password);
         }
 
-        private void CleanupServerQuery()
-        {
-            if (_serverQuery == HServerQuery.Invalid) return;
-            SteamMatchmakingServers.CancelServerQuery(_serverQuery);
-            _serverQuery = HServerQuery.Invalid;
-        }
-
-        private void OnPingResponded(gameserveritem_t data)
-        {
-            LogUtils.Log("Server is up, connecting...");
-            CleanupServerQuery();
-            if ((AppId_t)data.m_nAppID == GameInfo.ID)
-            {
-                ServerInfo info = new ServerInfo(data);
-
-                if (!data.m_bPassword || (_currentPassword != string.Empty))
-                {
-                    if (((info.Players >= info.MaxPlayers) || (info.MaxPlayers < MultiplayerProvider.MIN_PLAYERS)) ||
-                        (info.MaxPlayers > MultiplayerProvider.MAX_PLAYERS)) return;
-                    Connect(info);
-                    return;
-                    // Todo: server full
-                }
-                // Todo: no password
-            }
-            else
-            {
-                CleanupServerQuery();
-                LogUtils.Log("Wrong game ID received: " + data.m_nAppID + ", expected: " + GameInfo.ID);
-                //Todo: Timeout
-            }
-        }
-
-
-        private void OnPingFailedToRespond()
-        {
-            LogUtils.Error("Connection failed");
-            if (_serverQueryAttempts < CONNECTION_TRIES)
-            {
-                _serverQueryAttempts++;
-                LogUtils.Log("Retrying #" + _serverQueryAttempts);
-                AttemptConnect(_currentIp, _currentPort, _currentPassword);
-            }
-            else
-            {
-                LogUtils.Error("Couldn't connect to host");
-                CleanupServerQuery();
-                LevelManager.Instance.GoToMainMenu();
-                //Todo: Timeout
-            }
-        }
-
-        private void Connect(ServerInfo info)
+        internal void Connect(ServerInfo info)
         {
             if (IsConnected) return;
             LogUtils.Debug("Connected to server: " + info.Name);
-            ((ClientMultiplayerProvider) Provider).CurrentServer = info;
+            ((SteamsworksClientProvider) Provider).CurrentServer = info;
             IsConnected = true;
             ResetChannels();
             CurrentServerInfo = info;
-            ServerID = info.SteamID;
+            ServerID = info.ServerID;
             _pings = new float[4];
             Lag((info.Ping) / 1000f);
             LastNet = Time.realtimeSinceStartup;
@@ -258,7 +152,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         {
             int size;
             const string serverPasswordHash = "";
-            CSteamID group = CSteamID.Nil;
+            ulong group = 0;
 
             object[] args = { ClientName, serverPasswordHash, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f, group};
             byte[] packet = ObjectSerializer.GetBytes(0, out size, args);
@@ -270,16 +164,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             NetworkUtils.GetAveragePing(currentPing, out _ping, _pings);
         }
 
-        protected override Transform AddPlayer(UserIdentity ident, Vector3 point, byte angle, int channel)
+        protected override Transform AddPlayer(Identity ident, string @name, ulong group, Vector3 point, byte angle, int channel)
         {
-            if (ident.ID != ClientID)
+            if (ident != ClientID)
             {
-                SteamFriends.SetPlayedWith(ident.ID);
+                ((ClientMultiplayerProvider)Provider).SetPlayedWith(ident);
             }
-            return base.AddPlayer(ident, point, angle, channel);
+            return base.AddPlayer(ident, @name, group, point, angle, channel);
         }
 
-        internal override void Receive(CSteamID id, byte[] packet, int offset, int size, int channel)
+        internal override void Receive(Identity id, byte[] packet, int offset, int size, int channel)
         {
             base.Receive(id, packet, offset, size, channel);
             EPacket parsedPacket = (EPacket) packet[offset];
@@ -322,15 +216,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         {
                             Type[] argTypes = {
                                 //[0] package id, [1] steamID, [2] name, [3] group, [4] position, [5], angle, [6] channel
-                                Types.STRING_TYPE, Types.STEAM_ID_TYPE, Types.STRING_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
+                                Types.BYTE_TYPE, Types.STRING_TYPE, Types.STEAM_ID_TYPE, Types.STRING_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
                             };
 
                             object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, argTypes);
-                            AddPlayer(new UserIdentity((CSteamID)args[1], (string) args[2], (CSteamID)args[3]), (Vector3)args[4], (byte)args[5], (int)args[6]);
+                            var name = (string) args[2];
+                            AddPlayer(id, name, (ulong)args[3], (Vector3)args[4], (byte)args[5], (int)args[6]);
                             return;
                         }
                     case EPacket.VERIFY:
-                        byte[] ticket = OpenTicket();
+                        byte[] ticket = ((ClientMultiplayerProvider)Provider).OpenTicket();
                         if (ticket == null)
                         {
                             Disconnect();
@@ -360,59 +255,28 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
                         //Todo: OnConnectedToServer
 
-                        Steamworks.SteamUser.AdvertiseGame(ServerID, ip, port);
-
+                        ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, ip, port);
+                       
                         //Todo: implement a command line parser
-                        SteamFriends.SetRichPresence("connect", string.Concat("+connect ", ip, ":", port));
-                        var favoriteIP = ip;
-                        var favoritePort = port;
-                        IsFavoritedServer = false;
-                        for (var game = 0; game < SteamMatchmaking.GetFavoriteGameCount(); game++)
-                        {
-                            AppId_t appIdT;
-                            uint pnIp;
-                            ushort connPort;
-                            ushort pnQueryPort;
-                            uint punFlags;
-                            uint lastPlayedOnServer;
-                            SteamMatchmaking.GetFavoriteGame(game, out appIdT, out pnIp, out connPort, out pnQueryPort,
-                                out punFlags, out lastPlayedOnServer);
-                            if (((appIdT != GameInfo.ID) || (pnIp != favoriteIP)) ||
-                                (favoritePort != connPort)) continue;
-                            IsFavoritedServer = true;
-                            break;
-                        }
-                        SteamMatchmaking.AddFavoriteGame(GameInfo.ID, ip, port, (ushort) (port + 1), 2,
-                            SteamUtils.GetServerRealTime());
+                        ((ClientMultiplayerProvider)Provider).SetConnectInfo(ip,port);
+                        IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(ip, port);
+                        ((ClientMultiplayerProvider) Provider).FavoriteServer(ip, port);
                         break;
                     }
                 }
             }
         }
-        private HAuthTicket _ticketHandle = HAuthTicket.Invalid;
-        private byte[] OpenTicket()
-        {
-            uint size;
-            if (_ticketHandle != HAuthTicket.Invalid)
-            {
-                return null;
-            }
-            byte[] pTicket = new byte[1024];
-            _ticketHandle = Steamworks.SteamUser.GetAuthSessionTicket(pTicket, pTicket.Length, out size);
-            if (size == 0)
-            {
-                return null;
-            }
-            byte[] dst = new byte[size];
-            System.Buffer.BlockCopy(pTicket, 0, dst, 0, (int)size);
-            return dst;
-        }
 
-        private void CloseTicket()
+        public bool OnPingFailed()
         {
-            if (_ticketHandle == HAuthTicket.Invalid) return;
-            Steamworks.SteamUser.CancelAuthTicket(_ticketHandle);
-            _ticketHandle = HAuthTicket.Invalid;
+            if (_serverQueryAttempts >= CONNECTION_TRIES)
+            {
+                return false;
+            }
+            _serverQueryAttempts++;
+            LogUtils.Log("Retrying #" + _serverQueryAttempts);
+            AttemptConnect(_currentIp, _currentPort, CurrentPassword);
+            return true;
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Static_Interface.API.Network;
 using Static_Interface.API.Utils;
-using Steamworks;
 using UnityEngine;
 using Types = Static_Interface.Internal.Objects.Types;
 
@@ -55,7 +54,7 @@ namespace Static_Interface.API.Player
 
         //ServerSide
         [NetworkCall]
-        public void ReadInput(CSteamID id)
+        public void ReadInput(Identity id)
         {
             if (!Channel.CheckOwner(id)) return;
             _keyStates = new List<KeyState>();
@@ -66,7 +65,7 @@ namespace Static_Interface.API.Player
                 _keyStates.Add(state);
                 if (state.IsDown)
                 {
-                    LogUtils.Log(Player.User.Identity.PlayerName + " pressed " + ((KeyCode)state.KeyCode));
+                    LogUtils.Log(Player.User.Name + " pressed " + ((KeyCode)state.KeyCode));
                 }
             }
 

@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Static_Interface.API.Network;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework.Service.MultiplayerProviderService;
+using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
-using Steamworks;
 using UnityEngine;
-using SteamUser = Static_Interface.API.Player.SteamUser;
 
 namespace Static_Interface.Internal.MultiplayerFramework
 {
@@ -37,31 +34,26 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         protected byte[] Buffer  = new byte[Block.BUFFER_SIZE];
 
-        public CSteamID ServerID { get; protected set; }
+        public Identity ServerID { get; protected set; }
 
         protected float LastPing;
         protected float LastNet;
         protected float LastCheck;
         protected float OffsetNet;
 
-        public string ClientName { get; protected set; }
+        public string ClientName { get; protected internal set; }
 
         public uint CurrentTime { get; protected set; }
 
-        public MultiplayerProvider Provider { get; protected set; }
+        public MultiplayerProvider.MultiplayerProvider Provider { get; protected set; }
 
-        public CSteamID ClientID { get; internal set; }
+        public Identity ClientID { get; internal set; }
 
         public int Channels { get; private set; } = 1;
 
         private List<User> _clients = new List<User>();
 
         public bool IsConnected { get; protected set; }
-
-        protected void OnAPIWarningMessage(int severity, StringBuilder warning)
-        {
-            LogUtils.Log("Warning: " + warning + " (Severity: " + severity + ")");
-        }
 
         public ICollection<User> Clients => _clients?.AsReadOnly();
 
@@ -84,7 +76,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             LogUtils.Log("Destroying connection...");
         }
 
-        internal virtual void Receive(CSteamID source, byte[] packet, int offset, int size, int channel)
+        internal virtual void Receive(Identity source, byte[] packet, int offset, int size, int channel)
         {
             //if (!IsConnected) return;
             LogUtils.Debug("Received packet, channel: " + channel + ", size: " + packet.Length);
@@ -127,7 +119,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
         protected void Listen(int channelId)
         {
             LogUtils.Log("Listening channel: " + channelId);
-            CSteamID user;
+            Identity user;
             ulong length;
             while (Provider.Read(out user, Buffer, out length, channelId))
             {
@@ -148,10 +140,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         internal abstract void Listen();
 
-        protected virtual Transform AddPlayer(UserIdentity ident, Vector3 point, byte angle, int channel)
+        protected virtual Transform AddPlayer(Identity ident, string @name, ulong group, Vector3 point, byte angle, int channel)
         {
             Transform newModel = ((GameObject)Instantiate(Resources.Load("Player"), point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
-            _clients.Add(new SteamUser(CurrentConnection, ident, newModel, channel));
+            var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = @name };
+            ident.Owner = user;
+            _clients.Add(user);
             return newModel;
         }
 
@@ -168,12 +162,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
         }
 
 
-        public virtual void Send(CSteamID receiver, EPacket type, byte[] data, int id)
+        public virtual void Send(Identity receiver, EPacket type, byte[] data, int id)
         {
             Send(receiver, type, data, data.Length, id);
         }
 
-        public virtual void Send(CSteamID receiver, EPacket type, byte[] data, int length, int id)
+        public virtual void Send(Identity receiver, EPacket type, byte[] data, int length, int id)
         {
             var tmp = data.ToList();
             tmp.Insert(0, type.GetID());
@@ -186,7 +180,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
                 return;
             }
 
-            if (receiver.m_SteamID == 0)
+            if (!receiver.IsValid())
             {
                 LogUtils.Error("Failed to send to invalid steam ID.");
                 return;
@@ -194,18 +188,18 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
             LogUtils.Debug("Sending packet: " + type + ", receiver: " + receiver + (receiver == ServerID ? " (Server)" : "") + ", ch: " + id + ", size: " + data.Length);
 
-            EP2PSend sendType;
+            SendMethod sendType;
             if (type.IsUnreliable())
             {
                 sendType = !type.IsInstant()
-                    ? EP2PSend.k_EP2PSendUnreliable
-                    : EP2PSend.k_EP2PSendUnreliableNoDelay;
+                    ? SendMethod.SEND_UNRELIABLE
+                    : SendMethod.SEND_UNRELIABLE_NO_DELAY;
             }
             else
             {
                 sendType = !type.IsInstant() ?
-                    EP2PSend.k_EP2PSendReliableWithBuffering :
-                    EP2PSend.k_EP2PSendReliable;
+                    SendMethod.SEND_RELIABLE_WITH_BUFFERING:
+                    SendMethod.SEND_RELIABLE;
             }
             if (!Provider.Write(receiver, data, (ulong) length, sendType, id))
             {

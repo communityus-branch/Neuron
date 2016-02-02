@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Steamworks;
 
 namespace Static_Interface.API.Utils
 {
@@ -23,11 +21,6 @@ namespace Static_Interface.API.Utils
         public static byte[] SHA1(byte[] bytes)
         {
             return Service.ComputeHash(bytes);
-        }
-
-        public static byte[] SHA1(CSteamID steamID)
-        {
-            return SHA1(BitConverter.GetBytes(steamID.m_SteamID));
         }
 
         public static byte[] SHA1(Stream stream)

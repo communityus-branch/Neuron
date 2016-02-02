@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Static_Interface.API.Utils;
+using Static_Interface.ExtensionSandbox;
 using UnityEngine;
 
 namespace Static_Interface.API.Extension
@@ -30,7 +31,7 @@ namespace Static_Interface.API.Extension
             //Todo: unload all extensions
             foreach (var extension in _loadedExtensions)
             {
-                if(extension.Enabled) extension.Enabled = false;
+                if (extension.Enabled) extension.Enabled = false;
                 Assembly asm = _loadedAssemblies[extension.Path];
                 Sandbox.Instance.UnloadAssembly(asm);
                 _loadedAssemblies.Remove(extension.Path);
@@ -67,7 +68,7 @@ namespace Static_Interface.API.Extension
             {
                 Assembly asm;
                 AppDomain domain;
-                Sandbox.Instance.LoadAssembly(file,out asm, out domain);
+                Sandbox.Instance.LoadAssembly(file, out asm, out domain);
                 _loadedAssemblies.Add(file, asm);
                 LoadExtensionFromAssembly(asm, domain, file);
             }
@@ -80,7 +81,7 @@ namespace Static_Interface.API.Extension
             Extension ext = null;
             foreach (var type in asm.GetTypes())
             {
-                if (!type.IsSubclassOf(typeof (Extension))) continue;
+                if (!type.IsSubclassOf(typeof(Extension))) continue;
                 if (found)
                 {
                     LogUtils.Error("Assembly: " + asm + " has multiple Extension types");

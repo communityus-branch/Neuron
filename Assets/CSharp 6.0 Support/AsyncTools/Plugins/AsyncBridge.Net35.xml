@@ -337,7 +337,7 @@
                         <see cref="T:System.Threading.Tasks.TaskStatus">RanToCompletion</see> state.
             
             </summary>
-            <exception cref="T:System.InvalidOperationException">The builder is not initialized.</exception><exception cref="T:System.InvalidOperationException">The task has already completed.</exception>
+            <exception cref="T:System.InvalidOperationException">The builder is not initialized.</exception><exception cref="T:System.InvalsteamIdOperationException">The task has already completed.</exception>
         </member>
         <member name="M:System.Runtime.CompilerServices.AsyncTaskMethodBuilder.SetException(System.Exception)">
             <summary>
@@ -345,7 +345,7 @@
                         <see cref="T:System.Threading.Tasks.TaskStatus">Faulted</see> state with the specified exception.
             
             </summary>
-            <param name="exception">The <see cref="T:System.Exception"/> to use to fault the task.</param><exception cref="T:System.ArgumentNullException">The <paramref name="exception"/> argument is null (Nothing in Visual Basic).</exception><exception cref="T:System.InvalidOperationException">The builder is not initialized.</exception><exception cref="T:System.InvalidOperationException">The task has already completed.</exception>
+            <param name="exception">The <see cref="T:System.Exception"/> to use to fault the task.</param><exception cref="T:System.ArgumentNullException">The <paramref name="exception"/> argument is null (Nothing in Visual Basic).</exception><exception cref="T:System.InvalidOperationException">The builder is not initialized.</exception><exception cref="T:System.InvalsteamIdOperationException">The task has already completed.</exception>
         </member>
         <member name="M:System.Runtime.CompilerServices.AsyncTaskMethodBuilder.SetNotificationForWaitCompletion(System.Boolean)">
             <summary>
@@ -526,7 +526,7 @@
         </member>
         <member name="T:System.Runtime.CompilerServices.AsyncVoidMethodBuilder">
             <summary>
-            Provides a builder for asynchronous methods that return void.
+            Provides a builder for asynchronous methods that return vosteamId.
                         This type is intended for compiler use only.
             
             </summary>
