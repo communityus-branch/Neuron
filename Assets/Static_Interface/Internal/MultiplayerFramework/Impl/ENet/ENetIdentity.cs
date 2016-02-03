@@ -7,6 +7,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
     public class ENetIdentity : Identity
     {
         public ulong ID { get; }
+
         public ENetIdentity(Peer peer)
         {
             ID = BitConverter.ToUInt64(peer.GetRemoteAddress().Address.GetAddressBytes(), 0);

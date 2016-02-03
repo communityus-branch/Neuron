@@ -33,9 +33,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         public override void AttemptConnect(string ip, ushort port, string password)
         {
             _host = new Host();
-            
+            _host.InitializeClient(1);
             LogUtils.Debug("Initializing ENet Client");
-            _host.InitializeClient(MAX_PLAYERS+1);
+
             LogUtils.Debug("Connecting to host");
             var serverPeer = _host.Connect(ip, port, 0);
             _listen = true;

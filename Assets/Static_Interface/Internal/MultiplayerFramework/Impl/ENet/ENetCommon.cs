@@ -5,7 +5,6 @@ using ENet;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Server;
-using UnityEngine;
 using Event = ENet.Event;
 using EventType = ENet.EventType;
 
@@ -67,9 +66,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             byte ch = Convert.ToByte(channel);
             ENetIdentity ident = (ENetIdentity) target;
             Peer peer = peers[ident];
-            LogUtils.Debug("Initialized: " + peer.IsInitialized);
             LogUtils.Debug("State: " + peer.State);
-            LogUtils.Debug("Host Initialized: " + peer.Host.IsInitialized);
             peer.Send(ch, data, 0, Convert.ToInt32(length), flags);
             return true;
         }
@@ -140,7 +137,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         {
             foreach (ENetIdentity ident in peers.Keys)
             {
-                if (peers[ident] == peer)
+                if (peers[ident].GetHashCode() == peer.GetHashCode())
                 {
                     return ident;
                 }

@@ -64,9 +64,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             var bind = bindip == "*" ? 
                 new IPEndPoint(IPAddress.Any, port) : 
                 new IPEndPoint(IPAddress.Parse(bindip), port);
+            //Todo: implement bindip
             LogUtils.Log("Opening server listening on " + bindip + " with port "+ port);
             _host = new Host();
-            _host.Initialize(bind, MAX_PLAYERS+1, byte.MaxValue);
+            _host.Initialize(bind, MAX_PLAYERS+1);
             _listen = true;
             new Thread(Listen).Start();
         }
