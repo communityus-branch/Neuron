@@ -26,8 +26,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider
 
         public abstract bool Read(out Identity user, byte[] data, out ulong length, int channel);
 
-        public abstract bool Write(Identity target, byte[] data, ulong length);
-
         public abstract bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel);
 
         public abstract void CloseConnection(Identity user);

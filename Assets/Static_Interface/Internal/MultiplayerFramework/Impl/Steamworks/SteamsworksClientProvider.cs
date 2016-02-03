@@ -46,7 +46,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             string password;
             if (!Connection.IsConnected && TryGetConnect(callback.m_rgchConnect, out ip, out port, out password))
             {
-                ((ClientConnection)Connection).AttemptConnect(ip, port, password);
+                //((ClientConnection)Connection).AttemptConnect(ip, port, password);
+                //Todo
             }
         }
 
@@ -115,12 +116,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return true;
         }
 
-        public override bool Write(Identity target, byte[] data, ulong length)
-        {
-            LogUtils.Debug("Writing default...");
-            return SteamNetworking.SendP2PPacket((CSteamID)(SteamIdentity)target, data, (uint)length, EP2PSend.k_EP2PSendUnreliable);
-        }
-
         public override bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel)
         {
             LogUtils.Debug("Writing with method: " + method + " in channel " + channel);
@@ -159,9 +154,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return (SteamIdentity) SteamUser.GetSteamID();
         }
 
-        public override void AdvertiseGame(Identity serverID, uint ip, ushort port)
+        public override void AdvertiseGame(Identity serverID, string ip, ushort port)
         {
-            SteamUser.AdvertiseGame((CSteamID)(SteamIdentity)serverID, ip, port);
+            SteamUser.AdvertiseGame((CSteamID)(SteamIdentity)serverID, SteamworksCommon.GetUInt32FromIp(ip), port);
         }
 
         public override void SetPlayedWith(Identity ident)
@@ -169,10 +164,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             SteamFriends.SetPlayedWith((CSteamID)(SteamIdentity)ident);
         }
 
-        public override void AttemptConnect(uint ip, ushort port, string password)
+        public override void AttemptConnect(string ip, ushort port, string password)
         {
             CleanupServerQuery();
-            _serverQuery = SteamMatchmakingServers.PingServer(ip, (ushort)(port + 1), _serverPingResponse);
+            _serverQuery = SteamMatchmakingServers.PingServer(SteamworksCommon.GetUInt32FromIp(ip), (ushort)(port + 1), _serverPingResponse);
         }
 
         public override void SetStatus(string status)
@@ -180,9 +175,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             SteamFriends.SetRichPresence("status", status);
         }
 
-        public override void SetConnectInfo(uint ip, ushort port)
+        public override void SetConnectInfo(string ip, ushort port)
         {
-            if (ip == 0 && port == 0)
+            if (ip == null && port == 0)
             {
                 SteamFriends.SetRichPresence("connect", null);
                 return;
@@ -190,7 +185,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             SteamFriends.SetRichPresence("connect", string.Concat("+connect ", ip, ":", port));
         }
 
-        public override bool IsFavoritedServer(uint ip, ushort port)
+        public override bool IsFavoritedServer(string ip, ushort port)
         {
             for (var game = 0; game < SteamMatchmaking.GetFavoriteGameCount(); game++)
             {
@@ -202,7 +197,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
                 uint lastPlayedOnServer;
                 SteamMatchmaking.GetFavoriteGame(game, out appIdT, out pnIp, out connPort, out pnQueryPort,
                     out punFlags, out lastPlayedOnServer);
-                if (((appIdT != GameInfo.ID) || (pnIp != ip)) ||
+                if (((appIdT != GameInfo.ID) || (pnIp != SteamworksCommon.GetUInt32FromIp(ip))) ||
                     (port != connPort)) continue;
                 return true;
             }
@@ -281,10 +276,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             _ticketHandle = HAuthTicket.Invalid;
         }
 
-        public override void FavoriteServer(uint ip, ushort port)
+        public override void FavoriteServer(string ip, ushort port)
         {
-            SteamMatchmaking.AddFavoriteGame(GameInfo.ID, ip, port, (ushort)(port + 1), 2,
+            SteamMatchmaking.AddFavoriteGame(GameInfo.ID, SteamworksCommon.GetUInt32FromIp(ip), port, (ushort)(port + 1), 2,
                             GetServerRealTime());
+        }
+
+        public override void SetIdentity(ulong serializedIdent)
+        {
+            //not needed
         }
     }
 }

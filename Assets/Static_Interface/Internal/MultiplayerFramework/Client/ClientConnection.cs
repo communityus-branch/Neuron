@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.Level;
 using Static_Interface.API.Network;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework.Impl.ENet;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
@@ -24,7 +24,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         private int _serverQueryAttempts;
 
         internal string CurrentPassword;
-        private uint _currentIp;
+        private string _currentIp;
         private ushort _currentPort;
 
         public ServerInfo CurrentServerInfo { get; private set; }
@@ -62,17 +62,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             LevelManager.Instance.GoToMainMenu();
 
             ((ClientMultiplayerProvider) Provider).SetStatus("Menu");
-            ((ClientMultiplayerProvider)Provider).SetConnectInfo(0, 0);
+            ((ClientMultiplayerProvider)Provider).SetConnectInfo(null, 0);
             
             ((SteamsworksClientProvider)Provider).CurrentServer = null;
             Destroy(this);
         }
 
-
         internal override void Awake()
         {
             base.Awake();
-            Provider = new SteamsworksClientProvider(this);
             CurrentTime = Provider.GetServerRealTime();
             _user = ((ClientMultiplayerProvider) Provider).GetUserID();
             ClientID = _user;
@@ -80,40 +78,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             IsReady = true;
         }
 
-
-
-        public static uint GetUInt32FromIp(string ip)
+        public void AttemptConnect(string ip, ushort port, string password)
         {
-            string[] strArray = GetComponentsFromSerial(ip, '.');
-            return ((((uint.Parse(strArray[0]) << 0x18) | (uint.Parse(strArray[1]) << 0x10)) | (uint.Parse(strArray[2]) << 8)) | uint.Parse(strArray[3]));
-        }
-
-        public static string[] GetComponentsFromSerial(string serial, char delimiter)
-        {
-            int index;
-            List<string> list = new List<string>();
-            for (int i = 0; i < serial.Length; i = index + 1)
-            {
-                index = serial.IndexOf(delimiter, i);
-                if (index == -1)
-                {
-                    list.Add(serial.Substring(i, serial.Length - i));
-                    break;
-                }
-                list.Add(serial.Substring(i, index - i));
-            }
-            return list.ToArray();
-        }
-
-
-        public void AttemptConnect(string ipRaw, ushort port, string password)
-        {
-            LogUtils.Log("Attempting conncetion to " + ipRaw + ":" + port + " (using password: " + (string.IsNullOrEmpty(password) ? "NO" : "YES") + ")");
-            AttemptConnect(GetUInt32FromIp(ipRaw), port, password);
-        }
-
-        public void AttemptConnect(uint ip, ushort port, string password)
-        {
+            Provider = new ENetClient(this);
+            LogUtils.Log("Attempting conncetion to " + ip + ":" + port + " (using password: " + (string.IsNullOrEmpty(password) ? "NO" : "YES") + ")");
             if (IsConnected)
             {
                 LogUtils.Debug("Already connnected");
@@ -151,10 +119,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         private void OnLevelLoaded()
         {
             int size;
-            const string serverPasswordHash = "";
             ulong group = 0;
 
-            object[] args = { ClientName, serverPasswordHash, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f, group};
+            object[] args = { ClientName, group, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f};
             byte[] packet = ObjectSerializer.GetBytes(0, out size, args);
             Send(ServerID, EPacket.CONNECT, packet, size, 0);
         }
@@ -187,8 +154,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
             else if (id == ServerID)
             {
-                uint ip;
-                ushort port;
                 switch (parsedPacket)
                 {
                     case EPacket.TICK:
@@ -215,8 +180,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     case EPacket.CONNECTED:
                         {
                             Type[] argTypes = {
-                                //[0] package id, [1] steamID, [2] name, [3] group, [4] position, [5], angle, [6] channel
-                                Types.BYTE_TYPE, Types.STRING_TYPE, Types.STEAM_ID_TYPE, Types.STRING_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
+                                //[0] package id, [1] id, [2] name, [3] group, [4] position, [5], angle, [6] channel
+                                Types.BYTE_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
                             };
 
                             object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, argTypes);
@@ -248,19 +213,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
                             return;
                         }
-                        Type[] args = {Types.BYTE_TYPE, Types.UINT32_TYPE, Types.UINT16_TYPE};
-                        object[] objects = ObjectSerializer.GetObjects(id, offset, 0, packet, args);
-                        ip = (uint) objects[1];
-                        port = (ushort) objects[2];
 
+                        object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, Types.UINT64_TYPE);
+                        ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[1]);    
                         //Todo: OnConnectedToServer
 
-                        ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, ip, port);
+                        ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);
                        
                         //Todo: implement a command line parser
-                        ((ClientMultiplayerProvider)Provider).SetConnectInfo(ip,port);
-                        IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(ip, port);
-                        ((ClientMultiplayerProvider) Provider).FavoriteServer(ip, port);
+                        ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);
+                        IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(_currentIp, _currentPort);
+                        ((ClientMultiplayerProvider) Provider).FavoriteServer(_currentIp, _currentPort);
                         break;
                     }
                 }

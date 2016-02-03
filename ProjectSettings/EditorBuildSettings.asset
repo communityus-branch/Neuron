@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Static_Interface/The_Collapse/Menus/MainMenu.unity
+    path: Assets/Static_Interface/Neuron/Menus/MainMenu.unity
   - enabled: 1
-    path: Assets/Static_Interface/The_Collapse/Menus/LoadingMenu.unity
+    path: Assets/Static_Interface/Neuron/Menus/LoadingMenu.unity
   - enabled: 1
     path: Assets/DefaultMap.unity

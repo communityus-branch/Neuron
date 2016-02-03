@@ -4,14 +4,16 @@ namespace Static_Interface.API.Player
 {
     public class PendingUser
     {
-        public PendingUser(Identity ident, string name, ulong group)
+        public PendingUser(Identity ident, string name, ulong group, float ping)
         {
             Identity = ident;
             Joined = Time.realtimeSinceStartup;
             Group = group;
             Name = name;
+            Ping = ping;
         }
 
+        public float Ping { get; }
         public ulong Group { get; }
         public Identity Identity {get;}
         public readonly float Joined;

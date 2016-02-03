@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Static_Interface.API.Network;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
@@ -99,9 +100,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             IsHosting = false;
         }
 
-        public override void Open(uint ip, ushort port, bool lan)
+        public override void Open(string bindip, ushort port, bool lan)
         {
             if (IsHosting) return;
+            var ip = SteamworksCommon.GetUInt32FromIp(bindip);
             EServerMode mode = EServerMode.eServerModeAuthenticationAndSecure;
             //if(lan) mode = EServerMode.eServerModeNoAuthentication;
             if (!GameServer.Init(ip, (ushort)(port+ 2), port, (ushort)(port + 1), mode,
@@ -122,6 +124,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             Application.targetFrameRate = 60;
             IsHosting = true;
         }
+
+
 
         private void OnGsPolicyResponse(GSPolicyResponse_t callback)
         {
@@ -164,11 +168,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return true;
         }
 
-        public override bool Write(Identity target, byte[] data, ulong length)
-        {
-            return SteamGameServerNetworking.SendP2PPacket((CSteamID)(SteamIdentity)target, data, (uint)length, EP2PSend.k_EP2PSendUnreliable);
-        }
-
         public override bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel)
         {
             return SteamGameServerNetworking.SendP2PPacket((CSteamID)(SteamIdentity)target, data, (uint)length, (EP2PSend)method, channel);
@@ -197,7 +196,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return _ident ?? (_ident = (SteamIdentity) SteamGameServer.GetSteamID());
         }
 
-        public override uint GetPublicIP()
+        public uint GetPublicIP()
         {
             return SteamGameServer.GetPublicIP();
         }

@@ -5,6 +5,7 @@ using Static_Interface.API.Level;
 using Static_Interface.API.Network;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework.Impl.ENet;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
@@ -18,15 +19,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
     {
         public string Map { get; } = "DefaultMap";
 
-        public uint BindIP { get; } = 0;
-
         public int MaxPlayers = 8;
 
         private const float Timeout = 0.75f;
 
         public ushort Port { get; private set; }
-
-        public uint PublicIP => ((ServerMultiplayerProvider)Provider).GetPublicIP();
 
         private readonly List<PendingUser> _pendingPlayers = new List<PendingUser>();
         public ICollection<PendingUser> PendingPlayers => _pendingPlayers.AsReadOnly();
@@ -147,16 +144,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     }
 
                     Type[] argTypes = {
-                        //[0] package, [1] name, [2] group, [3] version, [4] point, [5], angle, [6] channel
-                        Types.BYTE_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
-                    };
+                        //[0] package, [1] name, [2] group, [3] version, [4] ping
+                        Types.BYTE_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.SINGLE_TYPE                    };
 
                     var args = ObjectSerializer.GetObjects(source, offset, 0, packet, argTypes);
                     var name = (string) args[1];
-                    var group = (ulong) args[3];
-
+                    var group = (ulong) args[2];
+                    var ping = (float) args[3];
 					LogUtils.Log("Player connecting: " + name);
-                    if (((string)args[4]) != GameInfo.VERSION)
+                    if (((string)args[3]) != GameInfo.VERSION)
                     {
                         Reject(source, ERejectionReason.WRONG_VERSION);
                         return;
@@ -168,7 +164,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         return;
                     }
 
-                    _pendingPlayers.Add(new PendingUser(source, name, group));
+                    _pendingPlayers.Add(new PendingUser(source, name, group, ping));
                     Send(source, EPacket.VERIFY, new byte[] { }, 0, 0);
                     return;
                 }
@@ -255,6 +251,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             IsReady = true;
         }
 
+        public void Accept(Identity ident)
+        {
+            foreach (PendingUser user in _pendingPlayers.Where(user => user.Identity == ident))
+            {
+                Accept(user);
+                break;
+            }
+        }
+
         public void Accept(PendingUser user)
         {
             Identity ident = user.Identity;
@@ -273,16 +278,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             byte[] packet;
             foreach (var c in Clients)
             {
-                data = new object[] { c.Identity, c.Name, c.Group, c.Model.position, c.Model.rotation.eulerAngles.y / 2f };
+                data = new object[] { c.Identity.Serialize(), c.Name, c.Group, c.Model.position, c.Model.rotation.eulerAngles.y / 2f };
                 packet = ObjectSerializer.GetBytes(0, out size, data);
                 Send(user.Identity, EPacket.CONNECTED, packet, data.Length, 0);
             }
 
-            object[] objects = { PublicIP, Port };
-            packet = ObjectSerializer.GetBytes(0, out size, objects);
-            Send(ident, EPacket.ACCEPTED, packet, size, 0);
-            data = new object[] { ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles.y / 2f };
+            data = new object[] { ident.Serialize()};
+            packet = ObjectSerializer.GetBytes(0, out size, data);
+            Send(user.Identity, EPacket.ACCEPTED, packet, data.Length, 0);
 
+            data = new object[] { ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles.y / 2f };
             packet = ObjectSerializer.GetBytes(0, out size, data);
             AnnounceToAll(EPacket.CONNECTED, packet, size, 0);
             //Todo: OnUserConnectedEvent
@@ -290,10 +295,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public void OpenGameServer(bool lan = false)
         {
-            if(Provider == null) Provider = new SteamworksServerProvider(this);
+            if(Provider == null) Provider = new ENetServer(this);
             try
             {
-                ((ServerMultiplayerProvider)Provider).Open(BindIP, Port, lan);
+                ((ServerMultiplayerProvider)Provider).Open("0.0.0.0", Port, lan);
             }
             catch (Exception exception)
             {
