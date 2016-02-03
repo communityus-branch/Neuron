@@ -102,6 +102,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public override void Open(string bindip, ushort port, bool lan)
         {
+            if (bindip == "*") bindip = "0.0.0.0";
             if (IsHosting) return;
             var ip = SteamworksCommon.GetUInt32FromIp(bindip);
             EServerMode mode = EServerMode.eServerModeAuthenticationAndSecure;

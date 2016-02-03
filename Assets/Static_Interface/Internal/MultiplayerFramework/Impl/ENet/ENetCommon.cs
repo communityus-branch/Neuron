@@ -85,57 +85,54 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public static void Listen(Host host, Connection connection, Dictionary<byte, List<ENetQueuedData>> queue, Dictionary<ENetIdentity, Peer> peers)
         {
-            Event @event;
-            host.Service(1, out @event);
-            while (host.CheckEvents(out @event))
-            {
+                Event @event;
+                host.Service(1, out @event);
                 LogUtils.Debug("Event: " + @event.Type);
 
-                switch (@event.Type)
-                {
-                    case EventType.Connect:
-                        ENetIdentity newIdent = new ENetIdentity(@event.Peer);
-                        peers.Add(newIdent, @event.Peer);
-                        break;
+            switch (@event.Type)
+            {
+                case EventType.Connect:
+                    ENetIdentity newIdent = new ENetIdentity(@event.Peer);
+                    peers.Add(newIdent, @event.Peer);
+                    break;
 
-                    case EventType.Disconnect:
-                        ((ServerConnection) connection).DisconnectClient(GetIdentFromPeer(@event.Peer, peers));
-                        break;
+                case EventType.Disconnect:
+                    ((ServerConnection) connection).DisconnectClient(GetIdentFromPeer(@event.Peer, peers));
+                    break;
 
-                    case EventType.Receive:
+                case EventType.Receive:
 
-                        byte channel = @event.ChannelID;
-                        if (!queue.ContainsKey(channel))
-                        {
-                            queue.Add(channel, new List<ENetQueuedData>());
-                        }
+                    byte channel = @event.ChannelID;
+                    if (!queue.ContainsKey(channel))
+                    {
+                        queue.Add(channel, new List<ENetQueuedData>());
+                    }
 
 
-                        var ident = GetIdentFromPeer(@event.Peer, peers);
+                    var ident = GetIdentFromPeer(@event.Peer, peers);
 
-                        bool add = false;
-                        ENetQueuedData qData;
-                        if (queue[channel].Count > 0 && queue[channel].ElementAt(queue.Count - 1).Ident == ident)
-                        {
-                            qData = queue[channel].ElementAt(0);
-                        }
-                        else
-                        {
-                            qData = new ENetQueuedData {Ident = ident};
-                            add = true;
-                        }
+                    bool add = false;
+                    ENetQueuedData qData;
+                    if (queue[channel].Count > 0 && queue[channel].ElementAt(queue.Count - 1).Ident == ident)
+                    {
+                        qData = queue[channel].ElementAt(0);
+                    }
+                    else
+                    {
+                        qData = new ENetQueuedData {Ident = ident};
+                        add = true;
+                    }
 
-                        byte[] data = @event.Packet.GetBytes();
-                        qData.Data.AddRange(data);
+                    byte[] data = @event.Packet.GetBytes();
+                    qData.Data.AddRange(data);
 
-                        if (add)
-                        {
-                            queue[channel].Add(qData);
-                        }
+                    if (add)
+                    {
+                        queue[channel].Add(qData);
+                    }
 
-                        @event.Packet.Dispose();
-                        break;
-                }
+                    @event.Packet.Dispose();
+                    break;
             }
         }
 

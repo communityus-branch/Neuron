@@ -13,6 +13,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 {
     public class ENetClient : ClientMultiplayerProvider
     {
+        private bool _listen;
         private readonly Dictionary<byte, List<ENetQueuedData>> _queue = new Dictionary<byte, List<ENetQueuedData>>();
         private readonly Dictionary<ENetIdentity, Peer> _peers = new Dictionary<ENetIdentity, Peer>();
         private static ENetIdentity _ident = new ENetIdentity(1);
@@ -24,22 +25,30 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             
         }
 
+        ~ENetClient()
+        {
+            Dispose();
+        }
+
         public override void AttemptConnect(string ip, ushort port, string password)
         {
             _host = new Host();
+            
             LogUtils.Debug("Initializing ENet Client");
             _host.InitializeClient(MAX_PLAYERS+1);
             LogUtils.Debug("Connecting to host");
             var serverPeer = _host.Connect(ip, port, 0);
-            ulong currentTime = GetServerRealTime();
+            _listen = true;
+            //ulong currentTime = GetServerRealTime();
 
             bool timeout = false;
-            while (serverPeer.State == PeerState.Connecting)
-            {
-                if (GetServerRealTime() - currentTime <= 1000*Connection.CLIENT_TIMEOUT) continue;
-                timeout = true;
-                break;
-            }
+            //while (serverPeer.State == PeerState.Connecting)
+            //{
+            //    if (GetServerRealTime() - currentTime <= 1000*Connection.CLIENT_TIMEOUT) continue;
+            //    timeout = true;
+            //    break;
+            //}
+
             if (timeout)
             {
                 if (!((ClientConnection)Connection).OnPingFailed())
@@ -79,7 +88,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         private void Listen()
         {
-            ENetCommon.Listen(_host, Connection, _queue, _peers);
+            while (_listen)
+            {
+                ENetCommon.Listen(_host, Connection, _queue, _peers);
+            }
         }
 
         public override string GetClientName()
@@ -99,6 +111,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override void Dispose()
         {
+            _listen = false;
             _host.Dispose();
         }
 

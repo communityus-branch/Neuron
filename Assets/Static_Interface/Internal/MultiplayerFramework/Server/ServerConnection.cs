@@ -297,7 +297,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             if(Provider == null) Provider = new ENetServer(this);
             try
             {
-                ((ServerMultiplayerProvider)Provider).Open("0.0.0.0", Port, lan);
+                ((ServerMultiplayerProvider)Provider).Open("*", Port, lan);
             }
             catch (Exception exception)
             {

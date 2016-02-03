@@ -12,11 +12,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 {
     public class ENetServer : ServerMultiplayerProvider
     {
+        private bool _listen;
         private readonly Dictionary<byte, List<ENetQueuedData>> _queue = new Dictionary<byte, List<ENetQueuedData>>();
         private readonly Dictionary<ENetIdentity, Peer> _peers = new Dictionary<ENetIdentity, Peer>(); 
         private Host _host;
         public ENetServer(Connection connection) : base(connection)
         {
+        }
+
+        ~ENetServer()
+        {
+            Dispose();
         }
 
         public override bool Read(out Identity user, byte[] data, out ulong length, int channel)
@@ -41,7 +47,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override void Dispose()
         {
-            _host.Dispose();
+            _listen = false;
+            if (_host.IsInitialized)
+            {
+                _host.Dispose();
+            }
         }
 
         public override void EndAuthSession(Identity user)
@@ -57,12 +67,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             LogUtils.Log("Opening server listening on " + bindip + " with port "+ port);
             _host = new Host();
             _host.Initialize(bind, MAX_PLAYERS+1, byte.MaxValue);
+            _listen = true;
             new Thread(Listen).Start();
         }
 
         private void Listen()
         {
-            ENetCommon.Listen(_host, Connection, _queue, _peers);
+            while (_listen)
+            {
+                ENetCommon.Listen(_host, Connection, _queue, _peers);
+            }
         }
 
         public override void Close()
@@ -72,7 +86,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                 _peers[ident].DisconnectNow(1);
             }
 
-            _host.Dispose();
+            Dispose();
         }
 
 
