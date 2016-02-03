@@ -42,7 +42,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             _serverPeer = _host.Connect(ip, port, 0);
             _listen = true;
 
-            new Thread(Ping).Start();
+            new Thread(Ping) {IsBackground = true}.Start();
         }
 
         private void Ping()

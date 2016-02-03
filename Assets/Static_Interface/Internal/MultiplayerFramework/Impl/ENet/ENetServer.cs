@@ -69,7 +69,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             _host = new Host();
             _host.Initialize(bind, MAX_PLAYERS+1);
             _listen = true;
-            new Thread(Listen).Start();
+            new Thread(Listen) { IsBackground = true }.Start();
         }
 
         private void Listen()
