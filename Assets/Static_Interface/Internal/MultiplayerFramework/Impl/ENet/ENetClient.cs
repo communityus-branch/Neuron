@@ -19,6 +19,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         private static ENetIdentity _ident = new ENetIdentity(1);
         private static readonly string RandName = "Player" + new Random().Next(MAX_PLAYERS);
         private Host _host;
+        private Peer _serverPeer;
 
         public ENetClient(Connection connection) : base(connection)
         {
@@ -33,21 +34,31 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         public override void AttemptConnect(string ip, ushort port, string password)
         {
             _host = new Host();
-            _host.InitializeClient(1);
+
             LogUtils.Debug("Initializing ENet Client");
+            _host.InitializeClient(1);
 
             LogUtils.Debug("Connecting to host");
-            var serverPeer = _host.Connect(ip, port, 0);
+            _serverPeer = _host.Connect(ip, port, 0);
             _listen = true;
-            //ulong currentTime = GetServerRealTime();
 
+            new Thread(Ping).Start();
+        }
+
+        private void Ping()
+        {
+            LogUtils.Debug("Adding server peer");
+            var servIdent = new ENetIdentity(0);
+            _peers.Add(servIdent, _serverPeer);
+
+            ulong currentTime = GetServerRealTime();
             bool timeout = false;
-            //while (serverPeer.State == PeerState.Connecting)
-            //{
-            //    if (GetServerRealTime() - currentTime <= 1000*Connection.CLIENT_TIMEOUT) continue;
-            //    timeout = true;
-            //    break;
-            //}
+            while (_serverPeer.State == PeerState.Connecting)
+            {
+                if (GetServerRealTime() - currentTime <= 1000 * 3) continue;
+                timeout = true;
+                break;
+            }
 
             if (timeout)
             {
@@ -59,16 +70,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                 return;
             }
 
-            LogUtils.Debug("Adding server peer");
-            var servIdent = new ENetIdentity(0);
-            _peers.Add(servIdent, serverPeer);
             ServerInfo info = new ServerInfo();
             info.ServerID = servIdent;
             info.MaxPlayers = -1;
             info.Name = "ENet Server";
 
-            ((ClientConnection) Connection).Connect(info);
-            new Thread(Listen).Start();
+            ((ClientConnection)Connection).Connect(info);
+            Listen();
         }
 
         public override bool Read(out Identity user, byte[] data, out ulong length, int channel)
