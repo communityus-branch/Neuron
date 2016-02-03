@@ -226,6 +226,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return SteamUtils.GetServerRealTime();
         }
 
+        public override void Dispose()
+        {
+            
+        }
+
         public override void EndAuthSession(Identity user)
         {
             SteamGameServer.EndAuthSession((CSteamID)(SteamIdentity)user);

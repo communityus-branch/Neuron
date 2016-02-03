@@ -44,8 +44,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public static bool operator ==(ENetIdentity a, ENetIdentity b)
         {
-            if (a == null && b == null) return true;
-            if (a == null || b == null) return false;
+            if ((object)a == null && (object)b == null) return true;
+            if ((object)a == null || (object)b == null) return false;
             return a.Equals(b);
         }
 

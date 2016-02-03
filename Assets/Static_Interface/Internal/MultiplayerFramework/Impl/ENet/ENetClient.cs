@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using ENet;
+using Static_Interface.API.Level;
+using Static_Interface.API.Network;
 using Static_Interface.API.Player;
+using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
@@ -23,9 +27,38 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         public override void AttemptConnect(string ip, ushort port, string password)
         {
             _host = new Host();
-            _host.InitializeClient(MAX_PLAYERS);
+            LogUtils.Debug("Initializing ENet Client");
+            _host.InitializeClient(MAX_PLAYERS+1);
+            LogUtils.Debug("Connecting to host");
             var serverPeer = _host.Connect(ip, port, 0);
-            _peers.Add(new ENetIdentity(0), serverPeer);
+            ulong currentTime = GetServerRealTime();
+
+            bool timeout = false;
+            while (serverPeer.State == PeerState.Connecting)
+            {
+                if (GetServerRealTime() - currentTime <= 1000*Connection.CLIENT_TIMEOUT) continue;
+                timeout = true;
+                break;
+            }
+            if (timeout)
+            {
+                if (!((ClientConnection)Connection).OnPingFailed())
+                {
+                    LogUtils.Error("Couldn't connect to host");
+                    LevelManager.Instance.GoToMainMenu();
+                }
+                return;
+            }
+
+            LogUtils.Debug("Adding server peer");
+            var servIdent = new ENetIdentity(0);
+            _peers.Add(servIdent, serverPeer);
+            ServerInfo info = new ServerInfo();
+            info.ServerID = servIdent;
+            info.MaxPlayers = -1;
+            info.Name = "ENet Server";
+
+            ((ClientConnection) Connection).Connect(info);
             new Thread(Listen).Start();
         }
 
@@ -62,6 +95,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         public override uint GetServerRealTime()
         {
             return Convert.ToUInt32(DateTime.Now.Millisecond);
+        }
+
+        public override void Dispose()
+        {
+            _host.Dispose();
         }
 
         public override void AdvertiseGame(Identity serverID, string ip, ushort port)

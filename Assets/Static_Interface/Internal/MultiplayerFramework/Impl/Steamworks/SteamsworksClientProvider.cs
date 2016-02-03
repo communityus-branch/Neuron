@@ -17,7 +17,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
         private readonly ISteamMatchmakingPingResponse _serverPingResponse;
         private HServerQuery _serverQuery = HServerQuery.Invalid;
 
-        public ServerInfo CurrentServer { get; internal set; }
+        public ServerInfo CurrentServer { get; protected set; }
 
         public SteamsworksClientProvider(Connection conn) : base(conn) 
         {
@@ -214,6 +214,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return SteamUtils.GetServerRealTime();
         }
 
+        public override void Dispose()
+        {
+            
+        }
+
         private void OnPingResponded(gameserveritem_t data)
         {
             LogUtils.Log("Server is up, connecting...");
@@ -236,6 +241,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
                 {
                     if (((info.Players >= info.MaxPlayers) || (info.MaxPlayers < MIN_PLAYERS)) ||
                         (info.MaxPlayers > MAX_PLAYERS)) return;
+                    CurrentServer = info;
                     ((ClientConnection)Connection).Connect(info);
                     return;
                     // Todo: server full

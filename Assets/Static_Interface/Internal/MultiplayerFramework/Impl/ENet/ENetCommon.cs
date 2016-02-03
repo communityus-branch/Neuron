@@ -5,6 +5,9 @@ using ENet;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Server;
+using UnityEngine;
+using Event = ENet.Event;
+using EventType = ENet.EventType;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 {
@@ -58,10 +61,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                     break;
                 case SendMethod.SEND_UNRELIABLE_NO_DELAY:
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(method), method, null);
             }
             byte ch = Convert.ToByte(channel);
-            ENetIdentity ident = (ENetIdentity)target;
+            ENetIdentity ident = (ENetIdentity) target;
             Peer peer = peers[ident];
+            LogUtils.Debug("Initialized: " + peer.IsInitialized);
+            LogUtils.Debug("State: " + peer.State);
+            LogUtils.Debug("Host Initialized: " + peer.Host.IsInitialized);
             peer.Send(ch, data, 0, Convert.ToInt32(length), flags);
             return true;
         }
@@ -69,7 +77,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public static void CloseConnection(Identity user, Dictionary<ENetIdentity, Peer> peers)
         {
-            ENetIdentity ident = (ENetIdentity)user;
+            ENetIdentity ident = (ENetIdentity) user;
             Peer p = peers[ident];
             p.DisconnectNow(0);
             peers.Remove(ident);
@@ -91,7 +99,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                         break;
 
                     case EventType.Disconnect:
-                        ((ServerConnection)connection).DisconnectClient(GetIdentFromPeer(@event.Peer, peers));
+                        ((ServerConnection) connection).DisconnectClient(GetIdentFromPeer(@event.Peer, peers));
                         break;
 
                     case EventType.Receive:
@@ -113,7 +121,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                         }
                         else
                         {
-                            qData = new ENetQueuedData { Ident = ident };
+                            qData = new ENetQueuedData {Ident = ident};
                             add = true;
                         }
 
@@ -142,7 +150,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             }
 
 
-            throw new ArgumentException("Identity not found for requested peer");
+            throw new ArgumentException("Identity not found for requested peer(?)");
             //ENetIdentity newIdent = new ENetIdentity(peer);
             //_peers.Add(newIdent, peer);
             //return newIdent;

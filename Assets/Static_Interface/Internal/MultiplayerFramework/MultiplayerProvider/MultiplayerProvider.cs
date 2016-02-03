@@ -36,5 +36,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider
         }
 
         public abstract uint GetServerRealTime();
+        public abstract void Dispose();
     }
 }

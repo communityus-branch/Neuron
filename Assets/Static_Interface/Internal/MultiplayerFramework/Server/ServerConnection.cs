@@ -248,7 +248,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
         {
             base.Awake();
             Port = 27015;
-            IsReady = true;
         }
 
         public void Accept(Identity ident)

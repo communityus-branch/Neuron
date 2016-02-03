@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Threading;
 using ENet;
 using Static_Interface.API.Player;
@@ -39,6 +39,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             return Convert.ToUInt32(DateTime.Now.Millisecond);
         }
 
+        public override void Dispose()
+        {
+            _host.Dispose();
+        }
+
         public override void EndAuthSession(Identity user)
         {
             CloseConnection(user);
@@ -46,9 +51,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override void Open(string bindip, ushort port, bool lan)
         {
-            LogUtils.Log("Opening server binded on " + bindip + " with port "+ port);
+            var bind = bindip == "*" ? 
+                new IPEndPoint(IPAddress.Any, port) : 
+                new IPEndPoint(IPAddress.Parse(bindip), port);
+            LogUtils.Log("Opening server listening on " + bindip + " with port "+ port);
             _host = new Host();
-            _host.Initialize(null, MAX_PLAYERS, byte.MaxValue);
+            _host.Initialize(bind, MAX_PLAYERS+1, byte.MaxValue);
             new Thread(Listen).Start();
         }
 

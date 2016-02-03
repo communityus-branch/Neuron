@@ -30,7 +30,6 @@ namespace Static_Interface.Internal.MultiplayerFramework
         }
 
         public static Connection CurrentConnection { get; private set; }
-        public bool IsReady { get; protected set; }
 
         protected byte[] Buffer  = new byte[Block.BUFFER_SIZE];
 

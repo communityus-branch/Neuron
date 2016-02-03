@@ -40,8 +40,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public static bool operator ==(SteamIdentity a, SteamIdentity b)
         {
-            if (a == null && b == null) return true;
-            if (a == null || b == null) return false;
+            if ((object)a == null && (object)b == null) return true;
+            if ((object)a == null || (object)b == null) return false;
             return a.Equals(b);
         }
 

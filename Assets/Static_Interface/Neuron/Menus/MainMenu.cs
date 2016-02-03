@@ -33,23 +33,17 @@ namespace Static_Interface.Neuron.Menus
 
         public void Host()
         {
-            StartCoroutine(HostCoroutine());
+            GameObject serverObject = GameObject.Find("Server");
+            DestroyImmediate(serverObject.GetComponent<ClientConnection>());
+            DestroyImmediate(serverObject.GetComponent<ServerConnection>());
+            ServerConnection conn = serverObject.AddComponent<ServerConnection>();
+            conn.OpenGameServer();
+            GameObject.Find("Host Button").GetComponent<Button>().enabled = false;
         }
 
         public void Quit()
         {
             Application.Quit();
-        }
-
-        private IEnumerator HostCoroutine()
-        {
-            GameObject serverObject = GameObject.Find("Server");
-            DestroyImmediate(serverObject.GetComponent<ClientConnection>());
-            DestroyImmediate(serverObject.GetComponent<ServerConnection>());
-            ServerConnection conn = serverObject.AddComponent<ServerConnection>();
-            if (!conn.IsReady) yield return new WaitForSeconds(0.5f);
-            conn.OpenGameServer();
-            GameObject.Find("Host Button").GetComponent<Button>().enabled = false;
         }
     }
 }

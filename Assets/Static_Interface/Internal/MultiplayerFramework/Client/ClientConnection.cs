@@ -19,8 +19,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         private float[] _pings;
         private float _ping;
         public const int CONNECTION_TRIES = 5;
-        private Identity _user;
- 
         private int _serverQueryAttempts;
 
         internal string CurrentPassword;
@@ -63,8 +61,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
             ((ClientMultiplayerProvider) Provider).SetStatus("Menu");
             ((ClientMultiplayerProvider)Provider).SetConnectInfo(null, 0);
-            
-            ((SteamsworksClientProvider)Provider).CurrentServer = null;
             Destroy(this);
         }
 
@@ -72,15 +68,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         {
             base.Awake();
             CurrentTime = Provider.GetServerRealTime();
-            _user = ((ClientMultiplayerProvider) Provider).GetUserID();
-            ClientID = _user;
-            ClientName = ((ClientMultiplayerProvider) Provider).GetClientName();
-            IsReady = true;
         }
 
         public void AttemptConnect(string ip, ushort port, string password)
         {
             Provider = new ENetClient(this);
+            ClientID = ((ClientMultiplayerProvider)Provider).GetUserID();
+            ClientName = ((ClientMultiplayerProvider)Provider).GetClientName();
             LogUtils.Log("Attempting conncetion to " + ip + ":" + port + " (using password: " + (string.IsNullOrEmpty(password) ? "NO" : "YES") + ")");
             if (IsConnected)
             {
@@ -100,7 +94,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         {
             if (IsConnected) return;
             LogUtils.Debug("Connected to server: " + info.Name);
-            ((SteamsworksClientProvider) Provider).CurrentServer = info;
             IsConnected = true;
             ResetChannels();
             CurrentServerInfo = info;
@@ -239,6 +232,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             _serverQueryAttempts++;
             LogUtils.Log("Retrying #" + _serverQueryAttempts);
             AttemptConnect(_currentIp, _currentPort, CurrentPassword);
+            Provider.Dispose();
             return true;
         }
     }
