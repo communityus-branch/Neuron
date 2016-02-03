@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ENet;
 using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
@@ -82,9 +83,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public static void Listen(Host host, Connection connection, Dictionary<byte, List<ENetQueuedData>> queue, Dictionary<ENetIdentity, Peer> peers)
         {
-                Event @event;
-                host.Service(1, out @event);
-                LogUtils.Debug("Event: " + @event.Type);
+            Event @event;
+            host.Service(1, out @event);
+            LogUtils.Debug("Event: " + @event.Type);
 
             switch (@event.Type)
             {
@@ -131,6 +132,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                     @event.Packet.Dispose();
                     break;
             }
+            Thread.Sleep(1);
         }
 
         public static ENetIdentity GetIdentFromPeer(Peer peer, Dictionary<ENetIdentity, Peer> peers)

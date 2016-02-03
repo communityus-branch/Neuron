@@ -294,7 +294,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public void OpenGameServer(bool lan = false)
         {
-            if(Provider == null) Provider = new ENetServer(this);
+            if(Provider == null) Provider = new SteamworksServerProvider(this);
             try
             {
                 ((ServerMultiplayerProvider)Provider).Open("*", Port, lan);

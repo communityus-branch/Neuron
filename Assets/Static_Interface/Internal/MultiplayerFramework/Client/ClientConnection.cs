@@ -72,7 +72,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public void AttemptConnect(string ip, ushort port, string password)
         {
-            Provider = new ENetClient(this);
+            Provider = new SteamworksClientProvider(this);
             ClientID = ((ClientMultiplayerProvider)Provider).GetUserID();
             ClientName = ((ClientMultiplayerProvider)Provider).GetClientName();
             LogUtils.Log("Attempting conncetion to " + ip + ":" + port + " (using password: " + (string.IsNullOrEmpty(password) ? "NO" : "YES") + ")");
