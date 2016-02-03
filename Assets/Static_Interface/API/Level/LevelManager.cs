@@ -8,7 +8,7 @@ namespace Static_Interface.API.Level
 {
     public class LevelManager : MonoBehaviour
     {
-        public const string MENU_DIR = "Static_Interface/The_Collapse/Menus/";
+        public const string MENU_DIR = "Static_Interface/Neuron/Menus/";
 
         public string CurrentLevel { get; private set; }
         public static LevelManager Instance { get; private set; }

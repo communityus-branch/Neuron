@@ -46,8 +46,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override void Open(string bindip, ushort port, bool lan)
         {
+            LogUtils.Log("Opening server binded on " + bindip + " with port "+ port);
             _host = new Host();
-            _host.InitializeServer(port, MAX_PLAYERS);
+            _host.Initialize(null, MAX_PLAYERS, byte.MaxValue);
             new Thread(Listen).Start();
         }
 

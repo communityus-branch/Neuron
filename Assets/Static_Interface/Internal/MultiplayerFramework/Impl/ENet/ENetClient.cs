@@ -23,6 +23,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         public override void AttemptConnect(string ip, ushort port, string password)
         {
             _host = new Host();
+            _host.InitializeClient(MAX_PLAYERS);
             var serverPeer = _host.Connect(ip, port, 0);
             _peers.Add(new ENetIdentity(0), serverPeer);
             new Thread(Listen).Start();
