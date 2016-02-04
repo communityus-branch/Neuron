@@ -28,6 +28,18 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             while ((msg = host.ReadMessage()) != null)
             {
                 LogUtils.Debug("Received: " + msg.MessageType);
+                switch (msg.MessageType)
+                {
+                    case NetIncomingMessageType.VerboseDebugMessage:
+                    case NetIncomingMessageType.WarningMessage:
+                    case NetIncomingMessageType.DebugMessage:
+                        LogUtils.Debug(msg.ReadString());
+                        continue;
+                    case NetIncomingMessageType.ErrorMessage:
+                        LogUtils.LogError(msg.ReadString());
+                        continue;
+                }
+
                 if (msg.MessageType != NetIncomingMessageType.Data)
                 {
                     skippedMsgs.Add(msg); 

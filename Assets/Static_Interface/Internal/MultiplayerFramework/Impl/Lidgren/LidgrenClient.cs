@@ -41,12 +41,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 Port = port
             };
             _client = new NetClient(config);
+            _client.Start();
             _startTime = GetServerRealTime();
             NetConnection conn = _client.Connect(_ip, _port);
+            _listen = true;
             _listenerThread = new Thread(OnConnect);
             _listenerThread.Start();
             LogUtils.Debug("Adding server connection");
-
             var servIdent = new IPIdentity(0);
             _peers.Add(servIdent, conn);
         }
@@ -73,6 +74,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                             
                         if (status == NetConnectionStatus.Disconnected)
                             _connected = false;
+                        LogUtils.Debug("New status: " + status);
                     }
                 }
 
