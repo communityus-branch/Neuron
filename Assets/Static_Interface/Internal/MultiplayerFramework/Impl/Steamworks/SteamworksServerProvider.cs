@@ -229,7 +229,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public override void Dispose()
         {
-            
+            Close();
         }
 
         public override void EndAuthSession(Identity user)

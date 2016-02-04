@@ -23,7 +23,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         private const float Timeout = 0.75f;
 
-        public ushort Port { get; private set; } = 27015;
+        public ushort Port { get; } = 27015;
 
         private readonly List<PendingUser> _pendingPlayers = new List<PendingUser>();
         public ICollection<PendingUser> PendingPlayers => _pendingPlayers.AsReadOnly();

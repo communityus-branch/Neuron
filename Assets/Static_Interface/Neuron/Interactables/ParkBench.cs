@@ -1,4 +1,5 @@
 ﻿using Static_Interface.API.InteractionFramework;
+using Static_Interface.API.PlayerFramework;
 using UnityEngine;
 
 namespace Static_Interface.Neuron.Interactables
@@ -14,13 +15,8 @@ namespace Static_Interface.Neuron.Interactables
         {
             return "Sit";
         }
-
-        public override bool ShouldShowInteractMessage()
-        {
-            return true;
-        }
-
-        public override void Interact()
+    
+        public override void Interact(Player player)
         {
             //todo
         }
@@ -29,6 +25,5 @@ namespace Static_Interface.Neuron.Interactables
         {
             return !full;
         }
-
     }
 }

@@ -84,8 +84,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         public static void Listen(Host host, Connection connection, Dictionary<byte, List<ENetQueuedData>> queue, Dictionary<ENetIdentity, Peer> peers)
         {
             Event @event;
-            host.Service(1, out @event);
-            LogUtils.Debug("Event: " + @event.Type);
+            host.Service(100, out @event);
+            if(@event.Type != EventType.None)
+                LogUtils.Debug("Event: " + @event.Type);
 
             switch (@event.Type)
             {
@@ -132,7 +133,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                     @event.Packet.Dispose();
                     break;
             }
-            Thread.Sleep(1);
+            Thread.Sleep(10);
         }
 
         public static ENetIdentity GetIdentFromPeer(Peer peer, Dictionary<ENetIdentity, Peer> peers)

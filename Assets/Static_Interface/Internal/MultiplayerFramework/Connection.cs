@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
@@ -162,26 +163,31 @@ namespace Static_Interface.Internal.MultiplayerFramework
         }
 
 
-        public virtual void Send(Identity receiver, EPacket type, byte[] data, int id)
+        public virtual void Send(Identity receiver, EPacket type, byte[] data, int channel)
         {
-            Send(receiver, type, data, data.Length, id);
+            Send(receiver, type, data, data.Length, channel);
         }
 
-        public virtual void Send(Identity receiver, EPacket type, byte[] data, int length, int id)
+        public virtual void Send(Identity receiver, EPacket type, byte[] data, int length, int channel)
         {
+            if (receiver == null)
+            {
+                throw new ArgumentNullException(nameof(receiver));
+            }
+
             if (data == null)
             {
-                LogUtils.LogError("Trying to send null data");
-                return;
+                throw new ArgumentNullException(nameof(data));
             }
+
             var tmp = data.ToList();
             tmp.Insert(0, type.GetID());
             data = tmp.ToArray();
             length += 1;
 
-            if ((IsClient() && receiver == ClientID) || (IsServer() && receiver == ServerID))
+            if ((IsClient() && receiver == ClientID && ClientID != null) || (IsServer() && receiver == ServerID && ServerID != null))
             {
-                Receive(receiver, data, 0, length, id);
+                Receive(receiver, data, 0, length, channel);
                 return;
             }
 
@@ -191,7 +197,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
                 return;
             }
 
-            LogUtils.Debug("Sending packet: " + type + ", receiver: " + receiver + (receiver == ServerID ? " (Server)" : "") + ", ch: " + id + ", size: " + data.Length);
+            LogUtils.Debug("Sending packet: " + type + ", receiver: " + receiver + (receiver == ServerID ? " (Server)" : "") + ", ch: " + channel + ", size: " + data.Length);
 
             SendMethod sendType;
             if (type.IsUnreliable())
@@ -206,7 +212,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
                     SendMethod.SEND_RELIABLE_WITH_BUFFERING:
                     SendMethod.SEND_RELIABLE;
             }
-            if (!Provider.Write(receiver, data, (ulong) length, sendType, id))
+            if (!Provider.Write(receiver, data, (ulong) length, sendType, channel))
             {
                 LogUtils.LogError("Failed to send data to " + receiver);
             }

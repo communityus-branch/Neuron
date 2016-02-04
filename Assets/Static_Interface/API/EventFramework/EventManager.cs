@@ -112,8 +112,9 @@ namespace Static_Interface.API.EventFramework
                 {
                     instance = _listenerInstances[info];
                 }
-                catch (KeyNotFoundException)
+                catch (KeyNotFoundException e)
                 {
+                    e.Log("This shouldn't happen");
                     return;
                 }
 

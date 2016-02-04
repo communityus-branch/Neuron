@@ -71,7 +71,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             Destroy(this);
         }
 
-        public void AttemptConnect(string ip, ushort port, string password)
+        public void AttemptConnect(string ip, ushort port, string password, bool reset = true)
         {
             Provider = new ENetClient(this);
             ClientID = ((ClientMultiplayerProvider)Provider).GetUserID();
@@ -83,7 +83,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 LogUtils.Debug("Already connnected");
                 return;
             }
-            _serverQueryAttempts = 0;
+
+            if (reset)
+            {
+                _serverQueryAttempts = 0;
+            }
 
             _currentIp = ip;
             _currentPort = port;
@@ -236,7 +240,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
             _serverQueryAttempts++;
             LogUtils.Log("Retrying #" + _serverQueryAttempts);
-            AttemptConnect(_currentIp, _currentPort, CurrentPassword);
+            AttemptConnect(_currentIp, _currentPort, CurrentPassword, false);
             Provider.Dispose();
             return true;
         }

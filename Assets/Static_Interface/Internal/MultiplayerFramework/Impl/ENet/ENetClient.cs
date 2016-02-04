@@ -8,7 +8,7 @@ using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
-using ThreadPool = Static_Interface.API.Utils.ThreadPool;
+
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 {
     public class ENetClient : ClientMultiplayerProvider
@@ -20,7 +20,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         private static readonly string RandName = "Player" + new Random().Next(MAX_PLAYERS);
         private Host _host;
         private Peer _serverPeer;
-
+        private Thread _thread;
         public ENetClient(Connection connection) : base(connection)
         {
             
@@ -42,7 +42,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             _serverPeer = _host.Connect(ip, port, 0);
             _listen = true;
 
-            new Thread(OnConnect).Start();
+            _thread = new Thread(OnConnect);
+            _thread.Start();
         }
 
         private void OnConnect()
@@ -56,7 +57,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             ulong checkTime = GetServerRealTime();
             while (_serverPeer.State == PeerState.Connecting)
             {
-                if (GetServerRealTime() - checkTime <= 1000) continue;
+                if (GetServerRealTime() - checkTime <= 1000 * 5) continue;
                 timeout = true;
                 break;
             }
@@ -68,6 +69,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
             if (timeout)
             {
+                LogUtils.LogError("Timeout with state: " + _serverPeer.State);
                 if (((ClientConnection)Connection).OnPingFailed()) return;
                 LogUtils.Debug("Couldn't connect to host");
                 LevelManager.Instance.GoToMainMenu();
@@ -83,7 +85,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
 
             ((ClientConnection)Connection).Connect(info);
-            //Listen();
+            Listen();
         }
 
         public override bool Read(out Identity user, byte[] data, out ulong length, int channel)
@@ -121,13 +123,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override uint GetServerRealTime()
         {
-            return Convert.ToUInt32(DateTime.Now.Millisecond);
+            return Convert.ToUInt32(DateTime.UtcNow.Millisecond);
         }
 
         public override void Dispose()
         {
             _listen = false;
             _host.Dispose();
+            _thread = null;
         }
 
         public override void AdvertiseGame(Identity serverID, string ip, ushort port)

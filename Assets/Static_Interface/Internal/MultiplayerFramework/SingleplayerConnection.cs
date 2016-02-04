@@ -26,9 +26,9 @@ namespace Static_Interface.Internal.MultiplayerFramework
             _client.AttemptConnect("localhost", 27015, string.Empty);
         }
 
-        public override void Send(Identity receiver, EPacket type, byte[] data, int length, int id)
+        public override void Send(Identity receiver, EPacket type, byte[] data, int length, int channel)
         {
-            _client.Send(receiver, type, data, length, id);
+            _client.Send(receiver, type, data, length, channel);
         }
 
         internal override void Receive(Identity source, byte[] packet, int offset, int size, int channel)
