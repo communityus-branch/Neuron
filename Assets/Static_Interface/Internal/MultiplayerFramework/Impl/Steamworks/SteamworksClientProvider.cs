@@ -1,8 +1,8 @@
 ﻿using System;
+using Static_Interface.API.LevelFramework;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.Neuron;
-using Static_Interface.API.Level;
-using Static_Interface.API.Network;
-using Static_Interface.API.Player;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
@@ -79,7 +79,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         private void OnP2PSessionConnectFail(P2PSessionConnectFail_t callback)
         {
-            LogUtils.Error("P2P connection failed for: " + callback.m_steamIDRemote + ", error: " + callback.m_eP2PSessionError);
+            LogUtils.LogError("P2P connection failed for: " + callback.m_steamIDRemote + ", error: " + callback.m_eP2PSessionError);
         }
 
 
@@ -138,10 +138,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         private void OnPingFailedToRespond()
         {
-            LogUtils.Error("Connection failed");
+            LogUtils.LogError("Connection failed");
             if (!((ClientConnection) Connection).OnPingFailed())
             {
-                LogUtils.Error("Couldn't connect to host");
+                LogUtils.LogError("Couldn't connect to host");
                 CleanupServerQuery();
                 LevelManager.Instance.GoToMainMenu();
                 //Todo: Timeout

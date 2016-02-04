@@ -1,4 +1,4 @@
-﻿using Static_Interface.API.Interact;
+﻿using Static_Interface.API.InteractionFramework;
 using UnityEngine;
 
 namespace Static_Interface.Neuron.Interactables

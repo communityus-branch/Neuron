@@ -1,5 +1,5 @@
-﻿using Static_Interface.API.Network;
-using Static_Interface.API.Player;
+﻿using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Server;
 
@@ -46,6 +46,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
         {
             _server.Disconnect();
             _client.Disconnect();
+        }
+
+        public override void Dispose()
+        {
+            _client.Dispose();
+            _server.Dispose();
         }
 
         internal override void Update()

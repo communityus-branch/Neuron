@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Static_Interface.API.Network;
-using Static_Interface.API.Player;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
@@ -144,6 +144,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             Transform newModel = ((GameObject)Instantiate(Resources.Load("Player"), point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
             var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = @name };
             ident.Owner = user;
+            newModel.GetComponent<Player>().User = user;
             _clients.Add(user);
             return newModel;
         }
@@ -152,7 +153,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
         {
             if ((index >= _clients.Count))
             {
-                LogUtils.Error("Failed to find player: " + index);
+                LogUtils.LogError("Failed to find player: " + index);
                 return;
             }
             //Todo: on player disconnected event
@@ -168,12 +169,17 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public virtual void Send(Identity receiver, EPacket type, byte[] data, int length, int id)
         {
+            if (data == null)
+            {
+                LogUtils.LogError("Trying to send null data");
+                return;
+            }
             var tmp = data.ToList();
             tmp.Insert(0, type.GetID());
             data = tmp.ToArray();
             length += 1;
 
-            if (IsClient() && receiver == ClientID || IsServer() && receiver == ServerID)
+            if ((IsClient() && receiver == ClientID) || (IsServer() && receiver == ServerID))
             {
                 Receive(receiver, data, 0, length, id);
                 return;
@@ -181,7 +187,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
             if (!receiver.IsValid())
             {
-                LogUtils.Error("Failed to send to invalid steam ID.");
+                LogUtils.LogError("Failed to send to invalid steam ID.");
                 return;
             }
 
@@ -202,7 +208,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             }
             if (!Provider.Write(receiver, data, (ulong) length, sendType, id))
             {
-                LogUtils.Error("Failed to send data to " + receiver);
+                LogUtils.LogError("Failed to send data to " + receiver);
             }
         }
 
@@ -229,5 +235,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             }
             Channels--;
         }
+
+        public abstract void Dispose();
     }
 }

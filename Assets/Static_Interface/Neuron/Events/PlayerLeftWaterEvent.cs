@@ -1,5 +1,5 @@
-﻿using Static_Interface.API.Event;
-using Static_Interface.API.Player;
+﻿using Static_Interface.API.EventFramework;
+using Static_Interface.API.PlayerFramework;
 
 namespace Static_Interface.Neuron.Events
 {

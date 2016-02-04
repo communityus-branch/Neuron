@@ -72,7 +72,7 @@ namespace UnityStandardAssets.ImageEffects
 
             EditorGUILayout.LabelField("Glow and Lens Flares for bright screen pixels", EditorStyles.miniLabel);
 
-            EditorGUILayout.PropertyField (quality, new GUIContent("Quality", "High quality preserves high frequencies with bigger blurs and uses a better blending and down-/upsampling"));
+            EditorGUILayout.PropertyField (quality, new GUIContent("Quality", "HIGH quality preserves high frequencies with bigger blurs and uses a better blending and down-/upsampling"));
 
             EditorGUILayout.Separator ();
 

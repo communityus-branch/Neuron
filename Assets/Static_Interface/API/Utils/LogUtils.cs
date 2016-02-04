@@ -2,56 +2,100 @@
 
 namespace Static_Interface.API.Utils
 {
+    /// <summary>
+    /// Provides thread-safe logging methods
+    /// </summary>
     public static class LogUtils
     {
         public static void Log(this Exception exception)
         {
-            UnityEngine.Debug.LogException(exception);
+            Action action = delegate
+            {
+                UnityEngine.Debug.LogException(exception);
+            };
+            if (ThreadPool.IsMainThread)
+            {
+                action.Invoke();
+                return;
+            }
+            ThreadPool.QueueMainFixed(action);
         }
 
         public static void Log(this Exception exception, string msg)
         {
-            UnityEngine.Debug.LogError(msg + ": ");
-            UnityEngine.Debug.LogException(exception);
+            Action action = delegate
+            {
+                UnityEngine.Debug.LogError(msg + ": ");
+                UnityEngine.Debug.LogException(exception);
+            };
+            if (ThreadPool.IsMainThread)
+            {
+                action.Invoke();
+                return;
+            }
+            ThreadPool.QueueMainFixed(action);
         }
 
         public static void Log(string msg, bool appendInfo = true)
         {
-            if (UnityEngine.Debug.isDebugBuild)
+            Action action = delegate
             {
-                UnityEngine.Debug.Log(msg);
+                if (UnityEngine.Debug.isDebugBuild)
+                {
+                    UnityEngine.Debug.Log(msg);
+                    return;
+                }
+
+                if (Console.Instance != null)
+                {
+                    Console.Instance.Print(appendInfo ? "[Info] " : "" + msg);
+                }
+            };
+            if (ThreadPool.IsMainThread)
+            {
+                action.Invoke();
                 return;
             }
-
-            if (Console.Instance != null)
-            {
-                Console.Instance.Print(appendInfo ? "[Info] " : "" + msg);
-            }
+            ThreadPool.QueueMainFixed(action);
         }
 
 
-        public static void Error(string msg)
+        public static void LogError(string msg)
         {
-#if UNITY_STANDALONE
-            if (UnityEngine.Debug.isDebugBuild)
+            Action action = delegate
             {
-                UnityEngine.Debug.LogError(msg);
+                if (UnityEngine.Debug.isDebugBuild)
+                {
+                    UnityEngine.Debug.LogError(msg);
+                    return;
+                }
+
+                if (Console.Instance != null)
+                {
+                    Console.Instance.Print("[Error] " + msg);
+                }
+            };
+            if (ThreadPool.IsMainThread)
+            {
+                action.Invoke();
                 return;
             }
-
-            if (Console.Instance != null)
-            {
-                Console.Instance.Print("[Error] " + msg);
-            }
-#else
-            Console.WriteLine(msg);
-#endif
+            ThreadPool.QueueMainFixed(action);
         }
 
-        public static void Debug(string msg)
+        public static void Debug(object obj)
         {
-            if (!UnityEngine.Debug.isDebugBuild) return;
-            UnityEngine.Debug.Log(msg);
+            Action action = delegate
+            {
+                if (!UnityEngine.Debug.isDebugBuild) return;
+                UnityEngine.Debug.Log(obj);
+            };
+            if (ThreadPool.IsMainThread)
+            {
+                action.Invoke();
+                return;
+            }
+            ThreadPool.QueueMainFixed(action);
         }
     }
 }

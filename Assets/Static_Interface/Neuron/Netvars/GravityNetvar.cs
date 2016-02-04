@@ -1,4 +1,4 @@
-﻿using Static_Interface.API.Netvar;
+﻿using Static_Interface.API.NetvarFramework;
 using UnityEngine;
 
 namespace Static_Interface.Neuron.Netvars

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Static_Interface.API.Level;
-using Static_Interface.API.Network;
-using Static_Interface.API.Player;
+using Static_Interface.API.LevelFramework;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Impl.ENet;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
@@ -47,8 +47,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public override void Disconnect(string reason = null)
         {
+            LevelManager.Instance.GoToMainMenu();
+            Dispose();
+        }
+
+        public override void Dispose()
+        {
+            Provider.Dispose();
             Provider.CloseConnection(ServerID);
-            foreach(User user in Clients)
+            foreach (User user in Clients)
             {
                 Provider.CloseConnection(user.Identity);
             }
@@ -57,24 +64,19 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             IsConnected = false;
 
             //Todo: OnDisconnectedFromServer()
-            LevelManager.Instance.GoToMainMenu();
 
-            ((ClientMultiplayerProvider) Provider).SetStatus("Menu");
+
+            ((ClientMultiplayerProvider)Provider).SetStatus("Menu");
             ((ClientMultiplayerProvider)Provider).SetConnectInfo(null, 0);
             Destroy(this);
         }
 
-        internal override void Awake()
-        {
-            base.Awake();
-            CurrentTime = Provider.GetServerRealTime();
-        }
-
         public void AttemptConnect(string ip, ushort port, string password)
         {
-            Provider = new SteamworksClientProvider(this);
+            Provider = new ENetClient(this);
             ClientID = ((ClientMultiplayerProvider)Provider).GetUserID();
             ClientName = ((ClientMultiplayerProvider)Provider).GetClientName();
+            CurrentTime = Provider.GetServerRealTime();
             LogUtils.Log("Attempting conncetion to " + ip + ":" + port + " (using password: " + (string.IsNullOrEmpty(password) ? "NO" : "YES") + ")");
             if (IsConnected)
             {
@@ -126,11 +128,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         protected override Transform AddPlayer(Identity ident, string @name, ulong group, Vector3 point, byte angle, int channel)
         {
+            var transform = base.AddPlayer(ident, @name, group, point, angle, channel);;
             if (ident != ClientID)
             {
-                ((ClientMultiplayerProvider)Provider).SetPlayedWith(ident);
+                ((ClientMultiplayerProvider) Provider).SetPlayedWith(ident);
             }
-            return base.AddPlayer(ident, @name, group, point, angle, channel);
+            else
+            {
+                Player.MainPlayer = transform.GetComponent<Player>();
+            }
+            return transform;
         }
 
         internal override void Receive(Identity id, byte[] packet, int offset, int size, int channel)
@@ -178,8 +185,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                             };
 
                             object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, argTypes);
-                            var name = (string) args[2];
-                            AddPlayer(id, name, (ulong)args[3], (Vector3)args[4], (byte)args[5], (int)args[6]);
+                            var @name = (string) args[2];
+                            AddPlayer(id, @name, (ulong)args[3], (Vector3)args[4], (byte)args[5], (int)args[6]);
                             return;
                         }
                     case EPacket.VERIFY:
@@ -209,14 +216,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
                         object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, Types.UINT64_TYPE);
                         ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[1]);    
-                        //Todo: OnConnectedToServer
-
-                        ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);
-                       
-                        //Todo: implement a command line parser
+                        ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
                         ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);
                         IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(_currentIp, _currentPort);
                         ((ClientMultiplayerProvider) Provider).FavoriteServer(_currentIp, _currentPort);
+
+                        //Todo: load extensions
                         break;
                     }
                 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Static_Interface.API.Network;
-using Static_Interface.API.Player;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.MultiplayerFramework.Server;
@@ -144,7 +144,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
         private void OnP2PSessionConnectFail(P2PSessionConnectFail_t callback)
         {
             Identity ident = (SteamIdentity) callback.m_steamIDRemote;
-            LogUtils.Error("P2P connection failed for: " + callback.m_steamIDRemote + ", error: " + callback.m_eP2PSessionError);
+            LogUtils.LogError("P2P connection failed for: " + callback.m_steamIDRemote + ", error: " + callback.m_eP2PSessionError);
             ((ServerConnection)Connection).DisconnectClient(ident);
         }
 

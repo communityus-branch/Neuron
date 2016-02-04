@@ -1,4 +1,4 @@
-﻿using Static_Interface.API.Player;
+﻿using Static_Interface.API.PlayerFramework;
 using Steamworks;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks

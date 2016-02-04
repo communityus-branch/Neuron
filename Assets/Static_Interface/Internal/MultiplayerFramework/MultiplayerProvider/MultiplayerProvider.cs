@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Text;
-using Static_Interface.API.Player;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 
 namespace Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider

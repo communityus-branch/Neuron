@@ -1,4 +1,5 @@
 ﻿using System;
+using Static_Interface.API.Utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -8,19 +9,25 @@ namespace Static_Interface.Internal
     {
         public static void CheckObjects()
         {
-            CheckObject("PersistentScripts");
-            CheckObject("SteamManager");
-            CheckObject("Console");
+            bool created;
+            var persScripts = CheckObject("PersistentScripts", out created);
+            if(created) persScripts.AddComponent<ThreadPool>();
+            CheckObject("SteamManager", out created);
+            CheckObject("Console", out created);
         }
 
-        private static void CheckObject(string name, string path = null)
+        private static GameObject CheckObject(string name, out bool created, string path = null)
         {
+            created = false;
             if (path == null) path = name;
-            if (GameObject.Find(name)) return;
+            var match = GameObject.Find(name);
+            if (match) return match;
+            created = true;
             GameObject instance = Object.Instantiate(Resources.Load(path, typeof(GameObject))) as GameObject;
             if(instance == null) throw new Exception("Couldn't load prefab: " + name);
             instance.name = name;
             Object.DontDestroyOnLoad(GameObject.Find(name));
+            return instance;
         }
     }
 }

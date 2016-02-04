@@ -129,7 +129,7 @@ namespace Static_Interface.Internal.Objects
             {
                 return ReadColor();
             }
-            LogUtils.Error("Failed to read type: " + type);
+            LogUtils.LogError("Failed to read type: " + type);
             return null;
         }
 
@@ -438,7 +438,7 @@ namespace Static_Interface.Internal.Objects
             }
             else
             {
-                LogUtils.Error("Failed to write type: " + type);
+                LogUtils.LogError("Failed to write type: " + type);
             }
         }
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Static_Interface.API.Level;
-using Static_Interface.API.Network;
-using Static_Interface.API.Player;
+using Static_Interface.API.LevelFramework;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Impl.ENet;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
@@ -23,7 +23,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         private const float Timeout = 0.75f;
 
-        public ushort Port { get; private set; }
+        public ushort Port { get; private set; } = 27015;
 
         private readonly List<PendingUser> _pendingPlayers = new List<PendingUser>();
         public ICollection<PendingUser> PendingPlayers => _pendingPlayers.AsReadOnly();
@@ -60,6 +60,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
         }
 
         public override void Disconnect(string reason = null)
+        {
+            Dispose();
+        }
+
+        public override void Dispose()
         {
             CloseGameServer();
             Destroy(this);
@@ -172,7 +177,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 default:
                     if (parsedPacket != EPacket.AUTHENTICATE)
                     {
-                        LogUtils.Error("Failed to handle message: " + parsedPacket);
+                        LogUtils.LogError("Failed to handle message: " + parsedPacket);
                         return;
                     }
 
@@ -242,12 +247,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             {
                 Send(c.Identity, packet, data, size, channel);
             }
-        }
-
-        internal override void Awake()
-        {
-            base.Awake();
-            Port = 27015;
         }
 
         public void Accept(Identity ident)

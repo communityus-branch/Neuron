@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using ENet;
-using Static_Interface.API.Level;
-using Static_Interface.API.Network;
-using Static_Interface.API.Player;
+using Static_Interface.API.LevelFramework;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
-
+using ThreadPool = Static_Interface.API.Utils.ThreadPool;
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 {
     public class ENetClient : ClientMultiplayerProvider
@@ -42,41 +42,48 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             _serverPeer = _host.Connect(ip, port, 0);
             _listen = true;
 
-            new Thread(Ping) {IsBackground = true}.Start();
+            new Thread(OnConnect).Start();
         }
 
-        private void Ping()
+        private void OnConnect()
         {
             LogUtils.Debug("Adding server peer");
+
             var servIdent = new ENetIdentity(0);
             _peers.Add(servIdent, _serverPeer);
 
-            ulong currentTime = GetServerRealTime();
             bool timeout = false;
+            ulong checkTime = GetServerRealTime();
             while (_serverPeer.State == PeerState.Connecting)
             {
-                if (GetServerRealTime() - currentTime <= 1000 * 3) continue;
+                if (GetServerRealTime() - checkTime <= 1000) continue;
                 timeout = true;
                 break;
             }
 
+            if (_serverPeer.State != PeerState.Connected)
+            {
+                timeout = true;
+            }
+
             if (timeout)
             {
-                if (!((ClientConnection)Connection).OnPingFailed())
-                {
-                    LogUtils.Error("Couldn't connect to host");
-                    LevelManager.Instance.GoToMainMenu();
-                }
+                if (((ClientConnection)Connection).OnPingFailed()) return;
+                LogUtils.Debug("Couldn't connect to host");
+                LevelManager.Instance.GoToMainMenu();
                 return;
             }
 
-            ServerInfo info = new ServerInfo();
-            info.ServerID = servIdent;
-            info.MaxPlayers = -1;
-            info.Name = "ENet Server";
+            ServerInfo info = new ServerInfo
+            {
+                ServerID = servIdent,
+                MaxPlayers = -1,
+                Name = "ENet Server"
+            };
+
 
             ((ClientConnection)Connection).Connect(info);
-            Listen();
+            //Listen();
         }
 
         public override bool Read(out Identity user, byte[] data, out ulong length, int channel)
