@@ -36,7 +36,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             _ip = ip;
             _port = port;
 
-            NetPeerConfiguration config = new NetPeerConfiguration(GameInfo.NAME + "_Network_Client")
+            NetPeerConfiguration config = new NetPeerConfiguration(GameInfo.NAME)
             {
                 Port = port
             };
@@ -67,24 +67,28 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 foreach (NetIncomingMessage msg in msgs)
                 {
                     NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
-                    if (msg.MessageType == NetIncomingMessageType.StatusChanged)
+                    if (msg.MessageType != NetIncomingMessageType.StatusChanged) continue;
+                    if (status == NetConnectionStatus.Connected)
                     {
-                        if (status == NetConnectionStatus.Connected)
-                            _connected = true;
-                            
-                        if (status == NetConnectionStatus.Disconnected)
-                            _connected = false;
-                        LogUtils.Debug("New status: " + status);
+                        ServerInfo info = new ServerInfo()
+                        {
+                            ServerID = new IPIdentity(0),
+                            MaxPlayers = MAX_PLAYERS,
+                            Name = "A Lidgren Server"
+                        };
+                        ((ClientConnection) Connection).Connect(info);
+                        _connected = true;
                     }
+
+                    if (status == NetConnectionStatus.Disconnected)
+                    {
+                        if (((ClientConnection) Connection).OnPingFailed()) continue;
+                        LogUtils.Debug("Couldn't connect to host");
+                        LevelManager.Instance.GoToMainMenu();
+                        _listen = false;
+                    }
+                    LogUtils.Debug("New status: " + status);
                 }
-
-                if (_connected || GetServerRealTime() - _startTime <= 1000 * 5) continue;
-
-                if (((ClientConnection)Connection).OnPingFailed()) return;
-                LogUtils.Debug("Couldn't connect to host");
-                LevelManager.Instance.GoToMainMenu();
-                _listen = false;
-                break;
             }
         }
 

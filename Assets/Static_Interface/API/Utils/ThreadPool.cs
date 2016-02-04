@@ -31,7 +31,16 @@ namespace Static_Interface.API.Utils
                 QueuedMainActions.Add(action);
             }
         }
-        
+        /// <summary>
+        /// Runs the given action on the main thread
+        /// </summary>
+        /// <param name="action">The action to run on the main thread</param>
+        public static void RunOnMainThread(Action action)
+        {
+            if(IsMainThread) action.Invoke();
+            else QueueMain(action);
+        }
+
         /// <summary>
         /// Calls the action on the main thread on the next FixedUpdate()
         /// </summary>
@@ -56,7 +65,7 @@ namespace Static_Interface.API.Utils
             }
         }
 
-        private void Update()
+        public void Update()
         {
             lock (QueuedMainActions)
             {
@@ -73,7 +82,7 @@ namespace Static_Interface.API.Utils
             }
         }
 
-        private void FixedUpdate()
+        public void FixedUpdate()
         {
             lock (QueuedMainFixedActions)
             {

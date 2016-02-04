@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using ENet;
 using Lidgren.Network;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Server;
@@ -45,6 +46,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     skippedMsgs.Add(msg); 
                     continue;
                 }
+
+                LogUtils.Debug("SequenceChannel: " + msg.SequenceChannel);
                 var channel = msg.SequenceChannel;
 
                 var ident = GetIdentFromConnection(msg.SenderConnection, peers);
@@ -60,7 +63,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     qData = new QueuedData { Ident = ident };
                     add = true;
                 }
-
+                try
+                {
+                    EPacket packet = (EPacket)msg.Data[0];
+                    LogUtils.Debug("Received packet: " + packet);
+                }
+                catch (Exception)
+                {
+                
+                }
                 byte[] data = msg.Data;
                 qData.Data.AddRange(data);
 
@@ -139,7 +150,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             }
             NetConnection p = peers[(IPIdentity)target];
             NetOutgoingMessage msg = host.CreateMessage((int) length);
-
             msg.Data = data;
             var result = p.SendMessage(msg, deliveryMethod, channel);
             if (result != NetSendResult.Dropped && result != NetSendResult.FailedNotConnected)

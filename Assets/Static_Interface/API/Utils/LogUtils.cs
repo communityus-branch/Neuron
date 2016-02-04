@@ -9,36 +9,24 @@ namespace Static_Interface.API.Utils
     {
         public static void Log(this Exception exception)
         {
-            Action action = delegate
+            ThreadPool.RunOnMainThread(delegate
             {
                 UnityEngine.Debug.LogException(exception);
-            };
-            if (ThreadPool.IsMainThread)
-            {
-                action.Invoke();
-                return;
-            }
-            ThreadPool.QueueMainFixed(action);
+            });
         }
 
         public static void Log(this Exception exception, string msg)
         {
-            Action action = delegate
+            ThreadPool.RunOnMainThread(delegate
             {
                 UnityEngine.Debug.LogError(msg + ": ");
                 UnityEngine.Debug.LogException(exception);
-            };
-            if (ThreadPool.IsMainThread)
-            {
-                action.Invoke();
-                return;
-            }
-            ThreadPool.QueueMainFixed(action);
+            });
         }
 
         public static void Log(string msg, bool appendInfo = true)
         {
-            Action action = delegate
+            ThreadPool.RunOnMainThread(delegate
             {
                 if (UnityEngine.Debug.isDebugBuild)
                 {
@@ -50,19 +38,13 @@ namespace Static_Interface.API.Utils
                 {
                     Console.Instance.Print(appendInfo ? "[Info] " : "" + msg);
                 }
-            };
-            if (ThreadPool.IsMainThread)
-            {
-                action.Invoke();
-                return;
-            }
-            ThreadPool.QueueMainFixed(action);
+            });
         }
 
 
         public static void LogError(string msg)
         {
-            Action action = delegate
+            ThreadPool.RunOnMainThread(delegate
             {
                 if (UnityEngine.Debug.isDebugBuild)
                 {
@@ -74,28 +56,16 @@ namespace Static_Interface.API.Utils
                 {
                     Console.Instance.Print("[Error] " + msg);
                 }
-            };
-            if (ThreadPool.IsMainThread)
-            {
-                action.Invoke();
-                return;
-            }
-            ThreadPool.QueueMainFixed(action);
+            });
         }
 
         public static void Debug(object obj)
         {
-            Action action = delegate
+            ThreadPool.RunOnMainThread(delegate
             {
                 if (!UnityEngine.Debug.isDebugBuild) return;
                 UnityEngine.Debug.Log(obj);
-            };
-            if (ThreadPool.IsMainThread)
-            {
-                action.Invoke();
-                return;
-            }
-            ThreadPool.QueueMainFixed(action);
+            });
         }
     }
 }

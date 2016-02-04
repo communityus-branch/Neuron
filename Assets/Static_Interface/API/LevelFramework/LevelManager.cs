@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
@@ -25,7 +26,16 @@ namespace Static_Interface.API.LevelFramework
 
         public void LoadLevel(string level, bool isMenu = false)
         {
-            StartCoroutine(LoadLevelInternal(level, isMenu));
+            Action action = delegate 
+            {
+                StartCoroutine(LoadLevelInternal(level, isMenu));
+            };
+            if (ThreadPool.IsMainThread)
+            {
+                action.Invoke();
+                return;
+            }
+            ThreadPool.QueueMain(action);
         }
 
         protected IEnumerator LoadLevelInternal(string level, bool isMenu)
@@ -53,14 +63,23 @@ namespace Static_Interface.API.LevelFramework
 
         public void GoToMainMenu()
         {
-            ExtensionManager.Instance.Shutdown();
-            EventManager.Instance.ClearExtensionListeners();
-            NetvarManager.Instance.ClearNetvars();
-            if (Connection.CurrentConnection != null)
+            Action action = delegate
             {
-                Connection.CurrentConnection.Dispose();
+                ExtensionManager.Instance.Shutdown();
+                EventManager.Instance.ClearExtensionListeners();
+                NetvarManager.Instance.ClearNetvars();
+                if (Connection.CurrentConnection != null)
+                {
+                    Connection.CurrentConnection.Dispose();
+                }
+                LoadLevel("MainMenu", true);
+            };
+            if (ThreadPool.IsMainThread)
+            {
+                action.Invoke();
+                return;
             }
-            LoadLevel("MainMenu", true);
+            ThreadPool.QueueMain(action);
         }
     }
 }

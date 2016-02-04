@@ -8,6 +8,7 @@ using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Neuron;
+using UnityEngine;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 {
@@ -61,12 +62,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 IPAddress.Any :
                 IPAddress.Parse(bindip);
 
-            NetPeerConfiguration config = new NetPeerConfiguration(GameInfo.NAME + "_Network_Server")
+            NetPeerConfiguration config = new NetPeerConfiguration(GameInfo.NAME)
             {
                 Port = port,
-                AcceptIncomingConnections = true,
-                BroadcastAddress = bind
+                AcceptIncomingConnections = true
             };
+            config.SetMessageTypeEnabled(NetIncomingMessageType.NatIntroductionSuccess, true);
+            config.SetMessageTypeEnabled(NetIncomingMessageType.ConnectionApproval, true);
+            config.SetMessageTypeEnabled(NetIncomingMessageType.DebugMessage, Debug.isDebugBuild);
+
             _server = new NetServer(config);
             _server.Start();
             _listen = true;
@@ -80,6 +84,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             {
                 List<NetIncomingMessage> msgs;
                 LidgrenCommon.Listen(_server, Connection, _queue, _peers, out msgs);
+                foreach (NetIncomingMessage msg in msgs)
+                {
+                    switch (msg.MessageType)
+                    {
+                        case NetIncomingMessageType.ConnectionApproval:
+                            //Todo: check for password here?
+                            msg.SenderConnection.Approve();
+                            break;
+                    }
+                }
             }
         }
 

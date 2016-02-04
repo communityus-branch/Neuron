@@ -81,7 +81,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             LogUtils.Log("Attempting conncetion to " + ip + ":" + port + " (using password: " + (string.IsNullOrEmpty(password) ? "NO" : "YES") + ")");
             if (IsConnected)
             {
-                LogUtils.Debug("Already connnected");
+                LogUtils.Debug("Already connnected to a server");
                 return;
             }
 
@@ -99,21 +99,24 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         internal void Connect(ServerInfo info)
         {
-            if (IsConnected) return;
-            ClientID = ((ClientMultiplayerProvider) Provider).GetUserID();
-            LogUtils.Debug("Connected to server: " + info.Name);
-            IsConnected = true;
-            ResetChannels();
-            CurrentServerInfo = info;
-            ServerID = info.ServerID;
-            _pings = new float[4];
-            Lag((info.Ping) / 1000f);
-            LastNet = Time.realtimeSinceStartup;
-            OffsetNet = 0f;
-            SetupPseudoChannel();
-            Send(ServerID, EPacket.WORKSHOP, new byte[] { }, 0, 0);
-            //Todo: Load Level specified by server
-            LevelManager.Instance.LoadLevel("DefaultMap");    
+            ThreadPool.RunOnMainThread(delegate
+            {
+                if (IsConnected) return;
+                ClientID = ((ClientMultiplayerProvider) Provider).GetUserID();
+                LogUtils.Debug("Connected to server: " + info.Name);
+                ResetChannels();
+                CurrentServerInfo = info;
+                ServerID = info.ServerID;
+                _pings = new float[4];
+                Lag((info.Ping)/1000f);
+                LastNet = Time.realtimeSinceStartup;
+                OffsetNet = 0f;
+                SetupPseudoChannel();
+                IsConnected = true;
+                Send(ServerID, EPacket.WORKSHOP, new byte[] {}, 0, 0);
+                //Todo: Load Level specified by server
+                LevelManager.Instance.LoadLevel("DefaultMap");
+            });
         }
 
         //Todo
