@@ -1,19 +1,21 @@
 ﻿using System;
-using ENet;
+using System.Net;
 using Static_Interface.API.PlayerFramework;
 
-namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
+namespace Static_Interface.Internal.MultiplayerFramework.Impl
 {
-    public class ENetIdentity : Identity
+    public class IPIdentity : Identity
     {
         public ulong ID { get; }
 
-        public ENetIdentity(Peer peer)
+        public static readonly IPIdentity Server = new IPIdentity(0);
+
+        public IPIdentity(IPAddress address)
         {
-            ID = BitConverter.ToUInt64(peer.GetRemoteAddress().Address.GetAddressBytes(), 0);
+            ID = BitConverter.ToUInt64(address.GetAddressBytes(), 0);
         }
 
-        public ENetIdentity(ulong id)
+        public IPIdentity(ulong id)
         {
             ID = id;
         }
@@ -28,49 +30,51 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             return ID;
         }
 
-        public static ENetIdentity Deserialze(ulong u)
+        public static IPIdentity Deserialze(ulong u)
         {
-            return (ENetIdentity) u;
+            return (IPIdentity) u;
         }
 
-        public static explicit operator ulong(ENetIdentity ident)
+        public static explicit operator ulong(IPIdentity ident)
         {
             return ident.ID;
         }
 
-        public static explicit operator ENetIdentity(ulong id)
+        public bool IsServer => this == Server;
+
+        public static explicit operator IPIdentity(ulong id)
         {
-            return new ENetIdentity(id);
+            return new IPIdentity(id);
         }
 
-        public static bool operator ==(ENetIdentity a, ENetIdentity b)
+        public static bool operator ==(IPIdentity a, IPIdentity b)
         {
             if ((object)a == null && (object)b == null) return true;
             if ((object)a == null || (object)b == null) return false;
             return a.Equals(b);
         }
 
-        public static bool operator !=(ENetIdentity a, ENetIdentity b)
+        public static bool operator !=(IPIdentity a, IPIdentity b)
         {
             return !(a == b);
         }
 
-        public static bool operator ==(ENetIdentity a, ulong b)
+        public static bool operator ==(IPIdentity a, ulong b)
         {
             return a?.ID == b;
         }
 
-        public static bool operator !=(ENetIdentity a, ulong b)
+        public static bool operator !=(IPIdentity a, ulong b)
         {
             return !(a == b);
         }
 
-        public static bool operator ==(ulong a, ENetIdentity b)
+        public static bool operator ==(ulong a, IPIdentity b)
         {
             return b == a;
         }
 
-        public static bool operator !=(ulong a, ENetIdentity b)
+        public static bool operator !=(ulong a, IPIdentity b)
         {
             return b != a;
         }
@@ -81,7 +85,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             {
                 return false;
             }
-            var identity = obj as ENetIdentity;
+            var identity = obj as IPIdentity;
             if (identity != null)
             {
                 return identity.ID == ID;

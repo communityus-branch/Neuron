@@ -5,6 +5,7 @@ using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Impl.ENet;
+using Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
@@ -73,7 +74,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public void AttemptConnect(string ip, ushort port, string password, bool reset = true)
         {
-            Provider = new ENetClient(this);
+            Provider = new LidgrenClient(this);
             ClientID = ((ClientMultiplayerProvider)Provider).GetUserID();
             ClientName = ((ClientMultiplayerProvider)Provider).GetClientName();
             CurrentTime = Provider.GetServerRealTime();

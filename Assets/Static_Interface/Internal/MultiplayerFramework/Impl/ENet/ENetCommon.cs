@@ -13,7 +13,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 {
     public class ENetCommon
     {
-        public static bool Read(out Identity user, byte[] data, out ulong length, int channel, Dictionary<byte, List<ENetQueuedData>>  queue)
+        public static bool Read(out Identity user, byte[] data, out ulong length, int channel, Dictionary<byte, List<QueuedData>>  queue)
         {
             user = null;
             length = 0;
@@ -24,30 +24,30 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                 return false;
             }
 
-            ENetQueuedData eNetQueuedData = queue[ch].ElementAt(0);
+            QueuedData queuedData = queue[ch].ElementAt(0);
 
             for (int i = 0; i < data.Length; i++)
             {
-                if (eNetQueuedData.Data.Count == 0)
+                if (queuedData.Data.Count == 0)
                 {
                     break;
                 }
-                data[i] = eNetQueuedData.Data.ElementAt(0);
-                eNetQueuedData.Data.RemoveAt(0);
+                data[i] = queuedData.Data.ElementAt(0);
+                queuedData.Data.RemoveAt(0);
                 length++;
             }
 
-            user = eNetQueuedData.Ident;
+            user = queuedData.Ident;
 
-            if (eNetQueuedData.Data.Count == 0)
+            if (queuedData.Data.Count == 0)
             {
-                queue[ch].Remove(eNetQueuedData);
+                queue[ch].Remove(queuedData);
             }
 
             return true;
         }
 
-        public static bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel, Dictionary<ENetIdentity, Peer> peers)
+        public static bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel, Dictionary<IPIdentity, Peer> peers)
         {
             PacketFlags flags = PacketFlags.None;
             switch (method)
@@ -65,7 +65,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                     throw new ArgumentOutOfRangeException(nameof(method), method, null);
             }
             byte ch = Convert.ToByte(channel);
-            ENetIdentity ident = (ENetIdentity) target;
+            IPIdentity ident = (IPIdentity) target;
             Peer peer = peers[ident];
             LogUtils.Debug("State: " + peer.State);
             peer.Send(ch, data, 0, Convert.ToInt32(length), flags);
@@ -73,15 +73,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         }
 
 
-        public static void CloseConnection(Identity user, Dictionary<ENetIdentity, Peer> peers)
+        public static void CloseConnection(Identity user, Dictionary<IPIdentity, Peer> peers)
         {
-            ENetIdentity ident = (ENetIdentity) user;
+            IPIdentity ident = (IPIdentity) user;
             Peer p = peers[ident];
             p.DisconnectNow(0);
             peers.Remove(ident);
         }
 
-        public static void Listen(Host host, Connection connection, Dictionary<byte, List<ENetQueuedData>> queue, Dictionary<ENetIdentity, Peer> peers)
+        public static void Listen(Host host, Connection connection, Dictionary<byte, List<QueuedData>> queue, Dictionary<IPIdentity, Peer> peers)
         {
             Event @event;
             host.Service(100, out @event);
@@ -91,7 +91,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             switch (@event.Type)
             {
                 case EventType.Connect:
-                    ENetIdentity newIdent = new ENetIdentity(@event.Peer);
+                    IPIdentity newIdent = new IPIdentity(@event.Peer.GetRemoteAddress().Address);
                     peers.Add(newIdent, @event.Peer);
                     break;
 
@@ -104,21 +104,21 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                     byte channel = @event.ChannelID;
                     if (!queue.ContainsKey(channel))
                     {
-                        queue.Add(channel, new List<ENetQueuedData>());
+                        queue.Add(channel, new List<QueuedData>());
                     }
 
 
                     var ident = GetIdentFromPeer(@event.Peer, peers);
 
                     bool add = false;
-                    ENetQueuedData qData;
-                    if (queue[channel].Count > 0 && queue[channel].ElementAt(queue.Count - 1).Ident == ident)
+                    QueuedData qData;
+                    if (queue[channel].Count > 0 && (IPIdentity)queue[channel].ElementAt(queue.Count - 1).Ident == ident)
                     {
                         qData = queue[channel].ElementAt(0);
                     }
                     else
                     {
-                        qData = new ENetQueuedData {Ident = ident};
+                        qData = new QueuedData {Ident = ident};
                         add = true;
                     }
 
@@ -136,9 +136,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             Thread.Sleep(10);
         }
 
-        public static ENetIdentity GetIdentFromPeer(Peer peer, Dictionary<ENetIdentity, Peer> peers)
+        public static IPIdentity GetIdentFromPeer(Peer peer, Dictionary<IPIdentity, Peer> peers)
         {
-            foreach (ENetIdentity ident in peers.Keys)
+            foreach (IPIdentity ident in peers.Keys)
             {
                 if (peers[ident].GetHashCode() == peer.GetHashCode())
                 {

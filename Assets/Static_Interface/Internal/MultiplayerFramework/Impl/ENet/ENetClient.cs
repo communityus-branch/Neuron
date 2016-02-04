@@ -14,9 +14,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
     public class ENetClient : ClientMultiplayerProvider
     {
         private bool _listen;
-        private readonly Dictionary<byte, List<ENetQueuedData>> _queue = new Dictionary<byte, List<ENetQueuedData>>();
-        private readonly Dictionary<ENetIdentity, Peer> _peers = new Dictionary<ENetIdentity, Peer>();
-        private static ENetIdentity _ident = new ENetIdentity(1);
+        private readonly Dictionary<byte, List<QueuedData>> _queue = new Dictionary<byte, List<QueuedData>>();
+        private readonly Dictionary<IPIdentity, Peer> _peers = new Dictionary<IPIdentity, Peer>();
+        private static IPIdentity _ident = new IPIdentity(1);
         private static readonly string RandName = "Player" + new Random().Next(MAX_PLAYERS);
         private Host _host;
         private Peer _serverPeer;
@@ -50,7 +50,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         {
             LogUtils.Debug("Adding server peer");
 
-            var servIdent = new ENetIdentity(0);
+            var servIdent = new IPIdentity(0);
             _peers.Add(servIdent, _serverPeer);
 
             bool timeout = false;
@@ -85,7 +85,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
 
             ((ClientConnection)Connection).Connect(info);
-            Listen();
+            ListenLoop();
         }
 
         public override bool Read(out Identity user, byte[] data, out ulong length, int channel)
@@ -103,7 +103,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             ENetCommon.CloseConnection(user, _peers);
         }
 
-        private void Listen()
+        private void ListenLoop()
         {
             while (_listen)
             {
@@ -175,7 +175,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override void SetIdentity(ulong serializedIdent)
         {
-            _ident = new ENetIdentity(serializedIdent);
+            _ident = new IPIdentity(serializedIdent);
         }
     }
 }

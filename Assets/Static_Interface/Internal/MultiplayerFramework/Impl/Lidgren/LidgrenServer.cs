@@ -1,43 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
-using ENet;
+using Lidgren.Network;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
-using Static_Interface.Internal.MultiplayerFramework.Server;
+using Static_Interface.Neuron;
 
-namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
+namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 {
-    public class ENetServer : ServerMultiplayerProvider
+    public class LidgrenServer : ServerMultiplayerProvider
     {
+        private NetServer _server;
         private bool _listen;
-        private readonly Dictionary<byte, List<QueuedData>> _queue = new Dictionary<byte, List<QueuedData>>();
-        private readonly Dictionary<IPIdentity, Peer> _peers = new Dictionary<IPIdentity, Peer>(); 
-        private Host _host;
-        public ENetServer(Connection connection) : base(connection)
+        private Thread _listenerThread;
+        private readonly Dictionary<int, List<QueuedData>> _queue = new Dictionary<int, List<QueuedData>>();
+        private readonly Dictionary<IPIdentity, NetConnection> _peers = new Dictionary<IPIdentity, NetConnection>();
+        public LidgrenServer(Connection connection) : base(connection)
         {
-        }
-
-        ~ENetServer()
-        {
-            Dispose();
         }
 
         public override bool Read(out Identity user, byte[] data, out ulong length, int channel)
         {
-            return ENetCommon.Read(out user, data, out length, channel, _queue);
+            return LidgrenCommon.Read(out user, data, out length, channel, _queue);
         }
 
         public override bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel)
         {
-            return ENetCommon.Write(target, data, length, method, channel, _peers);
+            return LidgrenCommon.Write(target, data, length, method, channel, _server, _peers);
         }
 
         public override void CloseConnection(Identity user)
         {
-            ENetCommon.CloseConnection(user, _peers);
+            LidgrenCommon.CloseConnection(user, _peers);
         }
 
         public override uint GetServerRealTime()
@@ -48,10 +45,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         public override void Dispose()
         {
             _listen = false;
-            if (_host.IsInitialized)
-            {
-                _host.Dispose();
-            }
+            _listenerThread = null;
+            _server.Shutdown(nameof(Dispose));
+            _server = null;
         }
 
         public override void EndAuthSession(Identity user)
@@ -61,40 +57,35 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override void Open(string bindip, ushort port, bool lan)
         {
-            var bind = bindip == "*" ? 
-                new IPEndPoint(IPAddress.Any, port) : 
-                new IPEndPoint(IPAddress.Parse(bindip), port);
-            //Todo: implement bindip
-            LogUtils.Log("Opening server listening on " + bindip + " with port "+ port);
-            _host = new Host();
-            _host.Initialize(bind, MAX_PLAYERS+1);
+            var bind = bindip == "*" ?
+                IPAddress.Any :
+                IPAddress.Parse(bindip);
+
+            NetPeerConfiguration config = new NetPeerConfiguration(GameInfo.NAME + "_Network_Server")
+            {
+                Port = port,
+                AcceptIncomingConnections = true,
+                BroadcastAddress = bind
+            };
+            _server = new NetServer(config);
+            _server.Start();
             _listen = true;
-            new Thread(Listen) { IsBackground = true }.Start();
+            _listenerThread = new Thread(Listen);
+            _listenerThread.Start();
         }
 
         private void Listen()
         {
             while (_listen)
             {
-                ENetCommon.Listen(_host, Connection, _queue, _peers);
+                List<NetIncomingMessage> msgs;
+                LidgrenCommon.Listen(_server, Connection, _queue, _peers, out msgs);
             }
         }
 
         public override void Close()
         {
-            foreach (IPIdentity ident in _peers.Keys)
-            {
-                _peers[ident].DisconnectNow(1);
-            }
-
-            Dispose();
-        }
-
-
-        public override bool VerifyTicket(Identity ident, byte[] data)
-        {
-            ((ServerConnection)Connection).Accept(ident);
-            return true;
+            Dispose();          
         }
 
         public override Identity GetServerIdentity()
@@ -102,11 +93,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             return IPIdentity.Server;
         }
 
+        public override bool VerifyTicket(Identity ident, byte[] data)
+        {
+            return true;
+        }
+
         public override void UpdateScore(Identity ident, uint score)
         {
             //do nothing
         }
-        
+
         public override void SetMaxPlayerCount(int maxPlayers)
         {
             //do nothing

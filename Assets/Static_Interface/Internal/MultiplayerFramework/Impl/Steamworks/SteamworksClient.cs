@@ -11,7 +11,7 @@ using SteamUser = Steamworks.SteamUser;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 {
-    public class SteamworksClientProvider : ClientMultiplayerProvider
+    public class SteamworksClient : ClientMultiplayerProvider
     {
         public bool IsAttempting;
         private readonly ISteamMatchmakingPingResponse _serverPingResponse;
@@ -19,7 +19,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public ServerInfo CurrentServer { get; protected set; }
 
-        public SteamworksClientProvider(Connection conn) : base(conn) 
+        public SteamworksClient(Connection conn) : base(conn) 
         {
             Callback<P2PSessionRequest_t>.Create(OnP2PSessionRequest);
             Callback<P2PSessionConnectFail_t>.Create(OnP2PSessionConnectFail);
@@ -55,7 +55,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
         {
             ip = 0;
             port = 0;
-            pass = String.Empty;
+            pass = string.Empty;
             return true; //TODO
         }
 

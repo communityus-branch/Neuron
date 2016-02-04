@@ -11,10 +11,10 @@ using UnityEngine;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 {
-    public class SteamworksServerProvider : ServerMultiplayerProvider
+    public class SteamworksServer : ServerMultiplayerProvider
     {
 
-        public SteamworksServerProvider(Connection conn) : base(conn)
+        public SteamworksServer(Connection conn) : base(conn)
         {
             Callback<P2PSessionRequest_t>.CreateGameServer(OnP2PSessionRequest);
             Callback<GSPolicyResponse_t>.CreateGameServer(OnGsPolicyResponse);
