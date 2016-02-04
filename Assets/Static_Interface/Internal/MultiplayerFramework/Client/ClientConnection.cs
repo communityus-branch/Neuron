@@ -99,6 +99,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         internal void Connect(ServerInfo info)
         {
             if (IsConnected) return;
+            ClientID = ((ClientMultiplayerProvider) Provider).GetUserID();
             LogUtils.Debug("Connected to server: " + info.Name);
             IsConnected = true;
             ResetChannels();

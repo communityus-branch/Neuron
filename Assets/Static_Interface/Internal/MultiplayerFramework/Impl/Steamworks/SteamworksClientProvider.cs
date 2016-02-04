@@ -237,6 +237,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
                     IsSecure = data.m_bSecure,
                 };
 
+
                 if (!data.m_bPassword || (((ClientConnection)Connection).CurrentPassword != String.Empty))
                 {
                     if (((info.Players >= info.MaxPlayers) || (info.MaxPlayers < MIN_PLAYERS)) ||

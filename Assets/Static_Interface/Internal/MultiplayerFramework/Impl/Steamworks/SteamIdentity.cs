@@ -34,8 +34,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public static explicit operator SteamIdentity(CSteamID id)
         {
-            //Todo;
-            return null;
+            return new SteamIdentity(id);
         }
 
         public static bool operator ==(SteamIdentity a, SteamIdentity b)
@@ -52,8 +51,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public static bool operator ==(SteamIdentity a, CSteamID b)
         {
-            if (a == null && b == CSteamID.Nil) return true;
-            if (a == null || b == CSteamID.Nil) return false;
+            if ((object)a == null && b == CSteamID.Nil) return true;
+            if ((object)a == null || b == CSteamID.Nil) return false;
             return a.SteamID == b;
         }
 
