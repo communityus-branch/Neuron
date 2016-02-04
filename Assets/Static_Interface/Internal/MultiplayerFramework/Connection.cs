@@ -118,7 +118,6 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         protected void Listen(int channelId)
         {
-            LogUtils.Log("Listening channel: " + channelId);
             Identity user;
             ulong length;
             while (Provider.Read(out user, Buffer, out length, channelId))
