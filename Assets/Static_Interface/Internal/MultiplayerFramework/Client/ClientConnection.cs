@@ -52,7 +52,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         public override void Dispose()
         {
             LogUtils.Debug(nameof(Dispose));
-            Provider.Dispose();
             Provider.CloseConnection(ServerID);
             foreach (User user in Clients)
             {
@@ -66,6 +65,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
             ((ClientMultiplayerProvider)Provider).SetStatus("Menu");
             ((ClientMultiplayerProvider)Provider).SetConnectInfo(null, 0);
+            Provider.Dispose();
             Destroy(this);
         }
 

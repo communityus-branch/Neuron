@@ -211,7 +211,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             LogUtils.Log("Rejecting user " + user.Serialize() + ", reason: " + reason);
             foreach (var player in _pendingPlayers.Where(player => player.Identity == user))
             {
-                PendingPlayers.Remove(player);
+                _pendingPlayers.Remove(player);
             }
 
             byte[] data = {(byte)reason};
