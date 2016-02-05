@@ -91,6 +91,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
         public override void Close()
         {
+            foreach (var conn in _server.Connections)
+            {
+                conn.Disconnect(nameof(Close));
+            }
             Dispose();          
         }
 

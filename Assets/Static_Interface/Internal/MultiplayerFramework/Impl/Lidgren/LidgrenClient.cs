@@ -25,6 +25,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         {
         }
 
+        ~LidgrenClient()
+        {
+            Dispose();
+        }
 
         public override void AttemptConnect(string ip, ushort port, string password)
         {
@@ -101,7 +105,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         public override void Dispose()
         {
             _listen = false;
-            _client.Shutdown(nameof(Dispose));
+            _client?.Shutdown(nameof(Dispose));
             _client = null;
         }
         public override Identity GetUserID()

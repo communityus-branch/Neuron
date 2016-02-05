@@ -14,8 +14,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
     {
         private bool _listen;
         private readonly Dictionary<byte, List<QueuedData>> _queue = new Dictionary<byte, List<QueuedData>>();
-        private readonly Dictionary<IPIdentity, Peer> _peers = new Dictionary<IPIdentity, Peer>(); 
+        private readonly Dictionary<ulong, Peer> _peers = new Dictionary<ulong, Peer>(); 
         private Host _host;
+        private Thread _thread;
         public ENetServer(Connection connection) : base(connection)
         {
         }
@@ -69,10 +70,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             _host = new Host();
             _host.Initialize(bind, MAX_PLAYERS+1);
             _listen = true;
-            new Thread(Listen) { IsBackground = true }.Start();
+            _thread = new Thread(ListenLoop);
+            _thread.Start();
         }
 
-        private void Listen()
+        private void ListenLoop()
         {
             while (_listen)
             {
@@ -82,9 +84,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override void Close()
         {
-            foreach (IPIdentity ident in _peers.Keys)
+            foreach (var peer in _peers.Values)
             {
-                _peers[ident].DisconnectNow(1);
+                peer.DisconnectNow(1);
             }
 
             Dispose();

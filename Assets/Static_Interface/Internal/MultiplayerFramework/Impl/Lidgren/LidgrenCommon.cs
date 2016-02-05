@@ -12,10 +12,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
     {
         public static void CloseConnection(Identity user, Dictionary<ulong, NetConnection> peers)
         {
-            IPIdentity ident = (IPIdentity)user;
-            NetConnection p = peers[ident.Serialize()];
+            var ident = user.Serialize();
+            NetConnection p = peers[ident];
             p.Disconnect(nameof(CloseConnection));
-            peers.Remove(ident.Serialize());
+            peers.Remove(ident);
         }
 
         public static void Listen(NetPeer host, Connection connection, Dictionary<int, List<QueuedData>> queue, Dictionary<ulong, NetConnection> peers, out List<NetIncomingMessage> skippedMsgs)

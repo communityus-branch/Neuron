@@ -15,7 +15,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
     {
         private bool _listen;
         private readonly Dictionary<byte, List<QueuedData>> _queue = new Dictionary<byte, List<QueuedData>>();
-        private readonly Dictionary<IPIdentity, Peer> _peers = new Dictionary<IPIdentity, Peer>();
+        private readonly Dictionary<ulong, Peer> _peers = new Dictionary<ulong, Peer>();
         private static IPIdentity _ident = new IPIdentity(1);
         private static readonly string RandName = "Player" + new Random().Next(MAX_PLAYERS);
         private Host _host;
@@ -51,7 +51,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             LogUtils.Debug("Adding server peer");
 
             var servIdent = new IPIdentity(0);
-            _peers.Add(servIdent, _serverPeer);
+            _peers.Add(servIdent.Serialize(), _serverPeer);
 
             bool timeout = false;
             ulong checkTime = GetServerRealTime();
@@ -129,7 +129,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         public override void Dispose()
         {
             _listen = false;
-            _host.Dispose();
+            if (_host.IsInitialized)
+            {
+                _host.Dispose();
+            }
             _thread = null;
         }
 

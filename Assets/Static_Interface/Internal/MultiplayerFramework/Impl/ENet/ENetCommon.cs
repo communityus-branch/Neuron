@@ -74,9 +74,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         }
 
 
-        public static void CloseConnection(Identity user, Dictionary<IPIdentity, Peer> peers)
+        public static void CloseConnection(Identity user, Dictionary<ulong, Peer> peers)
         {
-            IPIdentity ident = (IPIdentity) user;
+            ulong ident = user.Serialize();
             Peer p = peers[ident];
             p.DisconnectNow(0);
             peers.Remove(ident);
