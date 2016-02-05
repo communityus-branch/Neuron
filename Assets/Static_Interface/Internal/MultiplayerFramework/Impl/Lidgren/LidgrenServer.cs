@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Lidgren.Network;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
+using Static_Interface.Internal.MultiplayerFramework.Server;
 using Static_Interface.Neuron;
 using UnityEngine;
 
@@ -106,6 +109,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
         public override bool VerifyTicket(Identity ident, byte[] data)
         {
+            PendingUser pending = ((ServerConnection)Connection).PendingPlayers.FirstOrDefault(pendingPlayer => (IPIdentity)pendingPlayer.Identity == (IPIdentity)ident);
+            if (pending == null)
+            {
+                ((ServerConnection)Connection).Reject(ident, ERejectionReason.NOT_PENDING);
+                return false;
+            }
+
+            pending.HasAuthentication = true;
+            ((ServerConnection)Connection).Accept(pending);
             return true;
         }
 
