@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using ENet;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
@@ -19,6 +21,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         private Thread _thread;
         public ENetServer(Connection connection) : base(connection)
         {
+            SupportsTimeouts = true;
         }
 
         ~ENetServer()
@@ -95,7 +98,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override bool VerifyTicket(Identity ident, byte[] data)
         {
-            ((ServerConnection)Connection).Accept(ident);
+            PendingUser pending = ((ServerConnection)Connection).PendingPlayers.FirstOrDefault(pendingPlayer => (IPIdentity)pendingPlayer.Identity == (IPIdentity)ident);
+            if (pending == null)
+            {
+                ((ServerConnection)Connection).Reject(ident, ERejectionReason.NOT_PENDING);
+                return false;
+            }
+
+            pending.HasAuthentication = true;
+            ((ServerConnection)Connection).Accept(pending);
             return true;
         }
 

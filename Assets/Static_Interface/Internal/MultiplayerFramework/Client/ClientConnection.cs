@@ -30,6 +30,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         internal override void Listen()
         {
+            if (Provider.SupportsTimeouts) return;
             if (((Time.realtimeSinceStartup - LastNet) > CLIENT_TIMEOUT))
             {
                 LogUtils.Log("Timeout occurred");

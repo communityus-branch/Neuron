@@ -20,6 +20,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         private readonly Dictionary<ulong, NetConnection> _peers = new Dictionary<ulong, NetConnection>();
         public LidgrenServer(Connection connection) : base(connection)
         {
+            SupportsTimeouts = true;
         }
 
         public override bool Read(out Identity user, byte[] data, out ulong length, int channel)

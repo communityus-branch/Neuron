@@ -31,6 +31,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         internal override void Listen()
         {
+            if (Provider.SupportsTimeouts) return;
+
             if ((Time.realtimeSinceStartup - LastCheck) > CHECKRATE)
             {
                 LastCheck = Time.realtimeSinceStartup;
