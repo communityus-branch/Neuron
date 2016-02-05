@@ -12,6 +12,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
     {
         public static void CloseConnection(Identity user, Dictionary<ulong, NetConnection> peers)
         {
+            LogUtils.Debug("Closing connection with peer: " + user);
             var ident = user.Serialize();
             NetConnection p = peers[ident];
             p.Disconnect(nameof(CloseConnection));
@@ -27,6 +28,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 LogUtils.Debug("NetworkEvent: " + msg.MessageType);
                 switch (msg.MessageType)
                 {
+                    case NetIncomingMessageType.StatusChanged:
+                        NetConnectionStatus status = (NetConnectionStatus) msg.PeekByte();
+                        LogUtils.Debug("Status: " + status);
+                        if (status == NetConnectionStatus.Disconnected)
+                        {
+                            var sConIdent = GetIdentFromConnection(msg.SenderConnection, peers);
+                            CloseConnection(sConIdent, peers);
+                            host.Recycle(msg);
+                            continue;
+                        }
+                        break;
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
                         LogUtils.Debug(msg.ReadString());

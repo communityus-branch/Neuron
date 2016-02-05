@@ -154,12 +154,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     };
                 
                     var args = ObjectSerializer.GetObjects(source, 0, 0, packet, argTypes);
-                    var @name = (string) args[0];
+                    var playerName = (string) args[0];
                     var group = (ulong) args[1];
                     var version = (string) args[2];
                     var ping = (float) args[3];
 
-					LogUtils.Log("Player connecting: " + @name);
+					LogUtils.Log("Player connecting: " + playerName);
                     if (version != GameInfo.VERSION)
                     {
                         Reject(source, ERejectionReason.WRONG_VERSION);
@@ -172,7 +172,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         return;
                     }
 
-                    _pendingPlayers.Add(new PendingUser(source, @name, group, ping));
+                    _pendingPlayers.Add(new PendingUser(source, playerName, group, ping));
                     Send(source, EPacket.VERIFY, new byte[] { }, 0, 0);
                     return;
                 }

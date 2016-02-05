@@ -116,12 +116,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             });
         }
 
-        //Todo
-        private void OnLevelLoaded()
+        protected override void OnLevelWasLoaded(int level)
         {
+            base.OnLevelWasLoaded(level);
+            LogUtils.Debug("LEVEL LOADED -> CONNECTING");
             int size;
-            ulong group = 1;
-
+            ulong group = 1; //Todo
             object[] args = { ClientName, group, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f};
             byte[] packet = ObjectSerializer.GetBytes(0, out size, args);
             Send(ServerID, EPacket.CONNECT, packet, size, 0);
@@ -134,16 +134,22 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         protected override Transform AddPlayer(Identity ident, string @name, ulong group, Vector3 point, byte angle, int channel)
         {
-            var transform = base.AddPlayer(ident, @name, group, point, angle, channel);;
+            var playerTransform = base.AddPlayer(ident, @name, group, point, angle, channel);;
             if (ident != ClientID)
             {
                 ((ClientMultiplayerProvider) Provider).SetPlayedWith(ident);
             }
             else
             {
-                Player.MainPlayer = transform.GetComponent<Player>();
+                Player.MainPlayer = playerTransform.GetComponent<Player>();
+                SetupMainPlayer(playerTransform);
             }
-            return transform;
+            return playerTransform;
+        }
+
+        private void SetupMainPlayer(Transform playerTransform)
+        {
+            //Todo
         }
 
         internal override void Receive(Identity id, byte[] packet, int size, int channel)
@@ -170,17 +176,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                             return;
                         }
                     case EPacket.TIME:
-                        if (LastPing > 0f)
-                        {
-                            Type[] argTypes = { Types.SINGLE_TYPE };
-                            object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, argTypes);
-                            LastNet = Time.realtimeSinceStartup;
-                            OffsetNet = ((float)args[0]) + ((Time.realtimeSinceStartup - LastPing) / 2f);
-                            Lag(Time.realtimeSinceStartup - LastPing);
-                            LastPing = -1f;
-                        }
+                    {
+                        Type[] argTypes = {Types.SINGLE_TYPE};
+                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, argTypes);
+                        LastNet = Time.realtimeSinceStartup;
+                        OffsetNet = ((float) args[0]) + ((Time.realtimeSinceStartup - LastPing)/2f);
+                        Lag(Time.realtimeSinceStartup - LastPing);
                         return;
-
+                    }
                     case EPacket.SHUTDOWN:
                         Disconnect();
                         return;

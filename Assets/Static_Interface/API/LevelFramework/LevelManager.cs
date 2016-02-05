@@ -5,6 +5,7 @@ using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
+using Static_Interface.Neuron.Menus;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -45,7 +46,7 @@ namespace Static_Interface.API.LevelFramework
             Fading fading = GameObject.Find("PersistentScripts").GetComponent<Fading>();
             fading.BeginFade(1);
             yield return new WaitForSeconds(fading.FadeSpeed * Time.deltaTime * 64);
-            SceneManager.LoadScene(MENU_DIR + "LoadingMenu");
+            SceneManager.LoadSceneAsync(MENU_DIR + "LoadingMenu");
         }
 
         void OnLevelWasLoaded(int scene)

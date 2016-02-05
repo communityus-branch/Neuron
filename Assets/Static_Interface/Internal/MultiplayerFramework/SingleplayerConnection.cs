@@ -31,9 +31,9 @@ namespace Static_Interface.Internal.MultiplayerFramework
             _client.Send(receiver, type, data, length, channel);
         }
 
-        internal override void Receive(Identity source, byte[] packet, int offset, int size, int channel)
+        internal override void Receive(Identity source, byte[] packet,int size, int channel)
         {
-            _server.Receive(source, packet, offset, size, channel);
+            _server.Receive(source, packet, size, channel);
         }
 
         internal override void Listen()

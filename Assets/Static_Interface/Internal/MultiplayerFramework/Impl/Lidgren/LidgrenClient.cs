@@ -57,8 +57,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
             foreach (NetIncomingMessage msg in msgs)
             {
-                NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
                 if (msg.MessageType != NetIncomingMessageType.StatusChanged) continue;
+                NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
                 if (status == NetConnectionStatus.Connected)
                 {
                     ServerInfo info = new ServerInfo()
@@ -78,7 +78,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     LevelManager.Instance.GoToMainMenu();
                     _listen = false;
                 }
-                LogUtils.Debug("New status: " + status);
                 _client.Recycle(msg);
             }
         }

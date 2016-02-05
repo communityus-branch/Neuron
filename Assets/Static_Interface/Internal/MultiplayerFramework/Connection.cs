@@ -156,6 +156,10 @@ namespace Static_Interface.Internal.MultiplayerFramework
             _clients.RemoveAt(index);
         }
 
+        protected virtual void OnLevelWasLoaded(int level)
+        {
+            
+        }
 
         public virtual void Send(Identity receiver, EPacket type, byte[] data, int channel)
         {
@@ -181,7 +185,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
             if ((IsClient() && receiver == ClientID && ClientID != null) || (IsServer() && receiver == ServerID && ServerID != null))
             {
-                Receive(receiver, data, 0, length, channel);
+                Receive(receiver, data, length, channel);
                 return;
             }
 
