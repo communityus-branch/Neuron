@@ -109,32 +109,26 @@ namespace Static_Interface.Internal.MultiplayerFramework
         {
             if (!IsConnected) return;
             Listen();
-            //Listen(0);
+            Listen(0);
             foreach (Channel ch in Receivers)
             {
                 Listen(ch.ID);
             }
+            Provider.Update();
         }
 
         protected void Listen(int channelId)
         {
             Identity user;
             ulong length;
+            if (Provider == null)
+            {
+                throw new NullReferenceException("No provider was set!!");
+            }
             while (Provider.Read(out user, Buffer, out length, channelId))
             {
                 Receive(user, Buffer, 0, (int)length, channelId);
             }
-        }
-
-        protected void SetupPseudoChannel()
-        {
-            _zeroChannel = new GameObject("ZeroChannel");
-            var ch = _zeroChannel.AddComponent<Channel>();
-            ch.ID = 0;
-            ch.Connection = this;
-            ch.Setup();
-            AddReceiver(ch);
-            DontDestroyOnLoad(_zeroChannel);
         }
 
         internal abstract void Listen();

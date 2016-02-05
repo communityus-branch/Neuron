@@ -16,7 +16,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
     {
         private NetServer _server;
         private bool _listen;
-        private Thread _listenerThread;
         private readonly Dictionary<int, List<QueuedData>> _queue = new Dictionary<int, List<QueuedData>>();
         private readonly Dictionary<IPIdentity, NetConnection> _peers = new Dictionary<IPIdentity, NetConnection>();
         public LidgrenServer(Connection connection) : base(connection)
@@ -46,7 +45,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         public override void Dispose()
         {
             _listen = false;
-            _listenerThread = null;
             _server.Shutdown(nameof(Dispose));
             _server = null;
         }
@@ -74,25 +72,21 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             _server = new NetServer(config);
             _server.Start();
             _listen = true;
-            _listenerThread = new Thread(Listen);
-            _listenerThread.Start();
         }
 
-        private void Listen()
+        public override void Update()
         {
-            while (_listen)
+            if (!_listen) return;
+            List<NetIncomingMessage> msgs;
+            LidgrenCommon.Listen(_server, Connection, _queue, _peers, out msgs);
+            foreach (NetIncomingMessage msg in msgs)
             {
-                List<NetIncomingMessage> msgs;
-                LidgrenCommon.Listen(_server, Connection, _queue, _peers, out msgs);
-                foreach (NetIncomingMessage msg in msgs)
+                switch (msg.MessageType)
                 {
-                    switch (msg.MessageType)
-                    {
-                        case NetIncomingMessageType.ConnectionApproval:
-                            //Todo: check for password here?
-                            msg.SenderConnection.Approve();
-                            break;
-                    }
+                    case NetIncomingMessageType.ConnectionApproval:
+                        //Todo: check for password here?
+                        msg.SenderConnection.Approve();
+                        break;
                 }
             }
         }

@@ -56,21 +56,27 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 QueuedData qData;
                 if (queue[channel].Count > 0 && (IPIdentity)queue[channel].ElementAt(queue.Count - 1).Ident == ident)
                 {
+                    LogUtils.Debug("Already queued");
                     qData = queue[channel].ElementAt(0);
                 }
                 else
                 {
+
+                    LogUtils.Debug("Queueing new data");
                     qData = new QueuedData { Ident = ident };
                     add = true;
                 }
+
+                LogUtils.Debug("Data size: " + msg.Data.Length);
+
                 try
                 {
                     EPacket packet = (EPacket)msg.Data[0];
                     LogUtils.Debug("Received packet: " + packet);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                
+                    e.Log();
                 }
                 byte[] data = msg.Data;
                 qData.Data.AddRange(data);

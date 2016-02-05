@@ -21,11 +21,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         private NetClient _client;
         private IPIdentity _ident;
         private bool _listen;
-        private Thread _listenerThread;
         private string _ip;
         private ushort _port;
-        private uint _startTime;
-        private bool _connected;
         public LidgrenClient(Connection connection) : base(connection)
         {
         }
@@ -42,53 +39,43 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             };
             _client = new NetClient(config);
             _client.Start();
-            _startTime = GetServerRealTime();
             NetConnection conn = _client.Connect(_ip, _port);
             _listen = true;
-            _listenerThread = new Thread(OnConnect);
-            _listenerThread.Start();
             LogUtils.Debug("Adding server connection");
             var servIdent = new IPIdentity(0);
             _peers.Add(servIdent, conn);
         }
 
-        private void OnConnect()
+        public override void Update()
         {
-            ListenLoop();
-        }
-        
-        public void ListenLoop()
-        {
-            while (_listen)
-            {
-                List<NetIncomingMessage> msgs;
-                LidgrenCommon.Listen(_client, Connection, _queue, _peers, out msgs);
-                
-                foreach (NetIncomingMessage msg in msgs)
-                {
-                    NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
-                    if (msg.MessageType != NetIncomingMessageType.StatusChanged) continue;
-                    if (status == NetConnectionStatus.Connected)
-                    {
-                        ServerInfo info = new ServerInfo()
-                        {
-                            ServerID = new IPIdentity(0),
-                            MaxPlayers = MAX_PLAYERS,
-                            Name = "A Lidgren Server"
-                        };
-                        ((ClientConnection) Connection).Connect(info);
-                        _connected = true;
-                    }
+            base.Update();
+            if (!_listen) return;
+            List<NetIncomingMessage> msgs;
+            LidgrenCommon.Listen(_client, Connection, _queue, _peers, out msgs);
 
-                    if (status == NetConnectionStatus.Disconnected)
+            foreach (NetIncomingMessage msg in msgs)
+            {
+                NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
+                if (msg.MessageType != NetIncomingMessageType.StatusChanged) continue;
+                if (status == NetConnectionStatus.Connected)
+                {
+                    ServerInfo info = new ServerInfo()
                     {
-                        if (((ClientConnection) Connection).OnPingFailed()) continue;
-                        LogUtils.Debug("Couldn't connect to host");
-                        LevelManager.Instance.GoToMainMenu();
-                        _listen = false;
-                    }
-                    LogUtils.Debug("New status: " + status);
+                        ServerID = new IPIdentity(0),
+                        MaxPlayers = MAX_PLAYERS,
+                        Name = "A Lidgren Server"
+                    };
+                    ((ClientConnection)Connection).Connect(info);
                 }
+
+                if (status == NetConnectionStatus.Disconnected)
+                {
+                    if (((ClientConnection)Connection).OnPingFailed()) continue;
+                    LogUtils.Debug("Couldn't connect to host");
+                    LevelManager.Instance.GoToMainMenu();
+                    _listen = false;
+                }
+                LogUtils.Debug("New status: " + status);
             }
         }
 
@@ -115,7 +102,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         public override void Dispose()
         {
             _listen = false;
-            _listenerThread = null;
             _client.Shutdown(nameof(Dispose));
             _client = null;
         }

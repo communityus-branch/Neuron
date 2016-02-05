@@ -306,7 +306,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 return;
             }
 
-            SetupPseudoChannel();
             IsConnected = true;
 
             CurrentTime = ((ServerMultiplayerProvider)Provider).GetServerRealTime();
