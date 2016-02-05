@@ -146,17 +146,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             return transform;
         }
 
-        internal override void Receive(Identity id, byte[] packet, int offset, int size, int channel)
+        internal override void Receive(Identity id, byte[] packet, int size, int channel)
         {
-            base.Receive(id, packet, offset, size, channel);
-            EPacket parsedPacket = (EPacket) packet[offset];
+            base.Receive(id, packet,  size, channel);
+            EPacket parsedPacket = (EPacket) packet[0];
             StripPacketByte(ref packet, ref size);
 
             if (parsedPacket.IsUpdate())
             {
                 foreach (Channel ch in Receivers.Where(ch => ch.ID == channel))
                 {
-                    ch.Receive(id, packet, offset, size);
+                    ch.Receive(id, packet, 0, size);
                     return;
                 }
             }
@@ -173,7 +173,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         if (LastPing > 0f)
                         {
                             Type[] argTypes = { Types.SINGLE_TYPE };
-                            object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, argTypes);
+                            object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, argTypes);
                             LastNet = Time.realtimeSinceStartup;
                             OffsetNet = ((float)args[0]) + ((Time.realtimeSinceStartup - LastPing) / 2f);
                             Lag(Time.realtimeSinceStartup - LastPing);
@@ -192,7 +192,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                                 Types.UINT64_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
                             };
 
-                            object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, argTypes);
+                            object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, argTypes);
                             AddPlayer(id, (string)args[1], (ulong)args[2], (Vector3)args[3], (byte)args[4], (int)args[5]);
                             return;
                         }
@@ -206,7 +206,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         Send(ServerID, EPacket.AUTHENTICATE, ticket, ticket.Length, 0);
                         break;
                     case EPacket.DISCONNECTED:
-                        RemovePlayer(packet[offset + 1]);
+                        RemovePlayer(packet[1]);
                         return;
                     case EPacket.REJECTED:
                     case EPacket.KICKED:
@@ -225,7 +225,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                             return;
                         }
 
-                        object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, Types.UINT64_TYPE);
+                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, Types.UINT64_TYPE);
                         ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
                         ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
                         ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);

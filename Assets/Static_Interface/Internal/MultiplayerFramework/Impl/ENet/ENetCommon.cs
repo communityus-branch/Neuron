@@ -116,26 +116,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                     
                     var ident = GetIdentFromPeer(@event.Peer, peers);
 
-                    bool add = false;
-                    QueuedData qData;
-                    if (queue[channel].Count > 0 && (IPIdentity)queue[channel].ElementAt(queue.Count - 1).Ident == ident)
-                    {
-                        qData = queue[channel].ElementAt(0);
-                    }
-                    else
-                    {
-                        qData = new QueuedData {Ident = ident};
-                        add = true;
-                    }
+                    QueuedData qData = new QueuedData {
+                        Ident = ident,
+                        Data = @event.Packet.GetBytes().ToList()
+                    };
 
-                    byte[] data = @event.Packet.GetBytes();
-                    qData.Data.AddRange(data);
+                    LogUtils.Debug("Data size: " + qData.Data.Count);
 
-                    if (add)
-                    {
-                        queue[channel].Add(qData);
-                    }
-
+                    queue[channel].Add(qData);
                     @event.Packet.Dispose();
                     break;
             }

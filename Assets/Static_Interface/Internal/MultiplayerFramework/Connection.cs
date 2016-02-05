@@ -68,7 +68,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             LogUtils.Log("Destroying connection...");
         }
 
-        internal virtual void Receive(Identity source, byte[] packet, int offset, int size, int channel)
+        internal virtual void Receive(Identity source, byte[] packet,int size, int channel)
         {
             //if (!IsConnected) return;
             var type = "<channel data>";
@@ -123,7 +123,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             }
             while (Provider.Read(out user, Buffer, out length, channelId))
             {
-                Receive(user, Buffer, 0, (int)length, channelId);
+                Receive(user, Buffer, (int)length, channelId);
             }
         }
 

@@ -69,11 +69,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             Destroy(this);
         }
 
-        internal override void Receive(Identity source, byte[] packet, int offset, int size, int channel)
+        internal override void Receive(Identity source, byte[] packet, int size, int channel)
         {
-            base.Receive(source, packet, offset, size, channel);
+            base.Receive(source, packet, size, channel);
             var net = ((OffsetNet + Time.realtimeSinceStartup) - LastNet);
-            EPacket parsedPacket = (EPacket)packet[offset];
+            EPacket parsedPacket = (EPacket)packet[0];
             StripPacketByte(ref packet, ref size);
 
             if (parsedPacket.IsUpdate())
@@ -82,7 +82,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 {
                     foreach(Channel ch in Receivers)
                     {
-                       ch.Receive(source, packet, offset, size);
+                       ch.Receive(source, packet, 0, size);
                     }
                 }
                 else
@@ -90,7 +90,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     if (Clients.All(client => client.Identity != source)) return;
                     foreach (Channel ch in Receivers)
                     {
-                        ch.Receive(source, packet, offset, size);
+                        ch.Receive(source, packet, 0, size);
                     }
                 }
                 return;
@@ -153,7 +153,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.SINGLE_TYPE
                     };
                 
-                    var args = ObjectSerializer.GetObjects(source, offset, 0, packet, argTypes);
+                    var args = ObjectSerializer.GetObjects(source, 0, 0, packet, argTypes);
                     var @name = (string) args[0];
                     var group = (ulong) args[1];
                     var version = (string) args[2];
@@ -198,7 +198,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
             else
             {
-                object[] args = ObjectSerializer.GetObjects(source, offset, 0, packet, Types.BYTE_ARRAY_TYPE);
+                object[] args = ObjectSerializer.GetObjects(source, 0, 0, packet, Types.BYTE_ARRAY_TYPE);
                 if (!((ServerMultiplayerProvider)Provider).VerifyTicket(source, (byte[])args[0]))
                 {
                     Reject(source, ERejectionReason.AUTH_VERIFICATION);

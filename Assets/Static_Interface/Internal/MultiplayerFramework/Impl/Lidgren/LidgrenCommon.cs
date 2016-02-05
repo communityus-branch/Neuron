@@ -54,32 +54,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 
                 var ident = GetIdentFromConnection(msg.SenderConnection, peers);
 
-                bool add = false;
-
-                QueuedData qData;
-                if (queue[channel].Count > 0 && (IPIdentity)queue[channel].ElementAt(queue.Count - 1).Ident == ident)
+                QueuedData qData = new QueuedData
                 {
-                    LogUtils.Debug("Already queued");
-                    qData = queue[channel].ElementAt(0);
-                }
-                else
-                {
+                    Ident = ident,
+                    Data = msg.ReadBytes(msg.LengthBytes).ToList()
+                };
 
-                    LogUtils.Debug("Queueing new data");
-                    qData = new QueuedData { Ident = ident };
-                    add = true;
-                }
-
-                LogUtils.Debug("Data size: " + msg.Data.Length);
-
-                byte[] data = msg.ReadBytes(msg.LengthBytes);
-
-                qData.Data.AddRange(data);
-
-                if (add)
-                {
-                    queue[channel].Add(qData);
-                }
+                LogUtils.Debug("Data size: " + qData.Data.Count);
+                queue[channel].Add(qData);
                 host.Recycle(msg);
             }
         }
