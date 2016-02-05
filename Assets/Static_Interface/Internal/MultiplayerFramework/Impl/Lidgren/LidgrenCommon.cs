@@ -73,6 +73,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 LogUtils.Debug("Data size: " + msg.Data.Length);
 
                 byte[] data = msg.ReadBytes(msg.LengthBytes);
+
                 qData.Data.AddRange(data);
 
                 if (add)
@@ -102,14 +103,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         {
             user = null;
             length = 0;
-
-            var ch = Convert.ToByte(channel);
-            if (!queue.ContainsKey(ch) || queue[ch].Count == 0)
+            if (!queue.ContainsKey(channel) || queue[channel].Count == 0)
             {
                 return false;
             }
 
-            QueuedData queuedData = queue[ch].ElementAt(0);
+            QueuedData queuedData = queue[channel].ElementAt(0);
 
             for (int i = 0; i < data.Length; i++)
             {
@@ -126,7 +125,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
             if (queuedData.Data.Count == 0)
             {
-                queue[ch].Remove(queuedData);
+                queue[channel].Remove(queuedData);
             }
 
             return true;
@@ -152,11 +151,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             }
             
             NetConnection p = peers[target.Serialize()];
-            NetOutgoingMessage msg = host.CreateMessage((int) length);
-            foreach (byte b in data)
-            {
-                msg.Write(b);
-            }
+            int iLength = (int)length;
+            NetOutgoingMessage msg = host.CreateMessage(iLength);
+            msg.Write(data, 0, iLength);
+
             var result = p.SendMessage(msg, deliveryMethod, channel);
             if (result != NetSendResult.Dropped && result != NetSendResult.FailedNotConnected)
             {
