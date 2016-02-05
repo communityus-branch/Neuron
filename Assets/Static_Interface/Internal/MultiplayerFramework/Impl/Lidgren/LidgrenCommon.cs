@@ -5,8 +5,6 @@ using Lidgren.Network;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
-using UnityEngine;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 {
@@ -74,7 +72,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
                 LogUtils.Debug("Data size: " + msg.Data.Length);
 
-                byte[] data = msg.Data;
+                byte[] data = msg.ReadBytes(msg.LengthBytes);
                 qData.Data.AddRange(data);
 
                 if (add)
@@ -155,7 +153,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             
             NetConnection p = peers[target.Serialize()];
             NetOutgoingMessage msg = host.CreateMessage((int) length);
-            msg.Data = data;
+            foreach (byte b in data)
+            {
+                msg.Write(b);
+            }
             var result = p.SendMessage(msg, deliveryMethod, channel);
             if (result != NetSendResult.Dropped && result != NetSendResult.FailedNotConnected)
             {

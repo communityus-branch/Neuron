@@ -66,7 +66,7 @@ namespace Static_Interface.ExtensionSandbox
             typeof(Array),
             typeof(MemberInfo),
             typeof(RuntimeHelpers),
-            typeof(UnityEngine.Debug)
+            typeof(UnityEngine.Debug),
 
             typeof(TextWriter),
             typeof(TextReader),

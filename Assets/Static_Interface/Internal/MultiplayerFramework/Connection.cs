@@ -225,6 +225,14 @@ namespace Static_Interface.Internal.MultiplayerFramework
             Channels++;
         }
 
+        protected void StripPacketByte(ref byte[] packet, ref int size)
+        {
+            var list = packet.ToList();
+            list.RemoveAt(0);
+            packet = list.ToArray();
+            size--;
+        }
+
         internal void CloseChannel(Channel ch)
         {
             for (var i = 0; i < Receivers.Count; i++)

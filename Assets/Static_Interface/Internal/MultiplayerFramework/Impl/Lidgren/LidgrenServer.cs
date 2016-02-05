@@ -84,6 +84,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     case NetIncomingMessageType.ConnectionApproval:
                         //Todo: check for password here?
                         msg.SenderConnection.Approve();
+                        _server.Recycle(msg);
                         break;
                 }
             }

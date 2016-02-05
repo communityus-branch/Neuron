@@ -120,7 +120,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         private void OnLevelLoaded()
         {
             int size;
-            ulong group = 0;
+            ulong group = 1;
 
             object[] args = { ClientName, group, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f};
             byte[] packet = ObjectSerializer.GetBytes(0, out size, args);
@@ -150,6 +150,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         {
             base.Receive(id, packet, offset, size, channel);
             EPacket parsedPacket = (EPacket) packet[offset];
+            StripPacketByte(ref packet, ref size);
+
             if (parsedPacket.IsUpdate())
             {
                 foreach (Channel ch in Receivers.Where(ch => ch.ID == channel))
@@ -170,10 +172,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     case EPacket.TIME:
                         if (LastPing > 0f)
                         {
-                            Type[] argTypes = { Types.BYTE_TYPE, Types.SINGLE_TYPE };
+                            Type[] argTypes = { Types.SINGLE_TYPE };
                             object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, argTypes);
                             LastNet = Time.realtimeSinceStartup;
-                            OffsetNet = ((float)args[1]) + ((Time.realtimeSinceStartup - LastPing) / 2f);
+                            OffsetNet = ((float)args[0]) + ((Time.realtimeSinceStartup - LastPing) / 2f);
                             Lag(Time.realtimeSinceStartup - LastPing);
                             LastPing = -1f;
                         }
@@ -186,13 +188,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     case EPacket.CONNECTED:
                         {
                             Type[] argTypes = {
-                                //[0] package id, [1] id, [2] name, [3] group, [4] position, [5], angle, [6] channel
-                                Types.BYTE_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
+                                //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
+                                Types.UINT64_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.BYTE_TYPE, Types.INT32_TYPE
                             };
 
                             object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, argTypes);
-                            var @name = (string) args[2];
-                            AddPlayer(id, @name, (ulong)args[3], (Vector3)args[4], (byte)args[5], (int)args[6]);
+                            AddPlayer(id, (string)args[1], (ulong)args[2], (Vector3)args[3], (byte)args[4], (int)args[5]);
                             return;
                         }
                     case EPacket.VERIFY:
@@ -225,7 +226,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         }
 
                         object[] args = ObjectSerializer.GetObjects(id, offset, 0, packet, Types.UINT64_TYPE);
-                        ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[1]);    
+                        ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
                         ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
                         ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);
                         IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(_currentIp, _currentPort);

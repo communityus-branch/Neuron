@@ -73,16 +73,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
         {
             base.Receive(source, packet, offset, size, channel);
             var net = ((OffsetNet + Time.realtimeSinceStartup) - LastNet);
-            EPacket parsedPacket;
-            try
-            {
-                parsedPacket = (EPacket) packet[offset];
-            }
-            catch (Exception e)
-            {
-                e.Log("Couldn't parse packet with byte value: " + packet[offset]);
-                return;
-            }
+            EPacket parsedPacket = (EPacket)packet[offset];
+            StripPacketByte(ref packet, ref size);
+
             if (parsedPacket.IsUpdate())
             {
                 if (source == ServerID)
@@ -109,13 +102,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 case EPacket.WORKSHOP:
                 {
                     //workshop list {none for now}
-                    List<ulong> list = new List<ulong>();
+                    List<ulong> workshoplist = new List<ulong>();
 
-                    byte[] args = new byte[1 + (list.Count * 8)];
-                    args[0] = (byte)list.Count;
-                    for (byte i = 0; i < list.Count; i = (byte)(i + 1))
+                    byte[] args = new byte[1 + (workshoplist.Count * 8)];
+                    args[0] = (byte)workshoplist.Count;
+                    for (byte i = 0; i < workshoplist.Count; i = (byte)(i + 1))
                     {
-                        BitConverter.GetBytes(list[i]).CopyTo(args, (1 + (i * 8)));
+                        BitConverter.GetBytes(workshoplist[i]).CopyTo(args, (1 + (i * 8)));
                     }
                     Send(source, EPacket.WORKSHOP, args, args.Length, 0);
                     return;
@@ -154,16 +147,20 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         return;
                     }
 
-                    Type[] argTypes = {
-                        //[0] package, [1] name, [2] group, [3] version, [4] ping
-                        Types.BYTE_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.SINGLE_TYPE                    };
-
+                    Type[] argTypes =
+                    {
+                        // [0] name, [1] group, [2] version, [3] ping
+                        Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.SINGLE_TYPE
+                    };
+                
                     var args = ObjectSerializer.GetObjects(source, offset, 0, packet, argTypes);
-                    var name = (string) args[1];
-                    var group = (ulong) args[2];
-                    var ping = (float) args[4];
-					LogUtils.Log("Player connecting: " + name);
-                    if (((string)args[3]) != GameInfo.VERSION)
+                    var @name = (string) args[0];
+                    var group = (ulong) args[1];
+                    var version = (string) args[2];
+                    var ping = (float) args[3];
+
+					LogUtils.Log("Player connecting: " + @name);
+                    if (version != GameInfo.VERSION)
                     {
                         Reject(source, ERejectionReason.WRONG_VERSION);
                         return;
@@ -175,7 +172,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         return;
                     }
 
-                    _pendingPlayers.Add(new PendingUser(source, name, group, ping));
+                    _pendingPlayers.Add(new PendingUser(source, @name, group, ping));
                     Send(source, EPacket.VERIFY, new byte[] { }, 0, 0);
                     return;
                 }
@@ -201,9 +198,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
             else
             {
-                object[] args = ObjectSerializer.GetObjects(source, offset, 0, packet, Types.BYTE_TYPE,
-                    Types.BYTE_ARRAY_TYPE);
-                if (!((ServerMultiplayerProvider)Provider).VerifyTicket(source, (byte[])args[1]))
+                object[] args = ObjectSerializer.GetObjects(source, offset, 0, packet, Types.BYTE_ARRAY_TYPE);
+                if (!((ServerMultiplayerProvider)Provider).VerifyTicket(source, (byte[])args[0]))
                 {
                     Reject(source, ERejectionReason.AUTH_VERIFICATION);
                 }

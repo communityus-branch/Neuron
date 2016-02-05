@@ -79,6 +79,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     _listen = false;
                 }
                 LogUtils.Debug("New status: " + status);
+                _client.Recycle(msg);
             }
         }
 
