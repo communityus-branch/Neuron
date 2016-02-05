@@ -18,8 +18,6 @@ namespace Static_Interface.Internal.MultiplayerFramework
         public const int PENDING_TIMEOUT = 30;
         public const float UPDATE_TIME = 0.15f;
 
-        private GameObject _zeroChannel;
-
         public static bool IsServer()
         {
             return CurrentConnection.Provider is ServerMultiplayerProvider;
@@ -64,15 +62,9 @@ namespace Static_Interface.Internal.MultiplayerFramework
             DontDestroyOnLoad(this);
         }
 
-        protected void DestroyPseudoChannel()
-        {
-            Destroy(_zeroChannel);
-        }
-
         protected virtual void OnDestroy()
         {
             if (CurrentConnection == this) CurrentConnection = null;
-            DestroyPseudoChannel();
             LogUtils.Log("Destroying connection...");
         }
 

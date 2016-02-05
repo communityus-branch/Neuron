@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using Lidgren.Network;
 using Static_Interface.API.PlayerFramework;
@@ -15,7 +14,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         private NetServer _server;
         private bool _listen;
         private readonly Dictionary<int, List<QueuedData>> _queue = new Dictionary<int, List<QueuedData>>();
-        private readonly Dictionary<IPIdentity, NetConnection> _peers = new Dictionary<IPIdentity, NetConnection>();
+        private readonly Dictionary<ulong, NetConnection> _peers = new Dictionary<ulong, NetConnection>();
         public LidgrenServer(Connection connection) : base(connection)
         {
         }

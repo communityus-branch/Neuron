@@ -24,6 +24,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                 return false;
             }
 
+
             QueuedData queuedData = queue[ch].ElementAt(0);
 
             for (int i = 0; i < data.Length; i++)
@@ -47,7 +48,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             return true;
         }
 
-        public static bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel, Dictionary<IPIdentity, Peer> peers)
+        public static bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel, Dictionary<ulong, Peer> peers)
         {
             PacketFlags flags = PacketFlags.None;
             switch (method)
@@ -66,7 +67,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             }
             byte ch = Convert.ToByte(channel);
             IPIdentity ident = (IPIdentity) target;
-            Peer peer = peers[ident];
+            Peer peer = peers[ident.Serialize()];
             LogUtils.Debug("State: " + peer.State);
             peer.Send(ch, data, 0, Convert.ToInt32(length), flags);
             return true;
@@ -81,7 +82,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             peers.Remove(ident);
         }
 
-        public static void Listen(Host host, Connection connection, Dictionary<byte, List<QueuedData>> queue, Dictionary<IPIdentity, Peer> peers)
+        public static void Listen(Host host, Connection connection, Dictionary<byte, List<QueuedData>> queue, Dictionary<ulong, Peer> peers)
         {
             Event @event;
             host.Service(100, out @event);
@@ -92,7 +93,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             {
                 case EventType.Connect:
                     IPIdentity newIdent = new IPIdentity(@event.Peer.GetRemoteAddress().Address);
-                    peers.Add(newIdent, @event.Peer);
+                    peers.Add(newIdent.Serialize(), @event.Peer);
                     break;
 
                 case EventType.Disconnect:
@@ -106,8 +107,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                     {
                         queue.Add(channel, new List<QueuedData>());
                     }
-
-
+                    
                     var ident = GetIdentFromPeer(@event.Peer, peers);
 
                     bool add = false;
@@ -136,21 +136,20 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             Thread.Sleep(10);
         }
 
-        public static IPIdentity GetIdentFromPeer(Peer peer, Dictionary<IPIdentity, Peer> peers)
+        public static IPIdentity GetIdentFromPeer(Peer peer, Dictionary<ulong, Peer> peers)
         {
-            foreach (IPIdentity ident in peers.Keys)
+            foreach (ulong ident in peers.Keys)
             {
-                if (peers[ident].GetHashCode() == peer.GetHashCode())
+                if (peers[ident].GetRemoteAddress().Address.GetAddressBytes()== peer.GetRemoteAddress().Address.GetAddressBytes())
                 {
-                    return ident;
+                    return new IPIdentity(ident);
                 }
             }
 
 
-            throw new ArgumentException("Identity not found for requested peer(?)");
-            //ENetIdentity newIdent = new ENetIdentity(peer);
-            //_peers.Add(newIdent, peer);
-            //return newIdent;
+            IPIdentity newIdent = new IPIdentity(peer.GetRemoteAddress().Address);
+            peers.Add(newIdent.Serialize(), peer);
+            return newIdent;
         }
     }
 }

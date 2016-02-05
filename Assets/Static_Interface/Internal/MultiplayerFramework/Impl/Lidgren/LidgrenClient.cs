@@ -14,7 +14,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
     public class LidgrenClient : ClientMultiplayerProvider
     {
         private readonly Dictionary<int, List<QueuedData>> _queue = new Dictionary<int, List<QueuedData>>();
-        private readonly Dictionary<IPIdentity, NetConnection> _peers = new Dictionary<IPIdentity, NetConnection>();
+        private readonly Dictionary<ulong, NetConnection> _peers = new Dictionary<ulong, NetConnection>();
         private static readonly string RandName = "Player" + new Random().Next(MAX_PLAYERS);
         private NetClient _client;
         private IPIdentity _ident;
@@ -41,14 +41,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             _listen = true;
             LogUtils.Debug("Adding server connection");
             var servIdent = new IPIdentity(0);
-            _peers.Add(servIdent, conn);
+            _peers.Add(servIdent.Serialize(), conn);
         }
 
         public override void Update()
         {
             base.Update();
             if (!_listen) return;
-            LogUtils.Debug("Lidgrenupdate");
             List<NetIncomingMessage> msgs;
             LidgrenCommon.Listen(_client, Connection, _queue, _peers, out msgs);
 
@@ -60,6 +59,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 {
                     ServerInfo info = new ServerInfo()
                     {
+                        //Todo
                         ServerID = new IPIdentity(0),
                         MaxPlayers = MAX_PLAYERS,
                         Name = "A Lidgren Server"

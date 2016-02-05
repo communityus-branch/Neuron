@@ -12,7 +12,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl
 
         public IPIdentity(IPAddress address)
         {
-            ID = BitConverter.ToUInt64(address.GetAddressBytes(), 0);
+            ID = BitConverter.ToUInt32(address.GetAddressBytes(), 0);
         }
 
         public IPIdentity(ulong id)

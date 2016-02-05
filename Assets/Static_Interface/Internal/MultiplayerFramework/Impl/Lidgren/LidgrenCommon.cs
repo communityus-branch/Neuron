@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using ENet;
 using Lidgren.Network;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework.Server;
-using UnityEngine.Networking;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 {
     public static class LidgrenCommon
     {
-        public static void CloseConnection(Identity user, Dictionary<IPIdentity, NetConnection> peers)
+        public static void CloseConnection(Identity user, Dictionary<ulong, NetConnection> peers)
         {
             IPIdentity ident = (IPIdentity)user;
-            NetConnection p = peers[ident];
+            NetConnection p = peers[ident.Serialize()];
             p.Disconnect(nameof(CloseConnection));
-            peers.Remove(ident);
+            peers.Remove(ident.Serialize());
         }
 
-        public static void Listen(NetPeer host, Connection connection, Dictionary<int, List<QueuedData>> queue, Dictionary<IPIdentity, NetConnection> peers, out List<NetIncomingMessage> skippedMsgs)
+        public static void Listen(NetPeer host, Connection connection, Dictionary<int, List<QueuedData>> queue, Dictionary<ulong, NetConnection> peers, out List<NetIncomingMessage> skippedMsgs)
         {
             skippedMsgs = new List<NetIncomingMessage>();
             NetIncomingMessage msg;
@@ -49,10 +45,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
                 LogUtils.Debug("SequenceChannel: " + msg.SequenceChannel);
                 var channel = msg.SequenceChannel;
-
+                if (!queue.ContainsKey(channel))
+                {
+                    queue.Add(channel, new List<QueuedData>());
+                }
+                
                 var ident = GetIdentFromConnection(msg.SenderConnection, peers);
 
                 bool add = false;
+
                 QueuedData qData;
                 if (queue[channel].Count > 0 && (IPIdentity)queue[channel].ElementAt(queue.Count - 1).Ident == ident)
                 {
@@ -89,18 +90,18 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             }
         }
 
-        public static IPIdentity GetIdentFromConnection(NetConnection senderConnection, Dictionary<IPIdentity, NetConnection> peers)
+        public static IPIdentity GetIdentFromConnection(NetConnection senderConnection, Dictionary<ulong, NetConnection> peers)
         {
-            foreach (IPIdentity ident in peers.Keys)
+            foreach (ulong ident in peers.Keys)
             {
                 if (Equals(peers[ident].RemoteEndPoint, senderConnection.RemoteEndPoint))
                 {
-                    return ident;
+                    return new IPIdentity(ident);
                 }
             }
 
             IPIdentity newIdent = new IPIdentity(senderConnection.RemoteEndPoint.Address);
-            peers.Add(newIdent, senderConnection);
+            peers.Add(newIdent.Serialize(), senderConnection);
             return newIdent;
         }
 
@@ -138,7 +139,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             return true;
         }
 
-        public static bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel, NetPeer host, Dictionary<IPIdentity, NetConnection> peers)
+        public static bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel, NetPeer host, Dictionary<ulong, NetConnection> peers)
         {
             NetDeliveryMethod deliveryMethod = NetDeliveryMethod.Unknown;
             switch (method)
@@ -156,7 +157,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     deliveryMethod = NetDeliveryMethod.Unreliable;
                     break;
             }
-            NetConnection p = peers[(IPIdentity)target];
+
+            NetConnection p = peers[target.Serialize()];
             NetOutgoingMessage msg = host.CreateMessage((int) length);
             msg.Data = data;
             var result = p.SendMessage(msg, deliveryMethod, channel);
