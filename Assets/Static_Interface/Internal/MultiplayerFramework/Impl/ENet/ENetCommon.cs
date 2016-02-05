@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using ENet;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Server;
@@ -70,6 +71,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             Peer peer = peers[ident.Serialize()];
             LogUtils.Debug("State: " + peer.State);
             peer.Send(ch, data, 0, Convert.ToInt32(length), flags);
+
+            if (channel == 0 && (((EPacket)data[0]) == EPacket.REJECTED || ((EPacket)data[0]) == EPacket.KICKED))
+            {
+                CloseConnection(target, peers);
+            }
             return true;
         }
 

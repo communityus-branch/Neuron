@@ -73,7 +73,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
                 if (status == NetConnectionStatus.Disconnected)
                 {
-                    if (((ClientConnection)Connection).OnPingFailed()) continue;
+                    if (((ClientConnection)Connection).OnConnectionFailed()) continue;
                     LogUtils.Debug("Couldn't connect to host");
                     LevelManager.Instance.GoToMainMenu();
                     _listen = false;

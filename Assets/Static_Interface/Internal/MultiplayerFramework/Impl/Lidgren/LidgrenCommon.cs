@@ -5,6 +5,7 @@ using Lidgren.Network;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 {
@@ -157,7 +158,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     deliveryMethod = NetDeliveryMethod.Unreliable;
                     break;
             }
-
+            
             NetConnection p = peers[target.Serialize()];
             NetOutgoingMessage msg = host.CreateMessage((int) length);
             msg.Data = data;
@@ -165,6 +166,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             if (result != NetSendResult.Dropped && result != NetSendResult.FailedNotConnected)
             {
                 return true;
+            }
+
+            if (channel == 0 && (((EPacket)data[0]) == EPacket.REJECTED || ((EPacket)data[0]) == EPacket.KICKED))
+            {
+                CloseConnection(target, peers);
             }
 
             LogUtils.LogError("Failed to deliver message: " + result);

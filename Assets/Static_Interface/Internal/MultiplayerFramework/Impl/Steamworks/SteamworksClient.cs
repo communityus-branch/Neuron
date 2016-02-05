@@ -139,7 +139,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
         private void OnPingFailedToRespond()
         {
             LogUtils.LogError("Connection failed");
-            if (!((ClientConnection) Connection).OnPingFailed())
+            if (!((ClientConnection) Connection).OnConnectionFailed())
             {
                 LogUtils.LogError("Couldn't connect to host");
                 CleanupServerQuery();

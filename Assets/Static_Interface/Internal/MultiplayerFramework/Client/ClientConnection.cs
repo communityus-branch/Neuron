@@ -1,4 +1,5 @@
 ﻿using System;
+using System;
 using System.Linq;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetworkFramework;
@@ -233,12 +234,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
         }
 
-        public bool OnPingFailed()
+        public bool OnConnectionFailed()
         {
             if (_serverQueryAttempts >= CONNECTION_TRIES)
             {
                 return false;
             }
+            IsConnected = false;
             _serverQueryAttempts++;
             LogUtils.Log("Retrying #" + _serverQueryAttempts);
             AttemptConnect(_currentIp, _currentPort, CurrentPassword, false);

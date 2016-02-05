@@ -170,7 +170,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public override bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel)
         {
-            return SteamGameServerNetworking.SendP2PPacket((CSteamID)(SteamIdentity)target, data, (uint)length, (EP2PSend)method, channel);
+            bool result = SteamGameServerNetworking.SendP2PPacket((CSteamID)(SteamIdentity)target, data, (uint)length, (EP2PSend)method, channel);
+            if (channel == 0 && ((EPacket)data[0]) == EPacket.REJECTED)
+            {
+                EndAuthSession(target);
+            }
+            if (channel == 0 && ((EPacket)data[0]) == EPacket.KICKED)
+            {
+                CloseConnection(target);
+            }
+            return result;
         }
 
         public override void CloseConnection(Identity user)

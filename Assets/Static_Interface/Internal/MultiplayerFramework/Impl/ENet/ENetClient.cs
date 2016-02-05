@@ -70,7 +70,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             if (timeout)
             {
                 LogUtils.LogError("Timeout with state: " + _serverPeer.State);
-                if (((ClientConnection)Connection).OnPingFailed()) return;
+                if (((ClientConnection)Connection).OnConnectionFailed()) return;
                 LogUtils.Debug("Couldn't connect to host");
                 LevelManager.Instance.GoToMainMenu();
                 return;

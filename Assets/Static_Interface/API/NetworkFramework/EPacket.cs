@@ -22,6 +22,7 @@ namespace Static_Interface.API.NetworkFramework
         [EPacketAttr(false, false, false)] AUTHENTICATE,
         [EPacketAttr(false, false, false)] REJECTED,
         [EPacketAttr(false, false, false)] ACCEPTED,
+        [EPacketAttr(false, false, false)] KICKED,
         [EPacketAttr(false, false, false)] CONNECTED,
         [EPacketAttr(false, false, false)] DISCONNECTED,
         [EPacketAttr(false, true, false)] TICK,
