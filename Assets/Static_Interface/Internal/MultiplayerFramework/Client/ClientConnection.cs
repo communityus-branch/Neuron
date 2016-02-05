@@ -36,14 +36,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 LogUtils.Log("Timeout occurred");
                 //Disconnect(); //Timeout
             }
-            else if (((Time.realtimeSinceStartup - LastCheck) > CHECKRATE) && (((Time.realtimeSinceStartup - LastPing) > 1f) || (LastPing < 0f)))
+            else if (((Time.realtimeSinceStartup - LastCheck) > CHECKRATE) && (((Time.realtimeSinceStartup - LastPing) > CHECKRATE) || (LastPing <= 0f)))
             {
                 LastCheck = Time.realtimeSinceStartup;
                 LastPing = Time.realtimeSinceStartup;
                 Send(ServerID, EPacket.TICK, new byte[] {}, 0, 0);
             }
-
-            Send(ServerID, EPacket.TICK, new byte[] {}, 0, 0);
         }
 
         public override void Disconnect(string reason = null)
@@ -54,6 +52,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public override void Dispose()
         {
+            LogUtils.Debug(nameof(Dispose));
             Provider.Dispose();
             Provider.CloseConnection(ServerID);
             foreach (User user in Clients)
@@ -65,7 +64,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             IsConnected = false;
 
             //Todo: OnDisconnectedFromServer()
-
 
             ((ClientMultiplayerProvider)Provider).SetStatus("Menu");
             ((ClientMultiplayerProvider)Provider).SetConnectInfo(null, 0);
@@ -107,11 +105,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 ResetChannels();
                 CurrentServerInfo = info;
                 ServerID = info.ServerID;
+                IsConnected = true;
                 _pings = new float[4];
                 Lag((info.Ping)/1000f);
                 LastNet = Time.realtimeSinceStartup;
                 OffsetNet = 0f;
-                IsConnected = true;
+
                 Send(ServerID, EPacket.WORKSHOP, new byte[] {}, 0, 0);
                 //Todo: Load Level specified by server
                 LevelManager.Instance.LoadLevel("DefaultMap");

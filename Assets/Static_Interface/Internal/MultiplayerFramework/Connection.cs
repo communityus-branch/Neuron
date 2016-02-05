@@ -12,7 +12,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 {
     public abstract class Connection : MonoBehaviour
     {
-        public const float CHECKRATE = 1f;
+        public const float CHECKRATE = 2f;
         public const int CLIENT_TIMEOUT = 30;
         public const int SERVER_TIMEOUT = 30;
         public const int PENDING_TIMEOUT = 30;
@@ -132,8 +132,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         protected void FixedUpdate()
         {
-            if (!IsConnected) return;
-            Provider.Update();
+            Provider?.Update();
         }
 
         internal abstract void Listen();

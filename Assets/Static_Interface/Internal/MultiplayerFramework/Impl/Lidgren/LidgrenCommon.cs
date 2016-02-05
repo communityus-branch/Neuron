@@ -93,13 +93,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         {
             foreach (IPIdentity ident in peers.Keys)
             {
-                if (peers[ident].GetHashCode() == senderConnection.GetHashCode())
+                if (Equals(peers[ident].RemoteEndPoint, senderConnection.RemoteEndPoint))
                 {
                     return ident;
                 }
             }
 
-            throw new ArgumentException("Identity not found for requested peer(?)");
+            IPIdentity newIdent = new IPIdentity(senderConnection.RemoteEndPoint.Address);
+            peers.Add(newIdent, senderConnection);
+            return newIdent;
         }
 
         public static bool Read(out Identity user, byte[] data, out ulong length, int channel, Dictionary<int, List<QueuedData>> queue)

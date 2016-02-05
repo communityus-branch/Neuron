@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using ENet;
 using Lidgren.Network;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetworkFramework;
@@ -50,6 +48,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         {
             base.Update();
             if (!_listen) return;
+            LogUtils.Debug("Lidgrenupdate");
             List<NetIncomingMessage> msgs;
             LidgrenCommon.Listen(_client, Connection, _queue, _peers, out msgs);
 
