@@ -23,7 +23,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         private ushort _port;
         public LidgrenClient(Connection connection) : base(connection)
         {
-            SupportsTimeouts = true;
+            SupportsPing = true;
         }
 
         ~LidgrenClient()

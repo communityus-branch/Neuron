@@ -21,7 +21,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         private Thread _thread;
         public ENetServer(Connection connection) : base(connection)
         {
-            SupportsTimeouts = true;
+            SupportsPing = true;
         }
 
         ~ENetServer()
