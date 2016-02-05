@@ -114,7 +114,6 @@ namespace Static_Interface.Internal.MultiplayerFramework
             {
                 Listen(ch.ID);
             }
-            Provider.Update();
         }
 
         protected void Listen(int channelId)
@@ -129,6 +128,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
             {
                 Receive(user, Buffer, 0, (int)length, channelId);
             }
+        }
+
+        protected void FixedUpdate()
+        {
+            if (!IsConnected) return;
+            Provider.Update();
         }
 
         internal abstract void Listen();

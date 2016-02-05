@@ -76,6 +76,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
         public override void Update()
         {
+            base.Update();
             if (!_listen) return;
             List<NetIncomingMessage> msgs;
             LidgrenCommon.Listen(_server, Connection, _queue, _peers, out msgs);
