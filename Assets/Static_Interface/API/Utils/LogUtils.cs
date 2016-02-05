@@ -31,7 +31,6 @@ namespace Static_Interface.API.Utils
                 if (UnityEngine.Debug.isDebugBuild)
                 {
                     UnityEngine.Debug.Log(msg);
-                    return;
                 }
 
                 if (Console.Instance != null)
@@ -49,12 +48,27 @@ namespace Static_Interface.API.Utils
                 if (UnityEngine.Debug.isDebugBuild)
                 {
                     UnityEngine.Debug.LogError(msg);
-                    return;
                 }
 
                 if (Console.Instance != null)
                 {
                     Console.Instance.Print("[Error] " + msg);
+                }
+            });
+        }
+
+        public static void LogWarning(string msg)
+        {
+            ThreadPool.RunOnMainThread(delegate
+            {
+                if (UnityEngine.Debug.isDebugBuild)
+                {
+                    UnityEngine.Debug.LogWarning(msg);
+                }
+
+                if (Console.Instance != null)
+                {
+                    Console.Instance.Print("[Warning] " + msg);
                 }
             });
         }

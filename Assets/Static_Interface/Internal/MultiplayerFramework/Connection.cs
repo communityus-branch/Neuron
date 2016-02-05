@@ -71,7 +71,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
         internal virtual void Receive(Identity source, byte[] packet, int offset, int size, int channel)
         {
             //if (!IsConnected) return;
-            LogUtils.Debug("Received packet, channel: " + channel + ", size: " + packet.Length);
+            var type = "<channel data>";
+            if (channel == 0)
+            {
+                type = ((EPacket) packet[0]).ToString();
+            }
+            LogUtils.Debug("Received " + type + " packet, channel: " + channel + ", size: " + size);
         }
 
         private static List<Channel> _receivers = new List<Channel>();

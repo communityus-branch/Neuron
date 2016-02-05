@@ -73,9 +73,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
         {
             base.Receive(source, packet, offset, size, channel);
             var net = ((OffsetNet + Time.realtimeSinceStartup) - LastNet);
-
-            EPacket parsedPacket = (EPacket)packet[offset];
-
+            EPacket parsedPacket;
+            try
+            {
+                parsedPacket = (EPacket) packet[offset];
+            }
+            catch (Exception e)
+            {
+                e.Log("Couldn't parse packet with byte value: " + packet[offset]);
+                return;
+            }
             if (parsedPacket.IsUpdate())
             {
                 if (source == ServerID)
@@ -154,7 +161,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     var args = ObjectSerializer.GetObjects(source, offset, 0, packet, argTypes);
                     var name = (string) args[1];
                     var group = (ulong) args[2];
-                    var ping = (float) args[3];
+                    var ping = (float) args[4];
 					LogUtils.Log("Player connecting: " + name);
                     if (((string)args[3]) != GameInfo.VERSION)
                     {
@@ -205,14 +212,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public void Reject(Identity user, ERejectionReason reason)
         {
+            LogUtils.Log("Rejecting user " + user.Serialize() + ", reason: " + reason);
             foreach (var player in _pendingPlayers.Where(player => player.Identity == user))
             {
                 PendingPlayers.Remove(player);
             }
 
-            ((ServerMultiplayerProvider) Provider).EndAuthSession(user);
-
             byte[] data = {(byte)reason};
+
             Send(user, EPacket.REJECTED, data, data.Length, 0);
         }
 
@@ -222,7 +229,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             RemovePlayer(index);
             byte[] packet = { index };
             AnnounceToAll(EPacket.DISCONNECTED, packet, packet.Length, 0);
-            Provider.CloseConnection(user);
+            Send(user, EPacket.KICKED, new byte[0], 0);
         }
 
         public byte GetUserIndex(Identity user)

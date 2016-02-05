@@ -6,6 +6,7 @@ using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
+using UnityEngine;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 {
@@ -25,13 +26,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             NetIncomingMessage msg;
             while ((msg = host.ReadMessage()) != null)
             {
-                LogUtils.Debug("Received: " + msg.MessageType);
+                LogUtils.Debug("NetworkEvent: " + msg.MessageType);
                 switch (msg.MessageType)
                 {
                     case NetIncomingMessageType.VerboseDebugMessage:
-                    case NetIncomingMessageType.WarningMessage:
                     case NetIncomingMessageType.DebugMessage:
                         LogUtils.Debug(msg.ReadString());
+                        continue;
+                    case NetIncomingMessageType.WarningMessage:
+                        LogUtils.LogWarning(msg.ReadString());
                         continue;
                     case NetIncomingMessageType.ErrorMessage:
                         LogUtils.LogError(msg.ReadString());
@@ -71,15 +74,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
                 LogUtils.Debug("Data size: " + msg.Data.Length);
 
-                try
-                {
-                    EPacket packet = (EPacket)msg.Data[0];
-                    LogUtils.Debug("Received packet: " + packet);
-                }
-                catch (Exception e)
-                {
-                    e.Log();
-                }
                 byte[] data = msg.Data;
                 qData.Data.AddRange(data);
 

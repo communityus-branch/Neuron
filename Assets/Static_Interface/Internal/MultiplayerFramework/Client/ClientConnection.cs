@@ -33,7 +33,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             if (((Time.realtimeSinceStartup - LastNet) > CLIENT_TIMEOUT))
             {
                 LogUtils.Log("Timeout occurred");
-                //Disconnect(); //Timeout
+                Disconnect(); //Timeout
             }
             else if (((Time.realtimeSinceStartup - LastCheck) > CHECKRATE) && (((Time.realtimeSinceStartup - LastPing) > CHECKRATE) || (LastPing <= 0f)))
             {
@@ -206,6 +206,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         break;
                     case EPacket.DISCONNECTED:
                         RemovePlayer(packet[offset + 1]);
+                        return;
+                    case EPacket.REJECTED:
+                    case EPacket.KICKED:
+                        Disconnect();
                         return;
                     default:
                     {
