@@ -109,7 +109,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 457702}
   m_Layer: 0
-  m_Name: Weather(Clone)
+  m_Name: Weather
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
