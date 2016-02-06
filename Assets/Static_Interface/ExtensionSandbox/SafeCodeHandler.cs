@@ -115,13 +115,18 @@ namespace Static_Interface.ExtensionSandbox
             typeof(AddComponentMenu),
             typeof(ContextMenu),
             typeof(ExecuteInEditMode),
-            typeof(RPC)
+            typeof(RPC),
+            typeof(Timer),
+            typeof(System.Timers.Timer),
+            typeof(AsyncOperation),
+            typeof(System.ComponentModel.AsyncOperation)
         };
 
         private static readonly Dictionary<Type, List<string>> DisallowedMethods = new Dictionary<Type, List<string>>
         {
             {typeof(Object), new List<string> { "Destroy", "DestroyImmediate", "DestroyObject", "DontDestroyOnLoad" }},
-            {typeof(GameObject), new List<string> { "AddComponent" } }
+            {typeof(GameObject), new List<string> { "AddComponent" } },
+            {typeof(Component), new List<string> {"set_enabled"} } //dont allow disabling critical components like ExtensionManager
         };
 
         private static readonly Dictionary<Type, List<string>> AllowedMethods = new Dictionary<Type, List<string>>

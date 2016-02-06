@@ -16,7 +16,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 {
     public class ServerConnection : Connection
     {
-        public string Map { get; } = "DefaultMap";
+        public string Map { get; } = "TestMap";
 
         public int MaxPlayers = 8;
 

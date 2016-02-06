@@ -43,7 +43,7 @@ namespace Static_Interface.API.ExtensionFramework
         internal static void Init(string extensionsdir)
         {
             if (_parentObject != null) return;
-            _parentObject = new GameObject();
+            _parentObject = new GameObject("ExtensionManager");
             var mgr = _parentObject.AddComponent<ExtensionManager>();
             mgr.ExtensionsDir = extensionsdir;
             DontDestroyOnLoad(_parentObject);

@@ -1,5 +1,6 @@
 ﻿using System;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.API.WeatherFramework
@@ -9,13 +10,11 @@ namespace Static_Interface.API.WeatherFramework
         private Weather _currentWeather;
         private UniStormWeatherSystem_C _weatherSystem;
 
-        public GameObject UniStormSystemEditor;
-
         //Todo: WeatherChangeEvent
 
         protected void Awake()
         {
-            _weatherSystem = UniStormSystemEditor.GetComponent<UniStormWeatherSystem_C>();
+            _weatherSystem = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
         }
 
         protected void Update()
@@ -40,7 +39,6 @@ namespace Static_Interface.API.WeatherFramework
         private void ChangeWeatherTo(Weather weather)
         {
             _weatherSystem.weatherForecaster = (int)weather;
-            //_weatherSystem.InstantWeather();
             LogUtils.Log("Weather changed to: " + weather);
             ChangeWeatherInstant(); //todo: remmove this and make it smooth
         }

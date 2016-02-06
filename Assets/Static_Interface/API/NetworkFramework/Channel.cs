@@ -12,7 +12,8 @@ namespace Static_Interface.API.NetworkFramework
 {
     public class Channel : MonoBehaviour
     {
-        public Connection Connection { get; set; }
+        [HideInInspector]
+        public Connection Connection = Connection.CurrentConnection;
         public int ID { get; internal set; }
         public bool IsOwner { get; internal set; }
         public User Owner { get; internal set; }

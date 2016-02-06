@@ -81,6 +81,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         private static List<Channel> _receivers = new List<Channel>();
         public static ICollection<Channel> Receivers => _receivers?.AsReadOnly();
+        public bool IsConnecting { get; set; }
 
         protected void AddReceiver(Channel ch)
         {

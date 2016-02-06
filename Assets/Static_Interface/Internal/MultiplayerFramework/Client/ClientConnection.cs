@@ -1,6 +1,7 @@
 ﻿using System;
 using System;
 using System.Linq;
+using Plugins.ConsoleUI.FrontEnd.UnityGUI;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
@@ -9,7 +10,9 @@ using Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Types = Static_Interface.Internal.Objects.Types;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Client
@@ -46,6 +49,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public override void Disconnect(string reason = null)
         {
+            IsConnecting = false;
             LevelManager.Instance.GoToMainMenu();
             Dispose();
         }
@@ -74,6 +78,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public void AttemptConnect(string ip, ushort port, string password, bool reset = true)
         {
+            IsConnecting = true;
             Provider = new LidgrenClient(this);
             ClientID = ((ClientMultiplayerProvider)Provider).GetUserID();
             ClientName = ((ClientMultiplayerProvider)Provider).GetClientName();
@@ -115,14 +120,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
                 Send(ServerID, EPacket.WORKSHOP, new byte[] {}, 0, 0);
                 //Todo: Load Level specified by server
-                LevelManager.Instance.LoadLevel("DefaultMap");
+                LevelManager.Instance.LoadLevel(info.Map);
             });
         }
 
         protected override void OnLevelWasLoaded(int level)
         {
             base.OnLevelWasLoaded(level);
-            LogUtils.Debug("LEVEL LOADED -> CONNECTING");
             int size;
             ulong group = 1; //Todo
             object[] args = { ClientName, group, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f};
@@ -144,15 +148,77 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
             else
             {
-                Player.MainPlayer = playerTransform.GetComponent<Player>();
                 SetupMainPlayer(playerTransform);
             }
             return playerTransform;
         }
 
-        private void SetupMainPlayer(Transform playerTransform)
+        public static void SetupMainPlayer(Transform playerTransform)
         {
-            //Todo
+            if (Player.MainPlayer != null)
+            {
+                var comp = Player.MainPlayer.Model.GetComponent<AudioListener>();
+                if (comp != null) DestroyImmediate(comp);
+            }
+            LogUtils.Debug("Setting up main player");
+            Player.MainPlayer = playerTransform.GetComponent<Player>();
+            if (Camera.current != null && Camera.current.enabled)
+            {
+                Camera.current.enabled = false;
+            }
+
+            playerTransform.gameObject.AddComponent<MouseLook>();
+
+            LogUtils.Debug("Setting console character");
+            GameObject.Find("Console").GetComponent<ConsoleGUI>().Character = playerTransform.gameObject;
+
+            if(playerTransform.gameObject.GetComponent<AudioListener>() == null)
+                playerTransform.gameObject.AddComponent<AudioListener>();
+
+            LogUtils.Debug("Setting up Camera");
+            var cam = playerTransform.FindChild("MainCamera");
+            var sunshafts = cam.gameObject.AddComponent<SunShafts>();
+            cam.tag = "MainCamera";
+            cam.GetComponent<Camera>().enabled = true;
+            LogUtils.Debug("Loading WeatherParticles");
+            var fallLeaves = ((GameObject)Resources.Load("ParticleEffects/FallLeaves")).GetComponent<ParticleSystem>();
+            var lightningBugs = ((GameObject)Resources.Load("ParticleEffects/LightningBugs")).GetComponent<ParticleSystem>();
+            var lightningPosition = ((GameObject)Resources.Load("ParticleEffects/LightningPosition")).transform;
+            var rain = ((GameObject)Resources.Load("ParticleEffects/Rain")).GetComponent<ParticleSystem>(); 
+            var rainMist = ((GameObject)Resources.Load("ParticleEffects/RainMist")).GetComponent<ParticleSystem>();
+            var rainStreaks = (GameObject) Resources.Load("ParticleEffects/RainStreaks");
+            var snow = ((GameObject)Resources.Load("ParticleEffects/Snow")).GetComponent<ParticleSystem>(); 
+            var snowDust = ((GameObject)Resources.Load("ParticleEffects/SnowDust")).GetComponent<ParticleSystem>();
+
+            LogUtils.Debug("Loading WeatherGetComponents");
+            var weatherController = cam.gameObject.AddComponent<GetUniStormComponents_C>();
+            weatherController.windyLeaves = fallLeaves;
+            weatherController.lightningBugs = lightningBugs;
+            weatherController.lightningPosition = lightningPosition;
+            weatherController.rain = rain;
+            weatherController.rainSplash = rainMist;
+            weatherController.rainMist = rainMist;
+            weatherController.rainStreaks = rainStreaks;
+            weatherController.snow = snow;
+            weatherController.snowDust = snowDust;
+            weatherController.unistormCamera = cam.gameObject;
+
+            LogUtils.Debug("Loading WeatherSystem");
+            var weather = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
+            GameObject garbage= new GameObject();
+            var light = garbage.AddComponent<Light>();
+            weather.butterflies = fallLeaves;
+            weather.moon = light;
+            weather.moonLight = light;
+            weather.windyLeaves = fallLeaves;
+            weather.rain = rain;
+            weather.rainMist = rainMist;
+            weather.snow = snow;
+            weather.snowMistFog = snowDust;
+            weather.mistFog = rainStreaks;
+            weather.cameraObject = cam.gameObject;
+            weather.cameraObjectComponent = cam.GetComponent<Camera>();
+            weatherController.unistorm = weather.gameObject;
         }
 
         internal override void Receive(Identity id, byte[] packet, int size, int channel)
@@ -220,19 +286,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     case EPacket.KICKED:
                         Disconnect();
                         return;
-                    default:
+                    case EPacket.ACCEPTED:
                     {
-                        if (parsedPacket != EPacket.ACCEPTED)
-                        {
-                            if (parsedPacket != EPacket.REJECTED)
-                            {
-                                //Todo: handle reason
-                                Disconnect();
-                            }
-
-                            return;
-                        }
-
                         object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, Types.UINT64_TYPE);
                         ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
                         ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
@@ -243,6 +298,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         //Todo: load extensions
                         break;
                     }
+                    default:
+                        LogUtils.LogWarning("Couldn't handle packet: " + parsedPacket);
+                        break;
                 }
             }
         }
@@ -251,6 +309,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         {
             if (_serverQueryAttempts >= CONNECTION_TRIES)
             {
+                IsConnecting = false;
                 return false;
             }
             IsConnected = false;
