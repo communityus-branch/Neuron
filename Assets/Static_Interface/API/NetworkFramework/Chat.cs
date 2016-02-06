@@ -26,7 +26,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void SendPlayerMessage(string text)
         {
-            Channel.Send(nameof(SendMessage), ECall.Server, EPacket.UPDATE_RELIABLE_BUFFER, text);
+            Channel.Send(nameof(SendUserMessage), ECall.Server, EPacket.UPDATE_RELIABLE_BUFFER, text);
         }
 
         public void SendServerMessage(string text)
@@ -59,13 +59,13 @@ namespace Static_Interface.API.NetworkFramework
             _message = GUI.TextField(new Rect(0, 200, 150, 25), _message);
             if (GUI.Button(new Rect(150, 200, 50, 25), "Send"))
             {
-                SendMessage(_message);
+                SendPlayerMessage(_message);
                 _message = "";
             }
         }
 
         [NetworkCall]
-        public void SendMessage(Identity sender, string msg)
+        public void SendUserMessage(Identity sender, string msg)
         {
             //Todo: onchatevent
             msg = "<color=yellow>" + sender.GetUser().Name + "</color>: " + msg;
@@ -75,7 +75,7 @@ namespace Static_Interface.API.NetworkFramework
         [NetworkCall]
         public void ReceiveMessage(Identity server, Identity sender, string formattedMessage)
         {
-            //Todo: onchatevent
+            //Todo: onchatreceivedevent/onmessagereceived
             if (!Channel.CheckServer(server)) return;
             LogUtils.Log(formattedMessage);
             ChatHistory.Add(formattedMessage);
