@@ -60,7 +60,7 @@ namespace Static_Interface.API.NetworkFramework
             return (user == Owner.Identity);
         }
 
-        public bool ValidateServer(Identity user)
+        public bool CheckServer(Identity user)
         {
             return (user == Connection.ServerID);
         }

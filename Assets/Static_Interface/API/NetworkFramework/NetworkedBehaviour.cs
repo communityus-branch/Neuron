@@ -5,18 +5,16 @@ namespace Static_Interface.API.NetworkFramework
 {
     public abstract class NetworkedBehaviour : MonoBehaviour
     {
-        public Channel Channel { get; protected set; }
+        public Channel Channel { get; private set; }
 
         protected virtual void Awake()
         {
             Channel = GetComponent<Channel>();
             // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
             // Channel = GetComponent<Channel>() ?? gameObject.AddComponent<Channel>();
-            if (Channel == null)
-            {
-                Channel = gameObject.AddComponent<Channel>();
-                Channel.Connection = Connection.CurrentConnection;
-            }
+            if (Channel != null) return;
+            Channel = gameObject.AddComponent<Channel>();
+            Channel.Connection = Connection.CurrentConnection;
         }
 
         protected virtual void Start()
@@ -32,6 +30,11 @@ namespace Static_Interface.API.NetworkFramework
         protected virtual void FixedUpdate()
         {
 
+        }
+
+        protected virtual void OnDestroy()
+        {
+            
         }
     }
 }

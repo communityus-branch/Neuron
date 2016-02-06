@@ -1,4 +1,7 @@
-﻿namespace Static_Interface.API.PlayerFramework
+﻿using System.Linq;
+using Static_Interface.Internal.MultiplayerFramework;
+
+namespace Static_Interface.API.PlayerFramework
 {
     public abstract class Identity
     {
@@ -8,6 +11,11 @@
         public override string ToString()
         {
             return Serialize().ToString();
+        }
+
+        public User GetUser()
+        {
+            return Connection.CurrentConnection.Clients.FirstOrDefault(c => c.Identity.Serialize() == Serialize());
         }
     }
 }
