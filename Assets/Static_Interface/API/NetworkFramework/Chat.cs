@@ -68,12 +68,8 @@ namespace Static_Interface.API.NetworkFramework
         public void SendUserMessage(Identity sender, string msg)
         {
             //Todo: onchatevent
-            var name = sender.GetUser()?.Name;
-            if (name == null)
-            {
-                name = "Console";
-            }
-            msg = "<color=yellow>" + name + "</color>: " + msg;
+            var userName = sender?.GetUser()?.Name ?? "Console";
+            msg = "<color=yellow>" + userName + "</color>: " + msg;
             Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_BUFFER, sender, msg);
         }
 
