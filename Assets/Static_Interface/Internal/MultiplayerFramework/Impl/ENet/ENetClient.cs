@@ -80,7 +80,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             {
                 ServerID = servIdent,
                 MaxPlayers = -1,
-                Name = "ENet Server"
+                Name = "ENet Server",
+                Map = "TestMap"
             };
 
 

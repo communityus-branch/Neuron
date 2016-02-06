@@ -67,7 +67,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                         //Todo
                         ServerID = new IPIdentity(0),
                         MaxPlayers = MAX_PLAYERS,
-                        Name = "A Lidgren Server"
+                        Name = "A Lidgren Server",
+                        Map = "TestMap"
                     };
                     ((ClientConnection)Connection).Connect(info);
                 }

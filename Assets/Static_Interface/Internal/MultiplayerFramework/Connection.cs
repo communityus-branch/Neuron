@@ -137,7 +137,9 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         protected virtual Transform AddPlayer(Identity ident, string @name, ulong group, Vector3 point, byte angle, int channel)
         {
-            Transform newModel = ((GameObject)Instantiate(Resources.Load("Player"), point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
+            GameObject obj = (GameObject) Resources.Load("Player");
+            obj.transform.FindChild("MainCamera").GetComponent<Camera>().enabled = false,
+            Transform newModel = ((GameObject)Instantiate(obj, point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
             var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = @name };
             ident.Owner = user;
             newModel.GetComponent<Player>().User = user;
