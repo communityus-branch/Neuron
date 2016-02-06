@@ -30,7 +30,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         internal override void Listen()
         {
-            if (Provider.SupportsPing) return;
+            if (Provider == null || Provider.SupportsPing) return;
             if (((Time.realtimeSinceStartup - LastNet) > CLIENT_TIMEOUT))
             {
                 LogUtils.Log("Timeout occurred");
@@ -58,8 +58,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             {
                 Provider.CloseConnection(user.Identity);
             }
-
-            ((ClientMultiplayerProvider)Provider).CloseTicket();
+            if (Provider.SupportsAuthentification)
+            {
+                ((ClientMultiplayerProvider) Provider).CloseTicket();
+            }
             IsConnected = false;
 
             //Todo: OnDisconnectedFromServer()
@@ -201,9 +203,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                             return;
                         }
                     case EPacket.VERIFY:
+                        LogUtils.Debug("Opening ticket");
                         byte[] ticket = ((ClientMultiplayerProvider)Provider).OpenTicket();
                         if (ticket == null)
                         {
+                            LogUtils.Debug("ticket equals null");
                             Disconnect();
                             return;
                         }

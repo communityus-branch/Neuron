@@ -31,7 +31,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         internal override void Listen()
         {
-            if (Provider.SupportsPing) return;
+            if (Provider == null || Provider.SupportsPing) return;
 
             if ((Time.realtimeSinceStartup - LastCheck) > CHECKRATE)
             {
@@ -173,9 +173,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         Reject(source, ERejectionReason.SERVER_FULL);
                         return;
                     }
-
-                    _pendingPlayers.Add(new PendingUser(source, playerName, group, ping));
-                    Send(source, EPacket.VERIFY, new byte[] { }, 0, 0);
+                    var pendingPlayer = new PendingUser(source, playerName, group, ping);
+                    _pendingPlayers.Add(pendingPlayer);
+                    if (Provider.SupportsAuthentification)
+                    {
+                        Send(source, EPacket.VERIFY, new byte[] { }, 0, 0);
+                        return;
+                    }
+                    pendingPlayer.HasAuthentication = true;
+                    Accept(pendingPlayer);
                     return;
                 }
 

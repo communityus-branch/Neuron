@@ -20,12 +20,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public static bool IsServer()
         {
-            return CurrentConnection.Provider is ServerMultiplayerProvider;
+            return Provider is ServerMultiplayerProvider;
         }
 
         public static bool IsClient()
         {
-            return CurrentConnection.Provider is ClientMultiplayerProvider;
+            return Provider is ClientMultiplayerProvider;
         }
 
         public static Connection CurrentConnection { get; private set; }
@@ -43,7 +43,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public uint CurrentTime { get; protected set; }
 
-        public MultiplayerProvider.MultiplayerProvider Provider { get; protected set; }
+        public static MultiplayerProvider.MultiplayerProvider Provider { get; protected set; }
 
         public Identity ClientID { get; internal set; }
 

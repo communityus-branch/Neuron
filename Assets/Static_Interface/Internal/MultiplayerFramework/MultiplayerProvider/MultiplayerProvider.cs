@@ -38,6 +38,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider
         public abstract uint GetServerRealTime();
         public abstract void Dispose();
         public bool SupportsPing { get; set; } = false;
+        public bool SupportsAuthentification { get; set; } = false;
 
         public virtual void Update()
         {

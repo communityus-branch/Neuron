@@ -23,7 +23,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         private Thread _thread;
         public ENetClient(Connection connection) : base(connection)
         {
-            SupportsTimeouts = true;
+            SupportsPing = true;
         }
 
         ~ENetClient()
@@ -163,12 +163,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override byte[] OpenTicket()
         {
-            return new byte[] {0};
+            throw new NotSupportedException();
         }
 
         public override void CloseTicket()
         {
-            //do nothing
+            throw new NotSupportedException();
         }
 
         public override void FavoriteServer(string ip, ushort port)

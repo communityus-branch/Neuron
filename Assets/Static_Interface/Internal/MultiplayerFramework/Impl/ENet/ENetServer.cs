@@ -98,16 +98,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override bool VerifyTicket(Identity ident, byte[] data)
         {
-            PendingUser pending = ((ServerConnection)Connection).PendingPlayers.FirstOrDefault(pendingPlayer => (IPIdentity)pendingPlayer.Identity == (IPIdentity)ident);
-            if (pending == null)
-            {
-                ((ServerConnection)Connection).Reject(ident, ERejectionReason.NOT_PENDING);
-                return false;
-            }
-
-            pending.HasAuthentication = true;
-            ((ServerConnection)Connection).Accept(pending);
-            return true;
+            throw new NotSupportedException();
         }
 
         public override Identity GetServerIdentity()

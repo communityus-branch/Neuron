@@ -15,6 +15,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public SteamworksServer(Connection conn) : base(conn)
         {
+            SupportsAuthentification = true;
             Callback<P2PSessionRequest_t>.CreateGameServer(OnP2PSessionRequest);
             Callback<GSPolicyResponse_t>.CreateGameServer(OnGsPolicyResponse);
             Callback<P2PSessionConnectFail_t>.CreateGameServer(OnP2PSessionConnectFail);

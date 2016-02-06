@@ -16,11 +16,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
         public bool IsAttempting;
         private readonly ISteamMatchmakingPingResponse _serverPingResponse;
         private HServerQuery _serverQuery = HServerQuery.Invalid;
-
+        private bool _ticketOpened;
         public ServerInfo CurrentServer { get; protected set; }
 
-        public SteamworksClient(Connection conn) : base(conn) 
+        public SteamworksClient(Connection conn) : base(conn)
         {
+            SupportsAuthentification = true;
             Callback<P2PSessionRequest_t>.Create(OnP2PSessionRequest);
             Callback<P2PSessionConnectFail_t>.Create(OnP2PSessionConnectFail);
             SteamUtils.SetWarningMessageHook(OnAPIWarningMessage);
@@ -147,8 +148,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
                 //Todo: Timeout
             }
         }
-
-
+        
         public override Identity GetUserID()
         {
             return (SteamIdentity) SteamUser.GetSteamID();
@@ -216,7 +216,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public override void Dispose()
         {
-            
+            if (_ticketOpened)
+            {
+                CloseTicket();
+            }
         }
 
         private void OnPingResponded(gameserveritem_t data)
@@ -273,6 +276,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             }
             byte[] dst = new byte[size];
             System.Buffer.BlockCopy(pTicket, 0, dst, 0, (int)size);
+            _ticketOpened = true;
             return dst;
         }
 
@@ -281,6 +285,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             if (_ticketHandle == HAuthTicket.Invalid) return;
             SteamUser.CancelAuthTicket(_ticketHandle);
             _ticketHandle = HAuthTicket.Invalid;
+            _ticketOpened = false;
         }
 
         public override void FavoriteServer(string ip, ushort port)

@@ -126,7 +126,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
         public override byte[] OpenTicket()
         {
-            return new byte[] { };
+            throw new NotSupportedException();
+        }
+
+        public override void CloseTicket()
+        {
+            throw new NotSupportedException();
         }
 
         public override bool IsFavoritedServer(string ip, ushort port)
@@ -152,11 +157,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
 
         public override void SetConnectInfo(string ip, ushort port)
-        {
-            //do nothing
-        }
-
-        public override void CloseTicket()
         {
             //do nothing
         }
