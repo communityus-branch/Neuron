@@ -801,6 +801,7 @@ namespace Static_Interface.API.NetworkFramework
         public void Setup()
         {
             Connection = Connection.CurrentConnection;
+            ID = Connection.Channels;
             Connection.OpenChannel(this);
         }
 

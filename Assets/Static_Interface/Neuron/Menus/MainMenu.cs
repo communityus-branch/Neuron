@@ -27,7 +27,7 @@ namespace Static_Interface.Neuron.Menus
             ClientConnection conn = serverObject.AddComponent<ClientConnection>();
             //SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
             //conn.Start();
-            conn.AttemptConnect("78.182.212.56", 27015, string.Empty);
+            conn.AttemptConnect("88.226.30.77", 27015, string.Empty);
         }
 
         public void Host()
