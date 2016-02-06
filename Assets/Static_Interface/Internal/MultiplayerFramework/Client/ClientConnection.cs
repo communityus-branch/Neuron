@@ -142,7 +142,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         protected override Transform AddPlayer(Identity ident, string @name, ulong group, Vector3 point, byte angle, int channel)
         {
             var playerTransform = base.AddPlayer(ident, @name, group, point, angle, channel);;
-            if (ident != ClientID)
+            if (ident.Serialize() != ClientID.Serialize())
             {
                 ((ClientMultiplayerProvider) Provider).SetPlayedWith(ident);
             }

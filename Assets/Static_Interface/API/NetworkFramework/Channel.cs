@@ -12,8 +12,7 @@ namespace Static_Interface.API.NetworkFramework
 {
     public class Channel : MonoBehaviour
     {
-        [HideInInspector]
-        public Connection Connection = Connection.CurrentConnection;
+        [HideInInspector] public Connection Connection;
         public int ID { get; internal set; }
         public bool IsOwner { get; internal set; }
         public User Owner { get; internal set; }
@@ -25,6 +24,7 @@ namespace Static_Interface.API.NetworkFramework
         {
             Build();
             Init();
+            Connection = Connection.CurrentConnection;
         }
 
         public void Build()
@@ -800,6 +800,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Setup()
         {
+            Connection = Connection.CurrentConnection;
             Connection.OpenChannel(this);
         }
 
