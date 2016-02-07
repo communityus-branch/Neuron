@@ -141,7 +141,9 @@ namespace Static_Interface.Internal.Objects
 
         private Identity ReadIdentity()
         {
-            return Connection.CurrentConnection.Provider.Deserialilze(ReadUInt64());
+            ulong asd = ReadUInt64();
+            LogUtils.Debug("Reading identity: " + asd);
+            return Connection.CurrentConnection.Provider.Deserialilze(asd);
         }
 
         public object[] Read(params Type[] types)
@@ -448,6 +450,7 @@ namespace Static_Interface.Internal.Objects
                 WriteColor((Color) objects);
             } else if (type ==Types.IDENTITY_TYPE || type.IsSubclassOf(Types.IDENTITY_TYPE))
             {
+                LogUtils.Debug("Writing identity: " + ((Identity)objects).Serialize());
                 WriteUInt64(((Identity)objects).Serialize());
             }
             else
