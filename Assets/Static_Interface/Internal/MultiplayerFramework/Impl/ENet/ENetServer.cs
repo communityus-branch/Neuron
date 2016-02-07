@@ -101,7 +101,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             throw new NotSupportedException();
         }
 
-        public override Identity GetServerIdentity()
+        public override Identity GetServerIdent()
         {
             return IPIdentity.Server;
         }

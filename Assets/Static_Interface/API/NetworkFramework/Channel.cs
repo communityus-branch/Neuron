@@ -62,12 +62,17 @@ namespace Static_Interface.API.NetworkFramework
 
         public bool CheckServer(Identity user)
         {
-            return (user == Connection.ServerID);
+            bool matched =(user == Connection.ServerID);
+            if (!matched)
+            {
+                LogUtils.Debug("CheckServer failed for user: " + user.Serialize() +", ServerID: " + Connection.ServerID?.Serialize() + ", ClientID: " + Connection.ClientID?.Serialize());
+            }
+            return matched;
         }
 
         public void CloseWrite(string channelName, ECall mode, EPacket type)
         {
-            if (!IsChunk(type))
+            if (!type.IsChunk())
             {
                 LogUtils.LogError("Failed to stream non chunk: " + type);
             }
@@ -85,7 +90,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void CloseWrite(string channelName, Identity user, EPacket type)
         {
-            if (!IsChunk(type))
+            if (!type.IsChunk())
             {
                 LogUtils.LogError("Failed to stream non chunk: " + type);
             }
@@ -113,7 +118,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void CloseWrite(string channelName, ECall mode, byte bound, EPacket type)
         {
-            if (!IsChunk(type))
+            if (!type.IsChunk())
             {
                 LogUtils.LogError("Failed to stream non chunk: " + type);
             }
@@ -132,7 +137,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void CloseWrite(string channelName, ECall mode, byte x, byte y, byte area, EPacket type)
         {
-            if (!IsChunk(type))
+            if (!type.IsChunk())
             {
                 LogUtils.LogError("Failed to stream non chunk: " + type);
             }
@@ -223,7 +228,11 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Receive(Identity ident, byte[] packet, int offset, int size)
         {
-            if (size < 2) return;
+            if (size < sizeof(byte) * 2) return; // we need at least 2 bytes
+            if (ident.GetUser() == null)
+            {
+                ident = Connection.Provider.GetServerIdent();
+            }
             int index = packet[offset + 1];
             if ((index < 0) || (index >= Calls.Length)) return;
             EPacket packet2 = (EPacket) packet[offset];
@@ -785,7 +794,7 @@ namespace Static_Interface.API.NetworkFramework
         public void Setup()
         {
             Connection = Connection.CurrentConnection;
-            ID = Connection.Channels + 1;
+            ID = Connection.Channels;
             LogUtils.Debug("Setting up channel " + ID);
             Connection.OpenChannel(this);
         }
@@ -793,14 +802,6 @@ namespace Static_Interface.API.NetworkFramework
         public void Write(params object[] objects)
         {
             ObjectSerializer.Write(objects);
-        }
-
-        public bool IsChunk(EPacket packet)
-        {
-            return ((packet == EPacket.UPDATE_UNRELIABLE_CHUNK_BUFFER) ||
-                    ((packet == EPacket.UPDATE_RELIABLE_CHUNK_BUFFER) ||
-                     ((packet == EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT) ||
-                      (packet == EPacket.UPDATE_RELIABLE_CHUNK_INSTANT))));
         }
     }
 }

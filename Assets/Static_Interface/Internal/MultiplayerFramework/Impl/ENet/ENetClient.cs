@@ -142,6 +142,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             return new IPIdentity(ident);
         }
 
+        public override Identity GetServerIdent()
+        {
+            return IPIdentity.Server;
+        }
+
         public override void AdvertiseGame(Identity serverID, string ip, ushort port)
         {
             //do nothing

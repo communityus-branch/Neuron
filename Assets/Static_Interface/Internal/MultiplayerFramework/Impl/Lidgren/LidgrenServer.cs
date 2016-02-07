@@ -108,7 +108,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             Dispose();          
         }
 
-        public override Identity GetServerIdentity()
+        public override Identity GetServerIdent()
         {
             return IPIdentity.Server;
         }

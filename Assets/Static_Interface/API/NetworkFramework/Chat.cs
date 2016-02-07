@@ -117,6 +117,7 @@ namespace Static_Interface.API.NetworkFramework
         public void ReceiveMessage(Identity server, Identity sender, string formattedMessage)
         {
             //Todo: onchatreceivedevent/onmessagereceived
+            LogUtils.Debug(nameof(ReceiveMessage));
             if (!Channel.CheckServer(server)) return;
             LogUtils.Log(formattedMessage);
             ChatHistory.Add(formattedMessage);

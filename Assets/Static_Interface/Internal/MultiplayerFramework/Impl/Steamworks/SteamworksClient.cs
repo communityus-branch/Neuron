@@ -45,6 +45,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return new SteamIdentity((CSteamID)ident);
         }
 
+        public override Identity GetServerIdent()
+        {
+            return CurrentServer.ServerID;
+        }
+
         private void OnGameRichPresenceJoinRequested(GameRichPresenceJoinRequested_t callback)
         {
             uint ip;

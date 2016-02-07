@@ -325,7 +325,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             LevelManager.Instance.LoadLevel(Map); //Todo
 
 
-            ServerID = ((ServerMultiplayerProvider)Provider).GetServerIdentity();
+            ServerID = Provider.GetServerIdent();
             ClientID = ServerID;
 
             ClientName = "Console";

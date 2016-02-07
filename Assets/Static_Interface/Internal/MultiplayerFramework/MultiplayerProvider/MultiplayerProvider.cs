@@ -46,5 +46,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider
         }
 
         public abstract Identity Deserialilze(ulong ident);
+        public abstract Identity GetServerIdent();
     }
 }

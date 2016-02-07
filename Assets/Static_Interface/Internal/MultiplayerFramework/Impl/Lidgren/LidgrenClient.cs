@@ -54,6 +54,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             return new IPIdentity(ident);
         }
 
+        public override Identity GetServerIdent()
+        {
+            return IPIdentity.Server;
+        }
+
         public override void Update()
         {
             base.Update();

@@ -206,7 +206,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
         }
 
         private SteamIdentity _ident;
-        public override Identity GetServerIdentity()
+        public override Identity GetServerIdent()
         {
             return _ident ?? (_ident = (SteamIdentity) SteamGameServer.GetSteamID());
         }
