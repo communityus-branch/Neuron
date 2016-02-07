@@ -223,142 +223,128 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Receive(Identity user, byte[] packet, int offset, int size)
         {
-            if (size >= 2)
+            if (size < 2) return;
+            int index = packet[offset + 1];
+            if ((index < 0) || (index >= Calls.Length)) return;
+            EPacket packet2 = (EPacket) packet[offset];
+            if ((packet2 == EPacket.UPDATE_VOICE) && (size < 4)) return;
+            if ((packet2 == EPacket.UPDATE_UNRELIABLE_CHUNK_BUFFER) ||
+                (packet2 == EPacket.UPDATE_RELIABLE_CHUNK_BUFFER))
             {
-                int index = packet[offset + 1];
-                if ((index >= 0) && (index < Calls.Length))
-                {
-                    EPacket packet2 = (EPacket) packet[offset];
-                    if ((packet2 != EPacket.UPDATE_VOICE) || (size >= 4))
-                    {
-                        if ((packet2 == EPacket.UPDATE_UNRELIABLE_CHUNK_BUFFER) ||
-                            (packet2 == EPacket.UPDATE_RELIABLE_CHUNK_BUFFER))
-                        {
-                            ObjectSerializer.OpenRead(offset + 2, packet);
-                            object[] parameters = {user};
-                            Calls[index].Method.Invoke(Calls[index].Component, parameters);
-                            ObjectSerializer.CloseRead();
-                        }
-                        else if (Calls[index].Types.Length > 0)
-                        {
-                            if (packet2 == EPacket.UPDATE_VOICE)
-                            {
-                                Voice[0] = user;
-                                Voice[1] = packet;
-                                Voice[2] = BitConverter.ToUInt16(packet, offset + 2);
-                                Calls[index].Method.Invoke(Calls[index].Component, Voice);
-                            }
-                            else
-                            {
-                                object[] objArray = ObjectSerializer.GetObjects(user, offset, 2, packet,
-                                    Calls[index].Types);
-                                if (objArray != null)
-                                {
-                                    Calls[index].Method.Invoke(Calls[index].Component, objArray);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Calls[index].Method.Invoke(Calls[index].Component, null);
-                        }
-                    }
-                }
+                ObjectSerializer.OpenRead(offset + 2, packet);
+                object[] parameters = {user};
+                Calls[index].Method.Invoke(Calls[index].Component, parameters);
+                ObjectSerializer.CloseRead();
             }
+            else if (Calls[index].Types.Length > 0)
+            {
+                if (packet2 == EPacket.UPDATE_VOICE)
+                {
+                    Voice[0] = user;
+                    Voice[1] = packet;
+                    Voice[2] = BitConverter.ToUInt16(packet, offset + 2);
+                    Calls[index].Method.Invoke(Calls[index].Component, Voice);
+                    return;
+                }
+                object[] objArray = ObjectSerializer.GetObjects(user, offset, 2, packet,
+                    Calls[index].Types);
+                if (objArray != null)
+                {
+                    Calls[index].Method.Invoke(Calls[index].Component, objArray);
+                }
+                return;
+            }
+            Calls[index].Method.Invoke(Calls[index].Component, null);
         }
 
         public void Send(ECall mode, EPacket type, int size, byte[] packet)
         {
-            if (mode == ECall.Server)
+            switch (mode)
             {
-                if (Connection.IsServer())
-                {
-                    Receive(Connection.ServerID, packet, 0, size);
-                }
-                else
-                {
-                    Connection.Send(Connection.ServerID, type, packet, size, ID);
-                }
-            }
-            else if (mode == ECall.All)
-            {
-                if (!(Connection.IsServer()))
-                {
-                    Connection.Send(Connection.ServerID, type, packet, size, ID);
-                }
-                foreach (User user in Connection.Clients)
-                {
-                    if (user.Identity != Connection.ClientID)
+                case ECall.Server:
+                    if (Connection.IsServer())
                     {
-                        Connection.Send(user.Identity, type, packet, size, ID);
+                        Receive(Connection.ServerID, packet, 0, size);
                     }
-                }
-                if (Connection.IsServer())
-                {
-                    Receive(Connection.ServerID, packet, 0, size);
-                }
-                else
-                {
-                    Receive(Connection.ClientID, packet, 0, size);
-                }
-            }
-            else if (mode == ECall.Others)
-            {
-                if (!(Connection.IsServer()))
-                {
-                    Connection.Send(Connection.ServerID, type, packet, size, ID);
-                }
+                    else
+                    {
+                        Connection.Send(Connection.ServerID, type, packet, size, ID);
+                    }
+                    break;
+                case ECall.All:
+                    if (!(Connection.IsServer()))
+                    {
+                        Connection.Send(Connection.ServerID, type, packet, size, ID);
+                    }
+                    foreach (User user in Connection.Clients)
+                    {
+                        if (user.Identity != Connection.ClientID)
+                        {
+                            Connection.Send(user.Identity, type, packet, size, ID);
+                        }
+                    }
+                    if (Connection.IsServer())
+                    {
+                        Receive(Connection.ServerID, packet, 0, size);
+                    }
+                    else
+                    {
+                        Receive(Connection.ClientID, packet, 0, size);
+                    }
+                    break;
+                case ECall.Others:
+                    if (!(Connection.IsServer()))
+                    {
+                        Connection.Send(Connection.ServerID, type, packet, size, ID);
+                    }
 
-                foreach (var t in Connection.Clients.Where(t => t.Identity != Connection.ClientID))
-                {
-                    Connection.Send(t.Identity, type, packet, size, ID);
-                }
-            }
-            else if (mode == ECall.Owner)
-            {
-                if (IsOwner)
-                {
-                    Receive(Owner.Identity, packet, 0, size);
-                }
-                else
-                {
-                    Connection.Send(Owner.Identity, type, packet, size, ID);
-                }
-            }
-            else if (mode == ECall.NotOwner)
-            {
-                if (!(Connection.IsServer()))
-                {
-                    Connection.Send(Connection.ServerID, type, packet, size, ID);
-                }
-                foreach (User user in Connection.Clients.Where(user => user.Identity != Owner.Identity))
-                {
-                    Connection.Send(user.Identity, type, packet, size, ID);
-                }
-            }
-            else if (mode == ECall.Clients)
-            {
-                foreach (User user in Connection.Clients)
-                {
-                    if (user.Identity != Connection.ClientID)
+                    foreach (var t in Connection.Clients.Where(t => t.Identity != Connection.ClientID))
+                    {
+                        Connection.Send(t.Identity, type, packet, size, ID);
+                    }
+                    break;
+                case ECall.Owner:
+                    if (IsOwner)
+                    {
+                        Receive(Owner.Identity, packet, 0, size);
+                    }
+                    else
+                    {
+                        Connection.Send(Owner.Identity, type, packet, size, ID);
+                    }
+                    break;
+                case ECall.NotOwner:
+                    if (!(Connection.IsServer()))
+                    {
+                        Connection.Send(Connection.ServerID, type, packet, size, ID);
+                    }
+                    foreach (User user in Connection.Clients.Where(user => user.Identity != Owner.Identity))
                     {
                         Connection.Send(user.Identity, type, packet, size, ID);
                     }
-                }
-                if (Connection.IsClient())
-                {
-                    Receive(Connection.ClientID, packet, 0, size);
-                }
-            }
-            else if (mode == ECall.Peers)
-            {
-                foreach (User user in Connection.Clients)
-                {
-                    if (user.Identity != Connection.ClientID)
+                    break;
+                case ECall.Clients:
+                    foreach (User user in Connection.Clients)
                     {
-                        Connection.Send(user.Identity, type, packet, size, ID);
+                        if (user.Identity != Connection.ClientID)
+                        {
+                            Connection.Send(user.Identity, type, packet, size, ID);
+                        }
                     }
-                }
+                    if (Connection.IsClient())
+                    {
+                        Receive(Connection.ClientID, packet, 0, size);
+                    }
+                    break;
+                case ECall.Peers:
+                    foreach (User user in Connection.Clients)
+                    {
+                        if (user.Identity != Connection.ClientID)
+                        {
+                            Connection.Send(user.Identity, type, packet, size, ID);
+                        }
+                    }
+                    break;
             }
         }
 
@@ -801,7 +787,8 @@ namespace Static_Interface.API.NetworkFramework
         public void Setup()
         {
             Connection = Connection.CurrentConnection;
-            ID = Connection.Channels+1;
+            ID = Connection.Channels + 1;
+            LogUtils.Debug("Setting up channel " + ID);
             Connection.OpenChannel(this);
         }
 

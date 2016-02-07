@@ -14,7 +14,7 @@ namespace Static_Interface.API.NetworkFramework
             // Channel = GetComponent<Channel>() ?? gameObject.AddComponent<Channel>();
             if (Channel != null) return;
             Channel = gameObject.AddComponent<Channel>();
-            Channel.Connection = Connection.CurrentConnection;
+            Channel.Setup();
         }
 
         protected virtual void Start()
