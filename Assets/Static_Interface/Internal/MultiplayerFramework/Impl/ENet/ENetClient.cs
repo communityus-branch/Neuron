@@ -137,6 +137,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
             _thread = null;
         }
 
+        public override Identity Deserialilze(ulong ident)
+        {
+            return new IPIdentity(ident);
+        }
+
         public override void AdvertiseGame(Identity serverID, string ip, ushort port)
         {
             //do nothing

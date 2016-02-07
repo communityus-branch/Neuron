@@ -221,7 +221,7 @@ namespace Static_Interface.API.NetworkFramework
             return ObjectSerializer.Read(types);
         }
 
-        public void Receive(Identity user, byte[] packet, int offset, int size)
+        public void Receive(Identity ident, byte[] packet, int offset, int size)
         {
             if (size < 2) return;
             int index = packet[offset + 1];
@@ -232,7 +232,7 @@ namespace Static_Interface.API.NetworkFramework
                 (packet2 == EPacket.UPDATE_RELIABLE_CHUNK_BUFFER))
             {
                 ObjectSerializer.OpenRead(offset + 2, packet);
-                object[] parameters = {user};
+                object[] parameters = { ident };
                 Calls[index].Method.Invoke(Calls[index].Component, parameters);
                 ObjectSerializer.CloseRead();
             }
@@ -240,13 +240,13 @@ namespace Static_Interface.API.NetworkFramework
             {
                 if (packet2 == EPacket.UPDATE_VOICE)
                 {
-                    Voice[0] = user;
+                    Voice[0] = ident;
                     Voice[1] = packet;
                     Voice[2] = BitConverter.ToUInt16(packet, offset + 2);
                     Calls[index].Method.Invoke(Calls[index].Component, Voice);
                     return;
                 }
-                object[] objArray = ObjectSerializer.GetObjects(user, offset, 2, packet,
+                object[] objArray = ObjectSerializer.GetObjects(ident, offset, 2, packet,
                     Calls[index].Types);
                 if (objArray != null)
                 {
@@ -274,8 +274,10 @@ namespace Static_Interface.API.NetworkFramework
                 case ECall.All:
                     if (!(Connection.IsServer()))
                     {
+                        LogUtils.LogWarning("Im not the server, I can't send a message to all clients!!");
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
+ 
                     foreach (User user in Connection.Clients)
                     {
                         if (user.Identity != Connection.ClientID)
@@ -283,18 +285,12 @@ namespace Static_Interface.API.NetworkFramework
                             Connection.Send(user.Identity, type, packet, size, ID);
                         }
                     }
-                    if (Connection.IsServer())
-                    {
-                        Receive(Connection.ServerID, packet, 0, size);
-                    }
-                    else
-                    {
-                        Receive(Connection.ClientID, packet, 0, size);
-                    }
+                    Receive(Connection.ClientID, packet, 0, size);
                     break;
                 case ECall.Others:
                     if (!(Connection.IsServer()))
                     {
+                        LogUtils.LogWarning("Im not the server, I can't send a message to all other clients!!");
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
 
@@ -316,6 +312,7 @@ namespace Static_Interface.API.NetworkFramework
                 case ECall.NotOwner:
                     if (!(Connection.IsServer()))
                     {
+                        LogUtils.LogWarning("Im not the server, I can't send a message to all non owners!!");
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
                     foreach (User user in Connection.Clients.Where(user => user.Identity != Owner.Identity))
@@ -381,6 +378,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Send(ECall mode, byte bound, EPacket type, int size, byte[] packet)
         {
+            if(Connection.ServerID == null) throw new Exception("Server id is null");
             switch (mode)
             {
                 case ECall.Server:

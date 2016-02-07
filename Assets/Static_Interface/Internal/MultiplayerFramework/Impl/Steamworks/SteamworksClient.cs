@@ -40,6 +40,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             }
         }
 
+        public override Identity Deserialilze(ulong ident)
+        {
+            return new SteamIdentity((CSteamID)ident);
+        }
+
         private void OnGameRichPresenceJoinRequested(GameRichPresenceJoinRequested_t callback)
         {
             uint ip;

@@ -1,7 +1,9 @@
 ﻿using Steamworks;
 using System;
 using System.Text;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 
 namespace Static_Interface.Internal.Objects
@@ -129,8 +131,17 @@ namespace Static_Interface.Internal.Objects
             {
                 return ReadColor();
             }
+            if (type == Types.IDENTITY_TYPE || type.IsSubclassOf(Types.IDENTITY_TYPE))
+            {
+                return ReadIdentity();
+            }
             LogUtils.LogError("Failed to read type: " + type);
             return null;
+        }
+
+        private Identity ReadIdentity()
+        {
+            return Connection.CurrentConnection.Provider.Deserialilze(ReadUInt64());
         }
 
         public object[] Read(params Type[] types)
@@ -435,6 +446,9 @@ namespace Static_Interface.Internal.Objects
             else if (type == Types.COLOR_TYPE)
             {
                 WriteColor((Color) objects);
+            } else if (type ==Types.IDENTITY_TYPE || type.IsSubclassOf(Types.IDENTITY_TYPE))
+            {
+                WriteUInt64(((Identity)objects).Serialize());
             }
             else
             {

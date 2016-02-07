@@ -110,7 +110,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
         {
             //do nothing
         }
-        
+
+        public override Identity Deserialilze(ulong ident)
+        {
+            return new IPIdentity(ident);
+        }
+
         public override void SetMaxPlayerCount(int maxPlayers)
         {
             //do nothing

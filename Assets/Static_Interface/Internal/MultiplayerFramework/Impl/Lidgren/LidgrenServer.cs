@@ -43,6 +43,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             return Convert.ToUInt32(DateTime.Now.Millisecond);
         }
 
+        public override Identity Deserialilze(ulong ident)
+        {
+            return new IPIdentity(ident);
+        }
+
         public override void Dispose()
         {
             _listen = false;

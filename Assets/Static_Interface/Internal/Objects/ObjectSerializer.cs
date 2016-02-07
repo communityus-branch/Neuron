@@ -27,6 +27,7 @@ namespace Static_Interface.Internal.Objects
         public static readonly Type UINT64_TYPE = typeof(ulong);
         public static readonly Type VECTOR3_TYPE = typeof(Vector3);
         public static readonly Type KEYSTATE_TYPE = typeof (KeyState);
+        public static readonly Type IDENTITY_TYPE = typeof (Identity);
     }
 
     public class ObjectSerializer

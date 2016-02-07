@@ -20,12 +20,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public static bool IsServer()
         {
-            return Provider is ServerMultiplayerProvider;
+            return CurrentConnection.Provider is ServerMultiplayerProvider;
         }
 
         public static bool IsClient()
         {
-            return Provider is ClientMultiplayerProvider;
+            return CurrentConnection.Provider is ClientMultiplayerProvider;
         }
 
         public static Connection CurrentConnection { get; private set; }
@@ -43,7 +43,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public uint CurrentTime { get; protected set; }
 
-        public static MultiplayerProvider.MultiplayerProvider Provider { get; protected set; }
+        public MultiplayerProvider.MultiplayerProvider Provider { get; protected set; }
 
         public Identity ClientID { get; internal set; }
 
@@ -188,13 +188,14 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
             if ((IsClient() && receiver == ClientID && ClientID != null) || (IsServer() && receiver == ServerID && ServerID != null))
             {
+                LogUtils.Debug("Server/Client sending to itself");
                 Receive(receiver, data, length, channel);
                 return;
             }
 
             if (!receiver.IsValid())
             {
-                LogUtils.LogError("Failed to send to invalid steam ID.");
+                LogUtils.LogError("Failed to send to invalid ID.");
                 return;
             }
 

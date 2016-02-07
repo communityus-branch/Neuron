@@ -12,12 +12,13 @@ namespace Static_Interface.API.NetworkFramework
     {
         public List<string> ChatHistory = new List<string>();
         private Vector2 _scrollView = Vector2.zero;
-        private string _message = "";
-
+        public string Message { get; set; } = "";
+        private const string ChatTextFieldName = "ChatTextField";
         public bool Draw { get; set; } = true;
-
         public static Chat Instance;
 
+        private bool ChatTextFieldFocused { get; set; }
+        public bool ChatTextFieldVisible { get; set; }
         protected override void Start()
         {
             base.Start();
@@ -44,9 +45,13 @@ namespace Static_Interface.API.NetworkFramework
             Instance = null;
         }
 
+        private bool _justFocused;
+
         private void OnGUI()
         {
             if (!Draw) return;
+
+
             GUILayout.BeginArea(new Rect(0, 0, 400, 200));
             _scrollView = GUILayout.BeginScrollView(_scrollView);
             foreach (string c in ChatHistory)
@@ -56,19 +61,54 @@ namespace Static_Interface.API.NetworkFramework
             GUILayout.EndArea();
             GUILayout.EndScrollView();
             _scrollView.y++;
-            _message = GUI.TextField(new Rect(0, 200, 150, 25), _message);
-            if (GUI.Button(new Rect(150, 200, 50, 25), "Send"))
+
+            if (!ChatTextFieldVisible)
             {
-                SendPlayerMessage(_message);
-                _message = "";
+                if (!Input.GetKeyDown(KeyCode.Return)) return;
+                ChatTextFieldVisible = true;
+                FoucsChatTextField();
+                _justFocused = true;
+                return;
             }
+
+#region DrawTextField
+            GUI.SetNextControlName(ChatTextFieldName);
+            Message = GUI.TextField(new Rect(0, 200, 150, 25), Message);
+            if (ChatTextFieldFocused)
+            {
+                GUI.FocusControl(ChatTextFieldName);
+                ChatTextFieldFocused = false;
+            }
+#endregion
+
+            bool returnPressed = (Event.current.type == EventType.keyDown  && Event.current.character == '\n');
+
+            if (!IsChatTextFieldFocused() || !returnPressed) return;
+            if(!_justFocused) ChatTextFieldVisible = false;
+            if (_justFocused) _justFocused = false;
+            if (string.IsNullOrEmpty(Message?.Trim()))
+            {
+                return;
+            }
+            SendPlayerMessage(Message);
+            Message = "";
+        }
+        
+        public bool IsChatTextFieldFocused()
+        {
+            return GUI.GetNameOfFocusedControl() == ChatTextFieldName;
+        }
+
+        public void FoucsChatTextField()
+        {
+            ChatTextFieldFocused = true;
         }
 
         [NetworkCall]
         public void SendUserMessage(Identity sender, string msg)
         {
             //Todo: onchatevent
-            var userName = sender?.GetUser()?.Name ?? "Console";
+            var userName = sender.GetUser()?.Name ?? "Console";
             msg = "<color=yellow>" + userName + "</color>: " + msg;
             Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_BUFFER, sender, msg);
         }

@@ -140,7 +140,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                 }
             }
 
-
             IPIdentity newIdent = new IPIdentity(peer.GetRemoteAddress().Address);
             peers.Add(newIdent.Serialize(), peer);
             return newIdent;

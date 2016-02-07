@@ -49,6 +49,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             _peers.Add(servIdent.Serialize(), conn);
         }
 
+        public override Identity Deserialilze(ulong ident)
+        {
+            return new IPIdentity(ident);
+        }
+
         public override void Update()
         {
             base.Update();

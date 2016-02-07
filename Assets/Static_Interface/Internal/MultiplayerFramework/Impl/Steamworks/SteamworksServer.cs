@@ -23,6 +23,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             SteamUtils.SetWarningMessageHook(OnAPIWarningMessage);
         }
 
+        public override Identity Deserialilze(ulong ident)
+        {
+            return new SteamIdentity((CSteamID)ident);
+        }
+
         private void OnValidateAuthTicketResponse(ValidateAuthTicketResponse_t callback)
         {
             Identity ident = (SteamIdentity)callback.m_SteamID;
