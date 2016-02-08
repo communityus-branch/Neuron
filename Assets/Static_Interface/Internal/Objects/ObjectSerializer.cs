@@ -19,7 +19,6 @@ namespace Static_Interface.Internal.Objects
         public static readonly Type INT64_TYPE = typeof(long);
         public static readonly byte[] SHIFTS = { 1, 2, 4, 8, 0x10, 0x20, 0x40, 0x80 };
         public static readonly Type SINGLE_TYPE = typeof(float);
-        public static readonly Type STEAM_ID_TYPE = typeof(CSteamID);
         public static readonly Type STRING_TYPE = typeof(string);
         public static readonly Type UINT16_TYPE = typeof(ushort);
         public static readonly Type UINT32_TYPE = typeof(uint);
@@ -53,7 +52,7 @@ namespace Static_Interface.Internal.Objects
         public static object[] GetObjects(Identity ident, int offset, int prefix, byte[] bytes, params Type[] types)
         {
             block.Reset(offset + prefix, bytes);
-            if (types[0] == Types.STEAM_ID_TYPE)
+            if (types[0] == Types.IDENTITY_TYPE)
             {
                 object[] objArray = block.Read(1, types);
                 objArray[0] = ident;

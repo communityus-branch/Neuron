@@ -228,6 +228,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Receive(Identity ident, byte[] packet, int offset, int size)
         {
+            LogUtils.Debug(nameof(Receive) + "; ident: " + ident);
             if (size < sizeof(byte) * 2) return; // we need at least 2 bytes
             if (ident.GetUser() == null)
             {

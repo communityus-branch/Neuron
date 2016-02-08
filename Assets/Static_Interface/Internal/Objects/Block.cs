@@ -115,10 +115,6 @@ namespace Static_Interface.Internal.Objects
             {
                 return ReadUInt64Array();
             }
-            if (type == Types.STEAM_ID_TYPE)
-            {
-                return ReadSteamID();
-            }
             if (type == Types.VECTOR3_TYPE)
             {
                 return ReadSingleVector3();
@@ -290,11 +286,6 @@ namespace Static_Interface.Internal.Objects
             return new KeyState {KeyCode = ReadInt32(), IsDown = ReadBoolean(), IsPressed = ReadBoolean()};
         }
 
-        public CSteamID ReadSteamID()
-        {
-            return new CSteamID(ReadUInt64());
-        }
-
         public string ReadString()
         {
             if ((_block != null) && (_step < _block.Length))
@@ -433,10 +424,6 @@ namespace Static_Interface.Internal.Objects
             {
                 WriteUInt64Array((ulong[]) objects);
             }
-            else if (type == Types.STEAM_ID_TYPE)
-            {
-                WriteSteamID((CSteamID) objects);
-            }
             else if (type == Types.VECTOR3_TYPE)
             {
                 WriteSingleVector3((Vector3) objects);
@@ -574,11 +561,6 @@ namespace Static_Interface.Internal.Objects
             WriteInt32(value.KeyCode);
             WriteBoolean(value.IsDown);
             WriteBoolean(value.IsPressed);
-        }
-
-        public void WriteSteamID(CSteamID steamID)
-        {
-            WriteUInt64(steamID.m_SteamID);
         }
 
         public void WriteString(string value)
