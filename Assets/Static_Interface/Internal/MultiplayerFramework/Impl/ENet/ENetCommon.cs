@@ -121,8 +121,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
                         Data = @event.Packet.GetBytes().ToList()
                     };
 
-                    LogUtils.Debug("Data size: " + qData.Data.Count);
-
                     queue[channel].Add(qData);
                     @event.Packet.Dispose();
                     break;

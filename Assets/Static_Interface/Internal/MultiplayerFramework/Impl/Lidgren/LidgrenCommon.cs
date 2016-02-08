@@ -71,8 +71,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     Ident = ident,
                     Data = msg.ReadBytes(msg.LengthBytes).ToList()
                 };
-
-                LogUtils.Debug("Data size: " + qData.Data.Count);
+                
                 queue[channel].Add(qData);
                 host.Recycle(msg);
             }

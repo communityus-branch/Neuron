@@ -36,19 +36,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
         {
             return new SteamIdentity(id);
         }
-
-        public static bool operator ==(SteamIdentity a, SteamIdentity b)
-        {
-            if ((object)a == null && (object)b == null) return true;
-            if ((object)a == null || (object)b == null) return false;
-            return a.Equals(b);
-        }
-
-        public static bool operator !=(SteamIdentity a, SteamIdentity b)
-        {
-            return !(a == b);
-        }
-
         public static bool operator ==(SteamIdentity a, CSteamID b)
         {
             if ((object)a == null && b == CSteamID.Nil) return true;
@@ -73,14 +60,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
-                return false;
-            }
-            if (obj is SteamIdentity)
-            {
-                return ((SteamIdentity) obj).SteamID == SteamID;
-            }
+            bool baseEquals = base.Equals(obj);
+            if (baseEquals) return true;
+
             if (obj is CSteamID)
             {
                 return (CSteamID) obj == SteamID;
