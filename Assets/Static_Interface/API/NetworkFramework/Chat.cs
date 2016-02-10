@@ -49,8 +49,8 @@ namespace Static_Interface.API.NetworkFramework
 
         private void OnGUI()
         {
+            if (GuiUtil.IsInputLocked(this)) return;
             if (!Draw) return;
-
 
             GUILayout.BeginArea(new Rect(0, 0, 400, 200));
             _scrollView = GUILayout.BeginScrollView(_scrollView);
@@ -65,6 +65,7 @@ namespace Static_Interface.API.NetworkFramework
             if (!ChatTextFieldVisible)
             {
                 if (!Input.GetKeyDown(KeyCode.Return)) return;
+                GuiUtil.LockInput(this);
                 ChatTextFieldVisible = true;
                 FoucsChatTextField();
                 _justFocused = true;
@@ -84,7 +85,11 @@ namespace Static_Interface.API.NetworkFramework
             bool returnPressed = (Event.current.type == EventType.keyDown  && Event.current.character == '\n');
 
             if (!IsChatTextFieldFocused() || !returnPressed) return;
-            if(!_justFocused) ChatTextFieldVisible = false;
+            if (!_justFocused)
+            {
+                ChatTextFieldVisible = false;
+                GuiUtil.UnlockInput(this);
+            }
             if (_justFocused) _justFocused = false;
             if (string.IsNullOrEmpty(Message?.Trim()))
             {

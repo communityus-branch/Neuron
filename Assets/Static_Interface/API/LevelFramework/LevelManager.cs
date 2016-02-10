@@ -5,7 +5,6 @@ using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
-using Static_Interface.Neuron.Menus;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -66,13 +65,11 @@ namespace Static_Interface.API.LevelFramework
         {
             Action action = delegate
             {
-                ExtensionManager.Instance.Shutdown();
-                EventManager.Instance.ClearExtensionListeners();
-                NetvarManager.Instance.ClearNetvars();
-                if (Connection.CurrentConnection != null)
-                {
-                    Connection.CurrentConnection.Dispose();
-                }
+                ExtensionManager.Instance?.Shutdown();
+                EventManager.Instance?.ClearExtensionListeners();
+                NetvarManager.Instance?.ClearNetvars();
+                Connection.CurrentConnection?.Dispose();
+                Connection.CurrentConnection = null;
                 LoadLevel("MainMenu", true);
             };
             if (ThreadPool.IsMainThread)

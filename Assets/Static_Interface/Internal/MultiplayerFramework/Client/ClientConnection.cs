@@ -170,7 +170,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             playerTransform.gameObject.AddComponent<MouseLook>();
 
             LogUtils.Debug("Setting console character");
-            GameObject.Find("Console").GetComponent<ConsoleGUI>().Character = playerTransform.gameObject;
 
             if(playerTransform.gameObject.GetComponent<AudioListener>() == null)
                 playerTransform.gameObject.AddComponent<AudioListener>();

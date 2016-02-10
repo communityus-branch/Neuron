@@ -28,7 +28,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             return CurrentConnection.Provider is ClientMultiplayerProvider;
         }
 
-        public static Connection CurrentConnection { get; private set; }
+        public static Connection CurrentConnection { get; internal set; }
 
         protected byte[] Buffer  = new byte[Block.BUFFER_SIZE];
 

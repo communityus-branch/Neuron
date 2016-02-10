@@ -10,7 +10,6 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
     public class ConsoleGUI : MonoBehaviour
     {
         public KeyCode openKey = KeyCode.P;
-        public GameObject Character;
         private int historyScrollValue;
         private int commandIndex = 0;
 
@@ -20,7 +19,7 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
         public GUISkin skin = null;
         public int linesVisible = 17;
 
-        public bool isOpen = false;
+        public bool IsOpen = false;
         private string partialCommand = "";
 
         private bool moveCursorToEnd;
@@ -43,6 +42,7 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
         private int hierarchyWidth = 150;
 
         public static ConsoleGUI Instance;
+        public bool LockInput { get; set; }
 
         void Start()
         {
@@ -72,6 +72,7 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
 
         void OnGUI()
         {
+            if (LockInput) return;
             GUI.skin = skin;
 
             if (Event.current.type == EventType.keyDown && Event.current.keyCode == KeyCode.Return)
@@ -104,7 +105,7 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
                 Event.current.Use();
             }
 
-            if (isOpen)
+            if (IsOpen)
             {
                 GUI.depth = -100;
                 GUILayout.BeginArea(new Rect(5, 5, Screen.width - 10, Screen.height / 2), (GUIStyle)"box");
@@ -267,44 +268,35 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
             // show open button
             if (GUILayout.Button("Open Console"))
             {
-                isOpen = true;
+                IsOpen = true;
             }
         }
 #endif
 
-            if (!isOpen && Event.current.type == EventType.keyUp && Event.current.keyCode == openKey)
+            if (!IsOpen && Event.current.type == EventType.keyUp && Event.current.keyCode == openKey)
             {
-                isOpen = true;
+                IsOpen = true;
                 Event.current.Use();
                 Event.current.type = EventType.used;
                 wasCursorVisible = Cursor.visible;
                 previousLockmode = Cursor.lockState;
-                if (Character != null)
-                {
-                    //wasControllerEnabled = Character.GetComponent<FPSControlPlayer>().enabled;
-                    //Character.GetComponent<FPSControlPlayer>().enabled = false;
-                }
             }
 
-            if (isOpen)
+            if (IsOpen)
             {
                 Cursor.visible = true;    
                 Cursor.lockState = CursorLockMode.None;
             }
 
-            if (isOpen && escPressed)
+            if (IsOpen && escPressed)
             {
-                isOpen = false;
+                IsOpen = false;
                 Cursor.visible = wasCursorVisible;
                 Cursor.lockState = previousLockmode;
-                if (Character != null)
-                {
-                    //Character.GetComponent<FPSControlPlayer>().enabled = wasControllerEnabled;
-                }
             }
 
             // refocus the textfield if focus is lost
-            if (isOpen && Event.current.type == EventType.layout && GUI.GetNameOfFocusedControl() != "CommandTextField")
+            if (IsOpen && Event.current.type == EventType.layout && GUI.GetNameOfFocusedControl() != "CommandTextField")
             {
                 GUI.FocusControl("CommandTextField");
                 TextEditor te = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
