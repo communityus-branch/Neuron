@@ -27,12 +27,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return (SteamIdentity) id;
         }
 
-        public static explicit operator CSteamID(SteamIdentity ident)
+        public static implicit operator CSteamID(SteamIdentity ident)
         {
             return ident.SteamID;
         }
 
-        public static explicit operator SteamIdentity(CSteamID id)
+        public static implicit operator SteamIdentity(CSteamID id)
         {
             return new SteamIdentity(id);
         }

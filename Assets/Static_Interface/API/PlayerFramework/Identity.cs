@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.MultiplayerFramework.Impl;
 
@@ -19,6 +20,7 @@ namespace Static_Interface.API.PlayerFramework
             return Serialize().GetHashCode();
         }
 
+        [SuppressMessage("ReSharper", "RedundantCast.0")]
         public static bool operator ==(Identity a, Identity b)
         {
             if ((object) a == null && (object) b == null) return true;
@@ -51,12 +53,12 @@ namespace Static_Interface.API.PlayerFramework
             return b != a;
         }
 
-        public static explicit operator ulong(Identity ident)
+        public static implicit operator ulong(Identity ident)
         {
             return ident.Serialize();
         }
 
-        public static explicit operator Identity(ulong var)
+        public static implicit operator Identity(ulong var)
         {
             return Connection.CurrentConnection.Provider.Deserialilze(var);
         }

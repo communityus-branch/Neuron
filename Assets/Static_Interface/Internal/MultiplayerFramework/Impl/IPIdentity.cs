@@ -32,14 +32,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl
 
         public static IPIdentity Deserialze(ulong u)
         {
-            return (IPIdentity) u;
-        }
-
-        public bool IsServer => this == Server;
-
-        public static explicit operator IPIdentity(ulong id)
-        {
-            return new IPIdentity(id);
+            return new IPIdentity(u);
         }
     }
 }
