@@ -1,7 +1,5 @@
 ﻿using System;
-using System;
 using System.Linq;
-using Plugins.ConsoleUI.FrontEnd.UnityGUI;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
@@ -10,9 +8,7 @@ using Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Types = Static_Interface.Internal.Objects.Types;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Client

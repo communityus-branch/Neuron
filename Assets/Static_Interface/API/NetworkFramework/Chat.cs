@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
-using Static_Interface.Internal.Objects;
 using UnityEngine;
 
 namespace Static_Interface.API.NetworkFramework
@@ -27,7 +26,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void SendPlayerMessage(string text)
         {
-            Channel.Send(nameof(SendUserMessage), ECall.Server, EPacket.UPDATE_RELIABLE_BUFFER, text);
+            Channel.Send(nameof(SendUserMessage), ECall.Server, EPacket.UPDATE_RELIABLE_INSTANT, text);
         }
 
         public void SendServerMessage(string text)
@@ -36,7 +35,7 @@ namespace Static_Interface.API.NetworkFramework
             {
                 throw new Exception("This can be only called from server-side!");
             }
-            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_BUFFER, Channel.Connection.ServerID, text, true);
+            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_INSTANT, Channel.Connection.ServerID, text);
         }
 
         protected override void OnDestroy()
@@ -115,11 +114,11 @@ namespace Static_Interface.API.NetworkFramework
             //Todo: onchatevent
             var userName = sender.GetUser()?.Name ?? "Console";
             msg = "<color=yellow>" + userName + "</color>: " + msg;
-            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_CHUNK_BUFFER, sender, msg, false);
+            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_INSTANT, sender, msg);
         }
 
         [NetworkCall]
-        public void ReceiveMessage(Identity server, Identity sender, string formattedMessage, bool isServerMessage)
+        public void ReceiveMessage(Identity server, Identity sender, string formattedMessage)
         {
             //Todo: onchatreceivedevent/onmessagereceived
             LogUtils.Debug(nameof(ReceiveMessage));
