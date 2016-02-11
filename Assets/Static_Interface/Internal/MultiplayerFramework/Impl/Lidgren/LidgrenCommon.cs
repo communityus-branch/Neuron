@@ -133,11 +133,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     deliveryMethod = NetDeliveryMethod.ReliableOrdered;
                     break;
                 case SendMethod.SEND_RELIABLE_WITH_BUFFERING:
-                    deliveryMethod = NetDeliveryMethod.ReliableSequenced;
+                    deliveryMethod = NetDeliveryMethod.ReliableUnordered;
                     break;
                 case SendMethod.SEND_UNRELIABLE:
-                    deliveryMethod = NetDeliveryMethod.UnreliableSequenced;
-                    break;
                 case SendMethod.SEND_UNRELIABLE_NO_DELAY:
                     deliveryMethod = NetDeliveryMethod.Unreliable;
                     break;
