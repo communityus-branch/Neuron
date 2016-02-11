@@ -309,7 +309,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public void OpenGameServer(bool lan = false)
         {
-            if(Provider == null) Provider = new SteamworksClient(this);
+            if(Provider == null) Provider = new SteamworksServer(this);
             try
             {
                 ((ServerMultiplayerProvider)Provider).Open("*", Port, lan);
