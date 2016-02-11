@@ -5,6 +5,7 @@ using Lidgren.Network;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework.Server;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 {
@@ -34,7 +35,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                         if (status == NetConnectionStatus.Disconnected)
                         {
                             var sConIdent = GetIdentFromConnection(msg.SenderConnection, peers);
-                            CloseConnection(sConIdent, peers);
+                            ((ServerConnection)Connection.CurrentConnection).DisconnectClient(sConIdent);
                             host.Recycle(msg);
                             continue;
                         }

@@ -115,7 +115,7 @@ namespace Static_Interface.API.NetworkFramework
             //Todo: onchatevent
             var userName = sender.GetUser()?.Name ?? "Console";
             msg = "<color=yellow>" + userName + "</color>: " + msg;
-            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT, sender, msg, false);
+            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_CHUNK_BUFFER, sender, msg, false);
         }
 
         [NetworkCall]
