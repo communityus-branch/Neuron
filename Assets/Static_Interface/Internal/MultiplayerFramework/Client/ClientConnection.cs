@@ -124,9 +124,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             });
         }
 
+        private bool _levelLoadedCalled;
         protected override void OnLevelWasLoaded(int level)
         {
             base.OnLevelWasLoaded(level);
+
+            if (_levelLoadedCalled) return;
+            _levelLoadedCalled = true;
+    
             int size;
             ulong group = 1; //Todo
             object[] args = { ClientName, group, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f};

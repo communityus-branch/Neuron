@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
-using Types = Static_Interface.Internal.Objects.Types;
 
 namespace Static_Interface.API.PlayerFramework
 {
@@ -12,6 +11,8 @@ namespace Static_Interface.API.PlayerFramework
         private List<KeyState> _keyStates = new List<KeyState>(); 
         protected override void FixedUpdate()
         {
+            if (true) return;
+            if (InputUtil.IsInputLocked(this)) return;
             if (Channel.IsOwner)
             {
                 _keyStates = new List<KeyState>();
@@ -58,14 +59,14 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (!Channel.CheckOwner(id)) return;
             _keyStates = new List<KeyState>();
-            int size = (int) Channel.Read(Types.INT32_TYPE)[0];
+            int size = Channel.Read<int>();
             for (int i = 0; i < size; i++)
             {
-                KeyState state = (KeyState) Channel.Read(Types.KEYSTATE_TYPE)[0];
+                KeyState state = Channel.Read<KeyState>();
                 _keyStates.Add(state);
                 if (state.IsDown)
                 {
-                    LogUtils.Log(Player.User.Name + " pressed " + ((KeyCode)state.KeyCode));
+                    LogUtils.Log(Player.User.Name + " pressed " + state);
                 }
             }
 

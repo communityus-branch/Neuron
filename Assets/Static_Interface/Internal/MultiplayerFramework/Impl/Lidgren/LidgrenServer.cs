@@ -77,6 +77,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
             _server = new NetServer(config);
             _server.Start();
+            var con = _server.GetConnection(new IPEndPoint(IPAddress.None, port));
             _listen = true;
         }
 

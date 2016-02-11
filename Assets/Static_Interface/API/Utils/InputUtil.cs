@@ -1,9 +1,10 @@
 ﻿using System;
 using Plugins.ConsoleUI.FrontEnd.UnityGUI;
+using Static_Interface.Internal.MultiplayerFramework;
 
 namespace Static_Interface.API.Utils
 {
-    public class GuiUtil
+    public class InputUtil
     {
         private static bool InputLocked { get; set; } 
         private static object LockObject { get; set; }
@@ -29,6 +30,7 @@ namespace Static_Interface.API.Utils
 
         public static bool IsInputLocked(object o = null)
         {
+            if (Connection.CurrentConnection != null && Connection.IsServer()) return false;
             if (ConsoleGUI.Instance.IsOpen)
             {
                 return true;

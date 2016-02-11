@@ -36,7 +36,7 @@ namespace Static_Interface.API.NetworkFramework
             {
                 throw new Exception("This can be only called from server-side!");
             }
-            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_BUFFER, Channel.Connection.ServerID, text);
+            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_BUFFER, Channel.Connection.ServerID, text, true);
         }
 
         protected override void OnDestroy()
@@ -49,7 +49,7 @@ namespace Static_Interface.API.NetworkFramework
 
         private void OnGUI()
         {
-            if (GuiUtil.IsInputLocked(this)) return;
+            if (InputUtil.IsInputLocked(this)) return;
             if (!Draw) return;
 
             GUILayout.BeginArea(new Rect(0, 0, 400, 200));
@@ -65,7 +65,7 @@ namespace Static_Interface.API.NetworkFramework
             if (!ChatTextFieldVisible)
             {
                 if (!Input.GetKeyDown(KeyCode.Return)) return;
-                GuiUtil.LockInput(this);
+                InputUtil.LockInput(this);
                 ChatTextFieldVisible = true;
                 FoucsChatTextField();
                 _justFocused = true;
@@ -88,7 +88,7 @@ namespace Static_Interface.API.NetworkFramework
             if (!_justFocused)
             {
                 ChatTextFieldVisible = false;
-                GuiUtil.UnlockInput(this);
+                InputUtil.UnlockInput(this);
             }
             if (_justFocused) _justFocused = false;
             if (string.IsNullOrEmpty(Message?.Trim()))
@@ -115,11 +115,11 @@ namespace Static_Interface.API.NetworkFramework
             //Todo: onchatevent
             var userName = sender.GetUser()?.Name ?? "Console";
             msg = "<color=yellow>" + userName + "</color>: " + msg;
-            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_BUFFER, sender, msg);
+            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT, sender, msg, false);
         }
 
         [NetworkCall]
-        public void ReceiveMessage(Identity server, Identity sender, string formattedMessage)
+        public void ReceiveMessage(Identity server, Identity sender, string formattedMessage, bool isServerMessage)
         {
             //Todo: onchatreceivedevent/onmessagereceived
             LogUtils.Debug(nameof(ReceiveMessage));
