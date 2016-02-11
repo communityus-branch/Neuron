@@ -161,7 +161,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             length = 0L;
             if (!SteamGameServerNetworking.IsP2PPacketAvailable(out num, channel) || (num > data.Length))
             {
-                LogUtils.Debug("No P2P Packet available on channel " + channel);
                 return false;
             }
             if (!SteamGameServerNetworking.ReadP2PPacket(data, num, out num, out id, channel))
