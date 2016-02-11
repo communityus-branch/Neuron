@@ -31,10 +31,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void SendServerMessage(string text)
         {
-            if (!Connection.IsServer())
-            {
-                throw new Exception("This can be only called from server-side!");
-            }
+            CheckServer();
             Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_INSTANT, Channel.Connection.ServerID, text);
         }
 
@@ -108,8 +105,14 @@ namespace Static_Interface.API.NetworkFramework
             ChatTextFieldFocused = true;
         }
 
+        public void ClearChat()
+        {
+            CheckServer();
+            Channel.Send(nameof(ClearChat), ECall.All, EPacket.UPDATE_RELIABLE_INSTANT);
+        }
+
         [NetworkCall]
-        public void SendUserMessage(Identity sender, string msg)
+        private void SendUserMessage(Identity sender, string msg)
         {
             //Todo: onchatevent
             var userName = sender.GetUser()?.Name ?? "Console";
@@ -118,7 +121,7 @@ namespace Static_Interface.API.NetworkFramework
         }
 
         [NetworkCall]
-        public void ReceiveMessage(Identity server, Identity sender, string formattedMessage)
+        private void ReceiveMessage(Identity server, Identity sender, string formattedMessage)
         {
             //Todo: onchatreceivedevent/onmessagereceived
             LogUtils.Debug(nameof(ReceiveMessage));
@@ -128,7 +131,7 @@ namespace Static_Interface.API.NetworkFramework
         }
 
         [NetworkCall]
-        public void ClearChat(Identity server)
+        private void ClearChat(Identity server)
         {
             if (!Channel.CheckServer(server)) return;
             ChatHistory.Clear();

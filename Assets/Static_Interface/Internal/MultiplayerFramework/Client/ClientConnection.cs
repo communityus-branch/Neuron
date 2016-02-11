@@ -5,6 +5,7 @@ using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren;
+using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
@@ -75,7 +76,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         public void AttemptConnect(string ip, ushort port, string password, bool reset = true)
         {
             IsConnecting = true;
-            Provider = new LidgrenClient(this);
+            Provider = new SteamworksClient(this);
             ClientID = ((ClientMultiplayerProvider)Provider).GetUserID();
             ClientName = ((ClientMultiplayerProvider)Provider).GetClientName();
             CurrentTime = Provider.GetServerRealTime();

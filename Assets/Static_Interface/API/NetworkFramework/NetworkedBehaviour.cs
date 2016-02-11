@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Static_Interface.Internal.MultiplayerFramework;
+using UnityEngine;
 
 namespace Static_Interface.API.NetworkFramework
 {
@@ -34,6 +36,14 @@ namespace Static_Interface.API.NetworkFramework
         protected virtual void OnDestroy()
         {
             
+        }
+
+        public void CheckServer()
+        {
+            if (!Connection.IsServer())
+            {
+                throw new Exception("This can be only called from server-side!");
+            }
         }
     }
 }

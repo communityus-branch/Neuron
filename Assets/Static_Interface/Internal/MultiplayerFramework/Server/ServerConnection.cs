@@ -6,6 +6,7 @@ using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren;
+using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
@@ -308,7 +309,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public void OpenGameServer(bool lan = false)
         {
-            if(Provider == null) Provider = new LidgrenServer(this);
+            if(Provider == null) Provider = new SteamworksClient(this);
             try
             {
                 ((ServerMultiplayerProvider)Provider).Open("*", Port, lan);
