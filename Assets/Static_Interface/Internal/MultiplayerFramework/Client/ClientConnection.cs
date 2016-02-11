@@ -76,7 +76,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         public void AttemptConnect(string ip, ushort port, string password, bool reset = true)
         {
             IsConnecting = true;
-            Provider = new SteamworksClient(this);
+            Provider = new LidgrenClient(this);
             ClientID = ((ClientMultiplayerProvider)Provider).GetUserID();
             ClientName = ((ClientMultiplayerProvider)Provider).GetClientName();
             CurrentTime = Provider.GetServerRealTime();

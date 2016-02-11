@@ -26,13 +26,13 @@ namespace Static_Interface.API.NetworkFramework
 
         public void SendPlayerMessage(string text)
         {
-            Channel.Send(nameof(SendUserMessage), ECall.Server, EPacket.UPDATE_RELIABLE_INSTANT, text);
+            Channel.Send(nameof(SendUserMessage), ECall.Server, EPacket.UPDATE_RELIABLE_CHUNK_BUFFER, text);
         }
 
         public void SendServerMessage(string text)
         {
             CheckServer();
-            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_INSTANT, Channel.Connection.ServerID, text);
+            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_CHUNK_BUFFER, Channel.Connection.ServerID, text);
         }
 
         protected override void OnDestroy()
@@ -108,7 +108,7 @@ namespace Static_Interface.API.NetworkFramework
         public void ClearChat()
         {
             CheckServer();
-            Channel.Send(nameof(ClearChat), ECall.All, EPacket.UPDATE_RELIABLE_INSTANT);
+            Channel.Send(nameof(ClearChat), ECall.All, EPacket.UPDATE_RELIABLE_CHUNK_BUFFER);
         }
 
         [NetworkCall]
@@ -117,7 +117,7 @@ namespace Static_Interface.API.NetworkFramework
             //Todo: onchatevent
             var userName = sender.GetUser()?.Name ?? "Console";
             msg = "<color=yellow>" + userName + "</color>: " + msg;
-            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_INSTANT, sender, msg);
+            Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_RELIABLE_CHUNK_BUFFER, sender, msg);
         }
 
         [NetworkCall]
