@@ -1,4 +1,5 @@
 ﻿using System;
+using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -11,7 +12,11 @@ namespace Static_Interface.Internal
         {
             bool created;
             var persScripts = CheckObject("PersistentScripts", out created);
-            if(created) persScripts.AddComponent<ThreadPool>();
+            if (created)
+            {
+                persScripts.AddComponent<ThreadPool>();
+            }
+            
             CheckObject("SteamManager", out created);
             CheckObject("Console", out created);
         }

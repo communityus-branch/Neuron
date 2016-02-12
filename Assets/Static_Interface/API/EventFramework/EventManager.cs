@@ -15,7 +15,7 @@ namespace Static_Interface.API.EventFramework
 
         private readonly List<object> _listeners = new List<object>();
         private readonly Dictionary<Type, List<MethodInfo>> _eventListeners = new Dictionary<Type, List<MethodInfo>>();
-        private readonly Dictionary<MethodInfo, object> _listenerInstances = new Dictionary<MethodInfo, object>();
+        private readonly Dictionary<MethodInfo, IListener> _listenerInstances = new Dictionary<MethodInfo, IListener>();
 
         public static EventManager Instance => _instance ?? (_instance = new EventManager());
 
@@ -136,9 +136,14 @@ namespace Static_Interface.API.EventFramework
             }
         }
 
-        public void ClearExtensionListeners()
+        public void ClearListeners(Extension extension)
         {
-            //Todo
+            throw new NotImplementedException();
+        }
+
+        internal void Shutdown()
+        {
+            _instance= null;
         }
     }
 

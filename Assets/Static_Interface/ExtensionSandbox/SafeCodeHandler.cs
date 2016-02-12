@@ -67,7 +67,6 @@ namespace Static_Interface.ExtensionSandbox
             typeof(MemberInfo),
             typeof(RuntimeHelpers),
             typeof(UnityEngine.Debug),
-
             typeof(TextWriter),
             typeof(TextReader),
             typeof(BinaryWriter),
@@ -107,6 +106,7 @@ namespace Static_Interface.ExtensionSandbox
             typeof(AsyncOperation),
             typeof(Thread),
             typeof(Resolution),
+            typeof(UnityScheduler),
             typeof(Resources),
             typeof(SamsungTV),
             typeof(ScriptableObject),
@@ -119,7 +119,8 @@ namespace Static_Interface.ExtensionSandbox
             typeof(Timer),
             typeof(System.Timers.Timer),
             typeof(AsyncOperation),
-            typeof(System.ComponentModel.AsyncOperation)
+            typeof(System.ComponentModel.AsyncOperation),
+            typeof(ThreadPool)
         };
 
         private static readonly Dictionary<Type, List<string>> DisallowedMethods = new Dictionary<Type, List<string>>

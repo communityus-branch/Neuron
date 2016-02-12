@@ -3,6 +3,7 @@ using System.Collections;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
+using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
@@ -65,9 +66,11 @@ namespace Static_Interface.API.LevelFramework
         {
             Action action = delegate
             {
+
                 ExtensionManager.Instance?.Shutdown();
-                EventManager.Instance?.ClearExtensionListeners();
-                NetvarManager.Instance?.ClearNetvars();
+                EventManager.Instance?.Shutdown();
+                Scheduler.Instance?.Shutdown();
+                NetvarManager.Instance?.Shutdown();
                 Connection.CurrentConnection?.Dispose();
                 Connection.CurrentConnection = null;
                 LoadLevel("MainMenu", true);

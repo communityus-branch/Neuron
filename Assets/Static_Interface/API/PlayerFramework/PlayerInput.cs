@@ -11,7 +11,6 @@ namespace Static_Interface.API.PlayerFramework
         private List<KeyState> _keyStates = new List<KeyState>(); 
         protected override void FixedUpdate()
         {
-            if (true) return;
             if (InputUtil.IsInputLocked(this)) return;
             if (Channel.IsOwner)
             {

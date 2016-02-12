@@ -22,9 +22,9 @@ namespace Static_Interface.API.NetvarFramework
             _netvars.Add(netvar);
         }
 
-        public void ClearNetvars()
+        internal void Shutdown()
         {
-            //Todo
+            _instance = null;
         }
 
         public Netvar GetNetvar(string name)

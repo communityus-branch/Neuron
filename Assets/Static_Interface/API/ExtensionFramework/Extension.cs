@@ -1,4 +1,6 @@
 ﻿using System;
+using Static_Interface.API.EventFramework;
+using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 
 namespace Static_Interface.API.ExtensionFramework
@@ -59,6 +61,8 @@ namespace Static_Interface.API.ExtensionFramework
         {
             if (!_enabled) return;
             LogUtils.Log("Disabling extension: " + Name + " (" + GetType().Name + ")");
+            Scheduler.Instance.RemoveAllTasks(this);
+            EventManager.Instance.ClearListeners(this);
             try
             {
                 OnDisable();
