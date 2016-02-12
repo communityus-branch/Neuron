@@ -38,6 +38,9 @@ namespace Static_Interface.API.PlayerFramework
                 }
 
 
+                if (_keyStates.Count < 1) return;
+
+                LogUtils.Debug("Sending " + _keyStates.Count + " key states");
                 Channel.OpenWrite();
                 Channel.Write(_keyStates.Count);
                 foreach (KeyState state in _keyStates)
@@ -49,6 +52,8 @@ namespace Static_Interface.API.PlayerFramework
             }
 
             if (_keyStates.Count == 0) return;
+
+            //Todo: OnKeyPressedEvent
             Player.MovementController.HandleInput(this);
         }
 
@@ -69,7 +74,9 @@ namespace Static_Interface.API.PlayerFramework
                 }
             }
 
+
             //Todo: OnKeyPressedEvent
+            Player.MovementController.HandleInput(this);
         }
 
         public bool GetKey(KeyCode key)
