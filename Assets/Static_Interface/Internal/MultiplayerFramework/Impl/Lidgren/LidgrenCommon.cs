@@ -59,7 +59,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 }
 
                 byte[] data = new byte[sizeof(int)];
-                for (int i = 0; i <= data.Length; i++)
+                for (int i = 0; i < data.Length; i++)
                 {
                     data[i] = msg.ReadByte();
                 }
@@ -153,9 +153,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             NetOutgoingMessage msg = host.CreateMessage(iLength);
 
             byte[] chData = BitConverter.GetBytes(channel);
-            for (int i = 0; i <= chData.Length; i++)
+            foreach (byte t in chData)
             {
-                msg.Write(chData[i]);
+                msg.Write(t);
             }
 
             msg.Write(data, 0, iLength);
