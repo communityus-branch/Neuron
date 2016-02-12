@@ -11,9 +11,14 @@ namespace Static_Interface.API.NetworkFramework
         protected virtual void Awake()
         {
             Channel = GetComponent<Channel>();
+            
             // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
             // Channel = GetComponent<Channel>() ?? gameObject.AddComponent<Channel>();
-            if (Channel != null) return;
+            if (Channel != null)
+            {
+                Channel.Build(this);
+                return;
+            }
             Channel = gameObject.AddComponent<Channel>();
             Channel.Setup();
         }

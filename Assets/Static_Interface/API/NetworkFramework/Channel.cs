@@ -16,9 +16,10 @@ namespace Static_Interface.API.NetworkFramework
         public int ID { get; internal set; }
         public bool IsOwner { get; internal set; }
         public User Owner { get; internal set; }
-        public ChannelMethod[] Calls { get; private set; }
-
+        public List<ChannelMethod> Calls { get; private set; } = new List<ChannelMethod>();
+        
         private static readonly object[] Voice = new object[3];
+        private readonly List<Component> componentsRead = new List<Component>();
 
         void Awake()
         {
@@ -29,26 +30,39 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Build()
         {
-            var list = new List<ChannelMethod>();
+            Calls = new List<ChannelMethod>();
             var components = GetComponents(typeof (Component));
             foreach (var c in components)
             {
-                var members = c.GetType().GetMembers();
-                foreach (var m in members)
-                {
-                    if (m.MemberType != MemberTypes.Method) continue;
-                    var newMethod = (MethodInfo) m;
-                    if (newMethod.GetCustomAttributes(typeof (NetworkCall), true).Length <= 0) continue;
-                    var parameters = newMethod.GetParameters();
-                    var newTypes = new Type[parameters.Length];
-                    for (var k = 0; k < parameters.Length; k++)
-                    {
-                        newTypes[k] = parameters[k].ParameterType;
-                    }
-                    list.Add(new ChannelMethod(c, newMethod, newTypes));
-                }
+                Build(c);
             }
-            Calls = list.ToArray();
+        }
+
+        public void Build(Component c)
+        {
+            if (componentsRead.Contains(c)) return;
+            var members = c.GetType().GetMembers(BindingFlags.NonPublic | BindingFlags.Instance).ToList();
+            members.AddRange(c.GetType().GetMembers(BindingFlags.Instance));
+            foreach (var m in members)
+            {
+                if (m.MemberType != MemberTypes.Method)
+                {
+                    continue;
+                }
+                var newMethod = (MethodInfo)m;
+                if (newMethod.GetCustomAttributes(typeof (NetworkCall), true).Length <= 0)
+                {
+                    continue;
+                }
+                var parameters = newMethod.GetParameters();
+                var newTypes = new Type[parameters.Length];
+                for (var k = 0; k < parameters.Length; k++)
+                {
+                    newTypes[k] = parameters[k].ParameterType;
+                }
+                Calls.Add(new ChannelMethod(c, newMethod, newTypes));
+            }
+            componentsRead.Add(c);
         }
 
         public bool CheckOwner(Identity user)
@@ -154,9 +168,11 @@ namespace Static_Interface.API.NetworkFramework
 
         private int GetCall(string callName)
         {
-            for (var i = 0; i < Calls.Length; i++)
+            LogUtils.Debug(nameof(GetCall) + "- count: " + Calls.Count);
+            for (var i = 0; i < Calls.Count; i++)
             {
-                if (Calls[i].Method.Name == callName)
+                LogUtils.Debug(Calls[i].Method.Name);
+                if (Calls.ElementAt(i).Method.Name == callName)
                 {
                     return i;
                 }
@@ -235,7 +251,7 @@ namespace Static_Interface.API.NetworkFramework
                 ident = Connection.Provider.GetServerIdent();
             }
             int index = packet[offset + 1];
-            if ((index < 0) || (index >= Calls.Length)) return;
+            if ((index < 0) || (index >= Calls.Count)) return;
             EPacket packet2 = (EPacket) packet[offset];
             if ((packet2 == EPacket.UPDATE_VOICE) && (size < 4)) return;
             if ((packet2 == EPacket.UPDATE_UNRELIABLE_CHUNK_BUFFER) ||
@@ -269,6 +285,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Send(ECall mode, EPacket type, int size, byte[] packet)
         {
+            LogUtils.Debug(nameof(Send) + ": mode: " + mode + ", type: "+ type + ", size: " + size);
             switch (mode)
             {
                 case ECall.Server:
@@ -358,7 +375,11 @@ namespace Static_Interface.API.NetworkFramework
         public void Send(string pName, ECall mode, EPacket type, params object[] arguments)
         {
             var index = GetCall(pName);
-            if (index == -1) return;
+            if (index < 0 )
+            {
+                LogUtils.LogError("pName: " + pName + ": invalid index: " + index);
+                return;
+            }
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, arguments);
@@ -795,7 +816,7 @@ namespace Static_Interface.API.NetworkFramework
         public void Setup()
         {
             Connection = Connection.CurrentConnection;
-            ID = Connection.Channels+1;
+            ID = Connection.Channels;
             LogUtils.Debug("Setting up channel " + ID);
             Connection.OpenChannel(this);
         }

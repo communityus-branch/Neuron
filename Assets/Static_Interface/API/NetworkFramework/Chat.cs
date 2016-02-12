@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.NetworkFramework
@@ -114,6 +113,7 @@ namespace Static_Interface.API.NetworkFramework
         [NetworkCall]
         private void SendUserMessage(Identity sender, string msg)
         {
+            LogUtils.Debug(nameof(SendUserMessage));
             //Todo: onchatevent
             var userName = sender.GetUser()?.Name ?? "Console";
             msg = "<color=yellow>" + userName + "</color>: " + msg;

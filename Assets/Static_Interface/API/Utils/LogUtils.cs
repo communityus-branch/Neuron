@@ -31,6 +31,7 @@ namespace Static_Interface.API.Utils
                 if (UnityEngine.Debug.isDebugBuild)
                 {
                     UnityEngine.Debug.Log(msg);
+                    return;
                 }
 
                 if (Console.Instance != null)
@@ -48,6 +49,7 @@ namespace Static_Interface.API.Utils
                 if (UnityEngine.Debug.isDebugBuild)
                 {
                     UnityEngine.Debug.LogError(msg);
+                    return;
                 }
 
                 if (Console.Instance != null)
@@ -64,6 +66,7 @@ namespace Static_Interface.API.Utils
                 if (UnityEngine.Debug.isDebugBuild)
                 {
                     UnityEngine.Debug.LogWarning(msg);
+                    return;
                 }
 
                 if (Console.Instance != null)
