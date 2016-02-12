@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
 using Static_Interface.API.NetworkFramework;
@@ -57,8 +58,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     continue;
                 }
 
-                LogUtils.Debug("SequenceChannel: " + msg.SequenceChannel);
-                var channel = msg.SequenceChannel;
+                byte[] data = new byte[sizeof(int)];
+                for (int i = 0; i <= data.Length; i++)
+                {
+                    data[i] = msg.ReadByte();
+                }
+
+                var channel = BitConverter.ToInt32(data, 0);
+
                 if (!queue.ContainsKey(channel))
                 {
                     queue.Add(channel, new List<QueuedData>());
@@ -140,13 +147,20 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     deliveryMethod = NetDeliveryMethod.Unreliable;
                     break;
             }
-            
+
             NetConnection p = peers[target.Serialize()];
-            int iLength = (int)length;
+            int iLength = (int)length + sizeof(int);
             NetOutgoingMessage msg = host.CreateMessage(iLength);
+
+            byte[] chData = BitConverter.GetBytes(channel);
+            for (int i = 0; i <= chData.Length; i++)
+            {
+                msg.Write(chData[i]);
+            }
+
             msg.Write(data, 0, iLength);
 
-            var result = p.SendMessage(msg, deliveryMethod, channel);
+            var result = p.SendMessage(msg, deliveryMethod, 0);
             if (result != NetSendResult.Dropped && result != NetSendResult.FailedNotConnected)
             {
                 return true;
