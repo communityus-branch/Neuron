@@ -58,13 +58,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                     continue;
                 }
 
-                byte[] data = new byte[sizeof(int)];
-                for (int i = 0; i < data.Length; i++)
+                byte[] chData = new byte[sizeof(int)];
+                for (int i = 0; i < chData.Length; i++)
                 {
-                    data[i] = msg.ReadByte();
+                    chData[i] = msg.ReadByte();
                 }
 
-                var channel = BitConverter.ToInt32(data, 0);
+                var channel = BitConverter.ToInt32(chData, 0);
 
                 if (!queue.ContainsKey(channel))
                 {
@@ -131,7 +131,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             return true;
         }
 
-        public static bool Write(Identity target, byte[] data, ulong length, SendMethod method, int channel, NetPeer host, Dictionary<ulong, NetConnection> peers)
+        public static bool Write(Identity target, byte[] data, ulong contentLength, SendMethod method, int channel, NetPeer host, Dictionary<ulong, NetConnection> peers)
         {
             NetDeliveryMethod deliveryMethod = NetDeliveryMethod.Unknown;
             switch (method)
@@ -149,8 +149,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             }
 
             NetConnection p = peers[target.Serialize()];
-            int iLength = (int)length + sizeof(int);
-            NetOutgoingMessage msg = host.CreateMessage(iLength);
+
+
+            int totalLength = (int)contentLength + sizeof(int);
+            NetOutgoingMessage msg = host.CreateMessage(totalLength);
 
             byte[] chData = BitConverter.GetBytes(channel);
             foreach (byte t in chData)
@@ -158,7 +160,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 msg.Write(t);
             }
 
-            msg.Write(data, 0, iLength);
+            msg.Write(data, 0, (int)contentLength);
 
             var result = p.SendMessage(msg, deliveryMethod, 0);
             if (result != NetSendResult.Dropped && result != NetSendResult.FailedNotConnected)
