@@ -76,7 +76,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 QueuedData qData = new QueuedData
                 {
                     Ident = ident,
-                    Data = msg.ReadBytes(msg.LengthBytes).ToList()
+                    Data = msg.ReadBytes(msg.LengthBytes-sizeof(int)).ToList()
                 };
                 
                 queue[channel].Add(qData);
