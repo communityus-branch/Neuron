@@ -15,7 +15,7 @@ namespace Static_Interface.API.NetworkFramework
         [HideInInspector] public Connection Connection;
         public int ID { get; set; }
         public bool IsOwner { get; internal set; }
-        public User Owner { get; internal set; }
+        public Identity Owner { get; internal set; }
         public List<ChannelMethod> Calls { get; private set; } = new List<ChannelMethod>();
         
         private static readonly object[] Voice = new object[3];
@@ -71,7 +71,12 @@ namespace Static_Interface.API.NetworkFramework
             {
                 return false;
             }
-            return (user == Owner.Identity);
+            bool isOwner =(user == Owner);
+            if (!isOwner)
+            {
+                LogUtils.LogWarning("Not Owner! User: " + user + ", owner: " + Owner);
+            }
+            return isOwner;
         }
 
         public bool CheckServer(Identity user)
@@ -329,11 +334,11 @@ namespace Static_Interface.API.NetworkFramework
                 case ECall.Owner:
                     if (IsOwner)
                     {
-                        Receive(Owner.Identity, packet, 0, size);
+                        Receive(Owner, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.Identity, type, packet, size, ID);
+                        Connection.Send(Owner, type, packet, size, ID);
                     }
                     break;
                 case ECall.NotOwner:
@@ -342,7 +347,7 @@ namespace Static_Interface.API.NetworkFramework
                         LogUtils.LogWarning("Im not the server, I can't send a message to all non owners!!");
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
-                    foreach (User user in Connection.Clients.Where(user => user.Identity != Owner.Identity))
+                    foreach (User user in Connection.Clients.Where(user => user.Identity != Owner))
                     {
                         Connection.Send(user.Identity, type, packet, size, ID);
                     }
@@ -461,11 +466,11 @@ namespace Static_Interface.API.NetworkFramework
                 case ECall.Owner:
                     if (IsOwner)
                     {
-                        Receive(Owner.Identity, packet, 0, size);
+                        Receive(Owner, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.Identity, type, packet, size, ID);
+                        Connection.Send(Owner, type, packet, size, ID);
                     }
                     break;
                 case ECall.NotOwner:
@@ -475,7 +480,7 @@ namespace Static_Interface.API.NetworkFramework
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity != Owner.Identity) &&
+                        if (((user.Identity != Owner) &&
                              (user.Player != null)) && (user.Player.MovementController.Bound == bound))
                         {
                             Connection.Send(user.Identity, type, packet, size, ID);
@@ -585,11 +590,11 @@ namespace Static_Interface.API.NetworkFramework
                 case ECall.Owner:
                     if (IsOwner)
                     {
-                        Receive(Owner.Identity, packet, 0, size);
+                        Receive(Owner, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.Identity, type, packet, size, ID);
+                        Connection.Send(Owner, type, packet, size, ID);
                     }
                     break;
                 case ECall.NotOwner:
@@ -599,7 +604,7 @@ namespace Static_Interface.API.NetworkFramework
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if ((user.Identity == Owner.Identity) || (user.Player == null)) continue;
+                        if ((user.Identity == Owner) || (user.Player == null)) continue;
                         Vector3 vector3 = user.Player.transform.position - point;
                         if (vector3.sqrMagnitude < radius)
                         {
@@ -714,11 +719,11 @@ namespace Static_Interface.API.NetworkFramework
                 case ECall.Owner:
                     if (IsOwner)
                     {
-                        Receive(Owner.Identity, packet, 0, size);
+                        Receive(Owner, packet, 0, size);
                     }
                     else
                     {
-                        Connection.Send(Owner.Identity, type, packet, size, ID);
+                        Connection.Send(Owner, type, packet, size, ID);
                     }
                     break;
                 case ECall.NotOwner:
@@ -728,7 +733,7 @@ namespace Static_Interface.API.NetworkFramework
                     }
                     foreach (User user in Connection.Clients)
                     {
-                        if (((user.Identity != Owner.Identity) &&
+                        if (((user.Identity != Owner) &&
                              (user.Player != null)) &&
                             Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
                             user.Player.MovementController.RegionY, area))

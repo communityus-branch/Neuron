@@ -16,7 +16,7 @@ namespace Static_Interface.API.PlayerFramework
             {
                 _keyStates = new List<KeyState>();
 
-                foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
+                foreach (KeyCode keyCode in Enum.GetValues(typeof (KeyCode)))
                 {
                     KeyState state = new KeyState();
                     if (Input.GetKey(keyCode))
@@ -29,7 +29,7 @@ namespace Static_Interface.API.PlayerFramework
                         state.IsDown = true;
                     }
 
-                    state.KeyCode = (int)keyCode;
+                    state.KeyCode = (int) keyCode;
 
                     if (state.IsPressed || state.IsDown) //only send pressed keys
                     {

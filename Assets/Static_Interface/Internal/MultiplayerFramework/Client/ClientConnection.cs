@@ -141,9 +141,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             NetworkUtils.GetAveragePing(currentPing, out _ping, _pings);
         }
 
-        protected override Transform AddPlayer(Identity ident, string @name, ulong group, Vector3 point, byte angle, int channel)
+        protected override Transform AddPlayer(Identity ident, string playerName, ulong group, Vector3 point, byte angle, int channel)
         {
-            var playerTransform = base.AddPlayer(ident, @name, group, point, angle, channel);;
+            var playerTransform = base.AddPlayer(ident, playerName, group, point, angle, channel);;
             if (ident != ClientID)
             {
                 ((ClientMultiplayerProvider) Provider).SetPlayedWith(ident);
@@ -152,6 +152,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             {
                 SetupMainPlayer(playerTransform);
             }
+            playerTransform.gameObject.name = playerName;
             return playerTransform;
         }
 
@@ -169,6 +170,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 Camera.current.enabled = false;
             }
 
+            playerTransform.GetComponent<Channel>().IsOwner = true;
             playerTransform.gameObject.AddComponent<MouseLook>();
 
             LogUtils.Debug("Setting console character");

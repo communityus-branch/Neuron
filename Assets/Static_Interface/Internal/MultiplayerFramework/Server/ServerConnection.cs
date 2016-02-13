@@ -299,6 +299,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
             data = new object[] { ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles.y / 2f };
             packet = ObjectSerializer.GetBytes(0, out size, data);
+            player.GetComponent<Channel>().Owner = user.Identity;
             foreach (var c in Clients.Where(c => c.Identity != ident))
             {
                 Send(c.Identity, EPacket.CONNECTED, packet, size, 0);

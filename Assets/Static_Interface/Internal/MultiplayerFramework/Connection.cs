@@ -135,13 +135,13 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         internal abstract void Listen();
 
-        protected virtual Transform AddPlayer(Identity ident, string @name, ulong group, Vector3 point, byte angle, int channel)
+        protected virtual Transform AddPlayer(Identity ident, string playerName, ulong group, Vector3 point, byte angle, int channel)
         {
-            LogUtils.Debug(nameof(AddPlayer) + ": " + @name);
+            LogUtils.Debug(nameof(AddPlayer) + ": " + playerName);
             GameObject obj = (GameObject) Resources.Load("Player");
             obj.transform.FindChild("MainCamera").GetComponent<Camera>().enabled = false;
             Transform newModel = ((GameObject)Instantiate(obj, point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
-            var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = @name };
+            var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = playerName };
             ident.Owner = user;
             newModel.GetComponent<Player>().User = user;
             _clients.Add(user);

@@ -4,6 +4,7 @@ using Static_Interface.API.Commands;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Client;
@@ -36,6 +37,7 @@ namespace Static_Interface.Internal
             LogUtils.Debug("Spawning default player");
             GameObject player = (GameObject)Instantiate(Resources.Load("Player"), DefaultSpawnPosition.position, DefaultSpawnPosition.rotation);
             ClientConnection.SetupMainPlayer(player.transform);
+            player.name = Player.MainPlayer.User.Name;
         }
     }
 }
