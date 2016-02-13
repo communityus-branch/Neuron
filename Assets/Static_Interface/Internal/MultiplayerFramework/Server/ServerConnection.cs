@@ -282,8 +282,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             int size;
             //Todo: savefile
 
-            int channels = Channels;
-            Transform player = AddPlayer(ident, user.Name, user.Group, spawn, angle, channels);
+            int ch = Channels;
+            Transform player = AddPlayer(ident, user.Name, user.Group, spawn, angle, ch);
             object[] data;
             byte[] packet;
             foreach (var c in Clients)
@@ -292,9 +292,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 packet = ObjectSerializer.GetBytes(0, out size, data);
                 Send(user.Identity, EPacket.CONNECTED, packet, data.Length, 0);
             }
-            player.GetComponent<Channel>().Setup();
 
-            data = new object[] { ident.Serialize(), player.GetComponent<Channel>().ID};
+            data = new object[] { ident.Serialize(), ch};
             packet = ObjectSerializer.GetBytes(0, out size, data);
             Send(user.Identity, EPacket.ACCEPTED, packet, data.Length, 0);
 
