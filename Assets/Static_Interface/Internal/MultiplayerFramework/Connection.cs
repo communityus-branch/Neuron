@@ -99,7 +99,6 @@ namespace Static_Interface.Internal.MultiplayerFramework
                 OpenChannel(ch);
             }
             _clients = new List<User>();
-            //pending = new List<SteamPending>();
         }
 
 

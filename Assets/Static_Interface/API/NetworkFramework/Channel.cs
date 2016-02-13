@@ -44,10 +44,8 @@ namespace Static_Interface.API.NetworkFramework
             if (_componentsRead.Contains(c)) return;
             var members = c.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).ToList();
             members.AddRange(c.GetType().GetMethods(BindingFlags.Public| BindingFlags.Instance));
-            bool log = c is PlayerInput;
             foreach (var m in members)
             {
-                if(log) LogUtils.Debug(m.Name);
                 if (m.GetCustomAttributes(typeof (NetworkCall), true).Length <= 0)
                 {
                     continue;
@@ -671,7 +669,7 @@ namespace Static_Interface.API.NetworkFramework
         public void Setup()
         {
             Connection = Connection.CurrentConnection;
-            ID = Connection.Channels;
+            if(ID == 0) ID = Connection.Channels;
             LogUtils.Debug("Setting up channel " + ID);
             Connection.OpenChannel(this);
         }
