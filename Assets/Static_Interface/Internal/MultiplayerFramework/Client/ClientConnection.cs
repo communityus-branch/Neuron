@@ -242,6 +242,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             {
                 switch (parsedPacket)
                 {
+                    case EPacket.WORKSHOP:
+                        //todo
+                        return;
                     case EPacket.TICK:
                         {
                             Send(ServerID, EPacket.TIME, new byte[] { }, 0, 0);

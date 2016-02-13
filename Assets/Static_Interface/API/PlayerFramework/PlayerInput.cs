@@ -10,7 +10,9 @@ namespace Static_Interface.API.PlayerFramework
     {
         public const uint PERIOD = 250;
         private uint _lastSent;
-        private List<KeyState> _keyStates = new List<KeyState>(); 
+        private List<KeyState> _keyStates = new List<KeyState>();
+        private Vector3 _lookDirection = Vector3.zero;
+
         protected override void FixedUpdate()
         {
             if (InputUtil.IsInputLocked(this) || !Channel.IsOwner) return;
@@ -37,13 +39,10 @@ namespace Static_Interface.API.PlayerFramework
                 }
             }
 
-            if (_keyStates.Count < 1) return;
-
-            //Todo: OnKeyPressedEvent
-            Player.MovementController.HandleInput(this);
-
-            if (TimeUtil.GetCurrentTime() - _lastSent > PERIOD)
+            bool send = TimeUtil.GetCurrentTime() - _lastSent > PERIOD;
+            if (_keyStates.Count > 0 && send)
             {
+                //Todo: OnKeyPressedEvent
                 LogUtils.Debug("Sending " + _keyStates.Count + " key states");
                 Channel.OpenWrite();
                 Channel.Write(_keyStates.Count);
@@ -54,11 +53,21 @@ namespace Static_Interface.API.PlayerFramework
                 Channel.CloseWrite(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
                 _lastSent = TimeUtil.GetCurrentTime();
             }
+
+            if (Player.Camera.transform.eulerAngles != _lookDirection && send)
+            {
+                Channel.OpenWrite();
+                Channel.Write(Player.Camera.transform.eulerAngles);
+                Channel.CloseWrite(nameof(ReadLook), ECall.Server, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
+            }
+            _lookDirection = Player.Camera.transform.eulerAngles;
+
+            Player.MovementController.HandleInput(this);
         }
         
         //ServerSide
         [NetworkCall]
-        public void ReadInput(Identity id)
+        private void ReadInput(Identity id)
         {
             if (!Channel.CheckOwner(id)) return;
             _keyStates = new List<KeyState>();
@@ -75,6 +84,17 @@ namespace Static_Interface.API.PlayerFramework
 
             //Todo: OnKeyPressedEvent
             Player.MovementController.HandleInput(this);
+        }
+
+        [NetworkCall]
+        private void ReadLook(Identity id)
+        {
+            if (!Channel.CheckOwner(id)) return;
+            _lookDirection = Channel.Read<Vector3>();
+            if (Player.Health.IsDead) return;
+            Vector3 newRot = Player.transform.eulerAngles;
+            newRot.z= _lookDirection.z;
+            Player.transform.eulerAngles = newRot;
         }
 
         public bool GetKey(KeyCode key)
@@ -110,6 +130,11 @@ namespace Static_Interface.API.PlayerFramework
         public bool GetKeyUp(KeyCode key)
         {
             return !GetKeyDown(key);
+        }
+
+        public Vector3 GetLook()
+        {
+            return _lookDirection;
         }
     }
 }

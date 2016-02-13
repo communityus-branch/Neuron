@@ -30,7 +30,8 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Build()
         {
-            Calls = new List<ChannelMethod>();
+            _componentsRead.Clear();
+            Calls.Clear();
             var components = GetComponents(typeof (Component));
             foreach (var c in components)
             {
@@ -41,27 +42,23 @@ namespace Static_Interface.API.NetworkFramework
         public void Build(Component c)
         {
             if (_componentsRead.Contains(c)) return;
-            var members = c.GetType().GetMembers(BindingFlags.NonPublic | BindingFlags.Instance).ToList();
-            members.AddRange(c.GetType().GetMembers(BindingFlags.Public| BindingFlags.Instance));
-
+            var members = c.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).ToList();
+            members.AddRange(c.GetType().GetMethods(BindingFlags.Public| BindingFlags.Instance));
+            bool log = c is PlayerInput;
             foreach (var m in members)
             {
-                if (m.MemberType != MemberTypes.Method)
+                if(log) LogUtils.Debug(m.Name);
+                if (m.GetCustomAttributes(typeof (NetworkCall), true).Length <= 0)
                 {
                     continue;
                 }
-                var newMethod = (MethodInfo)m;
-                if (newMethod.GetCustomAttributes(typeof (NetworkCall), true).Length <= 0)
-                {
-                    continue;
-                }
-                var parameters = newMethod.GetParameters();
+                var parameters = m.GetParameters();
                 var newTypes = new Type[parameters.Length];
                 for (var k = 0; k < parameters.Length; k++)
                 {
                     newTypes[k] = parameters[k].ParameterType;
                 }
-                Calls.Add(new ChannelMethod(c, newMethod, newTypes));
+                Calls.Add(new ChannelMethod(c, m, newTypes));
             }
             _componentsRead.Add(c);
         }
@@ -156,25 +153,9 @@ namespace Static_Interface.API.NetworkFramework
             }
         }
 
-        public void CloseWrite(string channelName, ECall mode, byte x, byte y, byte area, EPacket type)
-        {
-            if (!type.IsChunk())
-            {
-                LogUtils.LogError("Failed to stream non chunk: " + type);
-            }
-            else
-            {
-                var index = GetCall(channelName);
-                if (index == -1) return;
-                int length;
-                byte[] buffer;
-                GetPacket(type, index, out length, out buffer);
-                Send(mode, x, y, area, type, length, buffer);
-            }
-        }
-
         private int GetCall(string callName)
         {
+            if(Calls.Count == 0) Build();
             for (var i = 0; i < Calls.Count; i++)
             {
                 if (Calls.ElementAt(i).Method.Name == callName)
@@ -182,7 +163,6 @@ namespace Static_Interface.API.NetworkFramework
                     return i;
                 }
             }
-
             LogUtils.Debug("Call index not found for: " + callName);
             return -1;
         }
@@ -664,128 +644,6 @@ namespace Static_Interface.API.NetworkFramework
             Send(mode, point, radius, type, size, buffer);
         }
 
-        public void Send(ECall mode, byte x, byte y, byte area, EPacket type, int size, byte[] packet)
-        {
-            switch (mode)
-            {
-                case ECall.Server:
-                    if (Connection.IsServer())
-                    {
-                        Receive(Connection.ServerID, packet, 0, size);
-                    }
-                    else
-                    {
-                        Connection.Send(Connection.ServerID, type, packet, size, ID);
-                    }
-                    break;
-                case ECall.All:
-                    if (!(Connection.IsServer()))
-                    {
-                        Connection.Send(Connection.ServerID, type, packet, size, ID);
-                    }
-                    foreach (var user in Connection.Clients)
-                    {
-                        if (((user.Identity != Connection.ClientID) &&
-                             (user.Player != null)) &&
-                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
-                                user.Player.MovementController.RegionY, area))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    if (Connection.IsServer())
-                    {
-                        Receive(Connection.ServerID, packet, 0, size);
-                    }
-                    else
-                    {
-                        Receive(Connection.ClientID, packet, 0, size);
-                    }
-                    break;
-                case ECall.Others:
-                    if (!(Connection.IsServer()))
-                    {
-                        Connection.Send(Connection.ServerID, type, packet, size, ID);
-                    }
-                    foreach (User user in Connection.Clients)
-                    {
-                        if (((user.Identity != Connection.ClientID) &&
-                             (user.Player != null)) &&
-                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
-                                user.Player.MovementController.RegionY, area))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    break;
-                case ECall.Owner:
-                    if (IsOwner)
-                    {
-                        Receive(Owner, packet, 0, size);
-                    }
-                    else
-                    {
-                        Connection.Send(Owner, type, packet, size, ID);
-                    }
-                    break;
-                case ECall.NotOwner:
-                    if (!(Connection.IsServer()))
-                    {
-                        Connection.Send(Connection.ServerID, type, packet, size, ID);
-                    }
-                    foreach (User user in Connection.Clients)
-                    {
-                        if (((user.Identity != Owner) &&
-                             (user.Player != null)) &&
-                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
-                            user.Player.MovementController.RegionY, area))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    break;
-                case ECall.Clients:
-                    foreach (User user in Connection.Clients)
-                    {
-                        if (((user.Identity != Connection.ClientID) &&
-                             (user.Player != null)) &&
-                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
-                                user.Player.MovementController.RegionY, area))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    if (Connection.IsClient())
-                    {
-                        Receive(Connection.ClientID, packet, 0, size);
-                    }
-                    break;
-                case ECall.Peers:
-                    foreach (User user in Connection.Clients)
-                    {
-                        if (((user.Identity != Connection.ClientID) &&
-                             (user.Player != null)) &&
-                            Regions.CheckArea(x, y, user.Player.MovementController.RegionX,
-                                user.Player.MovementController.RegionY, area))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    break;
-            }
-        }
-
-        public void Send(string pName, ECall mode, byte x, byte y, byte area, EPacket type,
-            params object[] arguments)
-        {
-            var index = GetCall(pName);
-            if (index == -1) return;
-            int size;
-            byte[] buffer;
-            GetPacket(type, index, out size, out buffer, arguments);
-            Send(mode, x, y, area, type, size, buffer);
-        }
-
         public void Send(string pName, ECall mode, Vector3 point, float radius, EPacket type, byte[] bytes,
             int length)
         {
@@ -795,16 +653,6 @@ namespace Static_Interface.API.NetworkFramework
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, bytes, length);
             Send(mode, point, radius, type, size, buffer);
-        }
-
-        public void Send(string pName, ECall mode, byte x, byte y, byte area, EPacket type, byte[] bytes, int length)
-        {
-            var index = GetCall(pName);
-            if (index == -1) return;
-            int size;
-            byte[] buffer;
-            GetPacket(type, index, out size, out buffer, bytes, length);
-            Send(mode, x, y, area, type, size, buffer);
         }
 
         public void SendAside(string pName, Identity u, EPacket type, params object[] arguments)
