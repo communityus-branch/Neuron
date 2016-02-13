@@ -152,7 +152,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             {
                 SetupMainPlayer(playerTransform);
             }
-            playerTransform.gameObject.name = playerName;
             return playerTransform;
         }
 
@@ -160,8 +159,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         {
             if (Player.MainPlayer != null)
             {
-                var comp = Player.MainPlayer.Model.GetComponent<AudioListener>();
-                if (comp != null) DestroyImmediate(comp);
+                DestroyImmediate(Player.MainPlayer.gameObject);
             }
             LogUtils.Debug("Setting up main player");
             Player.MainPlayer = playerTransform.GetComponent<Player>();
@@ -295,6 +293,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     case EPacket.ACCEPTED:
                     {
                         object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, Types.UINT64_TYPE, Types.INT32_TYPE);
+                        LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
                         Player.MainPlayer.gameObject.GetComponent<Channel>().ID = (int) args[1];
                         ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
                         ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    

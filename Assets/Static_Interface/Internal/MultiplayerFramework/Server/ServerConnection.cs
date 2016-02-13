@@ -292,6 +292,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 packet = ObjectSerializer.GetBytes(0, out size, data);
                 Send(user.Identity, EPacket.CONNECTED, packet, data.Length, 0);
             }
+            player.GetComponent<Channel>().Setup();
 
             data = new object[] { ident.Serialize(), player.GetComponent<Channel>().ID};
             packet = ObjectSerializer.GetBytes(0, out size, data);

@@ -107,7 +107,7 @@ namespace Static_Interface.API.NetworkFramework
         public void ClearChat()
         {
             CheckServer();
-            Channel.Send(nameof(ClearChat), ECall.All, EPacket.UPDATE_UNRELIABLE_BUFFER);
+            Channel.Send(nameof(ClearChatCommand), ECall.All, EPacket.UPDATE_UNRELIABLE_BUFFER);
         }
 
         [NetworkCall]
@@ -131,7 +131,7 @@ namespace Static_Interface.API.NetworkFramework
         }
 
         [NetworkCall]
-        private void ClearChat(Identity server)
+        private void ClearChatCommand(Identity server)
         {
             if (!Channel.CheckServer(server)) return;
             ChatHistory.Clear();

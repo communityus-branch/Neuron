@@ -37,7 +37,6 @@ namespace Static_Interface.Internal
             LogUtils.Debug("Spawning default player");
             GameObject player = (GameObject)Instantiate(Resources.Load("Player"), DefaultSpawnPosition.position, DefaultSpawnPosition.rotation);
             ClientConnection.SetupMainPlayer(player.transform);
-            player.name = Player.MainPlayer.User.Name;
         }
     }
 }
