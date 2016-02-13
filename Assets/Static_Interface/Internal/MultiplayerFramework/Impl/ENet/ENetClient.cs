@@ -124,7 +124,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.ENet
 
         public override uint GetServerRealTime()
         {
-            return Convert.ToUInt32(DateTime.UtcNow.Millisecond);
+            return TimeUtil.GetCurrentTime();
         }
 
         public override void Dispose()

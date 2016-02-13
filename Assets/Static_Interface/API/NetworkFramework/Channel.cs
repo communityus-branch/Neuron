@@ -19,7 +19,7 @@ namespace Static_Interface.API.NetworkFramework
         public List<ChannelMethod> Calls { get; private set; } = new List<ChannelMethod>();
         
         private static readonly object[] Voice = new object[3];
-        private readonly List<Component> componentsRead = new List<Component>();
+        private readonly List<Component> _componentsRead = new List<Component>();
 
         void Awake()
         {
@@ -40,9 +40,10 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Build(Component c)
         {
-            if (componentsRead.Contains(c)) return;
+            if (_componentsRead.Contains(c)) return;
             var members = c.GetType().GetMembers(BindingFlags.NonPublic | BindingFlags.Instance).ToList();
-            members.AddRange(c.GetType().GetMembers(BindingFlags.Instance));
+            members.AddRange(c.GetType().GetMembers(BindingFlags.Public| BindingFlags.Instance));
+
             foreach (var m in members)
             {
                 if (m.MemberType != MemberTypes.Method)
@@ -62,7 +63,7 @@ namespace Static_Interface.API.NetworkFramework
                 }
                 Calls.Add(new ChannelMethod(c, newMethod, newTypes));
             }
-            componentsRead.Add(c);
+            _componentsRead.Add(c);
         }
 
         public bool CheckOwner(Identity user)
@@ -91,6 +92,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void CloseWrite(string channelName, ECall mode, EPacket type)
         {
+            LogUtils.Debug(nameof(CloseWrite) + ": " + channelName);
             if (!type.IsChunk())
             {
                 LogUtils.LogError("Failed to stream non chunk: " + type);
@@ -173,15 +175,15 @@ namespace Static_Interface.API.NetworkFramework
 
         private int GetCall(string callName)
         {
-            LogUtils.Debug(nameof(GetCall) + "- count: " + Calls.Count);
             for (var i = 0; i < Calls.Count; i++)
             {
-                LogUtils.Debug(Calls[i].Method.Name);
                 if (Calls.ElementAt(i).Method.Name == callName)
                 {
                     return i;
                 }
             }
+
+            LogUtils.Debug("Call index not found for: " + callName);
             return -1;
         }
 

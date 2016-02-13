@@ -46,7 +46,7 @@ namespace Static_Interface.API.SchedulerFramework
                 IsAsync = isAsync,
                 Delay = delay,
                 Period = period,
-                ScheduledTime = GetCurrentTime()
+                ScheduledTime = TimeUtil.GetCurrentTime()
             };
 
             _lastId++;
@@ -91,7 +91,7 @@ namespace Static_Interface.API.SchedulerFramework
 
                 bool queued = false;
 
-                if (t.Delay > 0 && t.LastRunTime == 0 && GetCurrentTime() - t.ScheduledTime >= t.Delay)
+                if (t.Delay > 0 && t.LastRunTime == 0 && TimeUtil.GetCurrentTime() - t.ScheduledTime >= t.Delay)
                 {
                     QueueTask(t);
                     queued = true;
@@ -105,7 +105,7 @@ namespace Static_Interface.API.SchedulerFramework
                 }
 
 
-                if (!queued && t.LastRunTime > 0 && GetCurrentTime() - t.LastRunTime >= t.Period)
+                if (!queued && t.LastRunTime > 0 && TimeUtil.GetCurrentTime() - t.LastRunTime >= t.Period)
                 {
                     QueueTask(t);
                 }
@@ -119,7 +119,7 @@ namespace Static_Interface.API.SchedulerFramework
 
         private void QueueTask(Task t)
         {
-            t.LastRunTime = GetCurrentTime();
+            t.LastRunTime = TimeUtil.GetCurrentTime();
             if (t.IsAsync)
             {
                 ThreadPool.QueueAsync(t.Action);
@@ -128,11 +128,6 @@ namespace Static_Interface.API.SchedulerFramework
             {
                 ThreadPool.QueueMain(t.Action);
             }
-        }
-
-        private uint GetCurrentTime()
-        {
-            return (uint)DateTime.UtcNow.Millisecond;
         }
 
         public void RemoveAllTasks(Extension ext)

@@ -8,38 +8,42 @@ namespace Static_Interface.API.PlayerFramework
 {
     public class PlayerInput : PlayerBehaviour
     {
+        public const uint PERIOD = 250;
+        private uint _lastSent;
         private List<KeyState> _keyStates = new List<KeyState>(); 
         protected override void FixedUpdate()
         {
-            if (InputUtil.IsInputLocked(this)) return;
-            if (Channel.IsOwner)
+            if (InputUtil.IsInputLocked(this) || !Channel.IsOwner) return;
+            _keyStates = new List<KeyState>();
+
+            foreach (KeyCode keyCode in Enum.GetValues(typeof (KeyCode)))
             {
-                _keyStates = new List<KeyState>();
-
-                foreach (KeyCode keyCode in Enum.GetValues(typeof (KeyCode)))
+                KeyState state = new KeyState();
+                if (Input.GetKey(keyCode))
                 {
-                    KeyState state = new KeyState();
-                    if (Input.GetKey(keyCode))
-                    {
-                        state.IsPressed = true;
-                    }
-
-                    if (Input.GetKeyDown(keyCode))
-                    {
-                        state.IsDown = true;
-                    }
-
-                    state.KeyCode = (int) keyCode;
-
-                    if (state.IsPressed || state.IsDown) //only send pressed keys
-                    {
-                        _keyStates.Add(state);
-                    }
+                    state.IsPressed = true;
                 }
 
+                if (Input.GetKeyDown(keyCode))
+                {
+                    state.IsDown = true;
+                }
 
-                if (_keyStates.Count < 1) return;
+                state.KeyCode = (int) keyCode;
 
+                if (state.IsPressed || state.IsDown) //only send pressed keys
+                {
+                    _keyStates.Add(state);
+                }
+            }
+
+            if (_keyStates.Count < 1) return;
+
+            //Todo: OnKeyPressedEvent
+            Player.MovementController.HandleInput(this);
+
+            if (TimeUtil.GetCurrentTime() - _lastSent > PERIOD)
+            {
                 LogUtils.Debug("Sending " + _keyStates.Count + " key states");
                 Channel.OpenWrite();
                 Channel.Write(_keyStates.Count);
@@ -48,15 +52,10 @@ namespace Static_Interface.API.PlayerFramework
                     Channel.Write(state);
                 }
                 Channel.CloseWrite(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
-
+                _lastSent = TimeUtil.GetCurrentTime();
             }
-
-            if (_keyStates.Count == 0) return;
-
-            //Todo: OnKeyPressedEvent
-            Player.MovementController.HandleInput(this);
         }
-
+        
         //ServerSide
         [NetworkCall]
         public void ReadInput(Identity id)
@@ -73,7 +72,6 @@ namespace Static_Interface.API.PlayerFramework
                     LogUtils.Log(Player.User.Name + " pressed " + state);
                 }
             }
-
 
             //Todo: OnKeyPressedEvent
             Player.MovementController.HandleInput(this);

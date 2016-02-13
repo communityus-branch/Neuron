@@ -111,7 +111,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
         public override uint GetServerRealTime()
         {
-            return Convert.ToUInt32(DateTime.Now.Millisecond);
+            return TimeUtil.GetCurrentTime();
         }
 
         public override void Dispose()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Lidgren.Network;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Neuron;
 using UnityEngine;
@@ -37,7 +38,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
         public override uint GetServerRealTime()
         {
-            return Convert.ToUInt32(DateTime.Now.Millisecond);
+            return TimeUtil.GetCurrentTime();
         }
 
         public override Identity Deserialilze(ulong ident)
