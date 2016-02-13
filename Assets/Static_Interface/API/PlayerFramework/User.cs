@@ -23,7 +23,7 @@ namespace Static_Interface.API.PlayerFramework
             Model = model;
             Channel ch = model.GetComponent<Channel>();
             ch.ID = channelId;
-            ch.Owner = this;
+            ch.Owner = ident;
             ch.IsOwner = ident == connection.ClientID;
             ch.Setup();
             Player = model.GetComponent<Player>();
