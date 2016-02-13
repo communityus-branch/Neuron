@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
@@ -44,21 +45,13 @@ namespace Static_Interface.API.PlayerFramework
             {
                 //Todo: OnKeyPressedEvent
                 LogUtils.Debug("Sending " + _keyStates.Count + " key states");
-                Channel.OpenWrite();
-                Channel.Write(_keyStates.Count);
-                foreach (KeyState state in _keyStates)
-                {
-                    Channel.Write(state);
-                }
-                Channel.CloseWrite(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
+                Channel.Send(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, _keyStates.Count);
                 _lastSent = TimeUtil.GetCurrentTime();
             }
 
             if (Player.Camera.transform.eulerAngles != _lookDirection && send)
             {
-                Channel.OpenWrite();
-                Channel.Write(Player.Camera.transform.eulerAngles);
-                Channel.CloseWrite(nameof(ReadLook), ECall.Server, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
+                Channel.Send(nameof(ReadLook), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, Player.Camera.transform.eulerAngles);
             }
             _lookDirection = Player.Camera.transform.eulerAngles;
 
@@ -67,30 +60,20 @@ namespace Static_Interface.API.PlayerFramework
         
         //ServerSide
         [NetworkCall]
-        private void ReadInput(Identity id)
+        private void ReadInput(Identity id, KeyState[] states)
         {
             if (!Channel.CheckOwner(id)) return;
-            _keyStates = new List<KeyState>();
-            int size = Channel.Read<int>();
-            for (int i = 0; i < size; i++)
-            {
-                KeyState state = Channel.Read<KeyState>();
-                _keyStates.Add(state);
-                if (state.IsDown)
-                {
-                    LogUtils.Log(Player.User.Name + " pressed " + state);
-                }
-            }
+            _keyStates = states.ToList();
 
             //Todo: OnKeyPressedEvent
             Player.MovementController.HandleInput(this);
         }
 
         [NetworkCall]
-        private void ReadLook(Identity id)
+        private void ReadLook(Identity id, Vector3 dir)
         {
             if (!Channel.CheckOwner(id)) return;
-            _lookDirection = Channel.Read<Vector3>();
+            _lookDirection = dir;
             if (Player.Health.IsDead) return;
             Vector3 newRot = Player.transform.eulerAngles;
             newRot.z= _lookDirection.z;

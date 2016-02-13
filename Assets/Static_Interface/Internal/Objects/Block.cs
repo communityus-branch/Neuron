@@ -122,6 +122,10 @@ namespace Static_Interface.Internal.Objects
             {
                 return ReadKeyState();
             }
+            if (type == Types.KEYSTATE_ARRAY_TYPE)
+            {
+                return ReadKeyStates();
+            }
             if (type == Types.COLOR_TYPE)
             {
                 return ReadColor();
@@ -132,6 +136,18 @@ namespace Static_Interface.Internal.Objects
             }
             LogUtils.LogError("Failed to read type: " + type);
             return null;
+        }
+
+        private KeyState[] ReadKeyStates()
+        {
+            int size = ReadInt32();
+            KeyState[] states = new KeyState[size];
+            for (int i = 0; i < size; i++)
+            {
+                states[i] = ReadKeyState();
+            }
+
+            return states;
         }
 
         private Identity ReadIdentity()
@@ -431,6 +447,10 @@ namespace Static_Interface.Internal.Objects
             {
                 WriteKeyState((KeyState) objects);
             }
+            else if (type == Types.KEYSTATE_ARRAY_TYPE)
+            {
+                WriteKeyStates((KeyState[])objects);
+            }
             else if (type == Types.COLOR_TYPE)
             {
                 WriteColor((Color) objects);
@@ -442,6 +462,15 @@ namespace Static_Interface.Internal.Objects
             else
             {
                 LogUtils.LogError("Failed to write type: " + type);
+            }
+        }
+
+        private void WriteKeyStates(KeyState[] objects)
+        {
+            WriteInt32(objects.Length);
+            foreach (KeyState obj in objects)
+            {
+                WriteKeyState(obj);
             }
         }
 
