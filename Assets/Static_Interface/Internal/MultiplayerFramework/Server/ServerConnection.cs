@@ -293,14 +293,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 Send(user.Identity, EPacket.CONNECTED, packet, data.Length, 0);
             }
 
-            data = new object[] { ident.Serialize()};
+            data = new object[] { ident.Serialize(), player.GetComponent<Channel>().ID};
             packet = ObjectSerializer.GetBytes(0, out size, data);
             Send(user.Identity, EPacket.ACCEPTED, packet, data.Length, 0);
 
             data = new object[] { ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles.y / 2f };
             packet = ObjectSerializer.GetBytes(0, out size, data);
-            AnnounceToAll(EPacket.CONNECTED, packet, size, 0);
-
+            foreach (var c in Clients.Where(c => c.Identity != ident))
+            {
+                Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
+            }
             Chat.Instance.SendServerMessage("<b>" + user.Name + "</b> connected.");
             //Todo: OnUserConnectedEvent
         }

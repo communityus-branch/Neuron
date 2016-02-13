@@ -289,7 +289,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         return;
                     case EPacket.ACCEPTED:
                     {
-                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, Types.UINT64_TYPE);
+                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, Types.UINT64_TYPE, Types.INT32_TYPE);
+                        Player.MainPlayer.gameObject.GetComponent<Channel>().ID = (int) args[1];
                         ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
                         ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
                         ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);

@@ -33,8 +33,9 @@ namespace Static_Interface.Internal
             gameObject.AddComponent<Chat>();
             gameObject.AddComponent<Scheduler>();
             Weather = ObjectUtils.LoadWeather();
-            //GameObject player = (GameObject)Instantiate(Resources.Load("Player"), DefaultSpawnPosition.position, DefaultSpawnPosition.rotation);
-            //ClientConnection.SetupMainPlayer(player.transform);
+            LogUtils.Debug("Spawning default player");
+            GameObject player = (GameObject)Instantiate(Resources.Load("Player"), DefaultSpawnPosition.position, DefaultSpawnPosition.rotation);
+            ClientConnection.SetupMainPlayer(player.transform);
         }
     }
 }
