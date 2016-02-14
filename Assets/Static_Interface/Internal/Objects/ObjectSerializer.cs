@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 
@@ -49,12 +50,18 @@ namespace Static_Interface.Internal.Objects
             return block.GetBytes(out size);
         }
 
-        public static object[] GetObjects(Identity ident, int offset, int prefix, byte[] bytes, params Type[] types)
+        public static object[] GetObjects(Identity ident, int offset, int prefix, byte[] bytes, bool appendCmdByte, params Type[] types)
         {
             block.Reset(offset + prefix, bytes);
             if (types[0] == Types.IDENTITY_TYPE)
             {
-                object[] objArray = block.Read(1, types);
+                if (appendCmdByte)
+                {
+                    var tmp = types.ToList();
+                    tmp.Insert(1, Types.BYTE_TYPE);
+                    types = tmp.ToArray();
+                }
+                object[] objArray = block.Read(2, types);
                 objArray[0] = ident;
                 return objArray;
             }

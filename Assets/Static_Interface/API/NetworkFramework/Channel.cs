@@ -257,7 +257,8 @@ namespace Static_Interface.API.NetworkFramework
                     Calls[index].Method.Invoke(Calls[index].Component, Voice);
                     return;
                 }
-                object[] objArray = ObjectSerializer.GetObjects(ident, offset, 2, packet,
+
+                object[] objArray = ObjectSerializer.GetObjects(ident, offset, 2, packet, false,
                     Calls[index].Types);
                 if (objArray != null)
                 {

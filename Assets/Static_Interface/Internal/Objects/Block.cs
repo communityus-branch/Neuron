@@ -177,7 +177,7 @@ namespace Static_Interface.Internal.Objects
             if ((_block != null) && (_step <= (_block.Length - 1)))
             {
                 bool flag = BitConverter.ToBoolean(_block, _step);
-                _step++;
+                _step += sizeof(bool);
                 return flag;
             }
             return false;
@@ -211,7 +211,7 @@ namespace Static_Interface.Internal.Objects
             if ((_block != null) && (_step <= (_block.Length - 1)))
             {
                 byte num = _block[_step];
-                _step++;
+                _step += sizeof(byte);
                 return num;
             }
             return 0;
@@ -247,7 +247,7 @@ namespace Static_Interface.Internal.Objects
         {
             if ((_block == null) || (_step > (_block.Length - 2))) return 0;
             var num = BitConverter.ToInt16(_block, _step);
-            _step += 2;
+            _step += sizeof(short);
             return num;
         }
 
@@ -255,7 +255,7 @@ namespace Static_Interface.Internal.Objects
         {
             if ((_block == null) || (_step > (_block.Length - 4))) return 0;
             var num = BitConverter.ToInt32(_block, _step);
-            _step += 4;
+            _step += sizeof(int);
             return num;
         }
 
@@ -274,7 +274,7 @@ namespace Static_Interface.Internal.Objects
         {
             if ((_block == null) || (_step > (_block.Length - 8))) return 0L;
             var num = BitConverter.ToInt64(_block, _step);
-            _step += 8;
+            _step += sizeof(long);
             return num;
         }
 
@@ -282,7 +282,7 @@ namespace Static_Interface.Internal.Objects
         {
             if ((_block == null) || (_step > (_block.Length - 4))) return 0f;
             var num = BitConverter.ToSingle(_block, _step);
-            _step += 4;
+            _step += sizeof(float);
             return num;
         }
 
@@ -486,7 +486,7 @@ namespace Static_Interface.Internal.Objects
         {
             byte[] bytes = BitConverter.GetBytes(value);
             Buffer[_step] = bytes[0];
-            _step++;
+            _step+= sizeof(byte);
         }
 
         public void WriteBooleanArray(bool[] values)
@@ -514,7 +514,7 @@ namespace Static_Interface.Internal.Objects
         public void WriteByte(byte value)
         {
             Buffer[_step] = value;
-            _step++;
+            _step+=sizeof(byte);
         }
 
         public void WriteByteArray(byte[] values)
@@ -536,14 +536,14 @@ namespace Static_Interface.Internal.Objects
         {
             byte[] bytes = BitConverter.GetBytes(value);
             System.Buffer.BlockCopy(bytes, 0, Buffer, _step, bytes.Length);
-            _step += 2;
+            _step += sizeof(short);
         }
 
         public void WriteInt32(int value)
         {
             byte[] bytes = BitConverter.GetBytes(value);
             System.Buffer.BlockCopy(bytes, 0, Buffer, _step, bytes.Length);
-            _step += 4;
+            _step += sizeof(int);
         }
 
         public void WriteInt32Array(int[] values)
@@ -559,14 +559,14 @@ namespace Static_Interface.Internal.Objects
         {
             byte[] bytes = BitConverter.GetBytes(value);
             System.Buffer.BlockCopy(bytes, 0, Buffer, _step, bytes.Length);
-            _step += 8;
+            _step += sizeof(long);
         }
 
         public void WriteSingle(float value)
         {
             byte[] bytes = BitConverter.GetBytes(value);
             System.Buffer.BlockCopy(bytes, 0, Buffer, _step, bytes.Length);
-            _step += 4;
+            _step += sizeof(float);
         }
 
         public void WriteSingleQuaternion(Quaternion value)
@@ -604,21 +604,21 @@ namespace Static_Interface.Internal.Objects
         {
             byte[] bytes = BitConverter.GetBytes(value);
             System.Buffer.BlockCopy(bytes, 0, Buffer, _step, bytes.Length);
-            _step += 2;
+            _step += sizeof(ushort);
         }
 
         public void WriteUInt32(uint value)
         {
             byte[] bytes = BitConverter.GetBytes(value);
             System.Buffer.BlockCopy(bytes, 0, Buffer, _step, bytes.Length);
-            _step += 4;
+            _step += sizeof(uint);
         }
 
         public void WriteUInt64(ulong value)
         {
             byte[] bytes = BitConverter.GetBytes(value);
             System.Buffer.BlockCopy(bytes, 0, Buffer, _step, bytes.Length);
-            _step += 8;
+            _step += sizeof(ulong);
         }
 
         public void WriteUInt64Array(ulong[] values)

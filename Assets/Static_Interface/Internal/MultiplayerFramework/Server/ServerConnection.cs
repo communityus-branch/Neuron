@@ -156,7 +156,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.SINGLE_TYPE
                     };
                 
-                    var args = ObjectSerializer.GetObjects(source, 0, 0, packet, argTypes);
+                    var args = ObjectSerializer.GetObjects(source, 0, 0, packet, true, argTypes);
                     var playerName = (string) args[0];
                     var group = (ulong) args[1];
                     var version = (string) args[2];
@@ -207,7 +207,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
             else
             {
-                object[] args = ObjectSerializer.GetObjects(source, 0, 0, packet, Types.BYTE_ARRAY_TYPE);
+                object[] args = ObjectSerializer.GetObjects(source, 0, 0, packet, true, Types.BYTE_ARRAY_TYPE);
                 if (!((ServerMultiplayerProvider)Provider).VerifyTicket(source, (byte[])args[0]))
                 {
                     Reject(source, ERejectionReason.AUTH_VERIFICATION);
@@ -288,7 +288,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             byte[] packet;
             foreach (var c in Clients)
             {
-                data = new object[] { c.Identity.Serialize(), c.Name, c.Group, c.Model.position, c.Model.rotation.eulerAngles.y / 2f };
+                data = new object[] { c.Identity.Serialize(), c.Name, c.Group, c.Model.position, (byte)c.Model.rotation.eulerAngles.y / 2f, c.Player.GetComponent<Channel>().ID };
                 packet = ObjectSerializer.GetBytes(0, out size, data);
                 Send(user.Identity, EPacket.CONNECTED, packet, data.Length, 0);
             }
@@ -297,7 +297,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             packet = ObjectSerializer.GetBytes(0, out size, data);
             Send(user.Identity, EPacket.ACCEPTED, packet, data.Length, 0);
 
-            data = new object[] { ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles.y / 2f };
+            data = new object[] { ident.Serialize(), user.Name, user.Group, player.position, (byte)player.rotation.eulerAngles.y / 2f, ch};
             packet = ObjectSerializer.GetBytes(0, out size, data);
             player.GetComponent<Channel>().Owner = user.Identity;
             foreach (var c in Clients.Where(c => c.Identity != ident))
