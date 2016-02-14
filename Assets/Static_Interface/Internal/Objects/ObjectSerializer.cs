@@ -53,18 +53,19 @@ namespace Static_Interface.Internal.Objects
         public static object[] GetObjects(Identity ident, int offset, int prefix, byte[] bytes, bool isChannel, params Type[] types)
         {
             block.Reset(offset + prefix, bytes);
-            if (!isChannel)
-            {
-                var tmp = types.ToList();
-                tmp.Insert(0, Types.BYTE_TYPE);
-                types = tmp.ToArray();
-            }
-            else
+            if (isChannel)
             {
                 object[] objArray = block.Read(1, types);
                 objArray[0] = ident;
                 return objArray;
             }
+
+            /* Todo
+            var tmp = types.ToList();
+            tmp.Insert(0, Types.BYTE_TYPE);
+            types = tmp.ToArray();
+            */
+
             return block.Read(types);
         }
 
