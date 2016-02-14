@@ -258,7 +258,7 @@ namespace Static_Interface.API.NetworkFramework
                     return;
                 }
 
-                object[] objArray = ObjectSerializer.GetObjects(ident, offset, 2, packet, false,
+                object[] objArray = ObjectSerializer.GetObjects(ident, offset, 2, packet, true,
                     Calls[index].Types);
                 if (objArray != null)
                 {

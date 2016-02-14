@@ -250,7 +250,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         }
                     case EPacket.TIME:
                     {
-                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, true, Types.SINGLE_TYPE);
+                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.SINGLE_TYPE);
                         LastNet = Time.realtimeSinceStartup;
                         OffsetNet = ((float) args[0]) + ((Time.realtimeSinceStartup - LastPing)/2f);
                         Lag(Time.realtimeSinceStartup - LastPing);
@@ -267,7 +267,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                                 Types.UINT64_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE
                             };
 
-                            object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, true, argTypes);
+                            object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, argTypes);
                             AddPlayer(id, (string)args[1], (ulong)args[2], (Vector3)args[3], (byte)args[4], (int)args[5]);
                             return;
                         }
@@ -291,7 +291,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         return;
                     case EPacket.ACCEPTED:
                     {
-                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, true, Types.UINT64_TYPE, Types.INT32_TYPE);
+                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.UINT64_TYPE, Types.INT32_TYPE);
                         LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
                         Player.MainPlayer.gameObject.GetComponent<Channel>().ID = (int) args[1];
                         ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
