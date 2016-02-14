@@ -250,9 +250,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         }
                     case EPacket.TIME:
                     {
-                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.BYTE_TYPE, Types.SINGLE_TYPE);
+                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.SINGLE_TYPE);
                         LastNet = Time.realtimeSinceStartup;
-                        OffsetNet = ((float) args[1]) + ((Time.realtimeSinceStartup - LastPing)/2f);
+                        OffsetNet = ((float) args[0]) + ((Time.realtimeSinceStartup - LastPing)/2f);
                         Lag(Time.realtimeSinceStartup - LastPing);
                         return;
                     }
@@ -264,11 +264,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         {
                             Type[] argTypes = {
                                 //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
-                                Types.BYTE_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE
+                                Types.UINT64_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE
                             };
 
                             object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, argTypes);
-                            AddPlayer(id, (string)args[2], (ulong)args[3], (Vector3)args[4], (byte)args[5], (int)args[6]);
+                            AddPlayer(Provider.Deserialilze((ulong)args[0]), (string)args[1], (ulong)args[2], (Vector3)args[3], (byte)args[4], (int)args[5]);
                             return;
                         }
                     case EPacket.VERIFY:
@@ -291,10 +291,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         return;
                     case EPacket.ACCEPTED:
                     {
-                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.BYTE_TYPE, Types.UINT64_TYPE, Types.INT32_TYPE);
-                        LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[2]);
-                        Player.MainPlayer.gameObject.GetComponent<Channel>().ID = (int) args[2];
-                        ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[1]);    
+                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.UINT64_TYPE, Types.INT32_TYPE);
+                        LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
+                        Player.MainPlayer.gameObject.GetComponent<Channel>().ID = (int) args[1];
+                        ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
                         ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
                         ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);
                         IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(_currentIp, _currentPort);

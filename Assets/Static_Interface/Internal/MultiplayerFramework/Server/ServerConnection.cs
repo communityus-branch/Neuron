@@ -153,14 +153,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     Type[] argTypes =
                     {
                         // [0] name, [1] group, [2] version, [3] ping
-                        Types.BYTE_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.SINGLE_TYPE
+                        Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.SINGLE_TYPE
                     };
                 
                     var args = ObjectSerializer.GetObjects(source, 0, 0, packet, false, argTypes);
-                    var playerName = (string) args[1];
-                    var group = (ulong) args[2];
-                    var version = (string) args[3];
-                    var ping = (float) args[4];
+                    var playerName = (string) args[0];
+                    var group = (ulong) args[1];
+                    var version = (string) args[2];
+                    var ping = (float) args[3];
 
 					LogUtils.Log("Player connecting: " + playerName);
                     if (version != GameInfo.VERSION)
@@ -207,8 +207,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
             else
             {
-                object[] args = ObjectSerializer.GetObjects(source, 0, 0, packet, false, Types.BYTE_TYPE, Types.BYTE_ARRAY_TYPE);
-                if (!((ServerMultiplayerProvider)Provider).VerifyTicket(source, (byte[])args[1]))
+                object[] args = ObjectSerializer.GetObjects(source, 0, 0, packet, false,Types.BYTE_ARRAY_TYPE);
+                if (!((ServerMultiplayerProvider)Provider).VerifyTicket(source, (byte[])args[0]))
                 {
                     Reject(source, ERejectionReason.AUTH_VERIFICATION);
                 }
