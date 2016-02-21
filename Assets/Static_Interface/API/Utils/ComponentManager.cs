@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using Static_Interface.API.ExtensionFramework;
+using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -16,9 +17,17 @@ namespace Static_Interface.API.Utils
         private static readonly Dictionary<Extension, Dictionary<GameObject, List<Component>>> RegisteredComponents = new Dictionary<Extension, Dictionary<GameObject, List<Component>>>();
         private static readonly List<Type> CriticalComponents = new List<Type>
         {
-            typeof(ExtensionManager)
-        }; 
-        public static T AddComponentExtension<T>(this GameObject @object, Extension ext) where T : Component
+            typeof(ExtensionManager),
+            typeof(Connection)
+            //Todo
+        };
+
+        public static GameObject InstantiateSafe(this GameObject @object, Extension ext)
+        {
+            CheckCriticialObject(@object);
+            throw new NotImplementedException();
+        }
+        public static T AddComponentSafe<T>(this GameObject @object, Extension ext) where T : Component
         {
             return AddComponent<T>(ext, @object);
         }

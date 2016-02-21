@@ -108,7 +108,6 @@ namespace Static_Interface.ExtensionSandbox
             typeof(Resolution),
             typeof(UnityScheduler),
             typeof(Resources),
-            typeof(SamsungTV),
             typeof(ScriptableObject),
             typeof(SystemInfo),
             typeof(WebCamDevice),
@@ -125,9 +124,9 @@ namespace Static_Interface.ExtensionSandbox
 
         private static readonly Dictionary<Type, List<string>> DisallowedMethods = new Dictionary<Type, List<string>>
         {
-            {typeof(Object), new List<string> { "Destroy", "DestroyImmediate", "DestroyObject", "DontDestroyOnLoad" }},
+            {typeof(Object), new List<string> { "Destroy", "DestroyImmediate", "DestroyObject", "DontDestroyOnLoad", "Instantiate" }},
             {typeof(GameObject), new List<string> { "AddComponent" } },
-            {typeof(Component), new List<string> {"set_enabled"} } //dont allow disabling critical components like ExtensionManager
+            {typeof(Behaviour), new List<string> {"set_enabled"} } //dont allow disabling critical components like ExtensionManager
         };
 
         private static readonly Dictionary<Type, List<string>> AllowedMethods = new Dictionary<Type, List<string>>

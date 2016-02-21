@@ -293,7 +293,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     {
                         object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.UINT64_TYPE, Types.INT32_TYPE);
                         LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
-                        Player.MainPlayer.gameObject.GetComponent<Channel>().ID = (int) args[1];
+                        Player.MainPlayer.gameObject.GetComponent<Channel>().ID = Clients.Count + 2;
                         ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
                         ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
                         ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);

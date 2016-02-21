@@ -671,8 +671,19 @@ namespace Static_Interface.API.NetworkFramework
         {
             Connection = Connection.CurrentConnection;
             if(ID == 0) ID = Connection.Channels;
-            LogUtils.Debug("Setting up channel " + ID);
             Connection.OpenChannel(this);
+            LogUtils.Debug("Setting up channel " + ID);
+            string s = "";
+            foreach (Channel ch in FindObjectsOfType<Channel>())
+            {
+                if (s == "")
+                {
+                    s = ch.ID + ":" + ch.name;
+                    continue;
+                }
+                s += ", " + ch.ID + ":" + ch.name;
+            }
+            LogUtils.Debug("Channels: " + s);
         }
 
         public void Write(params object[] objects)
