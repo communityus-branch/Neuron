@@ -5,6 +5,7 @@ using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
@@ -29,6 +30,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
         public ICollection<PendingUser> PendingPlayers => _pendingPlayers.AsReadOnly();
 
         public bool IsSecure { get; internal set; }
+        public SingleplayerConnection SinglePlayerConnection { get; internal set; }
 
         internal override void Listen()
         {
@@ -174,6 +176,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         Reject(source, ERejectionReason.SERVER_FULL);
                         return;
                     }
+
                     var pendingPlayer = new PendingUser(source, playerName, group, ping);
                     _pendingPlayers.Add(pendingPlayer);
                     if (Provider.SupportsAuthentification)
@@ -213,6 +216,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     Reject(source, ERejectionReason.AUTH_VERIFICATION);
                 }
             }
+        }
+
+        protected override bool OnPreSend(Identity receiver, EPacket type, byte[] data, int length, int channel)
+        {
+            if (!IsSinglePlayer || receiver != ServerID) return false;
+
+            SinglePlayerConnection.Receive(ServerID, data, length, channel);
+            return true;
         }
 
         public void Reject(Identity user, ERejectionReason reason)
@@ -278,32 +289,54 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             _pendingPlayers.Remove(user);
             ((ServerMultiplayerProvider)Provider).UpdateScore(ident, 0);
             Vector3 spawn = Vector3.zero;
-            byte angle = 0;
             int size;
             //Todo: savefile
 
             int ch = Channels;
-            Transform player = AddPlayer(ident, user.Name, user.Group, spawn, angle, ch);
+            Transform player = AddPlayer(ident, user.Name, user.Group, spawn, new Vector3(0, 90, 0), ch);
             object[] data;
             byte[] packet;
-            foreach (var c in Clients)
-            {
-                data = new object[] { c.Identity.Serialize(), c.Name, c.Group, c.Model.position, (byte)c.Model.rotation.eulerAngles.y / 2f, c.Player.GetComponent<Channel>().ID };
-                packet = ObjectSerializer.GetBytes(0, out size, data);
-                Send(user.Identity, EPacket.CONNECTED, packet, data.Length, 0);
-            }
 
-            data = new object[] { ident.Serialize(), ch};
-            packet = ObjectSerializer.GetBytes(0, out size, data);
-            Send(user.Identity, EPacket.ACCEPTED, packet, data.Length, 0);
-
-            data = new object[] { ident.Serialize(), user.Name, user.Group, player.position, (byte)player.rotation.eulerAngles.y / 2f, ch};
-            packet = ObjectSerializer.GetBytes(0, out size, data);
             player.GetComponent<Channel>().Owner = user.Identity;
-            foreach (var c in Clients.Where(c => c.Identity != ident))
+
+            if (!IsSinglePlayer)
             {
-                Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
+                //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
+                foreach (var c in Clients)
+                {
+                    data = new object[]
+                    {
+                        c.Identity.Serialize(), c.Name, c.Group, c.Model.position,
+                        c.Model.rotation.eulerAngles,
+                        c.Player.GetComponent<Channel>().ID
+                    };
+                    packet = ObjectSerializer.GetBytes(0, out size, data);
+                    Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
+                }
             }
+
+            data = new object[]
+                {ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles, ch};
+            packet = ObjectSerializer.GetBytes(0, out size, data);
+            if (IsSinglePlayer)
+            {
+                foreach (var c in Clients)
+                {
+                    Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
+                }
+            }
+            else
+            {
+                foreach (var c in Clients.Where(c => c.Identity != ident))
+                {
+                    Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
+                }
+            }
+
+            data = new object[] { ident.Serialize(), ch };
+            packet = ObjectSerializer.GetBytes(0, out size, data);
+            Send(user.Identity, EPacket.ACCEPTED, packet, size, 0);
+
             Chat.Instance.SendServerMessage("<b>" + user.Name + "</b> connected.");
             //Todo: OnUserConnectedEvent
         }

@@ -8,6 +8,7 @@ using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Client;
+using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
 using Static_Interface.Neuron.Netvars;
 using UnityEngine;

@@ -1,10 +1,9 @@
 ﻿using System;
-using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Static_Interface.Internal
+namespace Static_Interface.Internal.Objects
 {
     public class ObjectUtils
     {
@@ -15,6 +14,7 @@ namespace Static_Interface.Internal
             if (created)
             {
                 persScripts.AddComponent<ThreadPool>();
+                persScripts.AddComponent<InputUtil>();
             }
             
             CheckObject("SteamManager", out created);

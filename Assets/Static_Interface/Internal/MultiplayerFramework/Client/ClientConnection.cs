@@ -25,7 +25,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         private string _currentIp;
         private ushort _currentPort;
 
-        public ServerInfo CurrentServerInfo { get; private set; }
+        public ServerInfo CurrentServerInfo { get; protected set; }
         public bool IsFavoritedServer { get; private set; }
 
         internal override void Listen()
@@ -141,11 +141,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             NetworkUtils.GetAveragePing(currentPing, out _ping, _pings);
         }
 
-        protected override Transform AddPlayer(Identity ident, string playerName, ulong group, Vector3 point, byte angle, int channel)
+        protected override Transform AddPlayer(Identity ident, string playerName, ulong @group, Vector3 point, Vector3 angle, int channel)
         {
-            var playerTransform = base.AddPlayer(ident, playerName, group, point, angle, channel);;
+            var playerTransform = base.AddPlayer(ident, playerName, @group, point, angle, channel);;
             if (ident != ClientID)
             {
+                LogUtils.Debug("Adding foreign player: " + ident);
                 ((ClientMultiplayerProvider) Provider).SetPlayedWith(ident);
             }
             else
@@ -205,27 +206,36 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             weatherController.unistormCamera = cam.gameObject;
 
             LogUtils.Debug("Loading WeatherSystem");
-            var weather = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
-            GameObject garbage= new GameObject();
-            var light = garbage.AddComponent<Light>();
-            weather.butterflies = fallLeaves;
-            weather.moon = light;
-            weather.moonLight = light;
-            weather.windyLeaves = fallLeaves;
-            weather.rain = rain;
-            weather.rainMist = rainMist;
-            weather.snow = snow;
-            weather.snowMistFog = snowDust;
-            weather.mistFog = rainStreaks;
-            weather.cameraObject = cam.gameObject;
-            weather.cameraObjectComponent = cam.GetComponent<Camera>();
-            weatherController.unistorm = weather.gameObject;
+            try
+            {
+                var weather = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
+                GameObject garbage = new GameObject();
+                var light = garbage.AddComponent<Light>();
+                weather.butterflies = fallLeaves;
+                weather.moon = light;
+                weather.moonLight = light;
+                weather.windyLeaves = fallLeaves;
+                weather.rain = rain;
+                weather.rainMist = rainMist;
+                weather.snow = snow;
+                weather.snowMistFog = snowDust;
+                weather.mistFog = rainStreaks;
+                weather.cameraObject = cam.gameObject;
+                weather.cameraObjectComponent = cam.GetComponent<Camera>();
+                weatherController.unistorm = weather.gameObject;
+            }
+            catch (Exception e)
+            {
+                LogUtils.LogError("Couldn't load weather");
+                LogUtils.Debug(e.ToString());
+            }
         }
 
         internal override void Receive(Identity id, byte[] packet, int size, int channel)
         {
             base.Receive(id, packet,  size, channel);
             EPacket parsedPacket = (EPacket) packet[0];
+
             StripPacketByte(ref packet, ref size);
 
             if (parsedPacket.IsUpdate())
@@ -264,11 +274,19 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         {
                             Type[] argTypes = {
                                 //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
-                                Types.UINT64_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE
+                                Types.IDENTITY_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE
                             };
 
                             object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, argTypes);
-                            AddPlayer(Provider.Deserialilze((ulong)args[0]), (string)args[1], (ulong)args[2], (Vector3)args[3], (byte)args[4], (int)args[5]);
+
+                            int i = 0;
+                            foreach (object o in args)
+                            {
+                                LogUtils.Debug("Received arg " + i + ": " + o?.GetType().Name + " - value: " + o);
+                                i++;
+                            }
+  
+                            AddPlayer(Provider.Deserialilze((Identity)args[0]), (string)args[1], (ulong)args[2], (Vector3)args[3], (Vector3)args[4], (int)args[5]);
                             return;
                         }
                     case EPacket.VERIFY:

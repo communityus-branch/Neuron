@@ -1,6 +1,8 @@
 ﻿using Static_Interface.Internal;
+using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Server;
+using Static_Interface.Internal.Objects;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,10 +26,11 @@ namespace Static_Interface.Neuron.Menus
             GameObject serverObject = GameObject.Find("Server");
             DestroyImmediate(serverObject.GetComponent<ClientConnection>());
             DestroyImmediate(serverObject.GetComponent<ServerConnection>());
-            ClientConnection conn = serverObject.AddComponent<ClientConnection>();
-            //SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
-            //conn.Start();
-            conn.AttemptConnect("88.226.30.77", 27015, string.Empty);
+            DestroyImmediate(serverObject.GetComponent<SingleplayerConnection>());
+            //ClientConnection conn = serverObject.AddComponent<ClientConnection>();
+            SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
+            conn.Init();
+            //conn.AttemptConnect("88.226.30.77", 27015, string.Empty);
         }
 
         public void Host()

@@ -59,13 +59,6 @@ namespace Static_Interface.Internal.Objects
                 objArray[0] = ident;
                 return objArray;
             }
-
-            /* Todo
-            var tmp = types.ToList();
-            tmp.Insert(0, Types.BYTE_TYPE);
-            types = tmp.ToArray();
-            */
-
             return block.Read(types);
         }
 

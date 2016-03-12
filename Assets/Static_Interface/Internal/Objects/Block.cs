@@ -141,6 +141,7 @@ namespace Static_Interface.Internal.Objects
         private KeyState[] ReadKeyStates()
         {
             int size = ReadInt32();
+            LogUtils.Debug("KeyStates Size: " + size);
             KeyState[] states = new KeyState[size];
             for (int i = 0; i < size; i++)
             {
@@ -382,6 +383,8 @@ namespace Static_Interface.Internal.Objects
 
         public void Write(object objects)
         {
+            if(objects == null) throw new ArgumentNullException(nameof(objects));
+
             Type type = objects.GetType();
             if (type == Types.STRING_TYPE)
             {

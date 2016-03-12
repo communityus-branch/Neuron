@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
@@ -45,16 +46,18 @@ namespace Static_Interface.API.PlayerFramework
             {
                 //Todo: OnKeyPressedEvent
                 LogUtils.Debug("Sending " + _keyStates.Count + " key states");
-                Channel.Send(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, _keyStates.Count);
+                Channel.Send(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, new object[] {_keyStates.ToArray()});
                 _lastSent = TimeUtil.GetCurrentTime();
             }
 
+            if (Player?.Camera?.transform == null || Player.MovementController == null) return;
             if (Player.Camera.transform.eulerAngles != _lookDirection && send)
             {
                 Channel.Send(nameof(ReadLook), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, Player.Camera.transform.eulerAngles);
             }
             _lookDirection = Player.Camera.transform.eulerAngles;
 
+            if (Connection.IsSinglePlayer) return;
             Player.MovementController.HandleInput(this);
         }
         
@@ -64,7 +67,7 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (!Channel.CheckOwner(id)) return;
             _keyStates = states.ToList();
-
+            LogUtils.Debug("Received " + _keyStates.Count + " key states");
             //Todo: OnKeyPressedEvent
             Player.MovementController.HandleInput(this);
         }

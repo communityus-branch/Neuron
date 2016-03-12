@@ -42,8 +42,7 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
         private int hierarchyWidth = 150;
 
         public static ConsoleGUI Instance;
-        public bool LockInput { get; set; }
-
+        public bool InputLocked { get; set; }
         void Start()
         {
             Instance = this;
@@ -72,7 +71,7 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
 
         void OnGUI()
         {
-            if (LockInput) return;
+            if (InputLocked) return;
             GUI.skin = skin;
 
             if (Event.current.type == EventType.keyDown && Event.current.keyCode == KeyCode.Return)

@@ -4,7 +4,9 @@ using System.Linq;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
+using Static_Interface.Internal.MultiplayerFramework.Server;
 using Static_Interface.Internal.Objects;
 using UnityEngine;
 
@@ -82,6 +84,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
         private static List<Channel> _receivers = new List<Channel>();
         public static ICollection<Channel> Receivers => _receivers?.AsReadOnly();
         public bool IsConnecting { get; set; }
+        public static bool IsSinglePlayer { get; internal set; }
 
         protected void AddReceiver(Channel ch)
         {
@@ -134,12 +137,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         internal abstract void Listen();
 
-        protected virtual Transform AddPlayer(Identity ident, string playerName, ulong group, Vector3 point, byte angle, int channel)
+        protected virtual Transform AddPlayer(Identity ident, string playerName, ulong @group, Vector3 point, Vector3 angle, int channel)
         {
             LogUtils.Debug(nameof(AddPlayer) + ": " + playerName);
             GameObject obj = (GameObject) Resources.Load("Player");
             obj.transform.FindChild("MainCamera").GetComponent<Camera>().enabled = false;
-            Transform newModel = ((GameObject)Instantiate(obj, point, Quaternion.Euler(0f, (angle * 2), 0f))).transform;
+            Transform newModel = ((GameObject)Instantiate(obj, point, Quaternion.Euler(angle))).transform;
             var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = playerName };
             ident.Owner = user;
             newModel.GetComponent<Player>().User = user;
@@ -186,12 +189,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
             data = tmp.ToArray();
             length += 1;
 
-            if ((IsClient() && receiver == ClientID && ClientID != null) || (IsServer() && receiver == ServerID && ServerID != null))
-            {
-                LogUtils.Debug("Server/Client sending to itself");
-                Receive(receiver, data, length, channel);
-                return;
-            }
+//            if ((IsClient() && receiver == ClientID && ClientID != null) || (IsServer() && receiver == ServerID && ServerID != null))
+//            {
+//                LogUtils.Debug("Server/Client sending to itself");
+//                Receive(receiver, data, length, channel);
+//                return;
+//            }
 
             if (!receiver.IsValid())
             {
@@ -214,10 +217,21 @@ namespace Static_Interface.Internal.MultiplayerFramework
                     SendMethod.SEND_RELIABLE_WITH_BUFFERING:
                     SendMethod.SEND_RELIABLE;
             }
+
+            if (OnPreSend(receiver, type, data, length, channel))
+            {
+                return;
+            }
+
             if (!Provider.Write(receiver, data, (ulong) length, sendType, channel))
             {
                 LogUtils.LogError("Failed to send data to " + receiver);
             }
+        }
+
+        protected virtual bool OnPreSend(Identity receiver, EPacket type, byte[] data, int length, int channel)
+        {
+            return false;
         }
 
         public abstract void Disconnect(string reason = null);
