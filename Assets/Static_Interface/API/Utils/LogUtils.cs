@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define LOG_NETWORK // enable network debug output
+using System;
 
 namespace Static_Interface.API.Utils
 {
@@ -39,6 +40,13 @@ namespace Static_Interface.API.Utils
                     Console.Instance.Print(appendInfo ? "[Info] " : "" + msg);
                 }
             });
+        }
+
+        internal static void LogNetwork(string msg)
+        {
+#if LOG_NETWORK
+            Log(msg);
+#endif
         }
 
 

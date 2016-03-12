@@ -45,7 +45,7 @@ namespace Static_Interface.API.PlayerFramework
             if (_keyStates.Count > 0 && send)
             {
                 //Todo: OnKeyPressedEvent
-                LogUtils.Debug("Sending " + _keyStates.Count + " key states");
+                //LogUtils.Debug("Sending " + _keyStates.Count + " key states");
                 Channel.Send(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, new object[] {_keyStates.ToArray()});
                 _lastSent = TimeUtil.GetCurrentTime();
             }
@@ -67,7 +67,7 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (!Channel.CheckOwner(id)) return;
             _keyStates = states.ToList();
-            LogUtils.Debug("Received " + _keyStates.Count + " key states");
+            //LogUtils.Debug("Received " + _keyStates.Count + " key states");
             //Todo: OnKeyPressedEvent
             Player.MovementController.HandleInput(this);
         }

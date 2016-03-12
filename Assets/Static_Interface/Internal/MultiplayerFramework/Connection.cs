@@ -59,7 +59,6 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         internal virtual void Awake()
         {
-            LogUtils.Log("Initializing connection...");
             CurrentConnection = this;
             DontDestroyOnLoad(this);
         }
@@ -67,7 +66,6 @@ namespace Static_Interface.Internal.MultiplayerFramework
         protected virtual void OnDestroy()
         {
             if (CurrentConnection == this) CurrentConnection = null;
-            LogUtils.Log("Destroying connection...");
         }
 
         internal virtual void Receive(Identity source, byte[] packet,int size, int channel)
@@ -78,7 +76,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             {
                 type = ((EPacket) packet[0]).ToString();
             }
-            LogUtils.Debug("Received " + type + " packet, channel: " + channel + ", size: " + size);
+            LogUtils.LogNetwork("Received " + type + " packet, channel: " + channel + ", size: " + size);
         }
 
         private static List<Channel> _receivers = new List<Channel>();
@@ -202,7 +200,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
                 return;
             }
 
-            LogUtils.Debug("Sending packet: " + type + ", receiver: " + receiver + (receiver == ServerID ? " (Server)" : "") + ", ch: " + channel + ", size: " + data.Length);
+            LogUtils.LogNetwork("Sending packet: " + type + ", receiver: " + receiver + (receiver == ServerID ? " (Server)" : "") + ", ch: " + channel + ", size: " + data.Length);
 
             SendMethod sendType;
             if (type.IsUnreliable())

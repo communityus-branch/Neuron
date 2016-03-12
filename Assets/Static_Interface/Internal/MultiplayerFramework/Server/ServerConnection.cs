@@ -283,6 +283,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public void Accept(PendingUser user)
         {
+            if(user == null) throw new ArgumentNullException(nameof(user));
             Identity ident = user.Identity;
 			LogUtils.Log("Player accepted: " + user.Name);
 			if (!user.HasAuthentication) return;

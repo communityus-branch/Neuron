@@ -70,7 +70,7 @@ namespace Static_Interface.API.NetworkFramework
             bool isOwner =(user == Owner);
             if (!isOwner)
             {
-                LogUtils.LogWarning("Not Owner! User: " + user + ", owner: " + Owner);
+                LogUtils.LogNetwork("Error: Not Owner! User: " + user + ", owner: " + Owner);
             }
             return isOwner;
         }
@@ -80,7 +80,7 @@ namespace Static_Interface.API.NetworkFramework
             bool matched =(user == Connection.ServerID);
             if (!matched)
             {
-                LogUtils.Debug("CheckServer failed for user: " + user.Serialize() +", ServerID: " + Connection.ServerID?.Serialize() + ", ClientID: " + Connection.ClientID?.Serialize());
+                LogUtils.LogNetwork("Error: CheckServer failed for user: " + user.Serialize() +", ServerID: " + Connection.ServerID?.Serialize() + ", ClientID: " + Connection.ClientID?.Serialize());
             }
             return matched;
         }
@@ -90,7 +90,7 @@ namespace Static_Interface.API.NetworkFramework
             LogUtils.Debug(nameof(CloseWrite) + ": " + channelName);
             if (!type.IsChunk())
             {
-                LogUtils.LogError("Failed to stream non chunk: " + type);
+                LogUtils.LogNetwork("Error: Failed to stream non chunk: " + type);
             }
             else
             {
@@ -108,7 +108,7 @@ namespace Static_Interface.API.NetworkFramework
         {
             if (!type.IsChunk())
             {
-                LogUtils.LogError("Failed to stream non chunk: " + type);
+                LogUtils.LogNetwork("Error: Failed to stream non chunk: " + type);
             }
             else
             {
@@ -136,7 +136,7 @@ namespace Static_Interface.API.NetworkFramework
         {
             if (!type.IsChunk())
             {
-                LogUtils.LogError("Failed to stream non chunk: " + type);
+                LogUtils.LogNetwork("Error: Failed to stream non chunk: " + type);
             }
             else
             {
@@ -161,7 +161,7 @@ namespace Static_Interface.API.NetworkFramework
                     return i;
                 }
             }
-            LogUtils.Debug("Call index not found for: " + callName);
+            LogUtils.LogError("Call index not found for: " + callName);
             return -1;
         }
 
@@ -229,7 +229,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Receive(Identity ident, byte[] packet, int offset, int size)
         {
-            LogUtils.Debug(nameof(Receive) + "; ident: " + ident);
+            LogUtils.LogNetwork(nameof(Receive) + "; ident: " + ident);
             if (size < sizeof(byte) * 2) return; // we need at least 2 bytes
             if (ident.GetUser() == null)
             {
@@ -271,7 +271,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Send(ECall mode, EPacket type, int size, byte[] packet)
         {
-            LogUtils.Debug(nameof(Send) + ": mode: " + mode + ", type: "+ type + ", size: " + size);
+            LogUtils.LogNetwork(nameof(Send) + ": mode: " + mode + ", type: "+ type + ", size: " + size);
             switch (mode)
             {
                 case ECall.Server:
@@ -287,7 +287,7 @@ namespace Static_Interface.API.NetworkFramework
                 case ECall.All:
                     if (!(Connection.IsServer()))
                     {
-                        LogUtils.LogWarning("Im not the server, I can't send a message to all clients!!");
+                        LogUtils.LogNetwork("Warning: Im not the server, I can't send a message to all clients!!");
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
  
@@ -303,7 +303,7 @@ namespace Static_Interface.API.NetworkFramework
                 case ECall.Others:
                     if (!(Connection.IsServer()))
                     {
-                        LogUtils.LogWarning("Im not the server, I can't send a message to all other clients!!");
+                        LogUtils.LogNetwork("Warning: Im not the server, I can't send a message to all other clients!!");
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
 
@@ -325,7 +325,7 @@ namespace Static_Interface.API.NetworkFramework
                 case ECall.NotOwner:
                     if (!(Connection.IsServer()))
                     {
-                        LogUtils.LogWarning("Im not the server, I can't send a message to all non owners!!");
+                        LogUtils.LogNetwork("Warning: Im not the server, I can't send a message to all non owners!!");
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
                     foreach (User user in Connection.Clients.Where(user => user.Identity != Owner))
@@ -363,7 +363,6 @@ namespace Static_Interface.API.NetworkFramework
             var index = GetCall(pName);
             if (index < 0 )
             {
-                LogUtils.LogError("pName: " + pName + ": invalid index: " + index);
                 return;
             }
             int size;
@@ -683,7 +682,7 @@ namespace Static_Interface.API.NetworkFramework
                 }
                 s += ", " + ch.ID + ":" + ch.name;
             }
-            LogUtils.Debug("Channels: " + s);
+            LogUtils.LogNetwork("Channels: " + s);
         }
 
         public void Write(params object[] objects)
