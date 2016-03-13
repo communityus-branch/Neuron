@@ -40,8 +40,6 @@ namespace Static_Interface.API.PlayerFramework
         {
             base.FixedUpdate();
             if (Player.Health.IsDead || _input == null) return;
-            transform.Rotate(Camera.main.transform.rotation.eulerAngles);
-
             var inputX = 0f;
             var inputY = 0f;
             bool jump = _input.GetKeyDown(KeyCode.Space);
@@ -70,8 +68,7 @@ namespace Static_Interface.API.PlayerFramework
 
             if (_controller.isGrounded)
             {
-                Vector3 vel = Vector3.zero;
-                vel = new Vector3(inputX, y, inputY);
+                Vector3 vel = new Vector3(inputX, y, inputY);
                 var speed = sprint ? RunSpeed : WalkSpeed;
                 vel.z *= speed;
                 cachedSpeed = vel;
