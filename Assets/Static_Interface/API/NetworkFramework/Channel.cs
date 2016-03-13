@@ -132,26 +132,7 @@ namespace Static_Interface.API.NetworkFramework
             }
         }
 
-        public void CloseWrite(string channelName, ECall mode, byte bound, EPacket type)
-        {
-            if (!type.IsChunk())
-            {
-                LogUtils.LogNetwork("Error: Failed to stream non chunk: " + type);
-            }
-            else
-            {
-                int index = GetCall(channelName);
-                if (index != -1)
-                {
-                    int size;
-                    byte[] buffer;
-                    GetPacket(type, index, out size, out buffer);
-                    Send(mode, bound, type, size, buffer);
-                }
-            }
-        }
-
-        private int GetCall(string callName)
+       private int GetCall(string callName)
         {
             if(Calls.Count == 0) Build();
             for (var i = 0; i < Calls.Count; i++)
@@ -392,109 +373,7 @@ namespace Static_Interface.API.NetworkFramework
             }
         }
 
-        public void Send(ECall mode, byte bound, EPacket type, int size, byte[] packet)
-        {
-            if(Connection.ServerID == null) throw new Exception("Server id is null");
-            switch (mode)
-            {
-                case ECall.Server:
-                    if (Connection.IsServer())
-                    {
-                        Receive(Connection.ServerID, packet, 0, size);
-                    }
-                    else
-                    {
-                        Connection.Send(Connection.ServerID, type, packet, size, ID);
-                    }
-                    break;
-                case ECall.All:
-                    if (!(Connection.IsServer()))
-                    {
-                        Connection.Send(Connection.ServerID, type, packet, size, ID);
-                    }
-                    foreach (User user in Connection.Clients)
-                    {
-                        if (((user.Identity != Connection.ClientID) &&
-                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    if (Connection.IsServer())
-                    {
-                        Receive(Connection.ServerID, packet, 0, size);
-                    }
-                    else
-                    {
-                        Receive(Connection.ClientID, packet, 0, size);
-                    }
-                    break;
-                case ECall.Others:
-                    if (!(Connection.IsServer()))
-                    {
-                        Connection.Send(Connection.ServerID, type, packet, size, ID);
-                    }
-                    foreach (User user in Connection.Clients)
-                    {
-                        if (((user.Identity != Connection.ClientID) &&
-                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    break;
-                case ECall.Owner:
-                    if (IsOwner)
-                    {
-                        Receive(Owner, packet, 0, size);
-                    }
-                    else
-                    {
-                        Connection.Send(Owner, type, packet, size, ID);
-                    }
-                    break;
-                case ECall.NotOwner:
-                    if (!(Connection.IsServer()))
-                    {
-                        Connection.Send(Connection.ServerID, type, packet, size, ID);
-                    }
-                    foreach (User user in Connection.Clients)
-                    {
-                        if (((user.Identity != Owner) &&
-                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    break;
-                case ECall.Clients:
-                    foreach (User user in Connection.Clients)
-                    {
-                        if (((user.Identity != Connection.ClientID) &&
-                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    if (Connection.IsClient())
-                    {
-                        Receive(Connection.ClientID, packet, 0, size);
-                    }
-                    break;
-                case ECall.Peers:
-                    foreach (User user in Connection.Clients)
-                    {
-                        if (((user.Identity != Connection.ClientID) &&
-                             (user.Player != null)) && (user.Player.MovementController.Bound == bound))
-                        {
-                            Connection.Send(user.Identity, type, packet, size, ID);
-                        }
-                    }
-                    break;
-            }
-        }
-
-        public void Send(string pName, ECall mode, EPacket type, byte[] bytes, int length)
+       public void Send(string pName, ECall mode, EPacket type, byte[] bytes, int length)
         {
             var index = GetCall(pName);
             if (index == -1) return;
@@ -502,16 +381,6 @@ namespace Static_Interface.API.NetworkFramework
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, bytes, length);
             Send(mode, type, size, buffer);
-        }
-
-        public void Send(string pName, ECall mode, byte bound, EPacket type, params object[] arguments)
-        {
-            var index = GetCall(pName);
-            if (index == -1) return;
-            int size;
-            byte[] buffer;
-            GetPacket(type, index, out size, out buffer, arguments);
-            Send(mode, bound, type, size, buffer);
         }
 
         public void Send(ECall mode, Vector3 point, float radius, EPacket type, int size, byte[] packet)
@@ -619,16 +488,6 @@ namespace Static_Interface.API.NetworkFramework
                     }
                     break;
             }
-        }
-
-        public void Send(string pName, ECall mode, byte bound, EPacket type, byte[] bytes, int length)
-        {
-            var index = GetCall(pName);
-            if (index == -1) return;
-            int size;
-            byte[] buffer;
-            GetPacket(type, index, out size, out buffer, bytes, length);
-            Send(mode, bound, type, size, buffer);
         }
 
         public void Send(string pName, ECall mode, Vector3 point, float radius, EPacket type,

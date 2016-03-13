@@ -17,6 +17,7 @@ namespace Static_Interface.API.PlayerFramework
 
         protected override void FixedUpdate()
         {
+            if (Connection.IsServer() && !Connection.IsSinglePlayer) return;
             if (InputUtil.IsInputLocked(this) || !Channel.IsOwner) return;
             _keyStates = new List<KeyState>();
 
@@ -41,12 +42,13 @@ namespace Static_Interface.API.PlayerFramework
                 }
             }
 
-            bool send = TimeUtil.GetCurrentTime() - _lastSent > PERIOD;
-            if (_keyStates.Count > 0 && send)
+            bool send = !Connection.IsSinglePlayer && TimeUtil.GetCurrentTime() - _lastSent > PERIOD;
+            Player.MovementController.UpdateInput(this);
+            //Todo: OnKeyPressedEvent
+            //LogUtils.Debug("Sending " + _keyStates.Count + " key states");
+            if (send)
             {
-                //Todo: OnKeyPressedEvent
-                //LogUtils.Debug("Sending " + _keyStates.Count + " key states");
-                Channel.Send(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, new object[] {_keyStates.ToArray()});
+                Channel.Send(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, _keyStates.ToArray());
                 _lastSent = TimeUtil.GetCurrentTime();
             }
 
@@ -56,9 +58,6 @@ namespace Static_Interface.API.PlayerFramework
                 Channel.Send(nameof(ReadLook), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, Player.Camera.transform.eulerAngles);
             }
             _lookDirection = Player.Camera.transform.eulerAngles;
-
-            if (Connection.IsSinglePlayer) return;
-            Player.MovementController.HandleInput(this);
         }
         
         //ServerSide
@@ -69,7 +68,7 @@ namespace Static_Interface.API.PlayerFramework
             _keyStates = states.ToList();
             //LogUtils.Debug("Received " + _keyStates.Count + " key states");
             //Todo: OnKeyPressedEvent
-            Player.MovementController.HandleInput(this);
+            Player.MovementController.UpdateInput(this);
         }
 
         [NetworkCall]
@@ -83,40 +82,63 @@ namespace Static_Interface.API.PlayerFramework
             Player.transform.eulerAngles = newRot;
         }
 
+        /// <summary>
+        /// 
+        /// <para>
+        /// Returns true while the player holds down the key identified by the key KeyCode enum parameter.
+        /// </para>
+        /// 
+        /// </summary>
+        /// <param name="key"/>
         public bool GetKey(KeyCode key)
         {
-            KeyState state;
-            try
+            if (!Connection.IsServer() || Connection.IsSinglePlayer)
             {
-                state = _keyStates[(int) key];
+                return Input.GetKey(key);
             }
-            catch (KeyNotFoundException)
-            {
-                return false;
-            }
-
-            return state.IsPressed;
+            return (from state in _keyStates where state.KeyCode == (int) key select state.IsPressed).FirstOrDefault();
         }
 
+        /// <summary>
+        /// 
+        /// <para>
+        /// Returns true during the frame the player starts pressing down the key identified by the key KeyCode enum parameter.
+        /// </para>
+        /// 
+        /// </summary>
+        /// <param name="key"/>
         public bool GetKeyDown(KeyCode key)
         {
-            KeyState state;
-            try
+            if (!Connection.IsServer() || Connection.IsSinglePlayer)
             {
-                state = _keyStates[(int)key];
+                return Input.GetKeyDown(key);
             }
-            catch (KeyNotFoundException)
-            {
-                return false;
-            }
-
-            return state.IsDown;
+            return (from state in _keyStates where state.KeyCode == (int)key select state.IsDown).FirstOrDefault();
         }
 
+        /// <summary>
+        /// 
+        /// <para>
+        /// Returns true during the frame the player releases the key identified by the key KeyCode enum parameter.
+        /// </para>
+        /// 
+        /// </summary>
+        /// <param name="key"/>
         public bool GetKeyUp(KeyCode key)
         {
+            if (!Connection.IsServer() || Connection.IsSinglePlayer)
+            {
+                return Input.GetKeyUp(key);
+            }
             return !GetKeyDown(key);
         }
+        /// <summary>
+        /// 
+        /// <para>
+        /// Returns the direction the player is facing at 
+        /// </para>
+        /// 
+        /// </summary>
 
         public Vector3 GetLook()
         {

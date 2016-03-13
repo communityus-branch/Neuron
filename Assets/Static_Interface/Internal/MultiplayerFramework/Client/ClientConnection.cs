@@ -162,13 +162,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             {
                 DestroyImmediate(Player.MainPlayer.gameObject);
             }
+            if (FindObjectOfType<AudioListener>() != null)
+            {
+                DestroyImmediate(FindObjectOfType<AudioListener>().gameObject);
+            }
             LogUtils.Debug("Setting up main player");
             Player.MainPlayer = playerTransform.GetComponent<Player>();
             if (Camera.current != null && Camera.current.enabled)
             {
                 Camera.current.enabled = false;
             }
-
+            playerTransform.gameObject.AddComponent<CharacterController>();
             playerTransform.GetComponent<Channel>().IsOwner = true;
             playerTransform.gameObject.AddComponent<MouseLook>();
 
@@ -181,6 +185,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             var cam = playerTransform.FindChild("MainCamera");
             var sunshafts = cam.gameObject.AddComponent<SunShafts>();
             cam.tag = "MainCamera";
+
             cam.GetComponent<Camera>().enabled = true;
             LogUtils.Debug("Loading WeatherParticles");
             var fallLeaves = ((GameObject)Resources.Load("ParticleEffects/FallLeaves")).GetComponent<ParticleSystem>();

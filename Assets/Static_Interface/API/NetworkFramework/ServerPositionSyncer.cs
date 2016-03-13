@@ -1,10 +1,13 @@
 ﻿using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
+using UnityEngine.Networking.Match;
 
 namespace Static_Interface.API.NetworkFramework
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PositionSyncer : NetworkedBehaviour
+    public class ServerPositionSyncer : NetworkedBehaviour
     {
         private Rigidbody _rigidbody;
         private Vector3 _cachedPosition = Vector3.zero;
@@ -15,11 +18,16 @@ namespace Static_Interface.API.NetworkFramework
         private float _syncTime;
         private Vector3 _syncStartPosition = Vector3.zero;
         private Vector3 _syncEndPosition = Vector3.zero;
+        private uint _lastSync;
+        public uint UpdatePeriod = 250;
+        public float UpdateRadius = 250f;
 
         protected override void Awake()
         {
             base.Awake();
             _rigidbody = GetComponent<Rigidbody>();
+            if(Connection.IsSinglePlayer) Destroy(this);
+            if(!Connection.IsServer()) Destroy(this);
         }
 
         protected override void Update()
@@ -32,6 +40,7 @@ namespace Static_Interface.API.NetworkFramework
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            if (TimeUtil.GetCurrentTime() - _lastSync < UpdatePeriod) return;
             if (!Channel.IsOwner) return;
             if (_cachedPosition == _rigidbody.position && _cachedVelocity == _rigidbody.velocity)
             {
@@ -41,22 +50,19 @@ namespace Static_Interface.API.NetworkFramework
 
             _cachedPosition = _rigidbody.position;
             _cachedVelocity = _rigidbody.velocity;
-            Channel.OpenWrite();
-            Channel.Write(_cachedPosition, _cachedVelocity);
-            Channel.CloseWrite(nameof(ReadPosition), ECall.Others, EPacket.UPDATE_UNRELIABLE_CHUNK_INSTANT);
+
+            Channel.Send(nameof(ReadPosition), ECall.Others, _rigidbody.position, UpdateRadius, EPacket.UPDATE_UNRELIABLE_BUFFER, _cachedPosition, _cachedVelocity);
+            _lastSync = TimeUtil.GetCurrentTime();
         }
 
         [NetworkCall]
-        protected void ReadPosition(Identity ident)
+        protected void ReadPosition(Identity ident, Vector3 syncPosition, Vector3 syncVelocity)
         {
-            if (!Channel.CheckOwner(ident)) return;
-            Vector3 syncPosition = Channel.Read<Vector3>();
-            Vector3 syncVelocity = Channel.Read<Vector3>();
-
+            if (!Channel.CheckServer(ident)) return;
             _syncTime = 0f;
             _syncDelay = Time.time - _lastSynchronizationTime;
             _lastSynchronizationTime = Time.time;
-
+            _lastSync = TimeUtil.GetCurrentTime();
             _syncEndPosition = syncPosition + syncVelocity * _syncDelay;
             _syncStartPosition = _rigidbody.position;
         }

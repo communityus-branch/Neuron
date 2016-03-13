@@ -1,43 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &120338
+--- !u!1 &144202
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 444528}
-  - 20: {fileID: 2087954}
-  - 124: {fileID: 12411484}
-  - 92: {fileID: 9250246}
-  - 114: {fileID: 11486386}
-  - 114: {fileID: 11403442}
-  - 114: {fileID: 11417754}
-  - 114: {fileID: 11492428}
-  m_Layer: 0
-  m_Name: MainCamera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &157834
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 496126}
-  - 33: {fileID: 3333046}
-  - 136: {fileID: 13603510}
-  - 23: {fileID: 2380882}
-  - 114: {fileID: 11458942}
-  - 114: {fileID: 11498990}
-  - 114: {fileID: 11436200}
-  - 114: {fileID: 11404904}
-  - 114: {fileID: 11452268}
+  - 4: {fileID: 419578}
+  - 33: {fileID: 3395986}
+  - 136: {fileID: 13620846}
+  - 23: {fileID: 2343536}
+  - 114: {fileID: 11413752}
+  - 114: {fileID: 11412052}
+  - 114: {fileID: 11435880}
+  - 114: {fileID: 11478892}
+  - 114: {fileID: 11464976}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -45,37 +23,59 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &444528
+--- !u!1 &183670
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 486838}
+  - 20: {fileID: 2025522}
+  - 124: {fileID: 12467122}
+  - 92: {fileID: 9230150}
+  - 114: {fileID: 11441956}
+  - 114: {fileID: 11449218}
+  - 114: {fileID: 11412466}
+  - 114: {fileID: 11433770}
+  m_Layer: 0
+  m_Name: MainCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &419578
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120338}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.1190033, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 496126}
-  m_RootOrder: 0
---- !u!4 &496126
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157834}
+  m_GameObject: {fileID: 144202}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2691.4, y: 131.43, z: 1226.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 444528}
+  - {fileID: 486838}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!20 &2087954
+--- !u!4 &486838
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 183670}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.1190033, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 419578}
+  m_RootOrder: 0
+--- !u!20 &2025522
 Camera:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120338}
+  m_GameObject: {fileID: 183670}
   m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
@@ -86,7 +86,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -104,12 +104,12 @@ Camera:
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
---- !u!23 &2380882
+--- !u!23 &2343536
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157834}
+  m_GameObject: {fileID: 144202}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -130,54 +130,41 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3333046
+--- !u!33 &3395986
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157834}
+  m_GameObject: {fileID: 144202}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!92 &9250246
+--- !u!92 &9230150
 Behaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120338}
+  m_GameObject: {fileID: 183670}
   m_Enabled: 1
---- !u!114 &11403442
+--- !u!114 &11412052
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4975a6e437fc3b149a8cd508ce5bdd69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  threshold: 0.25
-  intensity: 0.75
-  blurSize: 1
-  blurIterations: 1
-  blurType: 0
-  fastBloomShader: {fileID: 4800000, guid: 68a00c837b82e4c6d92e7da765dc5f1d, type: 3}
---- !u!114 &11404904
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157834}
+  m_GameObject: {fileID: 144202}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b9ce2ea0d1d8c4408a91e7369d812bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 6dff8a30c48aa3e43b9611d9adee5c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11417754
+  WalkSpeed: 6
+  RunSpeed: 11
+  JumpSpeed: 8
+  SideSpeed: 8
+--- !u!114 &11412466
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120338}
+  m_GameObject: {fileID: 183670}
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dad87ba4f1e04d6eb7f287e1f2e08fe, type: 3}
@@ -195,46 +182,57 @@ MonoBehaviour:
   useDepthTexture: 1
   sunShaftsShader: {fileID: 0}
   simpleClearShader: {fileID: 0}
---- !u!114 &11436200
+--- !u!114 &11413752
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32d8c61526510eb429ba5f1372d2821c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &11452268
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4dccb53eb4fbe934f8f13c21d42f2d41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Connection: {fileID: 0}
---- !u!114 &11458942
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157834}
+  m_GameObject: {fileID: 144202}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 057efd432c2fb434d963a3c2bed2a478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11486386
+--- !u!114 &11433770
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120338}
+  m_GameObject: {fileID: 183670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d3428e37d03ce4183e76ad84427669, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unistorm: {fileID: 0}
+  unistormCamera: {fileID: 0}
+  rain: {fileID: 19894424, guid: 6769b347f643b6d4a8dc61b3051a251c, type: 2}
+  snow: {fileID: 19872322, guid: 7e8e74e1908f6bb44b9c7713cc906b03, type: 2}
+  lightningBugs: {fileID: 19811554, guid: 84999a8927eeb364aa2849a665fb0dd8, type: 2}
+  rainMist: {fileID: 19824154, guid: 113a5adc80018714dbfe8228be6104a9, type: 2}
+  snowDust: {fileID: 19806758, guid: c1b49df0ee4f78944b8978082b36a022, type: 2}
+  rainStreaks: {fileID: 197506, guid: d11f5a983d8609544986de3855525e88, type: 2}
+  windyLeaves: {fileID: 19830434, guid: 16256da431dc19849888f003c18cb421, type: 2}
+  lightningBolt1: {fileID: 0}
+  rainSplash: {fileID: 0}
+  lightningPosition: {fileID: 414002, guid: c15d436ca5fa57e4496090b57c6c239a, type: 2}
+--- !u!114 &11435880
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 144202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32d8c61526510eb429ba5f1372d2821c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11441956
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 183670}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1fd999d1b2cf94a45a5b0a47ce074bef, type: 3}
@@ -365,53 +363,59 @@ MonoBehaviour:
     type: 3}
   colorCorrectionSelectiveShader: {fileID: 4800000, guid: e515e0f94cefc4c0db54b45cba621544,
     type: 3}
---- !u!114 &11492428
+--- !u!114 &11449218
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120338}
+  m_GameObject: {fileID: 183670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d3428e37d03ce4183e76ad84427669, type: 3}
+  m_Script: {fileID: 11500000, guid: 4975a6e437fc3b149a8cd508ce5bdd69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unistorm: {fileID: 0}
-  unistormCamera: {fileID: 0}
-  rain: {fileID: 19894424, guid: 6769b347f643b6d4a8dc61b3051a251c, type: 2}
-  snow: {fileID: 19872322, guid: 7e8e74e1908f6bb44b9c7713cc906b03, type: 2}
-  lightningBugs: {fileID: 19811554, guid: 84999a8927eeb364aa2849a665fb0dd8, type: 2}
-  rainMist: {fileID: 19824154, guid: 113a5adc80018714dbfe8228be6104a9, type: 2}
-  snowDust: {fileID: 19806758, guid: c1b49df0ee4f78944b8978082b36a022, type: 2}
-  rainStreaks: {fileID: 197506, guid: d11f5a983d8609544986de3855525e88, type: 2}
-  windyLeaves: {fileID: 19830434, guid: 16256da431dc19849888f003c18cb421, type: 2}
-  lightningBolt1: {fileID: 0}
-  rainSplash: {fileID: 0}
-  lightningPosition: {fileID: 414002, guid: c15d436ca5fa57e4496090b57c6c239a, type: 2}
---- !u!114 &11498990
+  threshold: 0.25
+  intensity: 0.75
+  blurSize: 1
+  blurIterations: 1
+  blurType: 0
+  fastBloomShader: {fileID: 4800000, guid: 68a00c837b82e4c6d92e7da765dc5f1d, type: 3}
+--- !u!114 &11464976
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157834}
+  m_GameObject: {fileID: 144202}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6dff8a30c48aa3e43b9611d9adee5c81, type: 3}
+  m_Script: {fileID: 11500000, guid: 4dccb53eb4fbe934f8f13c21d42f2d41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!124 &12411484
+  Connection: {fileID: 0}
+--- !u!114 &11478892
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 144202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b9ce2ea0d1d8c4408a91e7369d812bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!124 &12467122
 Behaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120338}
+  m_GameObject: {fileID: 183670}
   m_Enabled: 1
---- !u!136 &13603510
+--- !u!136 &13620846
 CapsuleCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157834}
+  m_GameObject: {fileID: 144202}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
@@ -425,8 +429,20 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Mass
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: near clip plane
+      value: 0.01
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 157834}
+  m_RootGameObject: {fileID: 144202}
   m_IsPrefabParent: 1
