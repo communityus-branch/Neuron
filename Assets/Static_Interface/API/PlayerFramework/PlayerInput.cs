@@ -17,7 +17,8 @@ namespace Static_Interface.API.PlayerFramework
 
         protected override void FixedUpdate()
         {
-            if (Connection.IsServer() && !Connection.IsSinglePlayer) return;
+            //if (Connection.IsServer()) return; //Todo: dedicated server check
+            if(!Channel.IsOwner) return;
             if (InputUtil.IsInputLocked(this) || !Channel.IsOwner) return;
             _keyStates = new List<KeyState>();
 
@@ -42,7 +43,7 @@ namespace Static_Interface.API.PlayerFramework
                 }
             }
 
-            bool send = !Connection.IsSinglePlayer && TimeUtil.GetCurrentTime() - _lastSent > PERIOD;
+            bool send = !Connection.IsSinglePlayer && !Connection.IsServer() && TimeUtil.GetCurrentTime() - _lastSent > PERIOD;
             Player.MovementController.UpdateInput(this);
             //Todo: OnKeyPressedEvent
             //LogUtils.Debug("Sending " + _keyStates.Count + " key states");
@@ -64,9 +65,13 @@ namespace Static_Interface.API.PlayerFramework
         [NetworkCall]
         private void ReadInput(Identity id, KeyState[] states)
         {
+            if(states == null) throw new ArgumentNullException(nameof(states));
+            if(Channel == null) throw new Exception(id.Owner?.Name + ": Channel is null");
+            if(Player == null) throw new Exception(id.Owner?.Name + ": Player is null");
+            if(Player.MovementController == null) throw new Exception(id.Owner?.Name + ": Player MovementController is null");
             if (!Channel.CheckOwner(id)) return;
             _keyStates = states.ToList();
-            //LogUtils.Debug("Received " + _keyStates.Count + " key states");
+            LogUtils.Debug("Received " + _keyStates.Count + " key states from " + id.Owner?.Name);
             //Todo: OnKeyPressedEvent
             Player.MovementController.UpdateInput(this);
         }

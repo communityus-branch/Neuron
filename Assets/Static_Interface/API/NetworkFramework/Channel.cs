@@ -13,7 +13,7 @@ namespace Static_Interface.API.NetworkFramework
     public class Channel : MonoBehaviour
     {
         [HideInInspector] public Connection Connection;
-        public int ID { get; set; }
+        public int ID;
         public bool IsOwner { get; internal set; }
         public Identity Owner { get; internal set; }
         public List<ChannelMethod> Calls { get; private set; } = new List<ChannelMethod>();

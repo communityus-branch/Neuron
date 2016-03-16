@@ -16,6 +16,7 @@ GameObject:
   - 114: {fileID: 11435880}
   - 114: {fileID: 11478892}
   - 114: {fileID: 11464976}
+  - 54: {fileID: 5423202}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -137,6 +138,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 144202}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &5423202
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 144202}
+  serializedVersion: 2
+  m_Mass: 80
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!92 &9230150
 Behaviour:
   m_ObjectHideFlags: 1
@@ -159,6 +175,14 @@ MonoBehaviour:
   RunSpeed: 11
   JumpSpeed: 8
   SideSpeed: 8
+  FallingDamageThreshold: 10
+  SlideWhenOverSlopeLimit: 0
+  SlideOnTaggedObjects: 0
+  SlideSpeed: 12
+  AirControl: 0
+  AntiBumpFactor: 0.75
+  AntiBunnyHopFactor: 1
+  LimitDiagonalSpeed: 1
 --- !u!114 &11412466
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -441,6 +465,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: near clip plane
       value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_UseGravity
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -27,10 +27,10 @@ namespace Static_Interface.Neuron.Menus
             DestroyImmediate(serverObject.GetComponent<ClientConnection>());
             DestroyImmediate(serverObject.GetComponent<ServerConnection>());
             DestroyImmediate(serverObject.GetComponent<SingleplayerConnection>());
-            //ClientConnection conn = serverObject.AddComponent<ClientConnection>();
-            SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
-            conn.Init();
-            //conn.AttemptConnect("88.226.30.77", 27015, string.Empty);
+            ClientConnection conn = serverObject.AddComponent<ClientConnection>();
+            //SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
+            //conn.Init();
+            conn.AttemptConnect("88.223.87.145", 27015, string.Empty);
         }
 
         public void Host()
@@ -38,8 +38,10 @@ namespace Static_Interface.Neuron.Menus
             GameObject serverObject = GameObject.Find("Server");
             DestroyImmediate(serverObject.GetComponent<ClientConnection>());
             DestroyImmediate(serverObject.GetComponent<ServerConnection>());
-            ServerConnection conn = serverObject.AddComponent<ServerConnection>();
-            conn.OpenGameServer();
+            //ServerConnection conn = serverObject.AddComponent<ServerConnection>();
+            //conn.OpenGameServer();
+            SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
+            conn.Init();
             GameObject.Find("Host Button").GetComponent<Button>().enabled = false;
         }
 

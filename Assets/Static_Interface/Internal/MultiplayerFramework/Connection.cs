@@ -22,7 +22,13 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public static bool IsServer()
         {
+            if (IsSinglePlayer) return true;
             return CurrentConnection.Provider is ServerMultiplayerProvider;
+        }
+
+        public static bool IsDedicated()
+        {
+            return !IsSinglePlayer && IsServer();
         }
 
         public static bool IsClient()
@@ -141,6 +147,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             GameObject obj = (GameObject) Resources.Load("Player");
             obj.transform.FindChild("MainCamera").GetComponent<Camera>().enabled = false;
             Transform newModel = ((GameObject)Instantiate(obj, point, Quaternion.Euler(angle))).transform;
+            LogUtils.Debug("Spawning player " + playerName + " at " + point);
             var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = playerName };
             ident.Owner = user;
             newModel.GetComponent<Player>().User = user;

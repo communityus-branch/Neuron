@@ -289,7 +289,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 			if (!user.HasAuthentication) return;
             _pendingPlayers.Remove(user);
             ((ServerMultiplayerProvider)Provider).UpdateScore(ident, 0);
-            Vector3 spawn = Vector3.zero;
+            Vector3 spawn = World.Instance.DefaultSpawnPosition.position;
             int size;
             //Todo: savefile
 

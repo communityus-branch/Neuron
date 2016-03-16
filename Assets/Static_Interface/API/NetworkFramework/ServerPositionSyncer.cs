@@ -39,6 +39,7 @@ namespace Static_Interface.API.NetworkFramework
 
         protected override void FixedUpdate()
         {
+            if (!Connection.IsServer()) return;
             base.FixedUpdate();
             if (TimeUtil.GetCurrentTime() - _lastSync < UpdatePeriod) return;
             if (!Channel.IsOwner) return;

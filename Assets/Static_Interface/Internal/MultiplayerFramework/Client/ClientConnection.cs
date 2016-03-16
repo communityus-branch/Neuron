@@ -158,15 +158,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public static void SetupMainPlayer(Transform playerTransform)
         {
+            LogUtils.Debug("Setting up main player");
             if (Player.MainPlayer != null)
             {
                 DestroyImmediate(Player.MainPlayer.gameObject);
             }
-            if (FindObjectOfType<AudioListener>() != null)
-            {
-                DestroyImmediate(FindObjectOfType<AudioListener>().gameObject);
-            }
-            LogUtils.Debug("Setting up main player");
+
             Player.MainPlayer = playerTransform.GetComponent<Player>();
             if (Camera.current != null && Camera.current.enabled)
             {
@@ -284,13 +281,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
                             object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, argTypes);
 
-                            int i = 0;
-                            foreach (object o in args)
-                            {
-                                LogUtils.Debug("Received arg " + i + ": " + o?.GetType().Name + " - value: " + o);
-                                i++;
-                            }
-  
                             AddPlayer(Provider.Deserialilze((Identity)args[0]), (string)args[1], (ulong)args[2], (Vector3)args[3], (Vector3)args[4], (int)args[5]);
                             return;
                         }

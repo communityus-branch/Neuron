@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Static_Interface.API.NetworkFramework;
+using Static_Interface.Internal.MultiplayerFramework;
+using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
 {
@@ -53,17 +55,19 @@ namespace Static_Interface.API.PlayerFramework
         {
             base.Start();
             _controller = GetComponent<CharacterController>();
-            if (!Channel.IsOwner)
+            if (!Channel.IsOwner && !Connection.IsServer())
             {
                 Destroy(_controller);
                 _controller = null;
-                //var syncer = gameObject.AddComponent<PositionSyncer>();
-
             }
             else if(_controller == null)
             {
                 _controller = gameObject.AddComponent<CharacterController>();
                 _controller.detectCollisions = true;
+            }
+            if (Connection.IsServer())
+            {
+                gameObject.AddComponent<ServerPositionSyncer>();
             }
         }
 
@@ -75,7 +79,7 @@ namespace Static_Interface.API.PlayerFramework
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-            if (Player.Health.IsDead || _input == null) return;
+            if (Player?.Health == null || Player.Health.IsDead || _input == null) return;
             var inputX = 0f;
             var inputY = 0f;
             bool jump = _input.GetKeyDown(KeyCode.Space);
