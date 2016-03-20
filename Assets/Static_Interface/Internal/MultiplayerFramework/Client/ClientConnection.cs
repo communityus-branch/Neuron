@@ -173,6 +173,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             playerTransform.GetComponent<Channel>().IsOwner = true;
             playerTransform.gameObject.AddComponent<MouseLook>();
 
+            playerTransform.GetComponentInChildren<SunShafts>().sunTransform = GameObject.Find("Sun_Moon").transform;
+
             LogUtils.Debug("Setting console character");
 
             if(playerTransform.gameObject.GetComponent<AudioListener>() == null)

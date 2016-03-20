@@ -62,7 +62,13 @@ namespace Static_Interface.Internal
                 child.SetParent(enviromentSun.transform);
             }
 
-            Object.Destroy(orgSunMoon.gameObject);
+            enviromentSun.transform.position = orgSunMoon.transform.position;
+            enviromentSun.transform.localPosition = orgSunMoon.transform.position;
+            enviromentSun.transform.localEulerAngles = orgSunMoon.transform.localEulerAngles;
+            enviromentSun.transform.localRotation = orgSunMoon.transform.localRotation;
+            enviromentSun.transform.localScale = orgSunMoon.transform.localScale;
+
+            Destroy(orgSunMoon.gameObject);
             enviromentSun.name = "Sun_Moon";
 
             var weatherSys = Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
