@@ -15,8 +15,8 @@ namespace Static_Interface.API.NetworkFramework
         private float _lastSynchronizationTime;
         private float _syncDelay;
         private float _syncTime;
-        private Vector3 _syncStartPosition = Vector3.zero;
-        private Vector3 _syncEndPosition = Vector3.zero;
+        private Vector3? _syncStartPosition;
+        private Vector3? _syncEndPosition;
         private uint _lastSync;
         public uint UpdatePeriod = 250;
         public float UpdateRadius = 250f;
@@ -31,17 +31,16 @@ namespace Static_Interface.API.NetworkFramework
         protected override void Update()
         {
             base.Update();
-            if (Connection.IsSinglePlayer) return;
+            if (Channel.IsOwner) return;
             _syncTime += Time.deltaTime;
-            var vec = Vector3.Lerp(_syncStartPosition, _syncEndPosition, _syncTime / _syncDelay);
-            if (vec == Vector3.zero) return;
+            if (_syncStartPosition == null || _syncEndPosition == null) return;
+            var vec = Vector3.Lerp(_syncStartPosition.Value, _syncEndPosition.Value, _syncTime / _syncDelay);
             _rigidbody.position = vec;
         }
 
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-            if (Connection.IsServer()) return;
             if (TimeUtil.GetCurrentTime() - _lastSync < UpdatePeriod) return;
             if (!Channel.IsOwner) return;
             if (_cachedPosition == _rigidbody.position && _cachedVelocity == _rigidbody.velocity)
@@ -62,8 +61,11 @@ namespace Static_Interface.API.NetworkFramework
         {
             if (!Channel.CheckOwner(ident) && !Channel.CheckServer(ident)) return;
             if (Connection.IsServer() && ident == Channel.Connection.ServerID) return;
-            
-            //Todo: check if position data is valid -> prevent speedhacks etc
+
+            if (Connection.IsServer())
+            {
+                //Todo: check if position data is valid -> prevent speedhacks etc
+            }
 
             _syncTime = 0f;
             _syncDelay = Time.time - _lastSynchronizationTime;
