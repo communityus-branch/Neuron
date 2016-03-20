@@ -68,7 +68,7 @@ namespace Static_Interface.Internal
             enviromentSun.transform.localRotation = orgSunMoon.transform.localRotation;
             enviromentSun.transform.localScale = orgSunMoon.transform.localScale;
 
-            Destroy(orgSunMoon.gameObject);
+            Object.Destroy(orgSunMoon.gameObject);
             enviromentSun.name = "Sun_Moon";
 
             var weatherSys = Weather.GetComponentInChildren<UniStormWeatherSystem_C>();

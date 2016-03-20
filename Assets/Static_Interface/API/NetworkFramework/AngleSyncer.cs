@@ -10,7 +10,7 @@ namespace Static_Interface.API.NetworkFramework
     public class AngleSyncer : NetworkedBehaviour
     {
         private Rigidbody _rigidbody;
-        private Vector3 _cachedAngle = Vector3.zero;
+        private Vector3? _cachedAngle;
 
         private uint _lastSync;
         public uint UpdatePeriod = 250;
@@ -37,7 +37,7 @@ namespace Static_Interface.API.NetworkFramework
 
             _cachedAngle = _rigidbody.rotation.eulerAngles;
 
-            Channel.Send(nameof(ReadAngle), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, _cachedAngle);
+            Channel.Send(nameof(ReadAngle), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, _rigidbody.rotation.eulerAngles);
             _lastSync = TimeUtil.GetCurrentTime();
         }
 
@@ -45,8 +45,9 @@ namespace Static_Interface.API.NetworkFramework
         protected void ReadAngle(Identity ident, Vector3 angle)
         {
             if (!Channel.CheckOwner(ident) && !Channel.CheckServer(ident)) return;
+            if (Connection.IsServer() && ident == Channel.Connection.ServerID) return;
             _rigidbody.rotation = Quaternion.Euler(angle);
-            Channel.Send(nameof(ReadAngle), ECall.NotOwner, _rigidbody.position, UpdateRadius, EPacket.UPDATE_UNRELIABLE_BUFFER, _cachedAngle);
+            Channel.Send(nameof(ReadAngle), ECall.NotOwner, _rigidbody.position, UpdateRadius, EPacket.UPDATE_UNRELIABLE_BUFFER, angle);
         }
     }
 }

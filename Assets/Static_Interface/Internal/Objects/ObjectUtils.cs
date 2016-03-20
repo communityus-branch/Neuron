@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Static_Interface.API.Utils;
-using Static_Interface.API.WeatherFramework;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -27,7 +26,7 @@ namespace Static_Interface.Internal.Objects
         {
             GameObject weather = (GameObject) Resources.Load("Weather");
             weather = (GameObject)Object.Instantiate(weather, new Vector3(0,0,0), Quaternion.identity);
-            return weather;;
+            return weather;
         }
 
         private static GameObject CheckObject(string name, out bool created, string path = null)
@@ -49,8 +48,8 @@ namespace Static_Interface.Internal.Objects
             Type type = original.GetType();
             Component copy = destination.AddComponent(type);
             // Copied fields can be restricted with BindingFlags
-            System.Reflection.FieldInfo[] fields = type.GetFields();
-            foreach (System.Reflection.FieldInfo field in fields)
+            FieldInfo[] fields = type.GetFields();
+            foreach (FieldInfo field in fields)
             {
                 field.SetValue(copy, field.GetValue(original));
             }
