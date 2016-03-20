@@ -300,40 +300,33 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
             player.GetComponent<Channel>().Owner = user.Identity;
 
-            if (!IsSinglePlayer)
+            //Send all connected players to the accepted player
+            //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
+            foreach (var c in Clients)
             {
-                //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
-                foreach (var c in Clients)
+                data = new object[]
                 {
-                    data = new object[]
-                    {
                         c.Identity.Serialize(), c.Name, c.Group, c.Model.position,
                         c.Model.rotation.eulerAngles,
                         c.Player.GetComponent<Channel>().ID,
                         false
-                    };
-                    packet = ObjectSerializer.GetBytes(0, out size, data);
-                    Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
-                }
+                };
+                packet = ObjectSerializer.GetBytes(0, out size, data);
+                Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
             }
 
             data = new object[]
-                {ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles, ch, true};
+                {ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles, ch, false};
             packet = ObjectSerializer.GetBytes(0, out size, data);
-            if (IsSinglePlayer)
+            foreach (var c in Clients.Where(c => c.Identity != ident))
             {
-                foreach (var c in Clients)
-                {
-                    Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
-                }
+                Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
             }
-            else
-            {
-                foreach (var c in Clients.Where(c => c.Identity != ident))
-                {
-                    Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
-                }
-            }
+
+            data = new object[]
+    {ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles, ch, true};
+            packet = ObjectSerializer.GetBytes(0, out size, data);
+            Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
 
             data = new object[] { ident.Serialize(), ch };
             packet = ObjectSerializer.GetBytes(0, out size, data);
