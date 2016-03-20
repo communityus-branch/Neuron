@@ -2,7 +2,6 @@
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
-using UnityEngine.Networking.Match;
 
 namespace Static_Interface.API.NetworkFramework
 {
@@ -26,7 +25,7 @@ namespace Static_Interface.API.NetworkFramework
         {
             base.Awake();
             _rigidbody = GetComponent<Rigidbody>();
-            if(Connection.IsSinglePlayer) Destroy(this);
+            //if(Connection.IsSinglePlayer) Destroy(this);
             if(!Connection.IsServer()) Destroy(this);
         }
 
@@ -45,7 +44,7 @@ namespace Static_Interface.API.NetworkFramework
             if (!Channel.IsOwner) return;
             if (_cachedPosition == _rigidbody.position && _cachedVelocity == _rigidbody.velocity)
             {
-                // no changes, no need for position updates
+                // no changes, no need for updates
                 return;
             }
 

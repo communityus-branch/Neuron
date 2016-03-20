@@ -65,9 +65,10 @@ namespace Static_Interface.API.PlayerFramework
                 _controller = gameObject.AddComponent<CharacterController>();
                 _controller.detectCollisions = true;
             }
-            if (Connection.IsServer())
+            if (false && Connection.IsServer())
             {
                 gameObject.AddComponent<ServerPositionSyncer>();
+                gameObject.AddComponent<ServerAngleSyncer>();
             }
         }
 

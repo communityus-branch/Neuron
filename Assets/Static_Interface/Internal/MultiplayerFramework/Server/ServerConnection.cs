@@ -294,7 +294,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             //Todo: savefile
 
             int ch = Channels;
-            Transform player = AddPlayer(ident, user.Name, user.Group, spawn, new Vector3(0, 90, 0), ch);
+            Transform player = AddPlayer(ident, user.Name, user.Group, spawn, new Vector3(0, 90, 0), ch, user.Identity == ServerID);
             object[] data;
             byte[] packet;
 
@@ -309,7 +309,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     {
                         c.Identity.Serialize(), c.Name, c.Group, c.Model.position,
                         c.Model.rotation.eulerAngles,
-                        c.Player.GetComponent<Channel>().ID
+                        c.Player.GetComponent<Channel>().ID,
+                        false
                     };
                     packet = ObjectSerializer.GetBytes(0, out size, data);
                     Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
@@ -317,7 +318,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
 
             data = new object[]
-                {ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles, ch};
+                {ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles, ch, true};
             packet = ObjectSerializer.GetBytes(0, out size, data);
             if (IsSinglePlayer)
             {

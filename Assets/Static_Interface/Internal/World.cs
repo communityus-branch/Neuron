@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using Static_Interface.API.Commands;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
@@ -13,6 +14,7 @@ using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
 using Static_Interface.Neuron.Netvars;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Static_Interface.Internal
 {
@@ -46,6 +48,29 @@ namespace Static_Interface.Internal
                             DefaultSpawnPosition.rotation);
                 ClientConnection.SetupMainPlayer(player.transform);
             }
+
+            var enviromentSun = GameObject.Find("__SUN__");
+            var weatherParent = GameObject.Find("WeatherSystems").transform;
+
+            var orgSunMoon = weatherParent.FindChild("Sun_Moon");
+            var orgLight = orgSunMoon.GetComponent<Light>();
+            ObjectUtils.CopyComponent(orgLight, enviromentSun);
+            enviromentSun.transform.SetParent(weatherParent);
+            for (int i = 0; i < orgSunMoon.childCount; i++)
+            {
+                var child = orgSunMoon.GetChild(i);
+                child.SetParent(enviromentSun.transform);
+            }
+
+            Object.Destroy(orgSunMoon.gameObject);
+            enviromentSun.name = "Sun_Moon";
+
+            var weatherSys = Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
+            weatherSys.sun = enviromentSun.GetComponent<Light>();
+
+            Type t = weatherSys.GetType();
+            var f = t.GetField("sunComponent", BindingFlags.NonPublic);
+            f.SetValue(weatherSys, enviromentSun.GetComponent<Light>());
         }
     }
 }

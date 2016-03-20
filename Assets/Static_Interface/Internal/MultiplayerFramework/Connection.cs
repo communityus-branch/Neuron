@@ -141,7 +141,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         internal abstract void Listen();
 
-        protected virtual Transform AddPlayer(Identity ident, string playerName, ulong @group, Vector3 point, Vector3 angle, int channel)
+        protected virtual Transform AddPlayer(Identity ident, string playerName, ulong @group, Vector3 point, Vector3 angle, int channel, bool mainPlayer)
         {
             LogUtils.Debug(nameof(AddPlayer) + ": " + playerName);
             GameObject obj = (GameObject) Resources.Load("Player");

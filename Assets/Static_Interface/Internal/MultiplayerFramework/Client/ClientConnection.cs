@@ -141,10 +141,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             NetworkUtils.GetAveragePing(currentPing, out _ping, _pings);
         }
 
-        protected override Transform AddPlayer(Identity ident, string playerName, ulong @group, Vector3 point, Vector3 angle, int channel)
+        protected override Transform AddPlayer(Identity ident, string playerName, ulong @group, Vector3 point, Vector3 angle, int channel, bool mainPlayer)
         {
-            var playerTransform = base.AddPlayer(ident, playerName, @group, point, angle, channel);;
-            if (ident != ClientID)
+            var playerTransform = base.AddPlayer(ident, playerName, @group, point, angle, channel, mainPlayer);
+            if (mainPlayer)
             {
                 LogUtils.Debug("Adding foreign player: " + ident);
                 ((ClientMultiplayerProvider) Provider).SetPlayedWith(ident);
@@ -219,6 +219,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 weather.windyLeaves = fallLeaves;
                 weather.rain = rain;
                 weather.rainMist = rainMist;
+                weather.rainSplashes = rainMist;
                 weather.snow = snow;
                 weather.snowMistFog = snowDust;
                 weather.mistFog = rainStreaks;
@@ -276,12 +277,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         {
                             Type[] argTypes = {
                                 //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
-                                Types.IDENTITY_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE
+                                Types.IDENTITY_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE, Types.BOOLEAN_TYPE
                             };
 
                             object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, argTypes);
 
-                            AddPlayer(Provider.Deserialilze((Identity)args[0]), (string)args[1], (ulong)args[2], (Vector3)args[3], (Vector3)args[4], (int)args[5]);
+                            AddPlayer(Provider.Deserialilze((Identity)args[0]), (string)args[1], (ulong)args[2], (Vector3)args[3], (Vector3)args[4], (int)args[5], (bool)args[6]);
                             return;
                         }
                     case EPacket.VERIFY:

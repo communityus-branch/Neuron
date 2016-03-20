@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using Static_Interface.API.Utils;
+using Static_Interface.API.WeatherFramework;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -40,6 +42,19 @@ namespace Static_Interface.Internal.Objects
             instance.name = name;
             Object.DontDestroyOnLoad(GameObject.Find(name));
             return instance;
+        }
+
+        public static Component CopyComponent(Component original, GameObject destination)
+        {
+            Type type = original.GetType();
+            Component copy = destination.AddComponent(type);
+            // Copied fields can be restricted with BindingFlags
+            System.Reflection.FieldInfo[] fields = type.GetFields();
+            foreach (System.Reflection.FieldInfo field in fields)
+            {
+                field.SetValue(copy, field.GetValue(original));
+            }
+            return copy;
         }
     }
 }
