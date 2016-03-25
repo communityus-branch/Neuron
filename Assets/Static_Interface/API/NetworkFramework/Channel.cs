@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Static_Interface.API.NetworkFramework
 {
-    public class Channel : MonoBehaviour
+    public class Channel : UnityExtensions.MonoBehaviour
     {
         [HideInInspector] public Connection Connection;
         public int ID;
@@ -21,8 +21,9 @@ namespace Static_Interface.API.NetworkFramework
         private static readonly object[] Voice = new object[3];
         private readonly List<Component> _componentsRead = new List<Component>();
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Build();
             Init();
             Connection = Connection.CurrentConnection;
@@ -46,7 +47,7 @@ namespace Static_Interface.API.NetworkFramework
             members.AddRange(c.GetType().GetMethods(BindingFlags.Public| BindingFlags.Instance));
             foreach (var m in members)
             {
-                if (m.GetCustomAttributes(typeof (NetworkCall), true).Length <= 0)
+                if (m.GetCustomAttributes(typeof (NetworkCallAttribute), true).Length <= 0)
                 {
                     continue;
                 }
@@ -175,8 +176,9 @@ namespace Static_Interface.API.NetworkFramework
         {
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             if (ID != 0)
             {
                 Connection.CloseChannel(this);

@@ -2,7 +2,7 @@
 using Plugins.ConsoleUI.FrontEnd.UnityGUI;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.Internal.MultiplayerFramework;
-using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.Utils
 {
@@ -68,8 +68,9 @@ namespace Static_Interface.API.Utils
             }
         }
 
-        private void FixedUpdate()
+        protected override void FixedUpdate()
         {
+            base.FixedUpdate();
             CheckConsole();
         }
     }

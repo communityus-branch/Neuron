@@ -1,5 +1,6 @@
 ﻿using Static_Interface.API.PlayerFramework;
 using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.InteractionFramework
 {
@@ -8,20 +9,6 @@ namespace Static_Interface.API.InteractionFramework
     /// </summary>
     public abstract class Interactable : MonoBehaviour
     {
-        protected virtual void Awake()
-        {
-            
-        }
-
-        protected virtual void Start()
-        {
-            
-        }
-
-        protected virtual void Update()
-        {
-            
-        }
         /// <summary>
         /// Called when a player interacts with it
         /// </summary>

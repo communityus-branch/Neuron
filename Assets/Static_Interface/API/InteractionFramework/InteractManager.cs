@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Static_Interface.API.InteractionFramework
 {
-    public class InteractManager : MonoBehaviour
+    public class InteractManager : UnityExtensions.MonoBehaviour
     {
         public const float INTERACT_RANGE = 5.0f;
         public KeyCode InteractKey = KeyCode.F;
@@ -13,21 +13,23 @@ namespace Static_Interface.API.InteractionFramework
         public static Interactable CurrentInteractable;
         public static InteractManager Instance;
 
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             if(Instance != null) throw new Exception("Only one instance allowed");
             Instance = this;
         }
 
-        private void Reset()
+        private void ResetInteract()
         {
             if (CurrentInteractable == null) return;
             Highlighter.Highlight(CurrentInteractable.InteractableObject);
             CurrentInteractable = null;
         }
 
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             if (InputUtil.IsInputLocked()) return;
             if (Camera.main == null) return;
             Vector3 p = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane));
@@ -82,8 +84,9 @@ namespace Static_Interface.API.InteractionFramework
             CurrentInteractable.Interact(Player.MainPlayer);
         }
 
-        public void OnGUI()
+        protected override void OnGUI()
         {
+            base.OnGUI();
             if (CurrentInteractable != null && CurrentInteractable.CanInteract())
             {
                 GUI.Label(new Rect(Screen.width / 2 - 75, Screen.height - 100, Screen.width / 2, 30), "[" + InteractKey + "] " + CurrentInteractable.GetInteractMessage());

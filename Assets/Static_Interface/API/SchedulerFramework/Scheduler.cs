@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework;
-using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.SchedulerFramework
 {
@@ -12,13 +11,15 @@ namespace Static_Interface.API.SchedulerFramework
     {
         private readonly Dictionary<int, Task> _tasks = new Dictionary<int, Task>();
         private int _lastId;
-        protected void Start()
+        protected override void Start()
         {
+            base.Start();  
             Instance = this;
         }
 
-        protected void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             Instance = null;
         }
 
@@ -73,8 +74,9 @@ namespace Static_Interface.API.SchedulerFramework
             return GetTask(ext, action, true, delay, period);
         }
 
-        protected void Update()
+        protected override void Update()
         {
+            base.Update();
             List<int> toRemove = new List<int>();
             foreach (var t in _tasks.Values)
             {

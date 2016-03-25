@@ -1,10 +1,10 @@
 ﻿using System;
 using Static_Interface.API.LevelFramework;
-using Static_Interface.Internal;
 using Static_Interface.Internal.Objects;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.Neuron.Menus
 {
@@ -13,8 +13,9 @@ namespace Static_Interface.Neuron.Menus
         public CanvasRenderer Text;
 
         public static AsyncOperation LoadingOperation;
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             ObjectUtils.CheckObjects();
 
             if (!LevelManager.Instance.IsLoading)
@@ -26,8 +27,9 @@ namespace Static_Interface.Neuron.Menus
         }
 
         // Update is called once per frame
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             if (LoadingOperation == null) return;
             double progress = Math.Round(LoadingOperation.progress*100);
             Text.GetComponent<Text>().text = "Loading... (" + progress + "%)";

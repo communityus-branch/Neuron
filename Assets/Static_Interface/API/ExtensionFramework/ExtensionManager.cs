@@ -6,6 +6,7 @@ using System.Reflection;
 using Static_Interface.API.Utils;
 using Static_Interface.ExtensionSandbox;
 using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.ExtensionFramework
 {
@@ -68,8 +69,9 @@ namespace Static_Interface.API.ExtensionFramework
             Instance = null;
         }
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             if (Instance != null)
             {
                 Destroy(this);
@@ -133,8 +135,9 @@ namespace Static_Interface.API.ExtensionFramework
             ext.Enabled = true;
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             foreach (Extension extension in _loadedExtensions.Where(ex => ex.Enabled))
             {
                 extension.Update();

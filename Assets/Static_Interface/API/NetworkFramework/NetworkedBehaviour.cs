@@ -1,14 +1,13 @@
 ﻿using System;
 using Static_Interface.Internal.MultiplayerFramework;
-using UnityEngine;
 
 namespace Static_Interface.API.NetworkFramework
 {
-    public abstract class NetworkedBehaviour : MonoBehaviour
+    public abstract class NetworkedBehaviour : UnityExtensions.MonoBehaviour
     {
         public Channel Channel { get; private set; }
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
             Channel = GetComponent<Channel>();
             
@@ -20,26 +19,6 @@ namespace Static_Interface.API.NetworkFramework
 
             Channel = gameObject.AddComponent<Channel>();
             Channel.Setup();
-        }
-
-        protected virtual void Start()
-        {
-            
-        }
-
-        protected virtual void Update()
-        {
-            
-        }
-
-        protected virtual void FixedUpdate()
-        {
-
-        }
-
-        protected virtual void OnDestroy()
-        {
-            
         }
 
         public void CheckServer()

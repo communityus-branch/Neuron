@@ -5,7 +5,6 @@ using Static_Interface.API.Commands;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
-using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
@@ -14,6 +13,7 @@ using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
 using Static_Interface.Neuron.Netvars;
 using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 using Object = UnityEngine.Object;
 
 namespace Static_Interface.Internal
@@ -24,8 +24,9 @@ namespace Static_Interface.Internal
         public static World Instance;
         public GameObject Weather;
         public Transform DefaultSpawnPosition;
-        private void Start ()
+        protected override void Start ()
         {
+            base.Start();
             ObjectUtils.CheckObjects();
             if (Instance != null) throw new Exception("Only one instance allowed");
             Instance = this;

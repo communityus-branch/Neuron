@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Static_Interface.API.NetworkFramework;
+﻿using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Impl;
@@ -14,7 +13,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
     {
         private ServerConnection _server;
 
-        internal override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             _server = gameObject.AddComponent<ServerConnection>();
@@ -57,7 +56,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         }
 
-        internal override void Update()
+        protected override void Update()
         {
 
         }

@@ -2,7 +2,7 @@
 
 namespace Static_Interface.API.LevelFramework
 {
-    public class Fading : MonoBehaviour
+    public class Fading : UnityExtensions.MonoBehaviour
     {
 
         public Texture2D FadeOutTexture;    // the texture that will overlay the screen. This can be a black image or a loading graphic
@@ -12,8 +12,9 @@ namespace Static_Interface.API.LevelFramework
         internal float Alpha = 1.0f;         // the texture's alpha value between 0 and 1
         private int _fadeDir = -1;           // the direction to fade: in = -1 or out = 1
 
-        void OnGUI()
+        protected override void OnGUI()
         {
+            base.OnGUI();
             // fade out/in the alpha value using a direction, a speed and Time.deltaTime to convert the operation to seconds
             Alpha += _fadeDir * FadeSpeed * Time.deltaTime;
             // force (clamp) the number to be between 0 and 1 because GUI.color uses Alpha values between 0 and 1
@@ -33,8 +34,9 @@ namespace Static_Interface.API.LevelFramework
         }
 
         // OnLevelWasLoaded is called when a level is loaded. It takes loaded level index (int) as a parameter so you can limit the fade in to certain scenes.
-        void OnLevelWasLoaded()
+        protected override void OnLevelWasLoaded(int i)
         {
+            base.OnLevelWasLoaded(i);
             // alpha = 1;		// use this if the alpha is not set to 1 by default
             BeginFade(-1);      // call the fade in function
         }

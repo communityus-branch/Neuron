@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
@@ -42,8 +41,9 @@ namespace Static_Interface.API.NetworkFramework
 
         private bool _justFocused;
 
-        private void OnGUI()
+        protected override void OnGUI()
         {
+            base.OnGUI();
             if (InputUtil.IsInputLocked(this)) return;
             if (!Draw) return;
 

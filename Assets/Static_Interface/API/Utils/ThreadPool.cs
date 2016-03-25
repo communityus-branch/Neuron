@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.Utils
 {
@@ -12,8 +12,9 @@ namespace Static_Interface.API.Utils
         private static readonly List<Action> QueuedAsyncActions = new List<Action>();
         private static int _mainThreadId;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
             new Thread(AsyncUpdate).Start();
         }
@@ -65,8 +66,9 @@ namespace Static_Interface.API.Utils
             }
         }
 
-        public void Update()
+        protected override void Update()
         {
+            base.Update();
             lock (QueuedMainActions)
             {
                 if (QueuedMainActions.Count == 0)
@@ -82,8 +84,9 @@ namespace Static_Interface.API.Utils
             }
         }
 
-        public void FixedUpdate()
+        protected override void FixedUpdate()
         {
+            base.FixedUpdate();
             lock (QueuedMainFixedActions)
             {
                 if (QueuedMainFixedActions.Count == 0)

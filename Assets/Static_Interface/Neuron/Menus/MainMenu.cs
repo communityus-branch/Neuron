@@ -1,18 +1,18 @@
-﻿using Static_Interface.Internal;
-using Static_Interface.Internal.MultiplayerFramework;
-using Static_Interface.Internal.MultiplayerFramework.Client;
+﻿using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Server;
 using Static_Interface.Internal.Objects;
 using UnityEngine;
 using UnityEngine.UI;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.Neuron.Menus
 {
     [RequireComponent(typeof(AudioSource))]
     public class MainMenu: MonoBehaviour
     {
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             ObjectUtils.CheckObjects();
             //if (!Debug.isDebugBuild && SteamAPI.RestartAppIfNecessary(GameInfo.ID))
             //{

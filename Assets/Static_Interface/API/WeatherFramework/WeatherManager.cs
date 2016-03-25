@@ -2,6 +2,7 @@
 using Static_Interface.API.Utils;
 using Static_Interface.Internal;
 using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.WeatherFramework
 {
@@ -12,13 +13,15 @@ namespace Static_Interface.API.WeatherFramework
 
         //Todo: WeatherChangeEvent
 
-        protected void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _weatherSystem = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
         }
 
-        protected void Update()
+        protected override void Update()
         {
+            base.Update();
             if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.F1))
             {
                 Weather = GetRandomWeather();

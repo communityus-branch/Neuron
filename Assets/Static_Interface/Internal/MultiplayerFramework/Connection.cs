@@ -4,11 +4,10 @@ using System.Linq;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
-using Static_Interface.Internal.MultiplayerFramework.Server;
 using Static_Interface.Internal.Objects;
 using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.Internal.MultiplayerFramework
 {
@@ -63,14 +62,16 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public ICollection<User> Clients => _clients?.AsReadOnly();
 
-        internal virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             CurrentConnection = this;
             DontDestroyOnLoad(this);
         }
 
-        protected virtual void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             if (CurrentConnection == this) CurrentConnection = null;
         }
 
@@ -109,8 +110,9 @@ namespace Static_Interface.Internal.MultiplayerFramework
         }
 
 
-        internal virtual void Update()
+        protected override void Update()
         {
+            base.Update();
             if (!IsConnected) return;
             Listen();
             Listen(0);
@@ -134,8 +136,9 @@ namespace Static_Interface.Internal.MultiplayerFramework
             }
         }
 
-        protected void FixedUpdate()
+        protected override void FixedUpdate()
         {
+            base.FixedUpdate();
             Provider?.Update();
         }
 
@@ -165,11 +168,6 @@ namespace Static_Interface.Internal.MultiplayerFramework
             //Todo: on player disconnected event
             Destroy(_clients[index].Model.gameObject);
             _clients.RemoveAt(index);
-        }
-
-        protected virtual void OnLevelWasLoaded(int level)
-        {
-            
         }
 
         public virtual void Send(Identity receiver, EPacket type, byte[] data, int channel)

@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 namespace Static_Interface.API.LevelFramework 
 {
-    public class LevelManager : MonoBehaviour
+    public class LevelManager : UnityExtensions.MonoBehaviour
     {
         public const string MENU_DIR = "Static_Interface/Neuron/Menus/";
 
@@ -20,8 +20,9 @@ namespace Static_Interface.API.LevelFramework
         public bool IsLoading { get; private set; }
         public string PendingLevel { get; private set; }
 
-        public void Start()
+        protected override void Start()
         {
+            base.Start();
             Instance = this;
         }
 
@@ -49,8 +50,9 @@ namespace Static_Interface.API.LevelFramework
             SceneManager.LoadSceneAsync(MENU_DIR + "LoadingMenu");
         }
 
-        void OnLevelWasLoaded(int scene)
+        protected override void OnLevelWasLoaded(int scene)
         {
+            base.OnLevelWasLoaded(scene);
             if (!IsLoading) return;
             if (scene == 1)
             {
