@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Static_Interface.API.NetworkFramework
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PositionSyncer : NetworkedBehaviour
+    public class RigidbodyPositionSyncer : NetworkedBehaviour
     {
         private Rigidbody _rigidbody;
         private Vector3? _cachedPosition;
@@ -20,7 +20,7 @@ namespace Static_Interface.API.NetworkFramework
         private uint _lastSync;
         public uint UpdatePeriod = 250;
         public float UpdateRadius = 250f;
-
+        public IPositionValidator PositionValidator;
         protected override void Awake()
         {
             base.Awake();
@@ -62,9 +62,15 @@ namespace Static_Interface.API.NetworkFramework
             if (!Channel.CheckOwner(ident) && !Channel.CheckServer(ident)) return;
             if (Connection.IsServer() && ident == Channel.Connection.ServerID) return;
 
-            if (Connection.IsServer())
+            if (Connection.IsServer() && PositionValidator != null)
             {
-                //Todo: check if position data is valid -> prevent speedhacks etc
+                var deltaPosition = syncPosition - _rigidbody.position;
+                var deltaVelocity = syncVelocity - _rigidbody.velocity;
+                if (!PositionValidator.ValidatePosition(transform, deltaPosition, deltaVelocity))
+                {
+                    Channel.Send(nameof(ReadPosition), ECall.Owner, EPacket.UPDATE_UNRELIABLE_BUFFER, _rigidbody.position, _rigidbody.velocity);
+                    return;
+                }
             }
 
             _syncTime = 0f;

@@ -66,7 +66,7 @@ namespace Static_Interface.API.PlayerFramework
                 _controller.detectCollisions = true;
             }
 
-            gameObject.AddComponent<PositionSyncer>();
+            gameObject.AddComponent<RigidbodyPositionSyncer>();
             //gameObject.AddComponent<ServerAngleSyncer>();
         }
 

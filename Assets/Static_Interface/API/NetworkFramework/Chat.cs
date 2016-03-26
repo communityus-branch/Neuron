@@ -9,7 +9,7 @@ namespace Static_Interface.API.NetworkFramework
     {
         public List<string> ChatHistory = new List<string>();
         private Vector2 _scrollView = Vector2.zero;
-        public string Message { get; set; } = "";
+        private string Message { get; set; } = "";
         private const string ChatTextFieldName = "ChatTextField";
         public bool Draw { get; set; } = true;
         public static Chat Instance;
@@ -115,7 +115,7 @@ namespace Static_Interface.API.NetworkFramework
         {
             LogUtils.Debug(nameof(SendUserMessage));
             //Todo: onchatevent
-            var userName = sender.GetUser()?.Name ?? "Console";
+            var userName = sender.GetUser()?.Name ?? "Server"; // if getuser returns null it means we are a server
             msg = "<color=yellow>" + userName + "</color>: " + msg;
             Channel.Send(nameof(ReceiveMessage), ECall.All, EPacket.UPDATE_UNRELIABLE_BUFFER, sender, msg);
         }
