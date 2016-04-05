@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using Static_Interface.API.Utils;
+using Static_Interface.API.WeatherFramework;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -16,6 +18,7 @@ namespace Static_Interface.Internal.Objects
             {
                 persScripts.AddComponent<ThreadPool>();
                 persScripts.AddComponent<InputUtil>();
+                persScripts.AddComponent<WeatherManager>();
             }
             
             CheckObject("SteamManager", out created);
@@ -43,17 +46,38 @@ namespace Static_Interface.Internal.Objects
             return instance;
         }
 
-        public static Component CopyComponent(Component original, GameObject destination)
+        public static GameObject CopyComponents(GameObject original, GameObject destination, params Type[] skips)
         {
-            Type type = original.GetType();
-            Component copy = destination.AddComponent(type);
-            // Copied fields can be restricted with BindingFlags
-            FieldInfo[] fields = type.GetFields();
+            foreach (Component c in original.GetComponents<Component>())
+            {
+                Type type = c.GetType();
+                if(skips.Contains(type) || type == typeof(Transform)) continue;     
+                if (destination.GetComponent(type) != null)
+                {
+                    Object.Destroy(destination.GetComponent(type));
+                }
+
+                Component copy = destination.AddComponent(type);
+                CopyFields(c, copy);
+            }
+
+            return destination;
+        }
+
+        public static T CopyFields<T>(T source, T target) 
+        {
+            return (T)CopyFields(source, target as object);
+        }
+
+        public static object CopyFields(object source, object target)
+        {
+            FieldInfo[] fields = source.GetType().GetFields();
             foreach (FieldInfo field in fields)
             {
-                field.SetValue(copy, field.GetValue(original));
+                field.SetValue(target, field.GetValue(source));
             }
-            return copy;
+
+            return target;
         }
     }
 }

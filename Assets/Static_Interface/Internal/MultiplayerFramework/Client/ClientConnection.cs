@@ -143,7 +143,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         protected override Transform AddPlayer(Identity ident, string playerName, ulong @group, Vector3 point, Vector3 angle, int channel, bool mainPlayer)
         {
             var playerTransform = base.AddPlayer(ident, playerName, @group, point, angle, channel, mainPlayer);
-            if (mainPlayer)
+            if (!mainPlayer)
             {
                 LogUtils.Debug("Adding foreign player: " + ident);
                 ((ClientMultiplayerProvider) Provider).SetPlayedWith(ident);
@@ -157,6 +157,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public static void SetupMainPlayer(Transform playerTransform)
         {
+            if(playerTransform == null) throw new ArgumentNullException(nameof(playerTransform));
             LogUtils.Debug("Setting up main player");
             if (Player.MainPlayer != null)
             {
@@ -168,11 +169,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             {
                 Camera.current.enabled = false;
             }
+            
+            if(playerTransform.gameObject == null) throw new ArgumentException("gameObject of playertransform is null");
             playerTransform.gameObject.AddComponent<CharacterController>();
             playerTransform.GetComponent<Channel>().IsOwner = true;
             playerTransform.gameObject.AddComponent<MouseLook>();
 
-            playerTransform.GetComponentInChildren<SunShafts>().sunTransform = GameObject.Find("Sun_Moon").transform;
+            var sunShafts = playerTransform.GetComponentInChildren<SunShafts>();
+            if (sunShafts != null && GameObject.Find("Sun_Moon") != null)
+            {
+                sunShafts.sunTransform = GameObject.Find("Sun_Moon").transform;
+            }
 
             LogUtils.Debug("Setting console character");
 
@@ -181,7 +188,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
             LogUtils.Debug("Setting up Camera");
             var cam = playerTransform.FindChild("MainCamera");
-            var sunshafts = cam.gameObject.AddComponent<SunShafts>();
+
             cam.tag = "MainCamera";
 
             cam.GetComponent<Camera>().enabled = true;
@@ -212,11 +219,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             try
             {
                 var weather = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
-                GameObject garbage = new GameObject();
-                var light = garbage.AddComponent<Light>();
                 weather.butterflies = fallLeaves;
-                weather.moon = light;
-                weather.moonLight = light;
                 weather.windyLeaves = fallLeaves;
                 weather.rain = rain;
                 weather.rainMist = rainMist;

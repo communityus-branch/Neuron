@@ -25,6 +25,8 @@ namespace Static_Interface.API.WeatherFramework
             if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.F1))
             {
                 Weather = GetRandomWeather();
+                ChangeWeatherTo(Weather);
+                ChangeWeatherInstant();
             }
         }
 

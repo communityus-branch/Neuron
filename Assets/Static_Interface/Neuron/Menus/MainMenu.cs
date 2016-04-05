@@ -30,7 +30,7 @@ namespace Static_Interface.Neuron.Menus
             ClientConnection conn = serverObject.AddComponent<ClientConnection>();
             //SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
             //conn.Init();
-            conn.AttemptConnect("88.223.87.145", 27015, string.Empty);
+            conn.AttemptConnect("localhost", 27015, string.Empty);
         }
 
         public void Host()
@@ -38,6 +38,7 @@ namespace Static_Interface.Neuron.Menus
             GameObject serverObject = GameObject.Find("Server");
             DestroyImmediate(serverObject.GetComponent<ClientConnection>());
             DestroyImmediate(serverObject.GetComponent<ServerConnection>());
+            DestroyImmediate(serverObject.GetComponent<SingleplayerConnection>());
             //ServerConnection conn = serverObject.AddComponent<ServerConnection>();
             //conn.OpenGameServer();
             SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();

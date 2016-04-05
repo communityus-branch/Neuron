@@ -280,59 +280,102 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
         }
 
+        private readonly List<PendingUser> _queuedUsers = new List<PendingUser>();
         public void Accept(PendingUser user)
         {
             if(user == null) throw new ArgumentNullException(nameof(user));
-            Identity ident = user.Identity;
 			LogUtils.Log("Player accepted: " + user.Name);
 			if (!user.HasAuthentication) return;
             _pendingPlayers.Remove(user);
-            ((ServerMultiplayerProvider)Provider).UpdateScore(ident, 0);
-            Vector3 spawn = World.Instance.DefaultSpawnPosition.position;
-            int size;
-            //Todo: savefile
 
-            int ch = Channels;
-            Transform player = AddPlayer(ident, user.Name, user.Group, spawn, new Vector3(0, 90, 0), ch, user.Identity == ServerID);
-            object[] data;
-            byte[] packet;
+            LogUtils.Debug("Loading spawn");
+            ((ServerMultiplayerProvider)Provider)?.UpdateScore(user.Identity, 0);
 
-            player.GetComponent<Channel>().Owner = user.Identity;
+            QueueUser(user);
 
-            //Send all connected players to the accepted player
-            //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
-            foreach (var c in Clients)
+            if (World.Instance == null)
             {
-                data = new object[]
+                return;
+            }
+
+            LoadQueuedPlayers(Chat.Instance);
+        }
+
+        protected void OnPostWorldInit(Chat chat)
+        {
+            LoadQueuedPlayers(chat);
+        }
+
+        protected void QueueUser(PendingUser user)
+        {
+            LogUtils.Debug("Queueing user: " + user.Identity);
+            _queuedUsers.Add(user);
+        }
+
+        public void LoadQueuedPlayers(Chat chat)
+        {
+            foreach (PendingUser user in _queuedUsers)
+            {
+                Identity ident = user.Identity;
+                Vector3? spawn = World.Instance.DefaultSpawnPosition?.position ?? Vector3.zero;
+                LogUtils.Debug("Adding player");
+                var angle = new Vector3(0, 90, 0);
+                int ch = Channels;
+
+                if (!(user.Identity == ServerID && IsSinglePlayer))
                 {
+                    Transform player = AddPlayer(ident, user.Name, user.Group, spawn.Value, angle, ch,
+                        user.Identity == ServerID);
+                    
+                    player.GetComponent<Channel>().Owner = user.Identity;
+                }
+
+                int size;
+                object[] data;
+                byte[] packet;
+
+                //Send all connected players to the accepted player
+                //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel, [6] isSelf
+                LogUtils.Debug("Sending connected to all clients");
+                foreach (var c in Clients)
+                {
+                    data = new object[]
+                    {
                         c.Identity.Serialize(), c.Name, c.Group, c.Model.position,
                         c.Model.rotation.eulerAngles,
                         c.Player.GetComponent<Channel>().ID,
                         false
-                };
+                    };
+                    packet = ObjectSerializer.GetBytes(0, out size, data);
+                    Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
+                }
+
+                LogUtils.Debug("Sending connected player data to client");
+
+                foreach (var c in Clients.Where(c => c.Identity != ident))
+                {
+                    data = new object[]
+                    {
+                        ident.Serialize(), c.Name, c.Group, c.Model.transform.position,
+                        c.Model.transform.rotation.eulerAngles, c.Model.GetComponent<Channel>().ID, false
+                    };
+                    packet = ObjectSerializer.GetBytes(0, out size, data);
+                    Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
+                }
+
+                LogUtils.Debug("Sending accepted data to client");
+                data = new object[]
+                {ident.Serialize(), user.Name, user.Group, spawn.Value, angle, ch, true};
                 packet = ObjectSerializer.GetBytes(0, out size, data);
                 Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
+
+                data = new object[] {ident.Serialize(), ch};
+                packet = ObjectSerializer.GetBytes(0, out size, data);
+                Send(user.Identity, EPacket.ACCEPTED, packet, size, 0);
+                chat?.SendServerMessage("<b>" + user.Name + "</b> connected.");
+                //Todo: OnUserConnectedEvent
             }
-
-            data = new object[]
-                {ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles, ch, false};
-            packet = ObjectSerializer.GetBytes(0, out size, data);
-            foreach (var c in Clients.Where(c => c.Identity != ident))
-            {
-                Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
-            }
-
-            data = new object[]
-    {ident.Serialize(), user.Name, user.Group, player.position, player.rotation.eulerAngles, ch, true};
-            packet = ObjectSerializer.GetBytes(0, out size, data);
-            Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
-
-            data = new object[] { ident.Serialize(), ch };
-            packet = ObjectSerializer.GetBytes(0, out size, data);
-            Send(user.Identity, EPacket.ACCEPTED, packet, size, 0);
-
-            Chat.Instance.SendServerMessage("<b>" + user.Name + "</b> connected.");
-            //Todo: OnUserConnectedEvent
+            _queuedUsers.Clear();
         }
 
         public void OpenGameServer(bool lan = false)

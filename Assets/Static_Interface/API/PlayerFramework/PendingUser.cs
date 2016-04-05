@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#pragma warning disable 8025
+using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
 {
