@@ -18,16 +18,11 @@ namespace Static_Interface.Internal.MultiplayerFramework
         public const int SERVER_TIMEOUT = 30;
         public const int PENDING_TIMEOUT = 30;
         public const float UPDATE_TIME = 0.15f;
-
+        public static bool IsDedicated { get; internal set; }
         public static bool IsServer()
         {
             if (IsSinglePlayer) return true;
             return CurrentConnection.Provider is ServerMultiplayerProvider;
-        }
-
-        public static bool IsDedicated()
-        {
-            return !IsSinglePlayer && IsServer();
         }
 
         public static bool IsClient()
