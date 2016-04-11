@@ -19,7 +19,7 @@ namespace Static_Interface.API.PlayerFramework
         {
             //if (Connection.IsServer()) return; //Todo: dedicated server check
             if(!Channel.IsOwner) return;
-            if (InputUtil.IsInputLocked(this) || !Channel.IsOwner) return;
+            if (InputUtil.Instance.IsInputLocked(this) || !Channel.IsOwner) return;
             _keyStates = new List<KeyState>();
 
             foreach (KeyCode keyCode in Enum.GetValues(typeof (KeyCode)))

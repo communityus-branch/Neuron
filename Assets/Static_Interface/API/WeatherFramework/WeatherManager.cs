@@ -1,12 +1,12 @@
 ﻿using System;
+using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal;
 using UnityEngine;
-using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.WeatherFramework
 {
-    public class WeatherManager : MonoBehaviour
+    public class WeatherManager : PersistentScript<WeatherManager>
     {
         private Weather _currentWeather;
         private UniStormWeatherSystem_C _weatherSystem;
@@ -16,13 +16,13 @@ namespace Static_Interface.API.WeatherFramework
         protected override void Awake()
         {
             base.Awake();
-            _weatherSystem = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
+            _weatherSystem = World.Instance?.Weather?.GetComponentInChildren<UniStormWeatherSystem_C>();
         }
 
         protected override void Update()
         {
             base.Update();
-            if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.F1))
+            if (_weatherSystem != null && Debug.isDebugBuild && Input.GetKeyDown(KeyCode.F1))
             {
                 Weather = GetRandomWeather();
                 ChangeWeatherTo(Weather);

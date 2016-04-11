@@ -100,7 +100,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         internal void Connect(ServerInfo info)
         {
-            ThreadPool.RunOnMainThread(delegate
+            ThreadPool.Instance.RunOnMainThread(delegate
             {
                 if (IsConnected) return;
                 ClientID = ((ClientMultiplayerProvider) Provider).GetUserID();
@@ -202,34 +202,19 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             var snow = ((GameObject)Resources.Load("ParticleEffects/Snow")).GetComponent<ParticleSystem>(); 
             var snowDust = ((GameObject)Resources.Load("ParticleEffects/SnowDust")).GetComponent<ParticleSystem>();
 
-            LogUtils.Debug("Loading WeatherGetComponents");
-            var weatherController = cam.gameObject.AddComponent<GetUniStormComponents_C>();
-            weatherController.windyLeaves = fallLeaves;
-            weatherController.lightningBugs = lightningBugs;
-            weatherController.lightningPosition = lightningPosition;
-            weatherController.rain = rain;
-            weatherController.rainSplash = rainMist;
-            weatherController.rainMist = rainMist;
-            weatherController.rainStreaks = rainStreaks;
-            weatherController.snow = snow;
-            weatherController.snowDust = snowDust;
-            weatherController.unistormCamera = cam.gameObject;
-
             LogUtils.Debug("Loading WeatherSystem");
             try
             {
                 var weather = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
-                weather.butterflies = fallLeaves;
+                weather.butterflies = lightningBugs;
                 weather.windyLeaves = fallLeaves;
-                weather.rain = rain;
-                weather.rainMist = rainMist;
-                weather.rainSplashes = rainMist;
-                weather.snow = snow;
-                weather.snowMistFog = snowDust;
                 weather.mistFog = rainStreaks;
+                weather.snowMistFog = snowDust;
+                weather.snow = snow;
+                weather.rainMist = rainMist;
+                weather.rain = rain;
+                weather.lightningSpawn = lightningPosition;
                 weather.cameraObject = cam.gameObject;
-                weather.cameraObjectComponent = cam.GetComponent<Camera>();
-                weatherController.unistorm = weather.gameObject;
             }
             catch (Exception e)
             {

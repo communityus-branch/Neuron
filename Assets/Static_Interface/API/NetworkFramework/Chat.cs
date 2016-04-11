@@ -44,7 +44,7 @@ namespace Static_Interface.API.NetworkFramework
         protected override void OnGUI()
         {
             base.OnGUI();
-            if (InputUtil.IsInputLocked(this)) return;
+            if (InputUtil.Instance.IsInputLocked(this)) return;
             if (!Draw) return;
 
             GUILayout.BeginArea(new Rect(0, 0, 400, 200));
@@ -60,7 +60,7 @@ namespace Static_Interface.API.NetworkFramework
             if (!ChatTextFieldVisible)
             {
                 if (!Input.GetKeyDown(KeyCode.Return)) return;
-                InputUtil.LockInput(this);
+                InputUtil.Instance.LockInput(this);
                 ChatTextFieldVisible = true;
                 FoucsChatTextField();
                 _justFocused = true;
@@ -83,7 +83,7 @@ namespace Static_Interface.API.NetworkFramework
             if (!_justFocused)
             {
                 ChatTextFieldVisible = false;
-                InputUtil.UnlockInput(this);
+                InputUtil.Instance.UnlockInput(this);
             }
             if (_justFocused) _justFocused = false;
             if (string.IsNullOrEmpty(Message?.Trim()))

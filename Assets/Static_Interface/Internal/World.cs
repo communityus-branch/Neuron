@@ -43,17 +43,6 @@ namespace Static_Interface.Internal
             var chat = gameObject.AddComponent<Chat>();
             gameObject.AddComponent<Scheduler>();
             Weather = ObjectUtils.LoadWeather();
-            //Todo:
-            //if (Connection.IsServer())
-            //{
-            //    LogUtils.Debug("Spawning default player");
-            //    GameObject player =
-            //        (GameObject)
-            //            Instantiate(Resources.Load("Player"), DefaultSpawnPosition.position,
-            //                DefaultSpawnPosition.rotation);
-            //    ClientConnection.SetupMainPlayer(player.transform);
-            //}
-
             var enviromentSun = GameObject.Find("__SUN__");
             var weatherParent = GameObject.Find("WeatherSystems").transform;
 

@@ -164,8 +164,8 @@
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="shortOption"/> name or <paramref name="longOption"/> name already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
             </exception>
-            <exception cref="T:Fclp.InvalidOptionNameException">
-            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
+            <exception cref="T:Fclp.InValidOptionNameException">
+            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not Valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
             or a control character. <paramref name="longOption"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
             </exception>
         </member>
@@ -175,7 +175,7 @@
             </summary>
             <param name="shortOption">The short name for the Option. This must not be <c>whitespace</c> or a control character.</param>
             <returns></returns>
-            <exception cref="T:Fclp.InvalidOptionNameException">if <paramref name="shortOption"/> is invalid for a short option.</exception>
+            <exception cref="T:Fclp.InValidOptionNameException">if <paramref name="shortOption"/> is inValid for a short option.</exception>
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="shortOption"/> name 
             already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
@@ -186,7 +186,7 @@
             Setup a new <see cref="T:Fclp.ICommandLineOptionFluent`1"/> using the specified long Option name.
             </summary>
             <param name="longOption">The long name for the Option. This must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.</param>
-            <exception cref="T:Fclp.InvalidOptionNameException">if <paramref name="longOption"/> is invalid for a long option.</exception>
+            <exception cref="T:Fclp.InValidOptionNameException">if <paramref name="longOption"/> is inValid for a long option.</exception>
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="longOption"/> name already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
             </exception>
@@ -267,8 +267,8 @@
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="shortOption"/> name or <paramref name="longOption"/> name already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
             </exception>
-            <exception cref="T:Fclp.InvalidOptionNameException">
-            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
+            <exception cref="T:Fclp.InValidOptionNameException">
+            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not Valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
             or a control character. <paramref name="longOption"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
             </exception>
         </member>
@@ -278,7 +278,7 @@
             </summary>
             <param name="shortOption">The short name for the Option. This must not be <c>whitespace</c> or a control character.</param>
             <returns></returns>
-            <exception cref="T:Fclp.InvalidOptionNameException">if <paramref name="shortOption"/> is invalid for a short option.</exception>
+            <exception cref="T:Fclp.InValidOptionNameException">if <paramref name="shortOption"/> is inValid for a short option.</exception>
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="shortOption"/> name 
             already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
@@ -289,7 +289,7 @@
             Setup a new <see cref="T:Fclp.ICommandLineOptionFluent`1"/> using the specified long Option name.
             </summary>
             <param name="longOption">The long name for the Option. This must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.</param>
-            <exception cref="T:Fclp.InvalidOptionNameException">if <paramref name="longOption"/> is invalid for a long option.</exception>
+            <exception cref="T:Fclp.InValidOptionNameException">if <paramref name="longOption"/> is inValid for a long option.</exception>
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="longOption"/> name already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
             </exception>
@@ -900,8 +900,8 @@
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="shortOption"/> name or <paramref name="longOption"/> name already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
             </exception>
-            <exception cref="T:Fclp.InvalidOptionNameException">
-            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
+            <exception cref="T:Fclp.InValidOptionNameException">
+            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not Valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
             or a control character. <paramref name="longOption"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
             </exception>
         </member>
@@ -915,8 +915,8 @@
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="shortOption"/> name or <paramref name="longOption"/> name already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
             </exception>
-            <exception cref="T:Fclp.InvalidOptionNameException">
-            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
+            <exception cref="T:Fclp.InValidOptionNameException">
+            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not Valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
             or a control character. <paramref name="longOption"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
             </exception>
         </member>
@@ -926,7 +926,7 @@
             </summary>
             <param name="shortOption">The short name for the Option. This must not be <c>whitespace</c> or a control character.</param>
             <returns></returns>
-            <exception cref="T:Fclp.InvalidOptionNameException">if <paramref name="shortOption"/> is invalid for a short option.</exception>
+            <exception cref="T:Fclp.InValidOptionNameException">if <paramref name="shortOption"/> is inValid for a short option.</exception>
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="shortOption"/> name 
             already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
@@ -937,7 +937,7 @@
             Setup a new <see cref="T:Fclp.ICommandLineOptionFluent`1"/> using the specified long Option name.
             </summary>
             <param name="longOption">The long name for the Option. This must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.</param>
-            <exception cref="T:Fclp.InvalidOptionNameException">if <paramref name="longOption"/> is invalid for a long option.</exception>
+            <exception cref="T:Fclp.InValidOptionNameException">if <paramref name="longOption"/> is inValid for a long option.</exception>
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="longOption"/> name already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
             </exception>
@@ -1007,8 +1007,8 @@
             <exception cref="T:Fclp.OptionAlreadyExistsException">
             A Option with the same <paramref name="shortOption"/> name or <paramref name="longOption"/> name already exists in the <see cref="T:Fclp.IFluentCommandLineParser"/>.
             </exception>
-            <exception cref="T:Fclp.InvalidOptionNameException">
-            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
+            <exception cref="T:Fclp.InValidOptionNameException">
+            Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not Valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
             or a control character. <paramref name="longOption"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
             </exception>
         </member>
@@ -1078,7 +1078,7 @@
         </member>
         <member name="P:Fclp.FluentCommandLineParser.OptionValidator">
             <summary>
-            Gets or sets the <see cref="T:Fclp.Internals.Validators.ICommandLineOptionValidator"/> used to validate each setup Option.
+            Gets or sets the <see cref="T:Fclp.Internals.Validators.ICommandLineOptionValidator"/> used to Validate each setup Option.
             </summary>
         </member>
         <member name="P:Fclp.FluentCommandLineParser.ParserEngine">
@@ -1775,19 +1775,19 @@
         </member>
         <member name="T:Fclp.Internals.Validators.CommandLineOptionValidator">
             <summary>
-            Wrapping validator that executes all the individual validation rules.
+            Wrapping Validator that executes all the individual Validation rules.
             </summary>
         </member>
         <member name="T:Fclp.Internals.Validators.ICommandLineOptionValidator">
             <summary>
-            Represents a validator used to verify new setup command line options.
+            Represents a Validator used to verify new setup command line options.
             </summary>
         </member>
         <member name="M:Fclp.Internals.Validators.ICommandLineOptionValidator.Validate(Fclp.Internals.ICommandLineOption)">
             <summary>
-            Verifies that the proposed new <see cref="T:Fclp.Internals.ICommandLineOption"/> is a valid new Option.
+            Verifies that the proposed new <see cref="T:Fclp.Internals.ICommandLineOption"/> is a Valid new Option.
             </summary>
-            <param name="commandLineOption">The <see cref="T:Fclp.Internals.ICommandLineOption"/> to validate. This must not be null.</param>
+            <param name="commandLineOption">The <see cref="T:Fclp.Internals.ICommandLineOption"/> to Validate. This must not be null.</param>
         </member>
         <member name="M:Fclp.Internals.Validators.CommandLineOptionValidator.#ctor(Fclp.IFluentCommandLineParser)">
             <summary>
@@ -1798,7 +1798,7 @@
             <summary>
             Validates the specified <see cref="T:Fclp.Internals.ICommandLineOption"/> against all the registered rules.
             </summary>
-            <param name="commandLineOption">The <see cref="T:Fclp.Internals.ICommandLineOption"/> to validate.</param>
+            <param name="commandLineOption">The <see cref="T:Fclp.Internals.ICommandLineOption"/> to Validate.</param>
         </member>
         <member name="T:Fclp.Internals.Validators.NoDuplicateOptionValidator">
             <summary>
@@ -1815,7 +1815,7 @@
             <summary>
             Verifies that the specified <see cref="T:Fclp.Internals.ICommandLineOption"/> will not cause any duplication.
             </summary>
-            <param name="commandLineOption">The <see cref="T:Fclp.Internals.ICommandLineOption"/> to validate.</param>
+            <param name="commandLineOption">The <see cref="T:Fclp.Internals.ICommandLineOption"/> to Validate.</param>
         </member>
         <member name="P:Fclp.Internals.Validators.NoDuplicateOptionValidator.ComparisonType">
             <summary>
@@ -1824,42 +1824,42 @@
         </member>
         <member name="T:Fclp.Internals.Validators.OptionNameValidator">
             <summary>
-            Validator to ensure a new Option has a valid long name.
+            Validator to ensure a new Option has a Valid long name.
             </summary>
         </member>
         <member name="M:Fclp.Internals.Validators.OptionNameValidator.Validate(Fclp.Internals.ICommandLineOption)">
             <summary>
-            Verifies that the specified <see cref="T:Fclp.Internals.ICommandLineOption"/> has a valid short/long name combination.
+            Verifies that the specified <see cref="T:Fclp.Internals.ICommandLineOption"/> has a Valid short/long name combination.
             </summary>
-            <param name="commandLineOption">The <see cref="T:Fclp.Internals.ICommandLineOption"/> to validate. This must not be null.</param>
+            <param name="commandLineOption">The <see cref="T:Fclp.Internals.ICommandLineOption"/> to Validate. This must not be null.</param>
             <exception cref="T:System.ArgumentNullException">if <paramref name="commandLineOption"/> is null.</exception>
         </member>
-        <member name="T:Fclp.InvalidOptionNameException">
+        <member name="T:Fclp.InValidOptionNameException">
             <summary>
-            Represents an error that has occurred because a specified Option name is invalid.
+            Represents an error that has occurred because a specified Option name is inValid.
             </summary>
         </member>
-        <member name="M:Fclp.InvalidOptionNameException.#ctor">
+        <member name="M:Fclp.InValidOptionNameException.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Fclp.InvalidOptionNameException"/> class.
+            Initializes a new instance of the <see cref="T:Fclp.InValidOptionNameException"/> class.
             </summary>
         </member>
-        <member name="M:Fclp.InvalidOptionNameException.#ctor(System.String)">
+        <member name="M:Fclp.InValidOptionNameException.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Fclp.InvalidOptionNameException"/> class.
+            Initializes a new instance of the <see cref="T:Fclp.InValidOptionNameException"/> class.
             </summary>
             <param name="message">The message that describes the error.</param>
         </member>
-        <member name="M:Fclp.InvalidOptionNameException.#ctor(System.String,System.Exception)">
+        <member name="M:Fclp.InValidOptionNameException.#ctor(System.String,System.Exception)">
             <summary>
-            Initializes a new instance of the <see cref="T:Fclp.InvalidOptionNameException"/> class.
+            Initializes a new instance of the <see cref="T:Fclp.InValidOptionNameException"/> class.
             </summary>
             <param name="message">The error message that explains the reason for the exception.</param>
             <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         </member>
-        <member name="M:Fclp.InvalidOptionNameException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+        <member name="M:Fclp.InValidOptionNameException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
-            Initializes a new instance of the <see cref="T:Fclp.InvalidOptionNameException"/> class.
+            Initializes a new instance of the <see cref="T:Fclp.InValidOptionNameException"/> class.
             </summary>
             <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
             <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>

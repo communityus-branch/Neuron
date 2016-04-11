@@ -4,6 +4,7 @@ using Static_Interface.API.EventFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.SchedulerFramework;
+using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
@@ -11,39 +12,41 @@ using UnityEngine.SceneManagement;
 
 namespace Static_Interface.API.LevelFramework 
 {
-    public class LevelManager : UnityExtensions.MonoBehaviour
+    public class LevelManager : PersistentScript<LevelManager>
     {
         public const string MENU_DIR = "Static_Interface/Neuron/Menus/";
 
         public string CurrentLevel { get; private set; }
-        public static LevelManager Instance { get; private set; }
         public bool IsLoading { get; private set; }
         public string PendingLevel { get; private set; }
 
-        protected override void Start()
-        {
-            base.Start();
-            Instance = this;
-        }
-
         public void LoadLevel(string level, bool isMenu = false)
         {
+            LogUtils.Log("Loading level: " + level);
             Action action = delegate 
             {
-                StartCoroutine(LoadLevelInternal(level, isMenu));
+                StartCoroutine(LoadLevelInternal(level, isMenu, Connection.IsDedicated));
             };
-            if (ThreadPool.IsMainThread)
+            if (ThreadPool.Instance.IsMainThread)
             {
                 action.Invoke();
                 return;
             }
-            ThreadPool.QueueMain(action);
+            ThreadPool.Instance.QueueMain(action);
         }
 
-        protected IEnumerator LoadLevelInternal(string level, bool isMenu)
+        protected IEnumerator LoadLevelInternal(string level, bool isMenu, bool skipLoading)
         {
             IsLoading = true;
             PendingLevel = isMenu ? MENU_DIR + level : level;
+            if (skipLoading)
+            {
+                //Todo: async support?
+                SceneManager.LoadScene(PendingLevel);
+                IsLoading = false;
+                PendingLevel = null;
+                yield return null;
+            }
             Fading fading = GameObject.Find("PersistentScripts").GetComponent<Fading>();
             fading.BeginFade(1);
             yield return new WaitForSeconds(fading.FadeSpeed * Time.deltaTime * 64);
@@ -77,12 +80,12 @@ namespace Static_Interface.API.LevelFramework
                 Connection.CurrentConnection = null;
                 LoadLevel("MainMenu", true);
             };
-            if (ThreadPool.IsMainThread)
+            if (ThreadPool.Instance.IsMainThread)
             {
                 action.Invoke();
                 return;
             }
-            ThreadPool.QueueMain(action);
+            ThreadPool.Instance.QueueMain(action);
         }
     }
 }

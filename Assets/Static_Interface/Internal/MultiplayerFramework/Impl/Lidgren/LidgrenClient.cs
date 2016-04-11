@@ -38,7 +38,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
             NetPeerConfiguration config = new NetPeerConfiguration(GameInfo.NAME)
             {
-                Port = port
+                Port = new Random().Next(1024, 65535)
             };
             _client = new NetClient(config);
             _client.Start();

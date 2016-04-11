@@ -51,7 +51,6 @@ namespace Static_Interface.API.NetworkFramework
 
             _cachedPosition = _rigidbody.position;
             _cachedVelocity = _rigidbody.velocity;
-
             Channel.Send(nameof(ReadPosition), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, _rigidbody.position, _rigidbody.velocity);
             _lastSync = TimeUtil.GetCurrentTime();
         }
@@ -59,6 +58,7 @@ namespace Static_Interface.API.NetworkFramework
         [NetworkCall]
         protected void ReadPosition(Identity ident, Vector3 syncPosition, Vector3 syncVelocity)
         {
+            LogUtils.Debug(nameof(ReadPosition) + ": " + syncPosition + "; " + syncVelocity);
             if (!Channel.CheckOwner(ident) && !Channel.CheckServer(ident)) return;
             if (Connection.IsServer() && ident == Channel.Connection.ServerID) return;
 

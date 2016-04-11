@@ -37,7 +37,6 @@ GameObject:
   - 92: {fileID: 9230150}
   - 114: {fileID: 11441956}
   - 114: {fileID: 11449218}
-  - 114: {fileID: 11433770}
   - 114: {fileID: 11479754}
   - 114: {fileID: 11444162}
   - 114: {fileID: 11485616}
@@ -198,29 +197,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 057efd432c2fb434d963a3c2bed2a478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11433770
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 183670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d3428e37d03ce4183e76ad84427669, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unistorm: {fileID: 0}
-  unistormCamera: {fileID: 0}
-  rain: {fileID: 19894424, guid: 6769b347f643b6d4a8dc61b3051a251c, type: 2}
-  snow: {fileID: 19872322, guid: 7e8e74e1908f6bb44b9c7713cc906b03, type: 2}
-  lightningBugs: {fileID: 19811554, guid: 84999a8927eeb364aa2849a665fb0dd8, type: 2}
-  rainMist: {fileID: 19824154, guid: 113a5adc80018714dbfe8228be6104a9, type: 2}
-  snowDust: {fileID: 19806758, guid: c1b49df0ee4f78944b8978082b36a022, type: 2}
-  rainStreaks: {fileID: 197506, guid: d11f5a983d8609544986de3855525e88, type: 2}
-  windyLeaves: {fileID: 19830434, guid: 16256da431dc19849888f003c18cb421, type: 2}
-  lightningBolt1: {fileID: 0}
-  rainSplash: {fileID: 0}
-  lightningPosition: {fileID: 414002, guid: c15d436ca5fa57e4496090b57c6c239a, type: 2}
 --- !u!114 &11435880
 MonoBehaviour:
   m_ObjectHideFlags: 1

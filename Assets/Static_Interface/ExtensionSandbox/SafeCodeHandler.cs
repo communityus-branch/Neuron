@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Static_Interface.API.UnityExtensions;
 using Steamworks;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -119,7 +120,8 @@ namespace Static_Interface.ExtensionSandbox
             typeof(System.Timers.Timer),
             typeof(AsyncOperation),
             typeof(System.ComponentModel.AsyncOperation),
-            typeof(ThreadPool)
+            typeof(ThreadPool),
+            typeof(PersistentScript<>)
         };
 
         private static readonly Dictionary<Type, List<string>> DisallowedMethods = new Dictionary<Type, List<string>>

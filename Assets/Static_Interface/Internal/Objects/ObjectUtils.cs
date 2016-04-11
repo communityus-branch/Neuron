@@ -13,13 +13,7 @@ namespace Static_Interface.Internal.Objects
         public static void CheckObjects()
         {
             bool created;
-            var persScripts = CheckObject("PersistentScripts", out created);
-            if (created)
-            {
-                persScripts.AddComponent<ThreadPool>();
-                persScripts.AddComponent<InputUtil>();
-                persScripts.AddComponent<WeatherManager>();
-            }
+            CheckObject("PersistentScripts", out created);
             
             CheckObject("SteamManager", out created);
             CheckObject("Console", out created);

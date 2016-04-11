@@ -10,7 +10,7 @@ namespace Static_Interface.API.Utils
     {
         public static void Log(this Exception exception)
         {
-            ThreadPool.RunOnMainThread(delegate
+            ThreadPool.Instance.RunOnMainThread(delegate
             {
                 UnityEngine.Debug.LogException(exception);
             });
@@ -18,7 +18,7 @@ namespace Static_Interface.API.Utils
 
         public static void Log(this Exception exception, string msg)
         {
-            ThreadPool.RunOnMainThread(delegate
+            ThreadPool.Instance.RunOnMainThread(delegate
             {
                 UnityEngine.Debug.LogError(msg + ": ");
                 UnityEngine.Debug.LogException(exception);
@@ -27,7 +27,7 @@ namespace Static_Interface.API.Utils
 
         public static void Log(string msg, bool appendInfo = true)
         {
-            ThreadPool.RunOnMainThread(delegate
+            ThreadPool.Instance.RunOnMainThread(delegate
             {
                 if (UnityEngine.Debug.isDebugBuild)
                 {
@@ -52,7 +52,7 @@ namespace Static_Interface.API.Utils
 
         public static void LogError(string msg)
         {
-            ThreadPool.RunOnMainThread(delegate
+            ThreadPool.Instance.RunOnMainThread(delegate
             {
                 if (UnityEngine.Debug.isDebugBuild)
                 {
@@ -69,7 +69,7 @@ namespace Static_Interface.API.Utils
 
         public static void LogWarning(string msg)
         {
-            ThreadPool.RunOnMainThread(delegate
+            ThreadPool.Instance.RunOnMainThread(delegate
             {
                 if (UnityEngine.Debug.isDebugBuild)
                 {
@@ -86,7 +86,7 @@ namespace Static_Interface.API.Utils
 
         public static void Debug(object obj)
         {
-            ThreadPool.RunOnMainThread(delegate
+            ThreadPool.Instance.RunOnMainThread(delegate
             {
                 if (!UnityEngine.Debug.isDebugBuild) return;
                 UnityEngine.Debug.Log(obj);

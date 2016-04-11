@@ -127,11 +127,11 @@ namespace Static_Interface.API.EventFramework
 
                 if (evnt.IsAsync)
                 {
-                    ThreadPool.QueueAsync(action);
+                    ThreadPool.Instance.QueueAsync(action);
                 }
                 else
                 {
-                    ThreadPool.QueueMainFixed(action);
+                    ThreadPool.Instance.QueueMainFixed(action);
                 }
             }
         }

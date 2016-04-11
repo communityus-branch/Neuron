@@ -445,7 +445,7 @@ PlayerSettings:
   Standalone::ScriptingBackend: 0
   boolPropertyNames: []
   stringPropertyNames: []
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  cloudProjectId: 0d3420ad-4fdd-462a-8850-17e9161499ad
+  projectName: Game
+  organizationId: trojaner
   cloudEnabled: 0

@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Static_Interface.API.UnityExtensions;
+using UnityEngine;
 
 namespace Static_Interface.API.LevelFramework
 {
-    public class Fading : UnityExtensions.MonoBehaviour
+    public class Fading : PersistentScript<Fading>
     {
 
         public Texture2D FadeOutTexture;    // the texture that will overlay the screen. This can be a black image or a loading graphic

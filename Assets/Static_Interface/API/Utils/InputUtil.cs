@@ -1,17 +1,18 @@
 ﻿using System;
 using Plugins.ConsoleUI.FrontEnd.UnityGUI;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.UnityExtensions;
 using Static_Interface.Internal.MultiplayerFramework;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.Utils
 {
-    public class InputUtil : MonoBehaviour
+    public class InputUtil : PersistentScript<InputUtil>
     {
         private static bool InputLocked { get; set; } 
         private static object LockObject { get; set; }
         private static bool valBefore;
-        public static void LockInput(object o)
+        public void LockInput(object o)
         {
             if(o == null) throw new ArgumentNullException(nameof(o));
             LogUtils.Debug(nameof(LockInput) + ": " + o.GetType().FullName);
@@ -24,13 +25,13 @@ namespace Static_Interface.API.Utils
             SetMouseLookEnabled(false);
         }
 
-        private static bool GetMouseLookEnabled()
+        private bool GetMouseLookEnabled()
         {
             var mouseLook = Player.MainPlayer?.GetComponent<MouseLook>();
             return mouseLook != null && mouseLook.enabled;
         }
 
-        public static void SetMouseLookEnabled(bool v)
+        public void SetMouseLookEnabled(bool v)
         {
             var mouseLook = Player.MainPlayer?.GetComponent<MouseLook>();
             if (mouseLook != null)
@@ -39,7 +40,7 @@ namespace Static_Interface.API.Utils
             }
         }
 
-        public static void UnlockInput(object o)
+        public void UnlockInput(object o)
         {
             LogUtils.Debug(nameof(UnlockInput) + ": " + o.GetType().FullName);
             if(o != LockObject) throw new ArgumentException("Input was not locked by given object!");
@@ -49,14 +50,14 @@ namespace Static_Interface.API.Utils
             SetMouseLookEnabled(valBefore);
         }
 
-        public static bool IsInputLocked(object o = null)
+        public bool IsInputLocked(object o = null)
         {
             if (Connection.CurrentConnection != null && Connection.IsServer()) return false;
             if (o != null && o == LockObject) return false;
             return InputLocked;
         }
 
-        private static void CheckConsole()
+        private void CheckConsole()
         {
             if (!InputLocked && ConsoleGUI.Instance.IsOpen)
             {

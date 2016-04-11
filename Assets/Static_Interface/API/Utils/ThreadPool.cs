@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Static_Interface.API.UnityExtensions;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.Utils
 {
-    public class ThreadPool : MonoBehaviour
+    public class ThreadPool : PersistentScript<ThreadPool>
     {
         private static readonly List<Action> QueuedMainActions = new List<Action>();
         private static readonly List<Action> QueuedMainFixedActions = new List<Action>();
@@ -19,13 +20,13 @@ namespace Static_Interface.API.Utils
             new Thread(AsyncUpdate).Start();
         }
 
-        public static bool IsMainThread => Thread.CurrentThread.ManagedThreadId == _mainThreadId;
+        public bool IsMainThread => Thread.CurrentThread.ManagedThreadId == _mainThreadId;
 
         /// <summary>
         /// Calls the action on the main thread on the next Update()
         /// </summary>
         /// <param name="action">The action to queue for the next Update() call</param>
-        public static void QueueMain(Action action)
+        public void QueueMain(Action action)
         {
             lock (QueuedMainActions)
             {
@@ -36,7 +37,7 @@ namespace Static_Interface.API.Utils
         /// Runs the given action on the main thread
         /// </summary>
         /// <param name="action">The action to run on the main thread</param>
-        public static void RunOnMainThread(Action action)
+        public void RunOnMainThread(Action action)
         {
             if(IsMainThread) action.Invoke();
             else QueueMain(action);
@@ -46,7 +47,7 @@ namespace Static_Interface.API.Utils
         /// Calls the action on the main thread on the next FixedUpdate()
         /// </summary>
         /// <param name="action">The action to queue for thenext FixedUpdate() call</param>
-        public static void QueueMainFixed(Action action)
+        public void QueueMainFixed(Action action)
         {
             lock (QueuedMainFixedActions)
             {
@@ -58,7 +59,7 @@ namespace Static_Interface.API.Utils
         /// Calls the action on the next async thread Update() call
         /// </summary>
         /// <param name="action">The action to call async</param>
-        public static void QueueAsync(Action action)
+        public void QueueAsync(Action action)
         {
             lock (QueuedAsyncActions)
             {

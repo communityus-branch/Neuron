@@ -124,11 +124,11 @@ namespace Static_Interface.API.SchedulerFramework
             t.LastRunTime = TimeUtil.GetCurrentTime();
             if (t.IsAsync)
             {
-                ThreadPool.QueueAsync(t.Action);
+                ThreadPool.Instance.QueueAsync(t.Action);
             }
             else
             {
-                ThreadPool.QueueMain(t.Action);
+                ThreadPool.Instance.QueueMain(t.Action);
             }
         }
 

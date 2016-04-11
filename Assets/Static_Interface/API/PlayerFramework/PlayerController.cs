@@ -81,7 +81,7 @@ namespace Static_Interface.API.PlayerFramework
             if (Player?.Health == null || Player.Health.IsDead || _input == null) return;
             var inputX = 0f;
             var inputY = 0f;
-            bool jump = _input.GetKeyDown(KeyCode.Space);
+            bool jump = _input.GetKeyDown(KeyCode.Space) && _controller.isGrounded;
             bool sprint = _input.GetKey(KeyCode.LeftShift);
 
             if (_input.GetKey(KeyCode.W))
@@ -105,15 +105,12 @@ namespace Static_Interface.API.PlayerFramework
 
             var y = _controller.isGrounded && jump ? JumpSpeed : 0;
 
-            if (_controller.isGrounded)
-            {
-                Vector3 vel = new Vector3(inputX, 0, inputY);
-                var speed = sprint ? RunSpeed : WalkSpeed;
-                vel.z *= speed;
-                vel = transform.TransformDirection(vel);
-                vel.y = y;
-                _cachedSpeed = vel;
-            }
+            Vector3 vel = new Vector3(inputX, 0, inputY);
+            var speed = sprint ? RunSpeed : WalkSpeed;
+            vel.z *= speed;
+            vel = transform.TransformDirection(vel);
+            vel.y = y;
+            _cachedSpeed = vel;
 
             _cachedSpeed -= -Physics.gravity * Time.deltaTime;
             _controller.Move(_cachedSpeed*Time.deltaTime);
