@@ -66,7 +66,7 @@ namespace Static_Interface.API.NetworkFramework
             {
                 var deltaPosition = syncPosition - _rigidbody.position;
                 var deltaVelocity = syncVelocity - _rigidbody.velocity;
-                if (!PositionValidator.ValidatePosition(transform, deltaPosition, deltaVelocity))
+                if (!PositionValidator.ValidatePosition(_rigidbody.transform, deltaPosition, deltaVelocity))
                 {
                     Channel.Send(nameof(ReadPosition), ECall.Owner, EPacket.UPDATE_UNRELIABLE_BUFFER, _rigidbody.position, _rigidbody.velocity);
                     return;

@@ -77,11 +77,11 @@ namespace Static_Interface.Internal.Utils
             
             foreach (var line in Console.Instance.Lines)
             {
-                HandleLog(line, null, LogType.Log);
+            //     HandleLog(line, null, LogType.Log);
             }
             for (int i = 0; i < Console.Instance.Lines.Count(); i++)
             {
-                Console.Instance.Lines.Dequeue();
+                //Console.Instance.Lines.Dequeue();
             }
         }
     }

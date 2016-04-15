@@ -38,13 +38,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             if ((Time.realtimeSinceStartup - LastCheck) > CHECKRATE)
             {
                 LastCheck = Time.realtimeSinceStartup;
-                foreach (var c in Clients)
+                foreach (var c in Clients.Where(c => ((Time.realtimeSinceStartup - c.LastPing) > 1f) || (c.LastPing < 0f)))
                 {
-                    if (((Time.realtimeSinceStartup - c.LastPing) > 1f) || (c.LastPing < 0f))
-                    {
-                        c.LastPing = Time.realtimeSinceStartup;
-                        Send(c.Identity, EPacket.TICK, new byte[] { }, 0, 0);
-                    }
+                    c.LastPing = Time.realtimeSinceStartup;
+                    Send(c.Identity, EPacket.TICK, new byte[] { }, 0, 0);
                 }
             }
 
@@ -92,7 +89,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 else
                 {
                     if (Clients.All(client => client.Identity != source)) return;
-                    foreach (Channel ch in Receivers)
+                    foreach (Channel ch in Receivers.Where(ch => ch.ID == channel))
                     {
                         ch.Receive(source, packet, 0, size);
                     }
@@ -320,7 +317,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 Vector3? spawn = World.Instance.DefaultSpawnPosition?.position ?? Vector3.zero;
                 LogUtils.Debug("Adding player");
                 var angle = new Vector3(0, 90, 0);
-                int ch = Channels;
+
+                int ch = ChannelCount;
 
                 if (!(user.Identity == ServerID && IsSinglePlayer))
                 {
@@ -337,13 +335,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 //Send all connected players to the accepted player
                 //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel, [6] isSelf
                 LogUtils.Debug("Sending connected to all clients");
-                foreach (var c in Clients)
+                foreach (var c in Clients.Where(c => c.Identity != ident))
                 {
                     data = new object[]
                     {
                         c.Identity.Serialize(), c.Name, c.Group, c.Model.position,
                         c.Model.rotation.eulerAngles,
-                        c.Player.GetComponent<Channel>().ID,
+                        c.Player.Channel.ID,
                         false
                     };
                     packet = ObjectSerializer.GetBytes(0, out size, data);
@@ -372,6 +370,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 data = new object[] {ident.Serialize(), ch};
                 packet = ObjectSerializer.GetBytes(0, out size, data);
                 Send(user.Identity, EPacket.ACCEPTED, packet, size, 0);
+
                 chat?.SendServerMessage("<b>" + user.Name + "</b> connected.");
                 //Todo: OnUserConnectedEvent
             }

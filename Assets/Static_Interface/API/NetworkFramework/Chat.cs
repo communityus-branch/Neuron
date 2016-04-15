@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Fclp.Internals.Extensions;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
@@ -86,10 +87,7 @@ namespace Static_Interface.API.NetworkFramework
                 InputUtil.Instance.UnlockInput(this);
             }
             if (_justFocused) _justFocused = false;
-            if (string.IsNullOrEmpty(Message?.Trim()))
-            {
-                return;
-            }
+            if (string.IsNullOrEmpty(Message)) return;
             SendPlayerMessage(Message);
             Message = "";
         }

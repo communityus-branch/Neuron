@@ -45,12 +45,13 @@ namespace Static_Interface.API.LevelFramework
                 SceneManager.LoadScene(PendingLevel);
                 IsLoading = false;
                 PendingLevel = null;
-                yield return null;
             }
-            Fading fading = GameObject.Find("PersistentScripts").GetComponent<Fading>();
-            fading.BeginFade(1);
-            yield return new WaitForSeconds(fading.FadeSpeed * Time.deltaTime * 64);
-            SceneManager.LoadSceneAsync(MENU_DIR + "LoadingMenu");
+            else
+            {
+                Fading.Instance.BeginFade(1);
+                yield return new WaitForSeconds(Fading.Instance.FadeSpeed*Time.deltaTime*64);
+                SceneManager.LoadSceneAsync(MENU_DIR + "LoadingMenu");
+            }
         }
 
         protected override void OnLevelWasLoaded(int scene)

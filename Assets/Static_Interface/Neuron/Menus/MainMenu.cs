@@ -10,7 +10,6 @@ using Static_Interface.Internal.Utils;
 using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
-using Console = System.Console;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.Neuron.Menus
@@ -48,17 +47,19 @@ namespace Static_Interface.Neuron.Menus
                 LogUtils.LogError("Couldn't parse arguments: " + result.ErrorText);
             }
 
-
-            LogUtils.Debug("Command line: " + Environment.CommandLine);
+#if !UNITY_EDITOR
+            LogUtils.Debug("Commandline: " + Environment.CommandLine);
 
             if (Debug.isDebugBuild)
             {
-                LogUtils.Debug("Debug build");
+                LogUtils.Debug("##### Debug build #####");
             }
+#endif
         }
 
         private void HostDedicated()
         {
+            AudioListener.pause = true;
             EnableConsole();
             Connection.IsDedicated = true;
             LogUtils.Log("Hosting dedicated server");
@@ -98,7 +99,7 @@ namespace Static_Interface.Neuron.Menus
             ClientConnection conn = serverObject.AddComponent<ClientConnection>();
             //SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
             //conn.Init();
-            conn.AttemptConnect("localhost", 27015, string.Empty);
+            conn.AttemptConnect("127.0.0.1", 27015, string.Empty);
             DontDestroyOnLoad(serverObject);
         }
 

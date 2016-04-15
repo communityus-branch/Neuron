@@ -1,8 +1,10 @@
 ﻿using System;
 using Homans.Console;
 using Static_Interface.API.NetvarFramework;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Static_Interface.API.Commands
 {
@@ -11,8 +13,9 @@ namespace Static_Interface.API.Commands
     {
         public void RegisterCommands()
         {
-            Console.Instance.RegisterCommand("nv_set", this, "SetCommand");
-            Console.Instance.RegisterCommand("exit", this, "Exit");
+            Console.Instance.RegisterCommand("nv_set", this, nameof(SetCommand));
+            Console.Instance.RegisterCommand("exit", this, nameof(Exit));
+            Console.Instance.RegisterCommand("printchannels", this, nameof(PrintChannels));
             Console.Instance.RegisterParser(typeof(Netvar), ParseNetvar);
         }
 
@@ -31,6 +34,16 @@ namespace Static_Interface.API.Commands
             netvar.Value = value;
         }
 
+        [Help("Output current network channels")]
+        public void PrintChannels()
+        {
+            Console.Instance.Print("Channels:");
+            var channels = Object.FindObjectsOfType<Channel>();
+            foreach (var ch in channels)
+            {
+                Console.Instance.Print("Channel #" + ch.ID + ": " + ch.gameObject.name);
+            }
+        }
         [Help("Exit the game")]
         public void Exit()
         {

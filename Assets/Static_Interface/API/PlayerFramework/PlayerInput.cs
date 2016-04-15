@@ -46,9 +46,10 @@ namespace Static_Interface.API.PlayerFramework
             bool send = !Connection.IsSinglePlayer && !Connection.IsServer() && TimeUtil.GetCurrentTime() - _lastSent > PERIOD;
             Player.MovementController.UpdateInput(this);
             //Todo: OnKeyPressedEvent
-            //LogUtils.Debug("Sending " + _keyStates.Count + " key states");
+
             if (send)
             {
+                if(_keyStates.Count > 0 ) LogUtils.Debug("Sending " + _keyStates.Count + " keystates on channel " + Channel.ID);
                 Channel.Send(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, _keyStates.ToArray());
                 _lastSent = TimeUtil.GetCurrentTime();
             }
@@ -65,13 +66,17 @@ namespace Static_Interface.API.PlayerFramework
         [NetworkCall]
         private void ReadInput(Identity id, KeyState[] states)
         {
-            if(states == null) throw new ArgumentNullException(nameof(states));
+            if (!Channel.CheckOwner(id))
+            {
+                LogUtils.Debug("CheckOwner failed");
+                return;
+            }
+            if (states == null) throw new ArgumentNullException(nameof(states));
             if(Channel == null) throw new Exception(id.Owner?.Name + ": Channel is null");
             if(Player == null) throw new Exception(id.Owner?.Name + ": Player is null");
             if(Player.MovementController == null) throw new Exception(id.Owner?.Name + ": Player MovementController is null");
-            if (!Channel.CheckOwner(id)) return;
             _keyStates = states.ToList();
-            LogUtils.Debug("Received " + _keyStates.Count + " key states from " + id.Owner?.Name);
+            if(_keyStates.Count > 0) LogUtils.Debug("Received " + _keyStates.Count + " key states from " + id.Owner?.Name);
             //Todo: OnKeyPressedEvent
             Player.MovementController.UpdateInput(this);
         }

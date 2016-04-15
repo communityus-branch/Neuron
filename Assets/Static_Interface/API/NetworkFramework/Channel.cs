@@ -12,14 +12,32 @@ namespace Static_Interface.API.NetworkFramework
 {
     public class Channel : UnityExtensions.MonoBehaviour
     {
+        [HideInInspector] public bool Listen = false;
         [HideInInspector] public Connection Connection;
-        public int ID;
+        private int _id;
+        public int ID
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                InspectorID = value;
+            }
+        }
+
+        public int InspectorID;
+
         public bool IsOwner { get; internal set; }
         public Identity Owner { get; internal set; }
-        public List<ChannelMethod> Calls { get; private set; } = new List<ChannelMethod>();
+        public List<ChannelMethod> Calls { get; } = new List<ChannelMethod>();
         
         private static readonly object[] Voice = new object[3];
         private readonly List<Component> _componentsRead = new List<Component>();
+
+        public static Channel GetChannel(int id)
+        {
+            return FindObjectsOfType<Channel>().FirstOrDefault(ch => ch.ID == id);
+        }
 
         protected override void Awake()
         {
@@ -181,7 +199,7 @@ namespace Static_Interface.API.NetworkFramework
             base.OnDestroy();
             if (ID != 0)
             {
-                Connection.CloseChannel(this);
+                Listen = false;
             }
         }
 
@@ -529,21 +547,11 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Setup()
         {
+            LogUtils.Debug("Setting up channel #" + ID);
             Connection = Connection.CurrentConnection;
-            if(ID == 0) ID = Connection.Channels;
-            Connection.OpenChannel(this);
-            LogUtils.Debug("Setting up channel " + ID);
-            string s = "";
-            foreach (Channel ch in FindObjectsOfType<Channel>())
-            {
-                if (s == "")
-                {
-                    s = ch.ID + ":" + ch.name;
-                    continue;
-                }
-                s += ", " + ch.ID + ":" + ch.name;
-            }
-            LogUtils.LogNetwork("Channels: " + s);
+            if(ID == 0) ID = Connection.ChannelCount;
+            if(ID < 1) throw new Exception("Channel ID is < 0!! (ID: " + ID + ")");
+            Listen = true;
         }
 
         public void Write(params object[] objects)

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Static_Interface.API.NetworkFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
@@ -12,5 +13,6 @@ namespace Static_Interface.API.PlayerFramework
         public User User { get; internal set; }
 
         public Camera Camera => GetComponentsInChildren<Camera>().FirstOrDefault(c => c.enabled);
+        public Channel Channel => GetComponent<Channel>();
     }
 }

@@ -21,11 +21,13 @@ namespace Static_Interface.API.PlayerFramework
             LastChat = Time.realtimeSinceStartup;
             Identity = ident;
             Model = model;
+
+            var created = model.GetComponent<Channel>() == null;
             Channel ch = model.GetComponent<Channel>();
             ch.ID = channelId;
             ch.Owner = ident;
             ch.IsOwner = ident == connection.ClientID;
-            ch.Setup();
+            if(created) ch.Setup();
             Player = model.GetComponent<Player>();
             Player.User = this;
         }

@@ -49,7 +49,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public Identity ClientID { get; internal set; }
 
-        public int Channels { get; private set; } = 1;
+        public int ChannelCount => FindObjectsOfType<Channel>().Length + 1;
 
         private List<User> _clients = new List<User>();
 
@@ -81,29 +81,9 @@ namespace Static_Interface.Internal.MultiplayerFramework
             LogUtils.LogNetwork("Received " + type + " packet, channel: " + channel + ", size: " + size);
         }
 
-        private static List<Channel> _receivers = new List<Channel>();
-        public static ICollection<Channel> Receivers => _receivers?.AsReadOnly();
+        public static IEnumerable<Channel> Receivers => FindObjectsOfType<Channel>().Where(ch => ch.Listen);
         public bool IsConnecting { get; set; }
         public static bool IsSinglePlayer { get; internal set; }
-
-        protected void AddReceiver(Channel ch)
-        {
-            _receivers.Add(ch);
-            Channels++;
-        }
-
-        protected void ResetChannels()
-        {
-            Channels = 1;
-            _receivers = new List<Channel>();
-            var channelArray = FindObjectsOfType<Channel>();
-            foreach (var ch in channelArray)
-            {
-                OpenChannel(ch);
-            }
-            _clients = new List<User>();
-        }
-
 
         protected override void Update()
         {
@@ -141,7 +121,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         protected virtual Transform AddPlayer(Identity ident, string playerName, ulong @group, Vector3 point, Vector3 angle, int channel, bool mainPlayer)
         {
-            LogUtils.Debug(nameof(AddPlayer) + ": " + playerName);
+            LogUtils.Debug("<b>" + nameof(AddPlayer) + ": " + playerName + "</b>");
             GameObject obj = (GameObject) Resources.Load("Player");
             obj.transform.FindChild("MainCamera").GetComponent<Camera>().enabled = false;
             Transform newModel = ((GameObject)Instantiate(obj, point, Quaternion.Euler(angle))).transform;
@@ -150,6 +130,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             ident.Owner = user;
             newModel.GetComponent<Player>().User = user;
             _clients.Add(user);
+            newModel.GetComponent<Channel>().Setup();
             return newModel;
         }
 
@@ -234,34 +215,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public abstract void Disconnect(string reason = null);
 
-        internal void OpenChannel(Channel ch)
-        {
-            if (Receivers == null)
-            {
-                ResetChannels();
-                return;
-            }
-            _receivers.Add(ch);
-            Channels++;
-        }
-
         protected void StripPacketByte(ref byte[] packet, ref int size)
         {
             var list = packet.ToList();
             list.RemoveAt(0);
             packet = list.ToArray();
             size--;
-        }
-
-        internal void CloseChannel(Channel ch)
-        {
-            for (var i = 0; i < Receivers.Count; i++)
-            {
-                if (_receivers[i].ID != ch.ID) continue;
-                _receivers.RemoveAt(i);
-                break;
-            }
-            Channels--;
         }
 
         public abstract void Dispose();

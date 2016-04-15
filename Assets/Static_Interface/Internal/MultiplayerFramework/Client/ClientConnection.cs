@@ -105,7 +105,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 if (IsConnected) return;
                 ClientID = ((ClientMultiplayerProvider) Provider).GetUserID();
                 LogUtils.Debug("Connected to server: " + info.Name);
-                ResetChannels();
                 CurrentServerInfo = info;
                 ServerID = info.ServerID;
                 IsConnected = true;
@@ -142,6 +141,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         protected override Transform AddPlayer(Identity ident, string playerName, ulong @group, Vector3 point, Vector3 angle, int channel, bool mainPlayer)
         {
+            LogUtils.Debug("AddPlayer: new player \"" + playerName + "\" with ch id " + channel);
             var playerTransform = base.AddPlayer(ident, playerName, @group, point, angle, channel, mainPlayer);
             if (!mainPlayer)
             {
@@ -296,7 +296,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     {
                         object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.UINT64_TYPE, Types.INT32_TYPE);
                         LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
-                        Player.MainPlayer.gameObject.GetComponent<Channel>().ID = Clients.Count + 2;
                         ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
                         ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
                         ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);

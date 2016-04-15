@@ -141,7 +141,6 @@ namespace Static_Interface.Internal.Objects
         private KeyState[] ReadKeyStates()
         {
             int size = ReadInt32();
-            LogUtils.Debug("KeyStates Size: " + size);
             KeyState[] states = new KeyState[size];
             for (int i = 0; i < size; i++)
             {
@@ -154,7 +153,6 @@ namespace Static_Interface.Internal.Objects
         private Identity ReadIdentity()
         {
             ulong asd = ReadUInt64();
-            LogUtils.Debug("Reading identity: " + asd);
             return Connection.CurrentConnection.Provider.Deserialilze(asd);
         }
 
@@ -459,12 +457,11 @@ namespace Static_Interface.Internal.Objects
                 WriteColor((Color) objects);
             } else if (type ==Types.IDENTITY_TYPE || type.IsSubclassOf(Types.IDENTITY_TYPE))
             {
-                LogUtils.Debug("Writing identity: " + ((Identity)objects).Serialize());
                 WriteUInt64(((Identity)objects).Serialize());
             }
             else
             {
-                LogUtils.LogError("Failed to write type: " + type);
+                LogUtils.LogError("Failed to write type: " + type + " (type not supported)");
             }
         }
 

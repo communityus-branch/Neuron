@@ -26,7 +26,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             NetIncomingMessage msg;
             while ((msg = host.ReadMessage()) != null)
             {
-                LogUtils.LogNetwork("NetworkEvent: " + msg.MessageType);
                 switch (msg.MessageType)
                 {
                     case NetIncomingMessageType.StatusChanged:
@@ -52,6 +51,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                         continue;
                 }
 
+
                 if (msg.MessageType != NetIncomingMessageType.Data)
                 {
                     skippedMsgs.Add(msg); 
@@ -65,6 +65,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 }
 
                 var channel = BitConverter.ToInt32(chData, 0);
+
+                LogUtils.LogNetwork("NetworkEvent: " + msg.MessageType + ": channel: " + channel);
 
                 if (!queue.ContainsKey(channel))
                 {

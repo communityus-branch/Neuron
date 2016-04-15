@@ -16,13 +16,16 @@ using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.Internal
 {
-    public class World : MonoBehaviour
+    public class World : NetworkedBehaviour
     {
         public Transform Water;
         public static World Instance;
         public GameObject Weather;
         private bool _selfDestruct;
         public Transform DefaultSpawnPosition;
+
+        protected override int PreferredChannelID => 1;
+
         protected override void Start ()
         {
             base.Start();
@@ -32,7 +35,8 @@ namespace Static_Interface.Internal
                 _selfDestruct = true;
                 DestroyImmediate(this);
                 return;
-            }
+            }          
+
             Instance = this;
             LogUtils.Log("Initializing World...");
 	        NetvarManager.Instance.RegisterNetvar(new GravityNetvar());
