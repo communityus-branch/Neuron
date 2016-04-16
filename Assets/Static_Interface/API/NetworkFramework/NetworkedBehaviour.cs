@@ -31,5 +31,20 @@ namespace Static_Interface.API.NetworkFramework
                 throw new Exception("This can be only called from server-side!");
             }
         }
+
+        public bool IsServer()
+        {
+            return Connection.IsServer();
+        }
+
+        public bool IsClient()
+        {
+            return Connection.IsClient();
+        }
+
+        public bool IsDedicatedServer()
+        {
+            return Connection.IsDedicated;
+        }
     }
 }

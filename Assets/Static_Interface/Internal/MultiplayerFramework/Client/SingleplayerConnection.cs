@@ -56,11 +56,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         }
 
-        protected override void Update()
-        {
-
-        }
-
         protected override void OnLevelWasLoaded(int level)
         {
 

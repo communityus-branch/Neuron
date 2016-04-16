@@ -12,15 +12,15 @@ namespace Static_Interface.API.PlayerFramework
     {
         public const uint PERIOD = 250;
         private uint _lastSent;
-        private List<KeyState> _keyStates = new List<KeyState>();
+        internal List<KeyState> KeyStates = new List<KeyState>();
         private Vector3 _lookDirection = Vector3.zero;
 
         protected override void FixedUpdate()
         {
-            //if (Connection.IsServer()) return; //Todo: dedicated server check
+            //if (IsServer()) return; //Todo: dedicated server check
             if(!Channel.IsOwner) return;
             if (InputUtil.Instance.IsInputLocked(this) || !Channel.IsOwner) return;
-            _keyStates = new List<KeyState>();
+            KeyStates = new List<KeyState>();
 
             foreach (KeyCode keyCode in Enum.GetValues(typeof (KeyCode)))
             {
@@ -37,54 +37,48 @@ namespace Static_Interface.API.PlayerFramework
 
                 state.KeyCode = (int) keyCode;
 
-                if (state.IsPressed || state.IsDown) //only send pressed keys
+                if (state.IsPressed) //only process pressed keys
                 {
-                    _keyStates.Add(state);
+                    KeyStates.Add(state);
                 }
             }
 
-            bool send = !Connection.IsSinglePlayer && !Connection.IsServer() && TimeUtil.GetCurrentTime() - _lastSent > PERIOD;
+            bool send = !(Connection.IsSinglePlayer && Channel.IsOwner) && !IsServer() && TimeUtil.GetCurrentTime() - _lastSent > PERIOD;
             Player.MovementController.UpdateInput(this);
             //Todo: OnKeyPressedEvent
 
             if (send)
             {
-                if(_keyStates.Count > 0 ) LogUtils.Debug("Sending " + _keyStates.Count + " keystates on channel " + Channel.ID);
-                Channel.Send(nameof(ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, _keyStates.ToArray());
+                if(KeyStates.Count > 0 ) LogUtils.Debug("Sending " + KeyStates.Count + " keystates on channel " + Channel.ID);
+                Channel.Send(nameof(Network_ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, KeyStates.ToArray());
                 _lastSent = TimeUtil.GetCurrentTime();
+
             }
 
             if (Player?.Camera?.transform == null || Player.MovementController == null) return;
             if (Player.Camera.transform.eulerAngles != _lookDirection && send)
             {
-                Channel.Send(nameof(ReadLook), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, Player.Camera.transform.eulerAngles);
+                Channel.Send(nameof(Network_ReadLook), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, Player.Camera.transform.eulerAngles);
             }
             _lookDirection = Player.Camera.transform.eulerAngles;
         }
         
         //ServerSide
         [NetworkCall]
-        private void ReadInput(Identity id, KeyState[] states)
+        private void Network_ReadInput(Identity id, KeyState[] states)
         {
-            if (!Channel.CheckOwner(id))
-            {
-                LogUtils.Debug("CheckOwner failed");
-                return;
-            }
-            if (states == null) throw new ArgumentNullException(nameof(states));
-            if(Channel == null) throw new Exception(id.Owner?.Name + ": Channel is null");
-            if(Player == null) throw new Exception(id.Owner?.Name + ": Player is null");
-            if(Player.MovementController == null) throw new Exception(id.Owner?.Name + ": Player MovementController is null");
-            _keyStates = states.ToList();
-            if(_keyStates.Count > 0) LogUtils.Debug("Received " + _keyStates.Count + " key states from " + id.Owner?.Name);
+            Channel.ValidateOwner(id);
+            if(Player.MovementController == null) throw new Exception(id.Owner.Name + ": Player MovementController is null");
+            KeyStates = states.ToList();
+            if(KeyStates.Count > 0) LogUtils.Debug("Received " + KeyStates.Count + " key states from " + id.Owner.Name);
             //Todo: OnKeyPressedEvent
             Player.MovementController.UpdateInput(this);
         }
 
         [NetworkCall]
-        private void ReadLook(Identity id, Vector3 dir)
+        private void Network_ReadLook(Identity id, Vector3 dir)
         {
-            if (!Channel.CheckOwner(id)) return;
+            Channel.ValidateOwner(id);
             _lookDirection = dir;
             if (Player.Health.IsDead) return;
             Vector3 newRot = Player.transform.eulerAngles;
@@ -102,11 +96,11 @@ namespace Static_Interface.API.PlayerFramework
         /// <param name="key"/>
         public bool GetKey(KeyCode key)
         {
-            if (!Connection.IsServer() || Connection.IsSinglePlayer)
+            if (!IsServer() || (IsServer() && Channel.IsOwner))
             {
                 return Input.GetKey(key);
             }
-            return (from state in _keyStates where state.KeyCode == (int) key select state.IsPressed).FirstOrDefault();
+            return (from state in KeyStates where state.KeyCode == (int) key select state.IsPressed).FirstOrDefault();
         }
 
         /// <summary>
@@ -119,11 +113,11 @@ namespace Static_Interface.API.PlayerFramework
         /// <param name="key"/>
         public bool GetKeyDown(KeyCode key)
         {
-            if (!Connection.IsServer() || Connection.IsSinglePlayer)
+            if (!IsServer() || IsServer() && Channel.IsOwner)
             {
                 return Input.GetKeyDown(key);
             }
-            return (from state in _keyStates where state.KeyCode == (int)key select state.IsDown).FirstOrDefault();
+            return (from state in KeyStates where state.KeyCode == (int)key select state.IsDown).FirstOrDefault();
         }
 
         /// <summary>
@@ -136,7 +130,7 @@ namespace Static_Interface.API.PlayerFramework
         /// <param name="key"/>
         public bool GetKeyUp(KeyCode key)
         {
-            if (!Connection.IsServer() || Connection.IsSinglePlayer)
+            if (!IsServer() || IsServer() && Channel.IsOwner)
             {
                 return Input.GetKeyUp(key);
             }

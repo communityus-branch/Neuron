@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Static_Interface.Internal.Objects;
+using UnityEngine;
 
 namespace Static_Interface.API.UnityExtensions
 {
@@ -17,6 +18,7 @@ namespace Static_Interface.API.UnityExtensions
         public static void Init()
         {
             if (InternalInstance != null) return;
+            ObjectUtils.CheckObjects();
             GameObject persistentScripts = GameObject.Find("PersistentScripts");
             InternalInstance = persistentScripts.AddComponent<T>();
         }

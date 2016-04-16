@@ -7,7 +7,7 @@ namespace Static_Interface.API.LevelFramework
     {
 
         public Texture2D FadeOutTexture;    // the texture that will overlay the screen. This can be a black image or a loading graphic
-        public float FadeSpeed = 0.8f;      // the fading speed
+        public float FadeSpeed = 0.8f;      // the fading Speed
 
         private const int DrawDepth = -1000; // the texture's order in the draw hierarchy: a low number means it renders on top
         internal float Alpha = 1.0f;         // the texture's alpha value between 0 and 1
@@ -16,7 +16,7 @@ namespace Static_Interface.API.LevelFramework
         protected override void OnGUI()
         {
             base.OnGUI();
-            // fade out/in the alpha value using a direction, a speed and Time.deltaTime to convert the operation to seconds
+            // fade out/in the alpha value using a direction, a Speed and Time.deltaTime to convert the operation to seconds
             Alpha += _fadeDir * FadeSpeed * Time.deltaTime;
             // force (clamp) the number to be between 0 and 1 because GUI.color uses Alpha values between 0 and 1
             Alpha = Mathf.Clamp01(Alpha);

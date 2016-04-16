@@ -73,6 +73,7 @@ namespace Static_Interface.Internal.Utils
 
         protected override void Update()
         {
+            base.Update();
             //_input.Update();
             
             foreach (var line in Console.Instance.Lines)

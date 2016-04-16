@@ -152,6 +152,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             {
                 SetupMainPlayer(playerTransform);
             }
+            playerTransform.BroadcastMessage("OnPlayerLoaded");
             return playerTransform;
         }
 

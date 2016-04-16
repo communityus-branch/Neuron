@@ -14,5 +14,6 @@ namespace Static_Interface.API.PlayerFramework
 
         public Camera Camera => GetComponentsInChildren<Camera>().FirstOrDefault(c => c.enabled);
         public Channel Channel => GetComponent<Channel>();
+        public PlayerGUI GUI => GetComponent<PlayerGUI>();
     }
 }

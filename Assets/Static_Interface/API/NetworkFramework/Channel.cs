@@ -80,10 +80,11 @@ namespace Static_Interface.API.NetworkFramework
             _componentsRead.Add(c);
         }
 
-        public bool CheckOwner(Identity user)
+        public bool ValidateOwner(Identity user, bool throwException = true)
         {
             if (Owner == null)
             {
+                if(throwException) throw new Exception("Not channel owner");
                 return false;
             }
             bool isOwner =(user == Owner);
@@ -91,15 +92,23 @@ namespace Static_Interface.API.NetworkFramework
             {
                 LogUtils.LogNetwork("Error: Not Owner! User: " + user + ", owner: " + Owner);
             }
-            return isOwner;
+
+            if (isOwner) return true;
+            if(throwException) throw new Exception("Not channel owner");
+            return false;
         }
 
-        public bool CheckServer(Identity user)
+        public bool ValidateServer(Identity user, bool throwException = true)
         {
             bool matched =(user == Connection.ServerID);
             if (!matched)
             {
                 LogUtils.LogNetwork("Error: CheckServer failed for user: " + user.Serialize() +", ServerID: " + Connection.ServerID?.Serialize() + ", ClientID: " + Connection.ClientID?.Serialize());
+            }
+
+            if (!matched && throwException)
+            {
+                throw new Exception("Identitiy is not server");
             }
             return matched;
         }

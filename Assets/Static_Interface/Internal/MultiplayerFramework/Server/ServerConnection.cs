@@ -326,6 +326,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         user.Identity == ServerID);
                     
                     player.GetComponent<Channel>().Owner = user.Identity;
+                    player.BroadcastMessage("OnPlayerLoaded");
                 }
 
                 int size;

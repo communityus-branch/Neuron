@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Static_Interface.API.PlayerFramework;
+using Static_Interface.Internal.MultiplayerFramework;
+using UnityEngine;
 
 namespace Static_Interface.API.UnityExtensions
 {
@@ -272,6 +274,12 @@ namespace Static_Interface.API.UnityExtensions
             
         }
 
+        [UnityMessage]
+        protected virtual void OnPlayerLoaded()
+        {
+            
+        }
+
         /// <summary>
         /// Update is called every frame, if the <see cref="UnityEngine.MonoBehaviour"/> is enabled.
         /// <para/>
@@ -282,7 +290,24 @@ namespace Static_Interface.API.UnityExtensions
         [UnityMessage]
         protected virtual void Update()
         {
+            if (Connection.IsServer())
+            {
+                UpdateServer();
+            }
+            if (Connection.IsClient())
+            {
+                UpdateClient();
+            }
+        }
 
+        protected virtual void UpdateServer()
+        {
+            
+        }
+
+        protected virtual void UpdateClient()
+        {
+            
         }
     }
 }

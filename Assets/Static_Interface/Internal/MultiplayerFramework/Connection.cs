@@ -22,12 +22,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
         public static bool IsServer()
         {
             if (IsSinglePlayer) return true;
-            return CurrentConnection.Provider is ServerMultiplayerProvider;
+            return CurrentConnection?.Provider is ServerMultiplayerProvider;
         }
 
         public static bool IsClient()
         {
-            return CurrentConnection.Provider is ClientMultiplayerProvider;
+            return CurrentConnection?.Provider is ClientMultiplayerProvider;
         }
 
         public static Connection CurrentConnection { get; internal set; }
@@ -127,7 +127,6 @@ namespace Static_Interface.Internal.MultiplayerFramework
             Transform newModel = ((GameObject)Instantiate(obj, point, Quaternion.Euler(angle))).transform;
             LogUtils.Debug("Spawning player " + playerName + " at " + point);
             var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = playerName };
-            ident.Owner = user;
             newModel.GetComponent<Player>().User = user;
             _clients.Add(user);
             newModel.GetComponent<Channel>().Setup();
