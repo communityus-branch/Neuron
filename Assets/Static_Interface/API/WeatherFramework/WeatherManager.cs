@@ -34,7 +34,10 @@ namespace Static_Interface.API.WeatherFramework
                 Weather = GetRandomWeather();
                 ChangeWeatherInstant();
             }
-
+            if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.F2))
+            {
+                _weatherSystem.startTime += 60000;
+            }
             if (_weatherSystem.weatherForecaster != (int)_forecast)
             {
                 OnWeatherChange(_forecast, (Weather) _weatherSystem.weatherForecaster);

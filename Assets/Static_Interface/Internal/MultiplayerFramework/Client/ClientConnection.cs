@@ -266,9 +266,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
 
             var worldAxle = World.Instance.Sun_Moon.transform.FindChild("WorldAxle");
-            var sunGlare = worldAxle.FindChild("Sun Glare");
-            cam.gameObject.GetComponent<SunShafts>().enabled = true;
-            cam.GetComponent<SunShafts>().sunTransform = sunGlare;
+            var sun = worldAxle.FindChild("WorldAxle").FindChild("Sun");
+            cam.gameObject.GetComponents<SunShafts>()[0].enabled = true;
+            cam.gameObject.GetComponents<SunShafts>()[0].sunTransform = sun;
+
+            var moon = worldAxle.FindChild("WorldAxle").FindChild("Moon");
+            cam.gameObject.GetComponents<SunShafts>()[1].enabled = true;
+            cam.gameObject.GetComponents<SunShafts>()[1].sunTransform = moon;
         }
 
         internal override void Receive(Identity id, byte[] packet, int size, int channel)
