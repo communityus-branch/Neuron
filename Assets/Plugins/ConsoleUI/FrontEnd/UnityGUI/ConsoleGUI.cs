@@ -121,61 +121,7 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
                 if (lines.Count() > linesVisible)
                     historyScrollValue = (int)GUILayout.VerticalScrollbar(historyScrollValue, linesVisible, lines.Count(), 0, GUILayout.ExpandHeight(true));
 
-                if (showHierarchy)
-                {
-                    GUILayout.BeginVertical(GUILayout.Width(hierarchyWidth), GUILayout.ExpandHeight(true));
-                    int firstDot = command.IndexOf('.');
-                    if (firstDot == -1 || command.IndexOf('.', firstDot + 1) == -1)
-                    {
-                        hierarchyScrollValue = GUILayout.BeginScrollView(hierarchyScrollValue, (GUIStyle)"box");
-                        foreach (var go in displayObjects)
-                        {
-                            if (GUILayout.Button(go, (GUIStyle)"GameObjectListLabel"))
-                            {
-                                if (command.LastIndexOf('/') >= 0)
-                                    command = command.Substring(0, command.LastIndexOf('/'));
-                                command += "/" + go.Replace(" ", "\\ ") + "/";
-                                displayObjects = Console.Instance.GetGameobjectsAtPath(command);
-                                displayComponents = Console.Instance.GetComponentsOfGameobject(command);
-                                moveCursorToEnd = true;
-                            }
-                        }
-                        GUILayout.EndScrollView();
-
-                        componentScrollValue = GUILayout.BeginScrollView(componentScrollValue, (GUIStyle)"box");
-                        foreach (var comp in displayComponents)
-                        {
-                            if (GUILayout.Button(comp, (GUIStyle)"GameObjectListLabel"))
-                            {
-                                if (firstDot > 0)
-                                    command = command.Substring(0, firstDot);
-                                if (command.EndsWith("/"))
-                                    command = command.Substring(0, command.Length - 1);
-                                command += "." + comp + ".";
-                                displayObjects = Console.Instance.GetGameobjectsAtPath(command);
-                                displayComponents = Console.Instance.GetComponentsOfGameobject(command);
-                                displayMethods = Console.Instance.GetMethodsOfComponent(command);
-                                moveCursorToEnd = true;
-                            }
-                        }
-                        GUILayout.EndScrollView();
-                    }
-                    else
-                    {
-                        methodScrollValue = GUILayout.BeginScrollView(methodScrollValue, (GUIStyle)"box");
-                        foreach (var method in displayMethods)
-                        {
-                            if (GUILayout.Button(method, (GUIStyle)"GameObjectListLabel"))
-                            {
-                                command = command.Substring(0, command.IndexOf('.', firstDot + 1));
-                                command += "." + method;
-                                moveCursorToEnd = true;
-                            }
-                        }
-                        GUILayout.EndScrollView();
-                    }
-                    GUILayout.EndVertical();
-                }
+ 
                 GUILayout.EndHorizontal();
                 GUILayout.FlexibleSpace();
                 GUILayout.BeginHorizontal();
@@ -261,16 +207,6 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
                     }
                 }
             }
-#if UNITY_IPHONE || UNITY_ANDROID
-        else
-        {
-            // show open button
-            if (GUILayout.Button("Open Console"))
-            {
-                IsOpen = true;
-            }
-        }
-#endif
 
             if (!IsOpen && Event.current.type == EventType.keyUp && Event.current.keyCode == openKey)
             {
@@ -301,67 +237,11 @@ namespace Plugins.ConsoleUI.FrontEnd.UnityGUI
                 TextEditor te = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
                 if (te != null)
                 {
-                    te.cursorIndex = commandLastPos;
-                    te.selectIndex = commandLastSelectPos;
+                    te.SelectNone();
+                    te.MoveTextEnd();
                 }
             }
         }
-
-        int test(int value)
-        {
-            return value + 1;
-        }
-
-        //void PrintChildren(string path)
-        //{
-        //    foreach (var s in Console.Instance.GetGameobjectsAtPath(path))
-        //    {
-        //        Console.Instance.Print(s);
-        //    }
-        //}
-
-        //void PrintComponents(string path)
-        //{
-        //    foreach (var s in Console.Instance.GetComponentsOfGameobject(path))
-        //    {
-        //        Console.Instance.Print(s);
-        //    }
-        //}
-
-        //void TestParse(params string[] args)
-        //{
-        //    string line = "";
-        //    foreach (string s in args)
-        //    {
-        //        line += s + " ";
-        //    }
-
-        //    string command;
-        //    string[] gameobjectPath;
-        //    string componentName;
-        //    string methodName;
-        //    string[] parameters;
-        //    Console.Instance.Print(line);
-        //    Console.parseCommand(line, out command, out gameobjectPath, out componentName, out methodName, out parameters);
-
-        //    Console.Instance.Print("command: " + command);
-        //    string goPath = "";
-        //    if (gameobjectPath!=null)
-        //        foreach (string s in gameobjectPath)
-        //        {
-        //            goPath += "/" + s;
-        //        }
-        //    Console.Instance.Print("gameobjectPath: " + goPath);
-        //    Console.Instance.Print("componentName: " + componentName);
-        //    Console.Instance.Print("methodName: " + methodName);
-        //    string par = "";
-        //    if (parameters!=null)
-        //        foreach (string s in parameters)
-        //        {
-        //            par += ";" + s;
-        //        }
-        //    Console.Instance.Print("parameters: " + par);
-        //}
     }
 }
 

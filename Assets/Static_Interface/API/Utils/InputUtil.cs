@@ -28,7 +28,7 @@ namespace Static_Interface.API.Utils
         private bool GetMouseLookEnabled()
         {
             var mouseLook = Player.MainPlayer?.GetComponent<MouseLook>();
-            return mouseLook != null && mouseLook.enabled;
+            return mouseLook == null || mouseLook.enabled;
         }
 
         public void SetMouseLookEnabled(bool v)

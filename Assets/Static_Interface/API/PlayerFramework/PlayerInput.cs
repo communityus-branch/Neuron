@@ -70,7 +70,6 @@ namespace Static_Interface.API.PlayerFramework
             Channel.ValidateOwner(id);
             if(Player.MovementController == null) throw new Exception(id.Owner.Name + ": Player MovementController is null");
             KeyStates = states.ToList();
-            if(KeyStates.Count > 0) LogUtils.Debug("Received " + KeyStates.Count + " key states from " + id.Owner.Name);
             //Todo: OnKeyPressedEvent
             Player.MovementController.UpdateInput(this);
         }

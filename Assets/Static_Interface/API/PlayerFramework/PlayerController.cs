@@ -159,7 +159,12 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (!IsDedicatedServer() && Channel.IsOwner)
             {
-                GetComponent<MouseLook>().enabled = true;
+                var comp = Player.GetComponent<MouseLook>();
+                if (comp == null)
+                {
+                    comp = Player.gameObject.AddComponent<MouseLook>();
+                } 
+                comp.enabled = true;
             }
             _disabled = false;
         }
@@ -168,7 +173,8 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (!IsDedicatedServer() && Channel.IsOwner)
             {
-                GetComponent<MouseLook>().enabled = false;
+                var comp = Player.GetComponent<MouseLook>();
+                Destroy(comp);
             }
             _disabled = true;
         }

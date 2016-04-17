@@ -15,6 +15,8 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 namespace Static_Interface.ExtensionSandbox
 {
+    //When I wrote this, only God and I understood what I was doing
+    //Now, God only knows   
     public static class SafeCodeHandler
     {
         private static readonly Disassembler _disassembler = new Disassembler();

@@ -2,6 +2,7 @@
 using Homans.Console;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -16,8 +17,24 @@ namespace Static_Interface.API.Commands
             Console.Instance.RegisterCommand("nv_set", this, nameof(SetCommand));
             Console.Instance.RegisterCommand("exit", this, nameof(Exit));
             Console.Instance.RegisterCommand("printchannels", this, nameof(PrintChannels));
+            Console.Instance.RegisterCommand("revive", this, nameof(Revive));
+            Console.Instance.RegisterCommand("kill", this, nameof(Kill));
             Console.Instance.RegisterParser(typeof(Netvar), ParseNetvar);
         }
+
+        [Help("Revive yourself")]
+        public void Revive()
+        {
+            Player.MainPlayer.Health.RevivePlayer();
+        }
+
+
+        [Help("Kill yourself")]
+        public void Kill()
+        {
+            Player.MainPlayer.Health.Kill();
+        }
+
 
         [Help("Usage: nv_set <netvar> <param>\nSet values of netvars")]
         public void SetCommand(Netvar netvar, string args)

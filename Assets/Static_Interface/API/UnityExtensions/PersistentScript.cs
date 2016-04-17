@@ -21,6 +21,7 @@ namespace Static_Interface.API.UnityExtensions
             ObjectUtils.CheckObjects();
             GameObject persistentScripts = GameObject.Find("PersistentScripts");
             InternalInstance = persistentScripts.AddComponent<T>();
+            DontDestroyOnLoad(InternalInstance);
         }
 
         public static bool HasInitied()

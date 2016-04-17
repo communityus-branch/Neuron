@@ -7,12 +7,12 @@ using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.API.WeatherFramework;
 using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
 using Static_Interface.Neuron.Netvars;
 using UnityEngine;
-using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.Internal
 {
@@ -20,6 +20,7 @@ namespace Static_Interface.Internal
     {
         public Transform Water;
         public static World Instance;
+        public GameObject Sun_Moon;
         public GameObject Weather;
         private bool _selfDestruct;
         public Transform DefaultSpawnPosition;
@@ -80,6 +81,8 @@ namespace Static_Interface.Internal
 
             weatherSys.moonLight = moon.FindChild("MoonLight").GetComponent<Light>();
             Connection conn = FindObjectOfType<Connection>();
+            Sun_Moon = enviromentSun;
+            gameObject.AddComponent<WeatherManager>();
             conn.SendMessage("OnPostWorldInit", chat);
         }
 
