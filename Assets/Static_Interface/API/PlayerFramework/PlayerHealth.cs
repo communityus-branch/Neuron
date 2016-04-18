@@ -40,22 +40,38 @@ namespace Static_Interface.API.PlayerFramework
             get { return _health; }
             set
             {
-                int newHealth = Mathf.Clamp(value, 0, MaxHealth); 
+                int newHealth = Mathf.Clamp(value, 0, MaxHealth);
 
                 if (IsDead && newHealth > 0)
                 {
                     RevivePlayer(newHealth);
                 }
-                
+
+                ECall target = ECall.Owner;
+                bool isStatusUpdate = false;
+                if ((_health > 0 && newHealth == 0) || (_health == 0 && newHealth > 0))
+                {
+                    target = ECall.Clients;
+                    isStatusUpdate = true;
+                }
                 _health = newHealth;
-                if(_healthProgressBar != null)
+                if (_healthProgressBar != null)
                     _healthProgressBar.Value = newHealth;
 
                 if (IsServer() && !Channel.IsOwner)
                 {
-                    Channel.Send(nameof(Network_SetHealth), ECall.Owner, EPacket.UPDATE_RELIABLE_BUFFER, MaxHealth, Health);
+                    Channel.Send(nameof(Network_SetHealth), target, EPacket.UPDATE_RELIABLE_BUFFER, MaxHealth, Health);
                 }
-            } 
+                if (!isStatusUpdate) return;
+                if (_health > 0)
+                {
+                    Channel.Send(nameof(Network_Revive), target, EPacket.UPDATE_RELIABLE_BUFFER, _health);
+                }
+                else
+                {
+                    Channel.Send(nameof(Network_Kill), target, EPacket.UPDATE_RELIABLE_BUFFER);
+                }
+            }
         }
 
         public void Kill()
@@ -121,8 +137,8 @@ namespace Static_Interface.API.PlayerFramework
         {
             bool wasDead = IsDead;
             var magnitude = momentum.magnitude;
-            var speed = magnitude/GetComponent<Rigidbody>().mass;
-            var damage = (10/4)*speed;  // 100 damage at 40 m/s
+            var speed = magnitude / GetComponent<Rigidbody>().mass;
+            var damage = (10 / 4) * speed;  // 100 damage at 40 m/s
             DamagePlayer((int)damage);
             if (!wasDead && IsDead)
             {
@@ -141,6 +157,13 @@ namespace Static_Interface.API.PlayerFramework
             Channel.ValidateServer(identity);
             MaxHealth = maxhealth;
             Health = health;
+        }
+
+        [NetworkCall]
+        private void Network_Kill(Identity identity)
+        {
+            Channel.ValidateServer(identity);
+            Kill();
         }
 
         [NetworkCall]

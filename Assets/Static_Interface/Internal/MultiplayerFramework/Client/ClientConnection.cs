@@ -98,6 +98,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             ((ClientMultiplayerProvider) Provider).AttemptConnect(ip, port, password);
         }
 
+
         internal void Connect(ServerInfo info)
         {
             ThreadPool.Instance.RunOnMainThread(delegate
@@ -166,11 +167,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
 
             Player.MainPlayer = playerTransform.GetComponent<Player>();
-            if (Camera.current != null && Camera.current.enabled)
-            {
-                Camera.current.enabled = false;
-            }
-            
+
             playerTransform.GetComponent<Channel>().IsOwner = true;
             playerTransform.gameObject.AddComponent<MouseLook>();
 
@@ -188,8 +185,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             var cam = playerTransform.FindChild("MainCamera");
 
             cam.tag = "MainCamera";
+            CameraManager.Instance.CurrentCamera = cam.GetComponent<Camera>();
 
-            cam.GetComponent<Camera>().enabled = true;
             LogUtils.Debug("Loading WeatherParticles");
             var fallLeaves = ((GameObject) Resources.Load("ParticleEffects/FallLeaves"));
             var lightningBugs = ((GameObject) Resources.Load("ParticleEffects/LightningBugs"));
@@ -256,7 +253,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 weather.rainMist = rainMist.GetComponent<ParticleSystem>(); 
                 weather.rain = rain.GetComponent<ParticleSystem>(); 
                 weather.lightningSpawn = lightningPosition.transform;
-                weather.cameraObject = cam.gameObject;
+                weather.cameraObject = CameraManager.Instance.UnistormCamera;
                 weather.rainSplashes = rain.transform.FindChild("Splashes").GetComponent<ParticleSystem>();
             }
             catch (Exception e)
@@ -265,6 +262,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 LogUtils.Debug(e.ToString());
             }
 
+            cam = CameraManager.Instance.UnistormCamera.transform;
             var worldAxle = World.Instance.Sun_Moon.transform.FindChild("WorldAxle");
             var sun = worldAxle.FindChild("WorldAxle").FindChild("Sun");
             cam.gameObject.GetComponents<SunShafts>()[0].enabled = true;

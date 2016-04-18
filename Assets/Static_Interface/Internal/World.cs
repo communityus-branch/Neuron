@@ -83,6 +83,7 @@ namespace Static_Interface.Internal
             Connection conn = FindObjectOfType<Connection>();
             Sun_Moon = enviromentSun;
             gameObject.AddComponent<WeatherManager>();
+            gameObject.AddComponent<CameraManager>();
             conn.SendMessage("OnPostWorldInit", chat);
         }
 
