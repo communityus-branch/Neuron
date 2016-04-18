@@ -39,13 +39,13 @@ namespace Static_Interface.Internal
             }          
 
             Instance = this;
+            Connection conn = FindObjectOfType<Connection>();
             LogUtils.Log("Initializing World...");
 	        NetvarManager.Instance.RegisterNetvar(new GravityNetvar());
             NetvarManager.Instance.RegisterNetvar(new GameSpeedNetvar());
             new ConsoleCommands().RegisterCommands();
             var extensionsDir = Path.Combine(GameInfo.GameBaseDir, "Plugins");
 			ExtensionManager.Init(extensionsDir);
-            var chat = gameObject.AddComponent<Chat>();
             gameObject.AddComponent<Scheduler>();
             Weather = ObjectUtils.LoadWeather();
             var enviromentSun = GameObject.Find("__SUN__");
@@ -80,11 +80,14 @@ namespace Static_Interface.Internal
             f.SetValue(weatherSys, moon.GetComponent<Light>());
 
             weatherSys.moonLight = moon.FindChild("MoonLight").GetComponent<Light>();
-            Connection conn = FindObjectOfType<Connection>();
             Sun_Moon = enviromentSun;
             gameObject.AddComponent<WeatherManager>();
+            conn.SendMessage("OnWeatherInit", Weather);
+
             gameObject.AddComponent<CameraManager>();
-            conn.SendMessage("OnPostWorldInit", chat);
+
+            var chat = gameObject.AddComponent<Chat>();
+            conn.SendMessage("OnChatInit", chat);
         }
 
         protected override void OnDestroy()

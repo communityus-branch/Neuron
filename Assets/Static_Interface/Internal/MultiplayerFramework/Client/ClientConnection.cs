@@ -254,6 +254,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 weather.rain = rain.GetComponent<ParticleSystem>(); 
                 weather.lightningSpawn = lightningPosition.transform;
                 weather.cameraObject = CameraManager.Instance.UnistormCamera;
+                weather.cameraObjectComponent = CameraManager.Instance.UnistormCamera.GetComponent<Camera>();
                 weather.rainSplashes = rain.transform.FindChild("Splashes").GetComponent<ParticleSystem>();
             }
             catch (Exception e)

@@ -23,8 +23,29 @@ namespace Static_Interface.API.WeatherFramework
 
             _forecast = (Weather) _weatherSystem.weatherForecaster;
 
-            if (!Connection.IsSinglePlayer && !IsServer()) _weatherSystem.staticWeather = true;
+            if (!Connection.IsSinglePlayer && !IsServer())
+            {
+                _weatherSystem.staticWeather = true;
+                Channel.Send(nameof(Network_Ask_Weather), ECall.Server, EPacket.UPDATE_RELIABLE_BUFFER);
+            }
         }
+
+        [NetworkCall]
+        private void Network_Ask_Weather(Identity ident)
+        {
+            if (Channel.ValidateServer(ident, false)) return;
+            Channel.Send(nameof(Network_SetTime), ident, EPacket.UPDATE_RELIABLE_BUFFER, _weatherSystem.startTime);
+            Channel.Send(nameof(Network_SetWeather), ident, EPacket.UPDATE_RELIABLE_BUFFER, (int)Weather);
+            Channel.Send(nameof(Network_ChangeWeatherInstant), ident, EPacket.UPDATE_RELIABLE_BUFFER);
+        }
+
+        [NetworkCall]
+        private void Network_SetTime(Identity ident, float time)
+        {
+            Channel.ValidateServer(ident);
+            _weatherSystem.startTime = time;
+        }
+
 
         protected override void Update()
         {
@@ -36,7 +57,7 @@ namespace Static_Interface.API.WeatherFramework
             }
             if (Debug.isDebugBuild && Input.GetKey(KeyCode.F2))
             {
-                _weatherSystem.startTime += 60000;
+                _weatherSystem.startTime += 6000;
             }
             if (_weatherSystem.weatherForecaster != (int)_forecast)
             {
@@ -61,7 +82,7 @@ namespace Static_Interface.API.WeatherFramework
         private void Network_SetWeather(Identity ident, int weather)
         {
             Channel.ValidateServer(ident);
-
+            Weather = (Weather)weather;
         }
 
         public Weather Weather

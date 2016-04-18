@@ -12,6 +12,9 @@ GameObject:
   - 124: {fileID: 12458860}
   - 92: {fileID: 9275194}
   - 81: {fileID: 8174208}
+  - 114: {fileID: 11463102}
+  - 114: {fileID: 11412676}
+  - 114: {fileID: 11410726}
   m_Layer: 0
   m_Name: UnistormCamera
   m_TagString: Untagged
@@ -47,12 +50,12 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 1000
+  far clip plane: 25000
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: 0
+  m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 256
@@ -79,6 +82,70 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 123984}
   m_Enabled: 1
+--- !u!114 &11410726
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76b5ec6153a1d55438228df10fe66844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceFog: 0
+  useRadialDistance: 1
+  heightFog: 1
+  height: 1
+  heightDensity: 2
+  startDistance: 0.5
+  fogShader: {fileID: 4800000, guid: 70d8568987ac0499f952b54c7c13e265, type: 3}
+--- !u!114 &11412676
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e318a6043c1cb4a8ce1c8805bab930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resolution: 1
+  screenBlendMode: 0
+  sunTransform: {fileID: 0}
+  radialBlurIterations: 2
+  sunColor: {r: 0.125, g: 0.125, b: 0.125, a: 1}
+  sunThreshold: {r: 0.125, g: 0.125, b: 0.125, a: 1}
+  sunShaftBlurRadius: 6.22
+  sunShaftIntensity: 2
+  maxRadius: 0.286
+  useDepthTexture: 1
+  sunShaftsShader: {fileID: 4800000, guid: d3b1c8c1036784176946f5cfbfb7fe4c, type: 3}
+  simpleClearShader: {fileID: 4800000, guid: f688f89ed5eb847c5b19c934a0f1e772, type: 3}
+--- !u!114 &11463102
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e318a6043c1cb4a8ce1c8805bab930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resolution: 1
+  screenBlendMode: 0
+  sunTransform: {fileID: 0}
+  radialBlurIterations: 2
+  sunColor: {r: 0.9815875, g: 0.67949784, b: 0.029348105, a: 1}
+  sunThreshold: {r: 0.24264705, g: 0.24264705, b: 0.24264705, a: 1}
+  sunShaftBlurRadius: 4.54
+  sunShaftIntensity: 2
+  maxRadius: 0.337
+  useDepthTexture: 1
+  sunShaftsShader: {fileID: 4800000, guid: d3b1c8c1036784176946f5cfbfb7fe4c, type: 3}
+  simpleClearShader: {fileID: 4800000, guid: f688f89ed5eb847c5b19c934a0f1e772, type: 3}
 --- !u!124 &12458860
 Behaviour:
   m_ObjectHideFlags: 1

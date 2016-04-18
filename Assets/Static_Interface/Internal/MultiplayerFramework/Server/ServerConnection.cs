@@ -298,7 +298,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             LoadQueuedPlayers(Chat.Instance);
         }
 
-        protected void OnPostWorldInit(Chat chat)
+        protected void OnWeatherInit(GameObject weather)
+        {
+            weather.GetComponentInChildren<UniStormWeatherSystem_C>().cameraObjectComponent = Camera.main;
+            weather.GetComponentInChildren<UniStormWeatherSystem_C>().cameraObject = Camera.main.gameObject;
+        }
+
+        protected void OnChatInit(Chat chat)
         {
             LoadQueuedPlayers(chat);
         }

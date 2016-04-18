@@ -44,7 +44,7 @@ namespace Static_Interface.API.GUIFramework
             get { return Prefab.transform.parent; }
             set
             {
-                Prefab.transform.parent = value;
+                Prefab.transform.SetParent(value);
                 Prefab.transform.localRotation = Quaternion.Euler(Vector3.zero);
                 Prefab.transform.localScale = new Vector3(1,1,1);
             }
