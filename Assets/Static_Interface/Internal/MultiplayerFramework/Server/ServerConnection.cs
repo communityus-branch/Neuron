@@ -301,6 +301,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         protected void OnWeatherInit(GameObject weather)
         {
+            if (Camera.main == null || weather == null) return;
             weather.GetComponentInChildren<UniStormWeatherSystem_C>().cameraObjectComponent = Camera.main;
             weather.GetComponentInChildren<UniStormWeatherSystem_C>().cameraObject = Camera.main.gameObject;
         }

@@ -50,7 +50,7 @@ namespace Static_Interface.API.PlayerFramework
             if (send)
             {
                 if(KeyStates.Count > 0 ) LogUtils.Debug("Sending " + KeyStates.Count + " keystates on channel " + Channel.ID);
-                Channel.Send(nameof(Network_ReadInput), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, KeyStates.ToArray());
+                Channel.Send(nameof(Network_ReadInput), ECall.Server, KeyStates.ToArray());
                 _lastSent = TimeUtil.GetCurrentTime();
 
             }
@@ -58,26 +58,24 @@ namespace Static_Interface.API.PlayerFramework
             if (Player?.Camera?.transform == null || Player.MovementController == null) return;
             if (Player.Camera.transform.eulerAngles != _lookDirection && send)
             {
-                Channel.Send(nameof(Network_ReadLook), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, Player.Camera.transform.eulerAngles);
+                Channel.Send(nameof(Network_ReadLook), ECall.Server, Player.Camera.transform.eulerAngles);
             }
             _lookDirection = Player.Camera.transform.eulerAngles;
         }
         
         //ServerSide
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true)]
         private void Network_ReadInput(Identity id, KeyState[] states)
         {
-            Channel.ValidateOwner(id);
             if(Player.MovementController == null) throw new Exception(id.Owner.Name + ": Player MovementController is null");
             KeyStates = states.ToList();
             //Todo: OnKeyPressedEvent
             Player.MovementController.UpdateInput(this);
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true)]
         private void Network_ReadLook(Identity id, Vector3 dir)
         {
-            Channel.ValidateOwner(id);
             _lookDirection = dir;
             if (Player.Health.IsDead) return;
             Vector3 newRot = Player.transform.eulerAngles;

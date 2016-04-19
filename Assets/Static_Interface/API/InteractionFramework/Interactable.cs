@@ -27,7 +27,7 @@ namespace Static_Interface.API.InteractionFramework
             if (!CanInteract(player)) return;
             if (IsClient())
             {
-                Channel.Send(nameof(Network_InteractRequest), ECall.Server, EPacket.UPDATE_RELIABLE_BUFFER);
+                Channel.Send(nameof(Network_InteractRequest), ECall.Server);
             }
             else
             {
@@ -37,7 +37,7 @@ namespace Static_Interface.API.InteractionFramework
 
         protected abstract void OnInteract(Player player);
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER)]
         public void Network_InteractRequest(Identity ident)
         {
             var player = ident.Owner.Player;
@@ -45,13 +45,12 @@ namespace Static_Interface.API.InteractionFramework
             if (!CanInteract(player)) return;
             OnInteract(player);
             //Todo: add radius
-            Channel.Send(nameof(Network_Interact), ECall.Clients, EPacket.UPDATE_RELIABLE_BUFFER, ident);
+            Channel.Send(nameof(Network_Interact), ECall.Clients, ident);
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         public void Network_Interact(Identity sender, Identity player)
         {
-            Channel.ValidateServer(sender);
             OnInteract(player.Owner.Player);
         }
 

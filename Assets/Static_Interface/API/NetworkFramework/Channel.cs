@@ -12,8 +12,10 @@ namespace Static_Interface.API.NetworkFramework
 {
     public class Channel : UnityExtensions.MonoBehaviour
     {
-        [HideInInspector] public bool Listen = false;
-        [HideInInspector] public Connection Connection;
+        [HideInInspector]
+        public bool Listen = false;
+        [HideInInspector]
+        public Connection Connection;
         private int _id;
         public int ID
         {
@@ -30,7 +32,7 @@ namespace Static_Interface.API.NetworkFramework
         public bool IsOwner { get; internal set; }
         public Identity Owner { get; internal set; }
         public List<ChannelMethod> Calls { get; } = new List<ChannelMethod>();
-        
+
         private static readonly object[] Voice = new object[3];
         private readonly List<Component> _componentsRead = new List<Component>();
 
@@ -51,7 +53,7 @@ namespace Static_Interface.API.NetworkFramework
         {
             _componentsRead.Clear();
             Calls.Clear();
-            var components = GetComponents(typeof (Component));
+            var components = GetComponents(typeof(Component));
             foreach (var c in components)
             {
                 Build(c);
@@ -62,10 +64,10 @@ namespace Static_Interface.API.NetworkFramework
         {
             if (_componentsRead.Contains(c)) return;
             var members = c.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).ToList();
-            members.AddRange(c.GetType().GetMethods(BindingFlags.Public| BindingFlags.Instance));
+            members.AddRange(c.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance));
             foreach (var m in members)
             {
-                if (m.GetCustomAttributes(typeof (NetworkCallAttribute), true).Length <= 0)
+                if (m.GetCustomAttributes(typeof(NetworkCallAttribute), true).Length <= 0)
                 {
                     continue;
                 }
@@ -84,26 +86,26 @@ namespace Static_Interface.API.NetworkFramework
         {
             if (Owner == null)
             {
-                if(throwException) throw new Exception("Not channel owner");
+                if (throwException) throw new Exception("Not channel owner");
                 return false;
             }
-            bool isOwner =(user == Owner);
+            bool isOwner = (user == Owner);
             if (!isOwner)
             {
                 LogUtils.LogNetwork("Error: Not Owner! User: " + user + ", owner: " + Owner);
             }
 
             if (isOwner) return true;
-            if(throwException) throw new Exception("Not channel owner");
+            if (throwException) throw new Exception("Not channel owner");
             return false;
         }
 
         public bool ValidateServer(Identity user, bool throwException = true)
         {
-            bool matched =(user == Connection.ServerID);
+            bool matched = (user == Connection.ServerID);
             if (!matched)
             {
-                LogUtils.LogNetwork("Error: CheckServer failed for user: " + user.Serialize() +", ServerID: " + Connection.ServerID?.Serialize() + ", ClientID: " + Connection.ClientID?.Serialize());
+                LogUtils.LogNetwork("Error: CheckServer failed for user: " + user.Serialize() + ", ServerID: " + Connection.ServerID?.Serialize() + ", ClientID: " + Connection.ClientID?.Serialize());
             }
 
             if (!matched && throwException)
@@ -122,8 +124,9 @@ namespace Static_Interface.API.NetworkFramework
             }
             else
             {
-                var index = 
-                    GetCall(channelName);
+                NetworkCallAttribute networkCall;
+                var index =
+                    GetCall(channelName, out networkCall);
                 if (index == -1) return;
                 int size;
                 byte[] buffer;
@@ -140,7 +143,9 @@ namespace Static_Interface.API.NetworkFramework
             }
             else
             {
-                var index = GetCall(channelName);
+                NetworkCallAttribute networkCall;
+                var index =
+                    GetCall(channelName, out networkCall);
                 if (index == -1) return;
                 int length;
                 byte[] buffer;
@@ -160,13 +165,17 @@ namespace Static_Interface.API.NetworkFramework
             }
         }
 
-       private int GetCall(string callName)
+        private int GetCall(string callName, out NetworkCallAttribute networkCall)
         {
-            if(Calls.Count == 0) Build();
+            networkCall = null;
+            if (Calls.Count == 0) Build();
             for (var i = 0; i < Calls.Count; i++)
             {
                 if (Calls.ElementAt(i).Method.Name == callName)
                 {
+                    networkCall =
+                        (NetworkCallAttribute)
+                            Calls.ElementAt(i).Method.GetCustomAttributes(typeof (NetworkCallAttribute), true)[0];  
                     return i;
                 }
             }
@@ -177,24 +186,24 @@ namespace Static_Interface.API.NetworkFramework
         private void GetPacket(EPacket type, int index, out int size, out byte[] packet)
         {
             packet = ObjectSerializer.CloseWrite(out size);
-            packet[0] = (byte) type;
-            packet[1] = (byte) index;
+            packet[0] = (byte)type;
+            packet[1] = (byte)index;
         }
 
         private void GetPacket(EPacket type, int index, out int size, out byte[] packet, params object[] arguments)
         {
             packet = ObjectSerializer.GetBytes(2, out size, arguments);
-            packet[0] = (byte) type;
-            packet[1] = (byte) index;
+            packet[0] = (byte)type;
+            packet[1] = (byte)index;
         }
 
         private void GetPacket(EPacket type, int index, out int size, out byte[] packet, byte[] bytes, int length)
         {
             size = 4 + length;
             packet = bytes;
-            packet[0] = (byte) type;
-            packet[1] = (byte) index;
-            byte[] buffer = BitConverter.GetBytes((ushort) length);
+            packet[0] = (byte)type;
+            packet[1] = (byte)index;
+            byte[] buffer = BitConverter.GetBytes((ushort)length);
             packet[2] = buffer[0];
             packet[3] = buffer[1];
         }
@@ -219,7 +228,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public T Read<T>()
         {
-            return (T) Read(typeof (T))[0];
+            return (T)Read(typeof(T))[0];
         }
 
         public T[] Read<T>(int size)
@@ -247,7 +256,46 @@ namespace Static_Interface.API.NetworkFramework
             }
             int index = packet[offset + 1];
             if ((index < 0) || (index >= Calls.Count)) return;
-            EPacket packet2 = (EPacket) packet[offset];
+            EPacket packet2 = (EPacket)packet[offset];
+
+
+            var call = Calls[index];
+            var networkCall = (NetworkCallAttribute) call.Method.GetCustomAttributes(typeof (NetworkCallAttribute), true)[0];
+            if (networkCall.ValidateOwner && networkCall.ValidateServer)
+            {
+                if (!ValidateOwner(ident, false) && !ValidateServer(ident, false))
+                {
+                    throw new Exception("Couldn't validate owner/server");
+                }
+            }
+            else if (networkCall.ValidateOwner)
+            {
+                ValidateOwner(ident);
+            }
+            else if (networkCall.ValidateServer)
+            {
+                ValidateServer(ident);
+            }
+
+            if (networkCall.ConnectionEnd != ConnectionEnd.BOTH)
+            {
+                switch (networkCall.ConnectionEnd)
+                {
+                    case ConnectionEnd.CLIENT:
+                        if (!Connection.IsClient())
+                        {
+                            throw new Exception(Calls[index].Method.Name + " is not supposed to run on this connection end");
+                        }
+                        break;
+                    case ConnectionEnd.SERVER:
+                        if (!Connection.IsServer())
+                        {
+                            throw new Exception(Calls[index].Method.Name + " is not supposed to run on this connection end");
+                        }
+                        break;
+                }
+            }
+
             if ((packet2 == EPacket.UPDATE_VOICE) && (size < 4)) return;
             if ((packet2 == EPacket.UPDATE_UNRELIABLE_CHUNK_BUFFER) ||
                 (packet2 == EPacket.UPDATE_RELIABLE_CHUNK_BUFFER))
@@ -281,7 +329,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Send(ECall mode, EPacket type, int size, byte[] packet)
         {
-            LogUtils.LogNetwork(nameof(Send) + ": mode: " + mode + ", type: "+ type + ", size: " + size);
+            LogUtils.LogNetwork(nameof(Send) + ": mode: " + mode + ", type: " + type + ", size: " + size);
             switch (mode)
             {
                 case ECall.Server:
@@ -300,7 +348,7 @@ namespace Static_Interface.API.NetworkFramework
                         LogUtils.LogNetwork("Warning: Im not the server, I can't send a message to all clients!!");
                         Connection.Send(Connection.ServerID, type, packet, size, ID);
                     }
- 
+
                     foreach (User user in Connection.Clients)
                     {
                         if (user.Identity != Connection.ClientID)
@@ -368,23 +416,29 @@ namespace Static_Interface.API.NetworkFramework
             }
         }
 
-        public void Send(string pName, ECall mode, EPacket type, params object[] arguments)
+        public void Send(string pName, ECall mode, params object[] arguments)
         {
-            var index = GetCall(pName);
-            if (index < 0 )
+            NetworkCallAttribute networkCall;
+            var index =
+                GetCall(pName, out networkCall);
+            if (index < 0)
             {
                 return;
             }
+            var type = networkCall.PacketType;
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, arguments);
             Send(mode, type, size, buffer);
         }
 
-        public void Send(string pName, Identity user, EPacket type, params object[] arguments)
+        public void Send(string pName, Identity user, params object[] arguments)
         {
-            var index = GetCall(pName);
+            NetworkCallAttribute networkCall;
+            var index =
+                GetCall(pName, out networkCall);
             if (index == -1) return;
+            var type = networkCall.PacketType;
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, arguments);
@@ -402,17 +456,20 @@ namespace Static_Interface.API.NetworkFramework
             }
         }
 
-       public void Send(string pName, ECall mode, EPacket type, byte[] bytes, int length)
+        public void Send(string pName, ECall mode, byte[] bytes, int length)
         {
-            var index = GetCall(pName);
+            NetworkCallAttribute networkCall;
+            var index =
+                GetCall(pName, out networkCall);
             if (index == -1) return;
+            var type = networkCall.PacketType;
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, bytes, length);
             Send(mode, type, size, buffer);
         }
 
-        public void Send(ECall mode, Vector3 point, float radius, EPacket type, int size, byte[] packet)
+        public void Send(ECall mode, Vector3 point,  float radius, EPacket type, int size, byte[] packet)
         {
             radius *= radius;
             switch (mode)
@@ -519,32 +576,43 @@ namespace Static_Interface.API.NetworkFramework
             }
         }
 
-        public void Send(string pName, ECall mode, Vector3 point, float radius, EPacket type,
+        public void Send(string pName, ECall mode, Vector3 point, 
             params object[] arguments)
         {
-            var index = GetCall(pName);
+            NetworkCallAttribute networkCall;
+            var index =
+                GetCall(pName, out networkCall);
             if (index == -1) return;
+            var type = networkCall.PacketType;
+            float radius = networkCall.MaxRadius;
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, arguments);
             Send(mode, point, radius, type, size, buffer);
         }
 
-        public void Send(string pName, ECall mode, Vector3 point, float radius, EPacket type, byte[] bytes,
+        public void Send(string pName, ECall mode, Vector3 point, byte[] bytes,
             int length)
         {
-            var index = GetCall(pName);
+            NetworkCallAttribute networkCall;
+            var index =
+                GetCall(pName, out networkCall);
             if (index == -1) return;
+            var type = networkCall.PacketType;
+            float radius = networkCall.MaxRadius;
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, bytes, length);
             Send(mode, point, radius, type, size, buffer);
         }
 
-        public void SendAside(string pName, Identity u, EPacket type, params object[] arguments)
+        public void SendAside(string pName, Identity u, params object[] arguments)
         {
-            var index = GetCall(pName);
+            NetworkCallAttribute networkCall;
+            var index =
+                GetCall(pName, out networkCall);
             if (index == -1) return;
+            var type = networkCall.PacketType;
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, arguments);
@@ -558,8 +626,8 @@ namespace Static_Interface.API.NetworkFramework
         {
             LogUtils.Debug("Setting up channel #" + ID);
             Connection = Connection.CurrentConnection;
-            if(ID == 0) ID = Connection.ChannelCount;
-            if(ID < 1) throw new Exception("Channel ID is < 0!! (ID: " + ID + ")");
+            if (ID == 0) ID = Connection.ChannelCount;
+            if (ID < 1) throw new Exception("Channel ID is < 0!! (ID: " + ID + ")");
             Listen = true;
         }
 

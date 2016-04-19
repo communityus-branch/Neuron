@@ -177,10 +177,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 sunShafts.sunTransform = GameObject.Find("Sun_Moon").transform;
             }
 
-            LogUtils.Debug("Setting console character");
-
-            playerTransform.gameObject.AddComponent<AudioListener>();
-
             LogUtils.Debug("Setting up Camera");
             var cam = playerTransform.FindChild("MainCamera");
 

@@ -25,13 +25,13 @@ namespace Static_Interface.API.NetworkFramework
 
         public void SendPlayerMessage(string text)
         {
-            Channel.Send(nameof(Network_SendUserMessage), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, text);
+            Channel.Send(nameof(Network_SendUserMessage), ECall.Server, text);
         }
 
         public void SendServerMessage(string text)
         {
             CheckServer();
-            Channel.Send(nameof(Network_ReceiveMessage), ECall.All, EPacket.UPDATE_UNRELIABLE_BUFFER, Channel.Connection.ServerID, text);
+            Channel.Send(nameof(Network_ReceiveMessage), ECall.All, Channel.Connection.ServerID, text);
         }
 
         protected override void OnDestroy()
@@ -104,35 +104,36 @@ namespace Static_Interface.API.NetworkFramework
 
         public void ClearChat()
         {
-            CheckServer();
-            Channel.Send(nameof(Network_ClearChatCommand), ECall.All, EPacket.UPDATE_UNRELIABLE_BUFFER);
+            if (IsServer())
+            {
+                Channel.Send(nameof(Network_ClearChatCommand), ECall.Clients);
+            }
+            ChatHistory.Clear();
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER)]
         private void Network_SendUserMessage(Identity sender, string msg)
         {
             LogUtils.Debug(nameof(Network_SendUserMessage));
             //Todo: onchatevent
             var userName = sender.GetUser()?.Name ?? "Server"; // if getuser returns null it means we are a server
             msg = "<color=yellow>" + userName + "</color>: " + msg;
-            Channel.Send(nameof(Network_ReceiveMessage), ECall.All, EPacket.UPDATE_UNRELIABLE_BUFFER, sender, msg);
+            Channel.Send(nameof(Network_ReceiveMessage), ECall.All, sender, msg);
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.BOTH, ValidateServer = true)]
         private void Network_ReceiveMessage(Identity server, Identity sender, string formattedMessage)
         {
-            Channel.ValidateServer(server);
             //Todo: onchatreceivedevent/onmessagereceived
             LogUtils.Debug(nameof(Network_ReceiveMessage));
             LogUtils.Log(formattedMessage);
             ChatHistory.Add(formattedMessage);
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_ClearChatCommand(Identity server)
         {
-            if (!Channel.ValidateServer(server)) return;
-            ChatHistory.Clear();
+            ClearChat();
         }
     }
 }

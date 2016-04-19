@@ -60,16 +60,12 @@ namespace Static_Interface.API.PlayerFramework
 
                 if (IsServer() && !Channel.IsOwner)
                 {
-                    Channel.Send(nameof(Network_SetHealth), target, EPacket.UPDATE_RELIABLE_BUFFER, MaxHealth, Health);
+                    Channel.Send(nameof(Network_SetHealth), target, MaxHealth, Health);
                 }
                 if (!isStatusUpdate) return;
-                if (_health > 0)
+                if (_health == 0)
                 {
-                    Channel.Send(nameof(Network_Revive), target, EPacket.UPDATE_RELIABLE_BUFFER, _health);
-                }
-                else
-                {
-                    Channel.Send(nameof(Network_Kill), target, EPacket.UPDATE_RELIABLE_BUFFER);
+                    Channel.Send(nameof(Network_Kill), target);
                 }
             }
         }
@@ -116,7 +112,7 @@ namespace Static_Interface.API.PlayerFramework
 
             if (IsServer() && !Channel.IsOwner)
             {
-                Channel.Send(nameof(Network_Revive), ECall.Owner, EPacket.UPDATE_RELIABLE_BUFFER, _health);
+                Channel.Send(nameof(Network_Revive), ECall.Owner, _health);
             }
         }
 
@@ -151,25 +147,22 @@ namespace Static_Interface.API.PlayerFramework
             Health -= damage;
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_SetHealth(Identity identity, int maxhealth, int health)
         {
-            Channel.ValidateServer(identity);
             MaxHealth = maxhealth;
             Health = health;
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_Kill(Identity identity)
         {
-            Channel.ValidateServer(identity);
             Kill();
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_Revive(Identity identity, int health)
         {
-            Channel.ValidateServer(identity);
             RevivePlayer(health);
         }
     }

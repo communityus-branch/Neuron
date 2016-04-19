@@ -33,27 +33,25 @@ namespace Static_Interface.API.WeatherFramework
             if (!Connection.IsSinglePlayer && !IsServer())
             {
                 _weatherSystem.staticWeather = true;
-                Channel.Send(nameof(Network_RequestWeather), ECall.Server, EPacket.UPDATE_RELIABLE_BUFFER);
+                Channel.Send(nameof(Network_RequestWeather), ECall.Server);
             }
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER)]
         private void Network_RequestWeather(Identity ident)
         {
-            if (Channel.ValidateServer(ident, false)) return;
-            Channel.Send(nameof(Network_SetWeather), ident, EPacket.UPDATE_RELIABLE_BUFFER, (int)Weather);
-            Channel.Send(nameof(Network_ChangeWeatherInstant), ident, EPacket.UPDATE_RELIABLE_BUFFER);
+            Channel.Send(nameof(Network_SetWeather), ident, (int)Weather);
+            Channel.Send(nameof(Network_ChangeWeatherInstant), ident);
         }
 
         public void SendWeatherTimeUpdate(Identity target)
         {
-            Channel.Send(nameof(Network_SetTime), target, EPacket.UPDATE_RELIABLE_BUFFER, _weatherSystem.startTime, World.Instance.Sun_Moon.transform.rotation.eulerAngles);
+            Channel.Send(nameof(Network_SetTime), target, _weatherSystem.startTime, World.Instance.Sun_Moon.transform.rotation.eulerAngles);
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_SetTime(Identity ident, float time, Vector3 rot)
         {
-            Channel.ValidateServer(ident);
             _weatherSystem.startTime = time;
             World.Instance.Sun_Moon.transform.rotation = Quaternion.Euler(rot);
         }
@@ -87,13 +85,12 @@ namespace Static_Interface.API.WeatherFramework
                 return;
             }
 
-            Channel.Send(nameof(Network_SetWeather), ECall.Others, EPacket.UPDATE_RELIABLE_BUFFER, (int)newWeather);
+            Channel.Send(nameof(Network_SetWeather), ECall.Others, (int)newWeather);
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_SetWeather(Identity ident, int weather)
         {
-            Channel.ValidateServer(ident);
             Weather = (Weather)weather;
         }
 
@@ -106,21 +103,19 @@ namespace Static_Interface.API.WeatherFramework
             }
         }
 
-
         public void ChangeWeatherInstant()
         {
             _weatherSystem.InstantWeather();
             if (IsServer())
             {
-                Channel.Send(nameof(Network_SetWeather), ECall.Others, EPacket.UPDATE_RELIABLE_BUFFER, (int)_forecast);
-                Channel.Send(nameof(Network_ChangeWeatherInstant), ECall.Others, EPacket.UPDATE_RELIABLE_BUFFER);
+                Channel.Send(nameof(Network_SetWeather), ECall.Others, (int)_forecast);
+                Channel.Send(nameof(Network_ChangeWeatherInstant), ECall.Others);
             }
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_ChangeWeatherInstant(Identity ident)
         {
-            Channel.ValidateServer(ident);
             ChangeWeatherInstant();
         }
 

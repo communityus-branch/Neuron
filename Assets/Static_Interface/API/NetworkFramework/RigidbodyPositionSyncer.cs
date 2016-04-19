@@ -51,15 +51,13 @@ namespace Static_Interface.API.NetworkFramework
 
             _cachedPosition = _rigidbody.position;
             _cachedVelocity = _rigidbody.velocity;
-            Channel.Send(nameof(Network_ReadPosition), ECall.Server, EPacket.UPDATE_UNRELIABLE_BUFFER, _rigidbody.position, _rigidbody.velocity);
+            Channel.Send(nameof(Network_ReadPosition), ECall.Server, _rigidbody.position, _rigidbody.velocity);
             _lastSync = TimeUtil.GetCurrentTime();
         }
 
-        [NetworkCall]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.BOTH, ValidateServer = true, ValidateOwner = true)]
         protected void Network_ReadPosition(Identity ident, Vector3 syncPosition, Vector3 syncVelocity)
         {
-            //LogUtils.Debug(nameof(ReadPosition) + ": " + syncPosition + "; " + syncVelocity);
-            if (!Channel.ValidateOwner(ident, false) && !Channel.ValidateServer(ident, false)) return;
             if (Connection.IsServer() && ident == Channel.Connection.ServerID) return;
 
             if (Connection.IsServer() && PositionValidator != null)
@@ -68,7 +66,7 @@ namespace Static_Interface.API.NetworkFramework
                 var deltaVelocity = syncVelocity - _rigidbody.velocity;
                 if (!PositionValidator.ValidatePosition(_rigidbody.transform, deltaPosition, deltaVelocity))
                 {
-                    Channel.Send(nameof(Network_ReadPosition), ECall.Owner, EPacket.UPDATE_UNRELIABLE_BUFFER, _rigidbody.position, _rigidbody.velocity);
+                    Channel.Send(nameof(Network_ReadPosition), ECall.Owner, _rigidbody.position, _rigidbody.velocity);
                     return;
                 }
             }

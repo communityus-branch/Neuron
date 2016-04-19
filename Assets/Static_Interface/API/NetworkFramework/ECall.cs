@@ -8,6 +8,7 @@
         Owner,
         NotOwner,
         Clients,
-        Peers
+        Peers,
+        NotOwnerNotServer,
     }
 }

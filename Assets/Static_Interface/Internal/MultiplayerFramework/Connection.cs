@@ -27,6 +27,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public static bool IsClient()
         {
+            if (IsSinglePlayer) return true;
             return CurrentConnection?.Provider is ClientMultiplayerProvider;
         }
 
