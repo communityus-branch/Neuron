@@ -13,12 +13,20 @@ namespace Static_Interface.API.WeatherFramework
     {
         private Weather _forecast;
         private UniStormWeatherSystem_C _weatherSystem;
+        public static WeatherManager Instance { get; private set; }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            Instance = null;
+        }
 
         //Todo: WeatherChangeEvent
 
         protected override void Awake()
         {
             base.Awake();
+            Instance = this;
             _weatherSystem = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
 
             _forecast = (Weather) _weatherSystem.weatherForecaster;
@@ -26,24 +34,29 @@ namespace Static_Interface.API.WeatherFramework
             if (!Connection.IsSinglePlayer && !IsServer())
             {
                 _weatherSystem.staticWeather = true;
-                Channel.Send(nameof(Network_Ask_Weather), ECall.Server, EPacket.UPDATE_RELIABLE_BUFFER);
+                Channel.Send(nameof(Network_RequestWeather), ECall.Server, EPacket.UPDATE_RELIABLE_BUFFER);
             }
         }
 
         [NetworkCall]
-        private void Network_Ask_Weather(Identity ident)
+        private void Network_RequestWeather(Identity ident)
         {
             if (Channel.ValidateServer(ident, false)) return;
-            Channel.Send(nameof(Network_SetTime), ident, EPacket.UPDATE_RELIABLE_BUFFER, _weatherSystem.startTime);
             Channel.Send(nameof(Network_SetWeather), ident, EPacket.UPDATE_RELIABLE_BUFFER, (int)Weather);
             Channel.Send(nameof(Network_ChangeWeatherInstant), ident, EPacket.UPDATE_RELIABLE_BUFFER);
         }
 
+        public void SendWeatherTimeUpdate(Identity target)
+        {
+            Channel.Send(nameof(Network_SetTime), target, EPacket.UPDATE_RELIABLE_BUFFER, _weatherSystem.startTime, World.Instance.Sun_Moon.transform.rotation);
+        }
+
         [NetworkCall]
-        private void Network_SetTime(Identity ident, float time)
+        private void Network_SetTime(Identity ident, float time, Vector3 rot)
         {
             Channel.ValidateServer(ident);
             _weatherSystem.startTime = time;
+            World.Instance.Sun_Moon.transform.rotation = Quaternion.Euler(rot);
         }
 
 

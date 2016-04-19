@@ -5,6 +5,7 @@ using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.API.WeatherFramework;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
@@ -379,7 +380,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 Send(user.Identity, EPacket.ACCEPTED, packet, size, 0);
 
                 chat?.SendServerMessage("<b>" + user.Name + "</b> connected.");
-                //Todo: OnUserConnectedEvent
+                WeatherManager.Instance.SendWeatherTimeUpdate(ident);
+               //Todo: OnUserConnectedEvent
             }
             _queuedUsers.Clear();
         }
