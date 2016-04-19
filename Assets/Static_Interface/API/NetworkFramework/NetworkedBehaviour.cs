@@ -11,17 +11,23 @@ namespace Static_Interface.API.NetworkFramework
 
         protected override void Awake()
         {
-            Channel = GetComponent<Channel>();
-            
-            if (Channel == null)
+            Channel = SetupChannel();
+        }
+
+        protected virtual Channel SetupChannel()
+        {
+            var ch = GetComponent<Channel>();
+
+            if (ch == null)
             {
-                Channel = gameObject.AddComponent<Channel>();
-                Channel.ID = PreferredChannelID != 0 ? PreferredChannelID : Connection.CurrentConnection.ChannelCount;
-                Channel.Setup();
-                return;
+                ch = gameObject.AddComponent<Channel>();
+                ch.ID = PreferredChannelID != 0 ? PreferredChannelID : Connection.CurrentConnection.ChannelCount;
+                ch.Setup();
+                return ch;
             }
 
-            Channel.Build(this);
+            ch.Build(this);
+            return ch;
         }
 
         public void CheckServer()

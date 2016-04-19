@@ -30,8 +30,13 @@ namespace Static_Interface.API.InteractionFramework
         protected override void Update()
         {
             base.Update();
-            if (InputUtil.Instance.IsInputLocked()) return;
-            if (Camera.main == null) return;
+            if (InputUtil.Instance.IsInputLocked() || Camera.main == null ||
+                (Player.MainPlayer == null || Player.MainPlayer.Health.IsDead))
+            {
+                CurrentInteractable = null;
+                return;
+            }
+
             Vector3 p = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane));
             if (!Physics.Raycast(p, Camera.main.transform.forward, out _hit, INTERACT_RANGE))
             {
@@ -66,7 +71,7 @@ namespace Static_Interface.API.InteractionFramework
                 Highlighter.Unhighlight(previousInteractable.InteractableObject);
             }
 
-            if (!CurrentInteractable.CanInteract())
+            if (!CurrentInteractable.CanInteract(Player.MainPlayer))
             {
                 CurrentInteractable = null;
                 return;
@@ -87,7 +92,7 @@ namespace Static_Interface.API.InteractionFramework
         protected override void OnGUI()
         {
             base.OnGUI();
-            if (CurrentInteractable != null && CurrentInteractable.CanInteract())
+            if (Player.MainPlayer != null && !Player.MainPlayer.Health.IsDead && CurrentInteractable != null && CurrentInteractable.CanInteract(Player.MainPlayer))
             {
                 GUI.Label(new Rect(Screen.width / 2 - 75, Screen.height - 100, Screen.width / 2, 30), "[" + InteractKey + "] " + CurrentInteractable.GetInteractMessage());
             }

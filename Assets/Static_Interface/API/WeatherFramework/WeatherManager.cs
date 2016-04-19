@@ -1,7 +1,6 @@
 ﻿using System;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
-using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal;
 using Static_Interface.Internal.MultiplayerFramework;
@@ -48,7 +47,7 @@ namespace Static_Interface.API.WeatherFramework
 
         public void SendWeatherTimeUpdate(Identity target)
         {
-            Channel.Send(nameof(Network_SetTime), target, EPacket.UPDATE_RELIABLE_BUFFER, _weatherSystem.startTime, World.Instance.Sun_Moon.transform.rotation);
+            Channel.Send(nameof(Network_SetTime), target, EPacket.UPDATE_RELIABLE_BUFFER, _weatherSystem.startTime, World.Instance.Sun_Moon.transform.rotation.eulerAngles);
         }
 
         [NetworkCall]

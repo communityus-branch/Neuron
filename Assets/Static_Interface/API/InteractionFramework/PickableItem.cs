@@ -6,7 +6,7 @@ namespace Static_Interface.API.InteractionFramework
 {
     public abstract class PickableItem : Interactable
     {      
-        public override void Interact(Player player)
+        protected override void OnInteract(Player player)
         {
             throw new NotImplementedException();
         }
@@ -18,7 +18,7 @@ namespace Static_Interface.API.InteractionFramework
             return "Pickup " + Name;
         }
 
-        public override bool CanInteract()
+        public override bool CanInteract(Player player)
         {
             //Check if Inventory has space
             throw new NotImplementedException();

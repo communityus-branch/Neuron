@@ -15,13 +15,13 @@ namespace Static_Interface.Neuron.Interactables
         {
             return "Sit";
         }
-    
-        public override void Interact(Player player)
+
+        protected override void OnInteract(Player player)
         {
             //todo
         }
 
-        public override bool CanInteract()
+        public override bool CanInteract(Player player)
         {
             return !full;
         }

@@ -11,7 +11,7 @@ namespace Static_Interface.API.InteractionFramework
 
         public override GameObject InteractableObject => OpenableObject;
 
-        public override bool CanInteract()
+        public override bool CanInteract(Player player)
         {
             return true;
         }
@@ -21,7 +21,7 @@ namespace Static_Interface.API.InteractionFramework
             return (IsOpen ? "Close" : "Open") + " " + Name.ToLower();
         }
 
-        public override void Interact(Player player)
+        protected override void OnInteract(Player player)
         {
             if (!IsOpen)
             {

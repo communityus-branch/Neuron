@@ -1,4 +1,6 @@
-﻿using Static_Interface.API.PlayerFramework;
+﻿using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
+using Static_Interface.Internal;
 using UnityEngine;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
@@ -7,12 +9,52 @@ namespace Static_Interface.API.InteractionFramework
     /// <summary>
     /// Objects which a player can interact with
     /// </summary>
-    public abstract class Interactable : MonoBehaviour
+    public abstract class Interactable : NetworkedBehaviour
     {
+        protected override Channel SetupChannel()
+        {
+            var ch = World.Instance.GetComponent<Channel>();
+            ch.Build(this);
+            return ch;
+        }
+
         /// <summary>
         /// Called when a player interacts with it
         /// </summary>
-        public abstract void Interact(Player player);
+        public virtual void Interact(Player player)
+        {
+            if (player.Health.IsDead) return;
+            if (!CanInteract(player)) return;
+            if (IsClient())
+            {
+                Channel.Send(nameof(Network_InteractRequest), ECall.Server, EPacket.UPDATE_RELIABLE_BUFFER);
+            }
+            else
+            {
+                Network_InteractRequest(player.User.Identity);   
+            }
+        }
+
+        protected abstract void OnInteract(Player player);
+
+        [NetworkCall]
+        public void Network_InteractRequest(Identity ident)
+        {
+            var player = ident.Owner.Player;
+            if (player == null || player.Health.IsDead) return;
+            if (!CanInteract(player)) return;
+            OnInteract(player);
+            //Todo: add radius
+            Channel.Send(nameof(Network_Interact), ECall.Clients, EPacket.UPDATE_RELIABLE_BUFFER, ident);
+        }
+
+        [NetworkCall]
+        public void Network_Interact(Identity sender, Identity player)
+        {
+            Channel.ValidateServer(sender);
+            OnInteract(player.Owner.Player);
+        }
+
         /// <summary>
         /// Human-Readable name of the interactable object
         /// </summary>
@@ -28,7 +70,7 @@ namespace Static_Interface.API.InteractionFramework
         /// Can you interact with the object?
         /// </summary>
         /// <returns></returns>
-        public abstract bool CanInteract();
+        public abstract bool CanInteract(Player player);
 
         /// <summary>
         /// The GameObject which can be interacted
