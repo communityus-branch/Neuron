@@ -79,7 +79,7 @@ namespace UnityStandardAssets.ImageEffects
                 EditorGUILayout.PropertyField (blurSampleCount, new GUIContent(" Sample Count"));
 
             EditorGUILayout.PropertyField (maxBlurSize, new GUIContent(" Max Blur Distance"));
-            EditorGUILayout.PropertyField (highResolution, new GUIContent(" HIGH Resolution"));
+            EditorGUILayout.PropertyField (highResolution, new GUIContent(" High Resolution"));
 
             EditorGUILayout.Separator ();
 

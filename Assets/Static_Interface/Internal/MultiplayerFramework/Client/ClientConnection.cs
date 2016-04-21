@@ -9,6 +9,7 @@ using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
 using UnityEngine;
+using UnityStandardAssets.ImageEffects;
 using Types = Static_Interface.Internal.Objects.Types;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Client
