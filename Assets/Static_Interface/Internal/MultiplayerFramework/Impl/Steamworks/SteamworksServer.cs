@@ -210,6 +210,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return _ident ?? (_ident = (SteamIdentity) SteamGameServer.GetSteamID());
         }
 
+        public override void RemoveClient(Identity ident)
+        {
+            EndAuthSession(ident);
+        }
+
         public uint GetPublicIP()
         {
             return SteamGameServer.GetPublicIP();

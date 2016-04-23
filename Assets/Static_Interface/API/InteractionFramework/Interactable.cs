@@ -11,11 +11,10 @@ namespace Static_Interface.API.InteractionFramework
     /// </summary>
     public abstract class Interactable : NetworkedBehaviour
     {
-        protected override Channel SetupChannel()
+        public override Channel Channel => World.Instance.GetComponent<Channel>();
+        protected override void SetupChannel()
         {
-            var ch = World.Instance.GetComponent<Channel>();
-            ch.Build(this);
-            return ch;
+            Channel.Build(this);
         }
 
         /// <summary>

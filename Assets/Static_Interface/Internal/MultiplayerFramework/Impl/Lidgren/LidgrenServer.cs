@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Lidgren.Network;
 using Static_Interface.API.PlayerFramework;
@@ -140,6 +141,25 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
         public override void SetMapName(string map)
         {
             //do nothing
+        }
+
+        public override void RemoveClient(Identity ident)
+        {
+            if (_peers.ContainsKey(ident))
+            {
+                var conn = _peers[ident];
+                if(conn.Status != NetConnectionStatus.Disconnecting && 
+                    conn.Status != NetConnectionStatus.Disconnected) conn.Disconnect(string.Empty);
+                _peers.Remove(ident);
+            }
+
+            foreach (int i in _queue.Keys)
+            {
+                foreach (QueuedData data in _queue[i].Where(data => data.Ident == ident))
+                {
+                    _queue[i].Remove(data);
+                }
+            }
         }
     }
 }

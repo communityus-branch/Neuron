@@ -8,7 +8,7 @@ namespace Static_Interface.API.NetworkFramework
     [RequireComponent(typeof(Rigidbody))]
     public class RigidbodyPositionSyncer : NetworkedBehaviour
     {
-        private Rigidbody _rigidbody;
+        private Rigidbody _rigidbody => GetComponent<Rigidbody>();
         private Vector3? _cachedPosition;
         private Vector3? _cachedVelocity;
 
@@ -24,7 +24,6 @@ namespace Static_Interface.API.NetworkFramework
         protected override void Awake()
         {
             base.Awake();
-            _rigidbody = GetComponent<Rigidbody>();
             //if(Connection.IsSinglePlayer) Destroy(this);
         }
 

@@ -245,6 +245,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             AnnounceToAll(EPacket.DISCONNECTED, packet, packet.Length, 0);
             if(sendKicked) Send(ident, EPacket.KICKED, new byte[0], 0);
             Chat.Instance.SendServerMessage("<b>" + user.Name + "</b> disconnected.");
+            ((ServerMultiplayerProvider) Provider).RemoveClient(ident);
         }
 
         public byte GetUserIndex(Identity user)

@@ -5,29 +5,27 @@ namespace Static_Interface.API.NetworkFramework
 {
     public abstract class NetworkedBehaviour : UnityExtensions.MonoBehaviour
     {
-        public Channel Channel { get; private set; }
+        public virtual Channel Channel => GetComponent<Channel>();
         public Connection Connection => Connection.CurrentConnection;
         protected virtual int PreferredChannelID  => 0;
 
         protected override void Awake()
         {
-            Channel = SetupChannel();
+            SetupChannel();
         }
 
-        protected virtual Channel SetupChannel()
+        protected virtual void SetupChannel()
         {
-            var ch = GetComponent<Channel>();
-
+            var ch = Channel;
             if (ch == null)
             {
                 ch = gameObject.AddComponent<Channel>();
                 ch.ID = PreferredChannelID != 0 ? PreferredChannelID : Connection.CurrentConnection.ChannelCount;
                 ch.Setup();
-                return ch;
+                return;
             }
 
             ch.Build(this);
-            return ch;
         }
 
         public void CheckServer()

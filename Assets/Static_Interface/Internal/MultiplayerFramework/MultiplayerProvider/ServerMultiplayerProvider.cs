@@ -22,5 +22,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider
         public abstract void SetServerName(string name);
         public abstract void SetPasswordProtected(bool b);
         public abstract void SetMapName(string map);
+        public abstract void RemoveClient(Identity ident);
     }
 }
