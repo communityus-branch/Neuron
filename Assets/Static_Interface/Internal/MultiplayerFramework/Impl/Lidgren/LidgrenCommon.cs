@@ -34,7 +34,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                         if (status == NetConnectionStatus.Disconnected)
                         {
                             var sConIdent = GetIdentFromConnection(msg.SenderConnection, peers);
-                            ((ServerConnection)Connection.CurrentConnection).DisconnectClient(sConIdent);
+                            ((ServerConnection)Connection.CurrentConnection).DisconnectClient(sConIdent, false);
                             host.Recycle(msg);
                             continue;
                         }

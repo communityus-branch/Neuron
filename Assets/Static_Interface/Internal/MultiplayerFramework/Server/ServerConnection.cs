@@ -236,14 +236,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             Send(user, EPacket.REJECTED, data, data.Length, 0);
         }
 
-        public void DisconnectClient(Identity user)
+        public void DisconnectClient(Identity ident, bool sendKicked = true)
         {
-            Chat.Instance.SendServerMessage("<b>" + user.GetUser().Name+ "</b> disconnected.");
-            byte index = GetUserIndex(user);
+            var user = ident.GetUser();
+            byte index = GetUserIndex(ident);
             RemovePlayer(index);
             byte[] packet = { index };
             AnnounceToAll(EPacket.DISCONNECTED, packet, packet.Length, 0);
-            Send(user, EPacket.KICKED, new byte[0], 0);
+            if(sendKicked) Send(ident, EPacket.KICKED, new byte[0], 0);
+            Chat.Instance.SendServerMessage("<b>" + user.Name + "</b> disconnected.");
         }
 
         public byte GetUserIndex(Identity user)

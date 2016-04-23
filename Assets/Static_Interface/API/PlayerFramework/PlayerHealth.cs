@@ -63,7 +63,7 @@ namespace Static_Interface.API.PlayerFramework
                     Channel.Send(nameof(Network_SetHealth), target, MaxHealth, Health);
                 }
                 if (!isStatusUpdate) return;
-                if (_health == 0)
+                if (IsServer() && !Channel.IsOwner && _health == 0)
                 {
                     Channel.Send(nameof(Network_Kill), target);
                 }

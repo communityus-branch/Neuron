@@ -8,7 +8,6 @@ namespace Static_Interface.API.NetworkFramework
     [RequireComponent(typeof(Rigidbody))]
     public class AngleSyncer : NetworkedBehaviour
     {
-        private Rigidbody _rigidbody;
         private Vector3? _cachedAngle;
 
         private uint _lastSync;
@@ -18,7 +17,6 @@ namespace Static_Interface.API.NetworkFramework
         protected override void Awake()
         {
             base.Awake();
-            _rigidbody = GetComponent<Rigidbody>();
             //if (Connection.IsSinglePlayer) Destroy(this);
         }
 
@@ -28,15 +26,15 @@ namespace Static_Interface.API.NetworkFramework
             if (Connection.IsServer()) return;
             if (TimeUtil.GetCurrentTime() - _lastSync < UpdatePeriod) return;
             if (!Channel.IsOwner) return;
-            if (_cachedAngle == _rigidbody.rotation.eulerAngles)
+            if (_cachedAngle == transform.rotation.eulerAngles)
             {
                 // no changes, no need for updates
                 return;
             }
 
-            _cachedAngle = _rigidbody.rotation.eulerAngles;
+            _cachedAngle = transform.rotation.eulerAngles;
 
-            Channel.Send(nameof(Network_ReadAngle), ECall.Server, _rigidbody.rotation.eulerAngles);
+            Channel.Send(nameof(Network_ReadAngle), ECall.Server, transform.rotation.eulerAngles);
             _lastSync = TimeUtil.GetCurrentTime();
         }
 
@@ -45,8 +43,8 @@ namespace Static_Interface.API.NetworkFramework
         protected void Network_ReadAngle(Identity ident, Vector3 angle)
         {
             if (Connection.IsServer() && ident == Channel.Connection.ServerID) return;
-            _rigidbody.rotation = Quaternion.Euler(angle);
-            Channel.Send(nameof(Network_ReadAngle), ECall.NotOwner, _rigidbody.position, angle);
+            transform.rotation = Quaternion.Euler(angle);
+            Channel.Send(nameof(Network_ReadAngle), ECall.NotOwner, transform.position, angle);
         }
     }
 }

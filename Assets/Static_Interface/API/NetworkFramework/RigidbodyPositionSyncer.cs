@@ -77,7 +77,7 @@ namespace Static_Interface.API.NetworkFramework
             _lastSync = TimeUtil.GetCurrentTime();
             _syncEndPosition = syncPosition + syncVelocity*_syncDelay;
             _syncStartPosition = _rigidbody.position;
-            Channel.Send(nameof(Network_ReadPosition), ECall.NotOwner, _rigidbody.position, UpdateRadius, EPacket.UPDATE_UNRELIABLE_BUFFER, syncPosition, syncVelocity);
+            Channel.Send(nameof(Network_ReadPosition), ECall.NotOwner, _rigidbody.position, UpdateRadius, syncPosition, syncVelocity);
         }
     }
 }
