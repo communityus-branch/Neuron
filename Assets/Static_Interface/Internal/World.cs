@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Static_Interface.API.Commands;
+using Static_Interface.API.ConsoleFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
@@ -13,6 +13,7 @@ using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
 using Static_Interface.Neuron.Netvars;
 using UnityEngine;
+using Console = Static_Interface.API.ConsoleFramework.Console;
 
 namespace Static_Interface.Internal
 {
@@ -24,7 +25,7 @@ namespace Static_Interface.Internal
         public GameObject Weather;
         private bool _selfDestruct;
         public Transform DefaultSpawnPosition;
-
+        private object _commands;
         protected override int PreferredChannelID => 1;
 
         protected override void Start ()
@@ -43,7 +44,6 @@ namespace Static_Interface.Internal
             LogUtils.Log("Initializing World...");
 	        NetvarManager.Instance.RegisterNetvar(new GravityNetvar());
             NetvarManager.Instance.RegisterNetvar(new GameSpeedNetvar());
-            new ConsoleCommands().RegisterCommands();
             var extensionsDir = Path.Combine(GameInfo.GameBaseDir, "Plugins");
 			ExtensionManager.Init(extensionsDir);
             gameObject.AddComponent<Scheduler>();
@@ -88,15 +88,33 @@ namespace Static_Interface.Internal
 
             var chat = gameObject.AddComponent<Chat>();
             conn.SendMessage("OnChatInit", chat);
+
+            if (Connection.IsClient() && !Connection.IsSinglePlayer)
+            {
+                _commands = new ClientConsoleCommands();
+            }
+            else if (Connection.IsServer())
+            {
+                _commands = new ServerConsoleCommands();
+            }
+
+            if(_commands != null)
+                Console.Instance.RegisterCommands(_commands);
         }
 
         protected override void OnDestroy()
         {
-            if (!_selfDestruct)
+            if (_selfDestruct)
             {
-                Instance = null;
+                _selfDestruct = false;
+                return;
             }
-            _selfDestruct = false;
+
+            Instance = null;
+            if (_commands != null)
+            {
+                Console.Instance.UnregisterCommands(_commands);
+            }
         }
     }
 }

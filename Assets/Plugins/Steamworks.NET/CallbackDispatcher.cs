@@ -53,7 +53,7 @@ namespace Steamworks {
 #if UNITY_BUILD
 			UnityEngine.Debug.LogException(e);
 #else
-			Console.Instance.Print(e.Message);
+			Console.WriteLine(e.Message);
 #endif
 		}
 	}

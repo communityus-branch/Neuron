@@ -5,18 +5,20 @@ namespace Static_Interface.Internal.Windows
 {
     public class ConsoleInput
     {
+        private const int CONSOLE_HEIGHT = 300;
+        private const int CONSOLE_WIDTH = 500;
+
         public string InputString = string.Empty;
         internal float NextUpdate;
-        public string[] StatusText = { string.Empty, string.Empty, string.Empty };
 
         public event Action<string> OnInputText;
 
         public void ClearLine(int numLines)
         {
-            System.Console.CursorLeft = 0;
-            System.Console.Write(new string(' ', LineWidth * numLines));
-            System.Console.CursorTop -= numLines;
-            System.Console.CursorLeft = 0;
+            Console.CursorLeft = 0;
+            Console.Write(new string(' ', LineWidth * numLines));
+            Console.CursorTop -= numLines;
+            Console.CursorLeft = 0;
         }
 
         internal void OnBackspace()
@@ -28,9 +30,8 @@ namespace Static_Interface.Internal.Windows
 
         internal void OnEnter()
         {
-            ClearLine(StatusText.Length);
-            System.Console.ForegroundColor = ConsoleColor.Green;
-            System.Console.WriteLine("> " + InputString);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("> " + InputString);
             string inputString = InputString;
             InputString = string.Empty;
             OnInputText?.Invoke(inputString);
@@ -43,24 +44,29 @@ namespace Static_Interface.Internal.Windows
             RedrawInputLine();
         }
 
+
+        private void CheckAndResetWindowSize()
+        {
+            if (Console.WindowWidth != CONSOLE_WIDTH || Console.WindowHeight != CONSOLE_HEIGHT)
+            {
+                Console.SetWindowSize(CONSOLE_WIDTH, CONSOLE_HEIGHT);
+            }
+        }
+
+
         public void RedrawInputLine()
         {
             try
             {
-                System.Console.ForegroundColor = ConsoleColor.White;
-                System.Console.CursorTop++;
-                foreach (string str in StatusText)
-                {
-                    System.Console.CursorLeft = 0;
-                    System.Console.Write(str.PadRight(LineWidth));
-                }
-                System.Console.CursorTop -= StatusText.Length + 1;
-                System.Console.CursorLeft = 0;
-                System.Console.BackgroundColor = ConsoleColor.Black;
-                System.Console.ForegroundColor = ConsoleColor.Green;
+                CheckAndResetWindowSize();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.CursorLeft = 0;
+                Console.CursorTop = Console.WindowTop + Console.WindowHeight - 1;
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
                 ClearLine(1);
                 if (InputString.Length == 0) return;
-                System.Console.Write(InputString.Length < (LineWidth - 2)
+                Console.Write(InputString.Length < (LineWidth - 2)
                     ? InputString
                     : InputString.Substring(InputString.Length - (LineWidth - 2)));
             }
@@ -80,7 +86,7 @@ namespace Static_Interface.Internal.Windows
             }
             try
             {
-                if (!System.Console.KeyAvailable)
+                if (!Console.KeyAvailable)
                 {
                     return;
                 }
@@ -89,7 +95,7 @@ namespace Static_Interface.Internal.Windows
             {
                 return;
             }
-            ConsoleKeyInfo info = System.Console.ReadKey();
+            ConsoleKeyInfo info = Console.ReadKey();
             if (info.Key == ConsoleKey.Enter)
             {
                 OnEnter();
@@ -109,8 +115,8 @@ namespace Static_Interface.Internal.Windows
             }
         }
 
-        public int LineWidth => System.Console.BufferWidth;
+        public int LineWidth => Console.BufferWidth;
 
-        public bool Valid => (System.Console.BufferWidth > 0);
+        public bool Valid => (Console.BufferWidth > 0);
     }
 }

@@ -3,17 +3,17 @@ using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.Windows;
 using UnityEngine;
-
+using Console = Static_Interface.API.ConsoleFramework.Console;
 namespace Static_Interface.Internal.Utils
 {
     public class ConsoleManager : SingletonComponent<ConsoleManager>
     {
         public ConsoleWindow ConsoleWindow = new ConsoleWindow();
-        //private readonly ConsoleInput _input = new ConsoleInput();
+        private readonly ConsoleInput _input = new ConsoleInput();
 
         private void HandleLog(string message, string stackTrace, LogType type)
         {
-            if (message == null) return;
+            if (string.IsNullOrEmpty(message)) return;
             switch (type)
             {
                 case LogType.Warning:
@@ -33,37 +33,29 @@ namespace Static_Interface.Internal.Utils
                     break;
             }
 
-            //_input.ClearLine(_input.StatusText.Length);
-
-            if (stackTrace != null)
-            {
-                message = message.Replace(stackTrace, "");
-            }
+            _input.ClearLine(3);
             System.Console.WriteLine(message);
-            //_input.RedrawInputLine();
+            _input.RedrawInputLine();
         }
 
         protected override void OnDisable()
         {
+            base.OnDisable();
             LogUtils.Debug("Destroying console");
             Application.logMessageReceived -= HandleLog;
-            //_input.OnInputText -= OnInputText;
+            _input.OnInputText -= OnInputText;
             ConsoleWindow.Shutdown();
         }
 
         protected override void OnEnable()
         {
+            base.OnEnable();
             DontDestroyOnLoad(gameObject);
-
             ConsoleWindow.Initialize();
             ConsoleWindow.SetTitle("Neuron Console");
             Application.logMessageReceived += HandleLog;
-            //_input.OnInputText += new Action<string>(this.OnInputText);
-            //_input.ClearLine(System.Console.WindowHeight);
-            //for (int i = 0; i < System.Console.WindowHeight; i++)
-            //{
-            //    System.Console.WriteLine(string.Empty);
-            //}
+            _input.OnInputText += OnInputText;
+            _input.ClearLine(System.Console.WindowHeight);
         }
 
         private void OnInputText(string obj)
@@ -74,16 +66,14 @@ namespace Static_Interface.Internal.Utils
         protected override void Update()
         {
             base.Update();
-            //_input.Update();
+            _input.Update();
             
             foreach (var line in Console.Instance.Lines)
             {
-            //     HandleLog(line, null, LogType.Log);
+                 HandleLog(line, null, LogType.Log);
             }
-            for (int i = 0; i < Console.Instance.Lines.Count(); i++)
-            {
-                //Console.Instance.Lines.Dequeue();
-            }
+
+            Console.Instance.Lines.Clear();
         }
     }
 }

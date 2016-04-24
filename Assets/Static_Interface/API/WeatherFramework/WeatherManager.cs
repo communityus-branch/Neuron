@@ -41,19 +41,31 @@ namespace Static_Interface.API.WeatherFramework
         private void Network_RequestWeather(Identity ident)
         {
             Channel.Send(nameof(Network_SetWeather), ident, (int)Weather);
+            Channel.Send(nameof(Network_SetTemperature), ident, _weatherSystem.temperature);
             Channel.Send(nameof(Network_ChangeWeatherInstant), ident);
         }
 
         public void SendWeatherTimeUpdate(Identity target)
         {
-            Channel.Send(nameof(Network_SetTime), target, _weatherSystem.startTime, World.Instance.Sun_Moon.transform.rotation.eulerAngles);
+            Channel.Send(nameof(Network_SetTime), target,
+                _weatherSystem.realStartTime,
+                _weatherSystem.realStartTimeMinutes,
+                World.Instance.Sun_Moon.transform.rotation.eulerAngles);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
-        private void Network_SetTime(Identity ident, float time, Vector3 rot)
+        private void Network_SetTime(Identity ident, float realStartTime, int realStartTimeMinutes, Vector3 rot)
         {
-            _weatherSystem.startTime = time;
-            World.Instance.Sun_Moon.transform.rotation = Quaternion.Euler(rot);
+            _weatherSystem.realStartTime = realStartTime;
+            _weatherSystem.realStartTimeMinutes = realStartTimeMinutes;
+            _weatherSystem.LoadTime();
+            //World.Instance.Sun_Moon.transform.rotation = Quaternion.Euler(rot);
+        }
+
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
+        private void Network_SetTemperature(Identity ident, int temperature)
+        {
+            _weatherSystem.temperature = temperature;
         }
 
 

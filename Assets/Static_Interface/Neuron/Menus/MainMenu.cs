@@ -1,5 +1,6 @@
 ﻿using System;
 using Fclp;
+using Static_Interface.API.ConsoleFramework;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
@@ -10,6 +11,7 @@ using Static_Interface.Internal.Utils;
 using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
+using Console = System.Console;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.Neuron.Menus
@@ -21,6 +23,9 @@ namespace Static_Interface.Neuron.Menus
         protected override void Awake()
         {
             base.Awake();
+            API.ConsoleFramework.Console.Init();
+            DefaultConsoleCommands defaultCmds = new DefaultConsoleCommands();
+            API.ConsoleFramework.Console.Instance.RegisterCommands(defaultCmds);
             ObjectUtils.CheckObjects();
             if (!Debug.isDebugBuild && SteamAPI.RestartAppIfNecessary(GameInfo.ID))
             {

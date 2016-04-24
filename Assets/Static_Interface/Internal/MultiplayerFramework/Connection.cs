@@ -129,8 +129,8 @@ namespace Static_Interface.Internal.MultiplayerFramework
             LogUtils.Debug("Spawning player " + playerName + " at " + point);
             var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = playerName };
             newModel.GetComponent<Player>().User = user;
-            _clients.Add(user);
             newModel.GetComponent<Channel>().Setup();
+            _clients.Add(user);
             return newModel;
         }
 
