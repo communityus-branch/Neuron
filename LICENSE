@@ -1,10 +1,7 @@
 ==License and Copyright==
 Everything is copyrighted (C) 2015-2016 Enes Sadik Özbek <trojaner25@gmail.com>
-
-The files at Assets/Static_Interface/API ("the API") are licensed under GPL v3. See <http://www.gnu.org/licenses/gpl-3.0.en.html> for the full license.
-
-Everything else at Assets/Static_Interface is proprietary and NOT open-source or free software in any way!
+Nothing is open-source or free software in any way!
 
 Some files may have a different license. These will be included in the directory which the said files are in.
 
-This project depends on proprietary Unity extensions like UniStorm and EasyRoads3D. These are not included and need to be purchased at the Unity Store. Different licenses may apply for these extensions.
+This project depends on proprietary Unity extensions like UniStorm. These are not included and need to be purchased at the Unity Store. Different licenses may apply for these extensions.
