@@ -6,7 +6,6 @@ namespace Static_Interface.API.PlayerFramework
 {
     public class Player : UnityExtensions.MonoBehaviour
     {
-        public Transform Model => User.Model;
         public static Player MainPlayer { get; internal set; } = null;
         public PlayerController MovementController => GetComponent<PlayerController>();
         public PlayerHealth Health => GetComponent<PlayerHealth>();

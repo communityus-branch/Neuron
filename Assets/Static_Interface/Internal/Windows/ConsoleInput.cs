@@ -6,7 +6,7 @@ namespace Static_Interface.Internal.Windows
     public class ConsoleInput
     {
         private const int CONSOLE_HEIGHT = 300;
-        private const int CONSOLE_WIDTH = 500;
+        private const int CONSOLE_WIDTH = 200;
 
         public string InputString = string.Empty;
         internal float NextUpdate;
@@ -47,9 +47,12 @@ namespace Static_Interface.Internal.Windows
 
         private void CheckAndResetWindowSize()
         {
-            if (Console.WindowWidth != CONSOLE_WIDTH || Console.WindowHeight != CONSOLE_HEIGHT)
+            Console.WindowWidth = 80;
+            Console.WindowHeight = 30;
+            if (true) return;
+            if (Console.BufferWidth != CONSOLE_WIDTH || Console.BufferHeight!= CONSOLE_HEIGHT)
             {
-                Console.SetWindowSize(CONSOLE_WIDTH, CONSOLE_HEIGHT);
+                Console.SetBufferSize(CONSOLE_WIDTH, CONSOLE_HEIGHT);
             }
         }
 

@@ -96,7 +96,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                 }
             }
 
-            IPIdentity newIdent = new IPIdentity(senderConnection.RemoteEndPoint.Address);
+            //IPIdentity newIdent = new IPIdentity(senderConnection.RemoteEndPoint.Address);
+            IPIdentity newIdent = new IPIdentity((ulong) new Random().Next(1, int.MaxValue));
             peers.Add(newIdent.Serialize(), senderConnection);
             return newIdent;
         }

@@ -83,9 +83,6 @@ namespace Static_Interface.Internal
             Sun_Moon = enviromentSun;
             gameObject.AddComponent<WeatherManager>();
             conn.SendMessage("OnWeatherInit", Weather);
-
-            gameObject.AddComponent<CameraManager>();
-
             var chat = gameObject.AddComponent<Chat>();
             conn.SendMessage("OnChatInit", chat);
 

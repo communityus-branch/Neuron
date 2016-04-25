@@ -30,11 +30,15 @@ namespace Static_Interface.API.NetworkFramework
         protected override void Update()
         {
             base.Update();
-            if (Channel.IsOwner) return;
             _syncTime += Time.deltaTime;
             if (_syncStartPosition == null || _syncEndPosition == null) return;
             var vec = Vector3.Lerp(_syncStartPosition.Value, _syncEndPosition.Value, _syncTime / _syncDelay);
             _rigidbody.position = vec;
+            if (vec == _syncEndPosition.Value)
+            {
+                _syncStartPosition = null;
+                _syncEndPosition = null;
+            }
         }
 
         protected override void FixedUpdate()
@@ -50,7 +54,7 @@ namespace Static_Interface.API.NetworkFramework
 
             _cachedPosition = _rigidbody.position;
             _cachedVelocity = _rigidbody.velocity;
-            Channel.Send(nameof(Network_ReadPosition), ECall.Server, _rigidbody.position, _rigidbody.velocity);
+            Channel.Send(nameof(Network_ReadPosition), ECall.Server, (object)_rigidbody.position, _rigidbody.velocity);
             _lastSync = TimeUtil.GetCurrentTime();
         }
 
@@ -65,7 +69,7 @@ namespace Static_Interface.API.NetworkFramework
                 var deltaVelocity = syncVelocity - _rigidbody.velocity;
                 if (!PositionValidator.ValidatePosition(_rigidbody.transform, deltaPosition, deltaVelocity))
                 {
-                    Channel.Send(nameof(Network_ReadPosition), ECall.Owner, _rigidbody.position, _rigidbody.velocity);
+                    Channel.Send(nameof(Network_ReadPosition), ECall.Owner, (object)_rigidbody.position, _rigidbody.velocity);
                     return;
                 }
             }
@@ -76,7 +80,7 @@ namespace Static_Interface.API.NetworkFramework
             _lastSync = TimeUtil.GetCurrentTime();
             _syncEndPosition = syncPosition + syncVelocity*_syncDelay;
             _syncStartPosition = _rigidbody.position;
-            Channel.Send(nameof(Network_ReadPosition), ECall.NotOwner, _rigidbody.position, UpdateRadius, syncPosition, syncVelocity);
+            Channel.Send(nameof(Network_ReadPosition), ECall.NotOwner, _rigidbody.position, syncPosition, syncVelocity);
         }
     }
 }

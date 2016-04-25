@@ -4,5 +4,7 @@
     {
         COLLISION,
         UNKNOWN,
+        CONSOLE,
+        SUICIDE
     }
 }

@@ -1,4 +1,7 @@
-﻿using Static_Interface.API.PlayerFramework;
+﻿using System;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
+using UnityEngine;
 
 namespace Static_Interface.API.ConsoleFramework
 {
@@ -17,7 +20,25 @@ namespace Static_Interface.API.ConsoleFramework
         [CommandUsage("<player>")]
         public void Kill(Player player)
         {
-            player.Health.Kill();
+            player.Health.Kill(EPlayerDeathCause.CONSOLE);
+        }
+
+        [ConsoleCommand(Runtime = ConsoleCommandRuntime.SERVER)]
+        [CommandHelp("Send a message to all players")]
+        [CommandUsage("<text>")]
+        public void Say(string text)
+        {
+            Chat.Instance.SendServerMessage("<b>SERVER</b>: " + text);
+        }
+
+        [ConsoleCommand(Runtime = ConsoleCommandRuntime.SERVER)]
+        [CommandUsage("<player> <speed>")]
+        public void Test(Player p, int speed)
+        {
+            var rigidbody = p.GetComponent<Rigidbody>();
+            RigidbodyPositionSyncer posSyncer = p.GetComponentInChildren<RigidbodyPositionSyncer>();
+            var ch = posSyncer.Channel;
+            ch.Send("Network_ReadPosition", ECall.Clients, (object) rigidbody.position, Vector3.up * speed);
         }
     }
 }

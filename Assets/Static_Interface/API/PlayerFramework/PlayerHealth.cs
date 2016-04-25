@@ -38,7 +38,7 @@ namespace Static_Interface.API.PlayerFramework
         public int Health
         {
             get { return _health; }
-            set
+            private set
             {
                 int newHealth = Mathf.Clamp(value, 0, MaxHealth);
 
@@ -54,7 +54,15 @@ namespace Static_Interface.API.PlayerFramework
                     target = ECall.Clients;
                     isStatusUpdate = true;
                 }
-                _health = newHealth;
+
+                if (newHealth < _health)
+                {
+                    DamagePlayer(_health - newHealth, true);
+                }
+                else
+                {
+                    _health = newHealth;
+                }
                 if (_healthProgressBar != null)
                     _healthProgressBar.Value = newHealth;
 
@@ -63,17 +71,27 @@ namespace Static_Interface.API.PlayerFramework
                     Channel.Send(nameof(Network_SetHealth), target, MaxHealth, Health);
                 }
                 if (!isStatusUpdate) return;
-                if (IsServer() && !Channel.IsOwner && _health == 0)
+                if (_health == 0)
                 {
-                    Channel.Send(nameof(Network_Kill), target);
+                    Kill(EPlayerDeathCause.UNKNOWN);
                 }
             }
         }
 
-        public void Kill()
+        public void Kill(EPlayerDeathCause deathcause)
         {
+            if (IsServer())
+            {
+                Channel.Send(nameof(Network_Kill), ECall.Clients);
+            }
+            Kill(deathcause, false);
+        }
+
+        private void Kill(EPlayerDeathCause deathcause, bool ignoreServer)
+        {
+            if (!ignoreServer && !IsServer()) return;
             Health = 0;
-            OnPlayerDeath(EPlayerDeathCause.UNKNOWN);
+            OnPlayerDeath(deathcause);
         }
 
         private void OnPlayerDeath(EPlayerDeathCause reason)
@@ -92,8 +110,16 @@ namespace Static_Interface.API.PlayerFramework
             RevivePlayer(MaxHealth);
         }
 
+
         public void RevivePlayer(int health)
         {
+            RevivePlayer(health, false);   
+        }
+
+        private void RevivePlayer(int health, bool ignoreServer)
+        {
+            if (!ignoreServer && !IsServer()) return;
+
             if (health <= 0)
             {
                 throw new ArgumentException("value can not be <= 0", nameof(health));
@@ -116,6 +142,7 @@ namespace Static_Interface.API.PlayerFramework
             }
         }
 
+
         private int _maxHealth;
 
         public int MaxHealth
@@ -131,6 +158,7 @@ namespace Static_Interface.API.PlayerFramework
 
         public void PlayerCollision(Vector3 momentum)
         {
+            if (!IsServer()) return;
             bool wasDead = IsDead;
             var magnitude = momentum.magnitude;
             var speed = magnitude / GetComponent<Rigidbody>().mass;
@@ -144,7 +172,14 @@ namespace Static_Interface.API.PlayerFramework
 
         public void DamagePlayer(int damage)
         {
-            Health -= damage;
+            DamagePlayer(damage, false);
+        }
+
+        protected void DamagePlayer(int damage, bool internallCall)
+        {
+            if (!internallCall && !IsServer()) return;
+            if (internallCall) _health -= damage;
+            else Health -= damage;
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
@@ -155,15 +190,17 @@ namespace Static_Interface.API.PlayerFramework
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
-        private void Network_Kill(Identity identity)
+        private void Network_Kill(Identity identity, int cause)
         {
-            Kill();
+            if (identity == Connection.ClientID) return;
+            Kill((EPlayerDeathCause) cause, true);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_Revive(Identity identity, int health)
         {
-            RevivePlayer(health);
+            if (identity == Connection.ClientID) return;
+            RevivePlayer(health, true);
         }
     }
 }

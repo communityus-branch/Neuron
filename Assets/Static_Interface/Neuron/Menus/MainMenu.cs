@@ -24,6 +24,7 @@ namespace Static_Interface.Neuron.Menus
         {
             base.Awake();
             API.ConsoleFramework.Console.Init();
+            CameraManager.Instance.CurrentCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
             DefaultConsoleCommands defaultCmds = new DefaultConsoleCommands();
             API.ConsoleFramework.Console.Instance.RegisterCommands(defaultCmds);
             ObjectUtils.CheckObjects();
