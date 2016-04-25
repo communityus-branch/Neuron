@@ -50,7 +50,7 @@ namespace Static_Interface.API.WeatherFramework
             Channel.Send(nameof(Network_SetTime), target,
                 _weatherSystem.realStartTime,
                 _weatherSystem.realStartTimeMinutes,
-                World.Instance.Sun_Moon.transform.rotation.eulerAngles);
+                World.Sun_Moon.transform.rotation.eulerAngles);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]

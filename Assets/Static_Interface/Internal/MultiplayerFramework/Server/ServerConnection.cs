@@ -350,17 +350,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 {
                     data = new object[]
                     {
-                        c.Identity.Serialize(), c.Name, c.Group, c.Model.position,
-                        c.Model.rotation.eulerAngles,
-                        c.Player.Channel.ID,
-                        false
+                        user.Identity.Serialize(), user.Name, user.Group, spawn,
+                        angle, ch, false
                     };
                     packet = ObjectSerializer.GetBytes(0, out size, data);
-                    Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
+                    Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
                 }
 
                 LogUtils.Debug("Sending connected player data to client");
-
                 foreach (var c in Clients.Where(c => c.Identity != ident))
                 {
                     data = new object[]
@@ -369,7 +366,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         c.Model.transform.rotation.eulerAngles, c.Model.GetComponent<Channel>().ID, false
                     };
                     packet = ObjectSerializer.GetBytes(0, out size, data);
-                    Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
+                    Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
                 }
 
                 LogUtils.Debug("Sending accepted data to client");

@@ -13,6 +13,15 @@ namespace Static_Interface.API.PlayerFramework
         private Rigidbody _rigidbody;
         public const float MIN_COLLISION_MOMENTUM = 15;
 
+        protected override void OnPlayerLoaded()
+        {
+            base.OnPlayerLoaded();
+            if (!IsServer() && !Channel.IsOwner)
+            {
+                Destroy(this);
+            }
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -39,7 +48,6 @@ namespace Static_Interface.API.PlayerFramework
         protected override void UpdateServer()
         {
             base.UpdateServer();
-            if (IsServer() && Channel.IsOwner) return;
             if (!_firstFrame)
             {
                 if (_newStatesSet) return;
@@ -72,6 +80,7 @@ namespace Static_Interface.API.PlayerFramework
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            if (!IsServer() && !Channel.IsOwner) return;
             if (_disabled || Player.Health.IsDead)
             {
                 ApplyGravity();
@@ -130,6 +139,7 @@ namespace Static_Interface.API.PlayerFramework
 
         private void ApplyGravity()
         {
+            if (true) return; //Let the Rigidbody handle this
             if (!GravityEnabled) return;
             _rigidbody.AddForce(Physics.gravity * _rigidbody.mass);
         }

@@ -21,12 +21,7 @@ namespace Static_Interface.API.NetworkFramework
         public uint UpdatePeriod = 250;
         public float UpdateRadius = 250f;
         public IPositionValidator PositionValidator;
-        protected override void Awake()
-        {
-            base.Awake();
-            //if(Connection.IsSinglePlayer) Destroy(this);
-        }
-
+        
         protected override void Update()
         {
             base.Update();
@@ -54,33 +49,42 @@ namespace Static_Interface.API.NetworkFramework
 
             _cachedPosition = _rigidbody.position;
             _cachedVelocity = _rigidbody.velocity;
-            Channel.Send(nameof(Network_ReadPosition), ECall.Server, (object)_rigidbody.position, _rigidbody.velocity);
+            Channel.Send(nameof(Network_ReadPositionServer), ECall.Server, (object)_rigidbody.position, _rigidbody.velocity);
             _lastSync = TimeUtil.GetCurrentTime();
         }
 
-        [NetworkCall(ConnectionEnd = ConnectionEnd.BOTH, ValidateServer = true, ValidateOwner = true)]
-        protected void Network_ReadPosition(Identity ident, Vector3 syncPosition, Vector3 syncVelocity)
+        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true)]
+        protected void Network_ReadPositionServer(Identity ident, Vector3 syncPosition, Vector3 syncVelocity)
         {
-            if (Connection.IsServer() && ident == Channel.Connection.ServerID) return;
-
-            if (Connection.IsServer() && PositionValidator != null)
+            if (PositionValidator != null)
             {
                 var deltaPosition = syncPosition - _rigidbody.position;
                 var deltaVelocity = syncVelocity - _rigidbody.velocity;
                 if (!PositionValidator.ValidatePosition(_rigidbody.transform, deltaPosition, deltaVelocity))
                 {
-                    Channel.Send(nameof(Network_ReadPosition), ECall.Owner, (object)_rigidbody.position, _rigidbody.velocity);
+                    Channel.Send(nameof(Network_ReadPositionClient), ECall.Owner, (object)_rigidbody.position, _rigidbody.velocity);
                     return;
                 }
             }
 
+            ReadPosition(syncPosition, syncVelocity);
+            Channel.Send(nameof(Network_ReadPositionClient), ECall.NotOwner, _rigidbody.position, syncPosition, syncVelocity);
+        }
+
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer= true)]
+        protected void Network_ReadPositionClient(Identity ident, Vector3 syncPosition, Vector3 syncVelocity)
+        {
+            ReadPosition(syncPosition, syncVelocity);
+        }
+
+        private void ReadPosition(Vector3 syncPosition, Vector3 syncVelocity)
+        {
             _syncTime = 0f;
             _syncDelay = Time.time - _lastSynchronizationTime;
             _lastSynchronizationTime = Time.time;
             _lastSync = TimeUtil.GetCurrentTime();
-            _syncEndPosition = syncPosition + syncVelocity*_syncDelay;
+            _syncEndPosition = syncPosition + syncVelocity * _syncDelay;
             _syncStartPosition = _rigidbody.position;
-            Channel.Send(nameof(Network_ReadPosition), ECall.NotOwner, _rigidbody.position, syncPosition, syncVelocity);
         }
     }
 }

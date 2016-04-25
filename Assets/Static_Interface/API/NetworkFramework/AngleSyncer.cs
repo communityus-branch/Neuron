@@ -34,17 +34,28 @@ namespace Static_Interface.API.NetworkFramework
 
             _cachedAngle = transform.rotation.eulerAngles;
 
-            Channel.Send(nameof(Network_ReadAngle), ECall.Server, transform.rotation.eulerAngles);
+            Channel.Send(nameof(Network_ReadAngleServer), ECall.Server, transform.rotation.eulerAngles);
             _lastSync = TimeUtil.GetCurrentTime();
         }
 
-        [NetworkCall(ConnectionEnd = ConnectionEnd.BOTH, ValidateServer = true, ValidateOwner = true, 
-            PacketType = EPacket.UPDATE_UNRELIABLE_BUFFER, MaxRadius = 250f)]
-        protected void Network_ReadAngle(Identity ident, Vector3 angle)
+        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true, 
+            PacketType = EPacket.UPDATE_UNRELIABLE_BUFFER)]
+        protected void Network_ReadAngleServer(Identity ident, Vector3 angle)
         {
-            if (Connection.IsServer() && ident == Channel.Connection.ServerID) return;
+            ReadAngle(angle);
+            Channel.Send(nameof(Network_ReadAngleClient), ECall.NotOwner, transform.position, angle);
+        }
+
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true,
+    PacketType = EPacket.UPDATE_UNRELIABLE_BUFFER, MaxRadius = 250f)]
+        protected void Network_ReadAngleClient(Identity ident, Vector3 angle)
+        {
+            ReadAngle(angle);
+        }
+
+        private void ReadAngle(Vector3 angle)
+        {
             transform.rotation = Quaternion.Euler(angle);
-            Channel.Send(nameof(Network_ReadAngle), ECall.NotOwner, transform.position, angle);
         }
     }
 }

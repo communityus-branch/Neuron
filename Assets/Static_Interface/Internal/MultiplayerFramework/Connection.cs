@@ -131,6 +131,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             newModel.GetComponent<Player>().User = user;
             newModel.GetComponent<Channel>().Setup();
             _clients.Add(user);
+            newModel.gameObject.name = playerName + " @ ch-" + channel;
             return newModel;
         }
 

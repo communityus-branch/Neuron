@@ -21,11 +21,12 @@ namespace Static_Interface.Internal
     {
         public Transform Water;
         public static World Instance;
-        public GameObject Sun_Moon;
+        public static GameObject Sun_Moon => GameObject.Find("Sun_Moon");
         public GameObject Weather;
         private bool _selfDestruct;
         public Transform DefaultSpawnPosition;
         private object _commands;
+        public static bool Loaded;
         protected override int PreferredChannelID => 1;
 
         protected override void Start ()
@@ -80,7 +81,6 @@ namespace Static_Interface.Internal
             f.SetValue(weatherSys, moon.GetComponent<Light>());
 
             weatherSys.moonLight = moon.FindChild("MoonLight").GetComponent<Light>();
-            Sun_Moon = enviromentSun;
             gameObject.AddComponent<WeatherManager>();
             conn.SendMessage("OnWeatherInit", Weather);
             var chat = gameObject.AddComponent<Chat>();
@@ -97,6 +97,8 @@ namespace Static_Interface.Internal
 
             if(_commands != null)
                 Console.Instance.RegisterCommands(_commands);
+            Loaded = true;
+            conn.SendMessage("OnWorldInit", this);
         }
 
         protected override void OnDestroy()

@@ -11,7 +11,6 @@ using Static_Interface.Internal.Utils;
 using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
-using Console = System.Console;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.Neuron.Menus

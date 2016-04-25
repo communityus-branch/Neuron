@@ -44,7 +44,7 @@ namespace Static_Interface.API.PlayerFramework
             }
 
             bool send = !(Connection.IsSinglePlayer && Channel.IsOwner) && !IsServer() && TimeUtil.GetCurrentTime() - _lastSent > PERIOD;
-            Player.MovementController.UpdateInput(this);
+            Player.MovementController?.UpdateInput(this);
             //Todo: OnKeyPressedEvent
 
             if (send)

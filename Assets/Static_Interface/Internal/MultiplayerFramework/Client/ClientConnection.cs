@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetworkFramework;
@@ -261,7 +262,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
 
             cam = CameraManager.Instance.UnistormCamera.transform;
-            var worldAxle = World.Instance.Sun_Moon.transform.FindChild("WorldAxle");
+            var worldAxle = World.Sun_Moon.transform.FindChild("WorldAxle");
             var sun = worldAxle.FindChild("WorldAxle").FindChild("Sun");
             cam.gameObject.GetComponents<SunShafts>()[0].enabled = true;
             cam.gameObject.GetComponents<SunShafts>()[0].sunTransform = sun;
@@ -318,8 +319,16 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                             };
 
                             object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, argTypes);
-
-                            AddPlayer(Provider.Deserialilze((Identity)args[0]), (string)args[1], (ulong)args[2], (Vector3)args[3], (Vector3)args[4], (int)args[5], (bool)args[6]);
+                            if (World.Loaded)
+                            {
+                                AddPlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
+                                    (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
+                            }
+                            else
+                            {
+                                QueuePlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
+                                    (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
+                            }
                             return;
                         }
                     case EPacket.VERIFY:
@@ -360,6 +369,31 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
         }
 
+        private readonly List<QueuedPlayer> _players = new List<QueuedPlayer>();
+        private void QueuePlayer(Identity identity, string playerName, ulong group, Vector3 pos, Vector3 rotation, int channel, bool mainplayer)
+        {
+            QueuedPlayer player = new QueuedPlayer
+            {
+                Identity = identity,
+                Name = playerName,
+                Group = @group,
+                Pos = pos,
+                Rotation = rotation,
+                Channel = channel,
+                IsMainPlayer = mainplayer
+            };
+            _players.Add(player);
+        }
+
+        private void OnWorldInit(World world)
+        {
+            foreach (QueuedPlayer player in _players)
+            {
+                AddPlayer(player.Identity, player.Name, player.Group, player.Pos, player.Rotation, player.Channel,
+                    player.IsMainPlayer);
+            }
+        }
+
         public bool OnConnectionFailed()
         {
             if (_serverQueryAttempts >= CONNECTION_TRIES)
@@ -373,6 +407,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             AttemptConnect(_currentIp, _currentPort, CurrentPassword, false);
             Provider.Dispose();
             return true;
+        }
+
+        private struct QueuedPlayer
+        {
+            public Identity Identity { get; set; }
+            public String Name { get; set; }
+            public ulong Group { get; set; }
+            public Vector3 Pos { get; set; }
+            public Vector3 Rotation { get; set; }
+            public int Channel { get; set; }
+            public bool IsMainPlayer { get; set; }
         }
     }
 }

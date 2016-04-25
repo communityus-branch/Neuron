@@ -113,6 +113,10 @@ namespace Static_Interface.API.PlayerFramework
 
         public void RevivePlayer(int health)
         {
+            if (IsServer())
+            {
+                Channel.Send(nameof(Network_Revive), ECall.Clients, health);
+            }
             RevivePlayer(health, false);   
         }
 
