@@ -52,11 +52,11 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public int ChannelCount => FindObjectsOfType<Channel>().Length + 1;
 
-        private List<User> _clients = new List<User>();
+        private static readonly List<User> ClientsInternal = new List<User>();
 
         public bool IsConnected { get; protected set; }
 
-        public ICollection<User> Clients => _clients?.AsReadOnly();
+        public ICollection<User> Clients => ClientsInternal?.AsReadOnly();
 
         protected override void Awake()
         {
@@ -68,6 +68,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            ClientsInternal.Clear();
             if (CurrentConnection == this) CurrentConnection = null;
         }
 
@@ -130,21 +131,21 @@ namespace Static_Interface.Internal.MultiplayerFramework
             var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = playerName };
             newModel.GetComponent<Player>().User = user;
             newModel.GetComponent<Channel>().Setup();
-            _clients.Add(user);
+            ClientsInternal.Add(user);
             newModel.gameObject.name = playerName + " @ ch-" + channel;
             return newModel;
         }
 
         protected void RemovePlayer(byte index)
         {
-            if ((index >= _clients.Count))
+            if ((index >= ClientsInternal.Count))
             {
                 LogUtils.LogError("Failed to find player: " + index);
                 return;
             }
             //Todo: on player disconnected event
-            Destroy(_clients[index].Model.gameObject);
-            _clients.RemoveAt(index);
+            Destroy(ClientsInternal[index].Model.gameObject);
+            ClientsInternal.RemoveAt(index);
         }
 
         public virtual void Send(Identity receiver, EPacket type, byte[] data, int channel)
