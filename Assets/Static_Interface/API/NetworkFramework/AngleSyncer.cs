@@ -14,12 +14,6 @@ namespace Static_Interface.API.NetworkFramework
         public uint UpdatePeriod = 250;
         public float UpdateRadius = 250f;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            //if (Connection.IsSinglePlayer) Destroy(this);
-        }
-
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -34,20 +28,18 @@ namespace Static_Interface.API.NetworkFramework
 
             _cachedAngle = transform.rotation.eulerAngles;
 
-            Channel.Send(nameof(Network_ReadAngleServer), ECall.Server, transform.rotation.eulerAngles);
+            Channel.Send(nameof(Network_ReadAngleServer), ECall.Server, (object) transform.rotation.eulerAngles);
             _lastSync = TimeUtil.GetCurrentTime();
         }
 
-        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true, 
-            PacketType = EPacket.UPDATE_UNRELIABLE_BUFFER)]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true)]
         protected void Network_ReadAngleServer(Identity ident, Vector3 angle)
         {
             ReadAngle(angle);
             Channel.Send(nameof(Network_ReadAngleClient), ECall.NotOwner, transform.position, angle);
         }
 
-        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true,
-    PacketType = EPacket.UPDATE_UNRELIABLE_BUFFER, MaxRadius = 250f)]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true, MaxRadius = 1000f)]
         protected void Network_ReadAngleClient(Identity ident, Vector3 angle)
         {
             ReadAngle(angle);

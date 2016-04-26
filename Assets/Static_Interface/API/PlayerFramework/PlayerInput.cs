@@ -15,6 +15,15 @@ namespace Static_Interface.API.PlayerFramework
         internal List<KeyState> KeyStates = new List<KeyState>();
         private Vector3 _lookDirection = Vector3.zero;
 
+        protected override void Awake()
+        {
+            base.Awake();
+            if (!IsServer() && !Channel.IsOwner)
+            {
+                Destroy(this);
+            }
+        }
+
         protected override void FixedUpdate()
         {
             //if (IsServer()) return; //Todo: dedicated server check

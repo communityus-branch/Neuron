@@ -102,7 +102,7 @@ namespace Static_Interface.API.PlayerFramework
             }
 
             _rigidbody.freezeRotation = false;
-            Player.MovementController.DisableControl();
+            Player.MovementController?.DisableControl();
         }
 
         public void RevivePlayer()
@@ -138,7 +138,7 @@ namespace Static_Interface.API.PlayerFramework
 
             _rigidbody.rotation = Quaternion.identity;
             _rigidbody.freezeRotation = true;
-            Player.MovementController.EnableControl();
+            Player.MovementController?.EnableControl();
 
             if (IsServer() && !Channel.IsOwner)
             {

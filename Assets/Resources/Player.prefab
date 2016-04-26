@@ -254,8 +254,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 549d334e1ad725b4fae5e5a59eb6b560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UpdatePeriod: 250
-  UpdateRadius: 250
+  UpdatePeriod: 100
+  UpdateRadius: 1000
 --- !u!114 &11469006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -317,8 +317,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea325f3eed3d9dc4289db146486c7b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UpdatePeriod: 250
-  UpdateRadius: 250
+  UpdatePeriod: 100
+  UpdateRadius: 1000
 --- !u!114 &11493612
 MonoBehaviour:
   m_ObjectHideFlags: 1

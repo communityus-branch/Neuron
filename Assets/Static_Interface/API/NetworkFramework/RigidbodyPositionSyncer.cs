@@ -71,7 +71,7 @@ namespace Static_Interface.API.NetworkFramework
             Channel.Send(nameof(Network_ReadPositionClient), ECall.NotOwner, _rigidbody.position, syncPosition, syncVelocity);
         }
 
-        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer= true)]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer= true, MaxRadius = 1000)]
         protected void Network_ReadPositionClient(Identity ident, Vector3 syncPosition, Vector3 syncVelocity)
         {
             ReadPosition(syncPosition, syncVelocity);

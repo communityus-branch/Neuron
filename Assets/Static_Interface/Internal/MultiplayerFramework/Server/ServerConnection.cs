@@ -241,8 +241,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             var user = ident.GetUser();
             byte index = GetUserIndex(ident);
             RemovePlayer(index);
-            byte[] packet = { index };
-            AnnounceToAll(EPacket.DISCONNECTED, packet, packet.Length, 0);
+            int size;
+            byte[] packet = ObjectSerializer.GetBytes(0, out size, index);
+            AnnounceToAll(EPacket.DISCONNECTED, packet, size, 0);
             if(sendKicked) Send(ident, EPacket.KICKED, new byte[0], 0);
             Chat.Instance.SendServerMessage("<b>" + user.Name + "</b> disconnected.");
             ((ServerMultiplayerProvider) Provider).RemoveClient(ident);
@@ -332,11 +333,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
                 if (!(user.Identity == ServerID && IsSinglePlayer))
                 {
-                    Transform player = AddPlayer(ident, user.Name, user.Group, spawn.Value, angle, ch,
-                        user.Identity == ServerID);
-                    
-                    player.GetComponent<Channel>().Owner = user.Identity;
-                    player.BroadcastMessage("OnPlayerLoaded");
+                    if (!IsSinglePlayer)
+                    {
+                        Transform player = AddPlayer(ident, user.Name, user.Group, spawn.Value, angle, ch,
+                            user.Identity == ServerID);
+
+                        player.GetComponent<Channel>().Owner = user.Identity;
+                        player.BroadcastMessage("OnPlayerLoaded");
+                    }
                 }
 
                 int size;
@@ -346,7 +350,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 //Send all connected players to the accepted player
                 //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel, [6] isSelf
                 LogUtils.Debug("Sending connected to all clients");
-                foreach (var c in Clients.Where(c => c.Identity != ident))
+                foreach (var c in Clients.ToList().Where(c => c.Identity != ident))
                 {
                     data = new object[]
                     {
@@ -358,7 +362,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 }
 
                 LogUtils.Debug("Sending connected player data to client");
-                foreach (var c in Clients.Where(c => c.Identity != ident))
+                foreach (var c in Clients.ToList().Where(c => c.Identity != ident))
                 {
                     data = new object[]
                     {
