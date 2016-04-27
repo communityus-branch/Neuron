@@ -4,6 +4,7 @@ using System.Linq;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
 using UnityEngine;
@@ -138,6 +139,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         protected void RemovePlayer(byte index)
         {
+            if (IsSinglePlayer && this is ClientConnection) return;
             if ((index >= ClientsInternal.Count))
             {
                 LogUtils.LogError("Failed to find player: " + index);
