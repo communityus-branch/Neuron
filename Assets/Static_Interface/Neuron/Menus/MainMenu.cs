@@ -18,39 +18,46 @@ namespace Static_Interface.Neuron.Menus
     [RequireComponent(typeof(AudioSource))]
     public class MainMenu : MonoBehaviour
     {
+        private static bool firstStart = true;
         private FluentCommandLineParser<ApplicationArguments> _parser;
         protected override void Awake()
         {
             base.Awake();
-            API.ConsoleFramework.Console.Init();
             CameraManager.Instance.CurrentCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-            DefaultConsoleCommands defaultCmds = new DefaultConsoleCommands();
-            API.ConsoleFramework.Console.Instance.RegisterCommands(defaultCmds);
-            ObjectUtils.CheckObjects();
-            if (!Debug.isDebugBuild && SteamAPI.RestartAppIfNecessary(GameInfo.ID))
+            if (firstStart)
             {
-                Application.Quit();
-                return;
+                DefaultConsoleCommands defaultCmds = new DefaultConsoleCommands();
+                API.ConsoleFramework.Console.Instance.RegisterCommands(defaultCmds);
+                API.ConsoleFramework.Console.Init();
+                ObjectUtils.CheckObjects();
+                if (!Debug.isDebugBuild && SteamAPI.RestartAppIfNecessary(GameInfo.ID))
+                {
+                    Application.Quit();
+                    return;
+                }
+
+                Fading.Init();
+
+                _parser = new FluentCommandLineParser<ApplicationArguments>();
+
+                _parser.Setup(arg => arg.Dedicated)
+                    .As('d', "dedicated")
+                    .Callback(DedicatedCallback)
+                    .SetDefault(false);
+
+                _parser.Setup(arg => arg.Lan)
+                    .As('l', "lan")
+                    .SetDefault(false);
+
+                var result = _parser.Parse(Environment.GetCommandLineArgs());
+                if (result.HasErrors)
+                {
+                    LogUtils.LogError("Couldn't parse arguments: " + result.ErrorText);
+                }
+
+                firstStart = false;
             }
 
-            Fading.Init();
-
-            _parser = new FluentCommandLineParser<ApplicationArguments>();
-
-            _parser.Setup(arg => arg.Dedicated)
-                .As('d', "dedicated")
-                .Callback(DedicatedCallback)
-                .SetDefault(false);
-
-            _parser.Setup(arg => arg.Lan)
-                .As('l', "lan")
-                .SetDefault(false);
-
-            var result = _parser.Parse(Environment.GetCommandLineArgs());
-            if (result.HasErrors)
-            {
-                LogUtils.LogError("Couldn't parse arguments: " + result.ErrorText);
-            }
 
 #if !UNITY_EDITOR
             LogUtils.Debug("Commandline: " + Environment.CommandLine);

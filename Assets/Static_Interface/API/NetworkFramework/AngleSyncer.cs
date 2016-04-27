@@ -11,8 +11,7 @@ namespace Static_Interface.API.NetworkFramework
         private Vector3? _cachedAngle;
 
         private uint _lastSync;
-        public uint UpdatePeriod = 250;
-        public float UpdateRadius = 250f;
+        public uint UpdatePeriod = 20;
 
         protected override void FixedUpdate()
         {

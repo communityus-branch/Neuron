@@ -14,7 +14,6 @@ GameObject:
   - 114: {fileID: 11487186}
   - 114: {fileID: 11481794}
   - 114: {fileID: 11484092}
-  - 114: {fileID: 11436764}
   - 114: {fileID: 11452604}
   - 54: {fileID: 5462126}
   - 114: {fileID: 11492286}
@@ -218,17 +217,6 @@ MonoBehaviour:
   blurIterations: 1
   blurType: 0
   fastBloomShader: {fileID: 4800000, guid: 68a00c837b82e4c6d92e7da765dc5f1d, type: 3}
---- !u!114 &11436764
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 104110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b9ce2ea0d1d8c4408a91e7369d812bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11452604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -249,13 +237,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 104110}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 549d334e1ad725b4fae5e5a59eb6b560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UpdatePeriod: 100
-  UpdateRadius: 1000
 --- !u!114 &11469006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -318,7 +305,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UpdatePeriod: 100
-  UpdateRadius: 1000
 --- !u!114 &11493612
 MonoBehaviour:
   m_ObjectHideFlags: 1
