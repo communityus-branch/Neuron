@@ -18,8 +18,7 @@ namespace Static_Interface.API.NetworkFramework
         private Vector3? _syncStartPosition;
         private Vector3? _syncEndPosition;
         private uint _lastSync;
-        public uint UpdatePeriod = 250;
-        public float UpdateRadius = 250f;
+        public uint UpdatePeriod = 20;
         public IPositionValidator PositionValidator;
         
         protected override void Update()
@@ -29,13 +28,14 @@ namespace Static_Interface.API.NetworkFramework
             if (_syncStartPosition == null || _syncEndPosition == null) return;
             var vec = Vector3.Lerp(_syncStartPosition.Value, _syncEndPosition.Value, _syncTime / _syncDelay);
             _rigidbody.position = vec;
+
             if (vec == _syncEndPosition.Value)
             {
                 _syncStartPosition = null;
                 _syncEndPosition = null;
             }
-        }
 
+        }
         protected override void FixedUpdate()
         {
             base.FixedUpdate();

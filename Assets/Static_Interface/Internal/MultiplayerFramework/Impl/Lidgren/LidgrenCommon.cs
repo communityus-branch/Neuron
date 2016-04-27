@@ -13,6 +13,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
     {
         public static void CloseConnection(Identity user, Dictionary<ulong, NetConnection> peers)
         {
+            if (!peers.ContainsKey(user)) return;
             LogUtils.LogNetwork("Closing connection with peer: " + user);
             var ident = user.Serialize();
             NetConnection p = peers[ident];
@@ -34,7 +35,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
                         if (status == NetConnectionStatus.Disconnected)
                         {
                             var sConIdent = GetIdentFromConnection(msg.SenderConnection, peers);
-                            ((ServerConnection)Connection.CurrentConnection).DisconnectClient(sConIdent, false);
+                            if(Connection.CurrentConnection is ServerConnection) ((ServerConnection)Connection.CurrentConnection).DisconnectClient(sConIdent, false);
+                            else Connection.CurrentConnection.Disconnect("Connection lost");
                             host.Recycle(msg);
                             continue;
                         }
@@ -136,6 +138,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
 
         public static bool Write(Identity target, byte[] data, ulong contentLength, SendMethod method, int channel, NetPeer host, Dictionary<ulong, NetConnection> peers)
         {
+            if (!peers.ContainsKey(target)) return false;
             NetDeliveryMethod deliveryMethod = NetDeliveryMethod.Unknown;
             switch (method)
             {

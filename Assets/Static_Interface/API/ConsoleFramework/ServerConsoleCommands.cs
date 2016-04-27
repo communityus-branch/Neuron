@@ -38,7 +38,7 @@ namespace Static_Interface.API.ConsoleFramework
             var rigidbody = p.GetComponent<Rigidbody>();
             RigidbodyPositionSyncer posSyncer = p.GetComponentInChildren<RigidbodyPositionSyncer>();
             var ch = posSyncer.Channel;
-            ch.Send("Network_ReadPosition", ECall.Clients, (object) rigidbody.position, Vector3.up * speed);
+            ch.Send("Network_ReadPositionClient", ECall.Clients, (object) rigidbody.position, Vector3.up * speed);
         }
     }
 }
