@@ -218,7 +218,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             return SteamFriends.GetPersonaName();
         }
 
-        public override uint GetServerRealTime()
+        public override long GetServerRealTime()
         {
             return SteamUtils.GetServerRealTime();
         }
@@ -300,7 +300,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
         public override void FavoriteServer(string ip, ushort port)
         {
             SteamMatchmaking.AddFavoriteGame(GameInfo.ID, SteamworksCommon.GetUInt32FromIp(ip), port, (ushort)(port + 1), 2,
-                            GetServerRealTime());
+                            (uint)GetServerRealTime());
         }
 
         public override void SetIdentity(ulong serializedIdent)

@@ -31,6 +31,7 @@ namespace Static_Interface.Internal
 
         protected override void Start ()
         {
+            transform.position = new Vector3(0,0,0);
             base.Start();
             ObjectUtils.CheckObjects();
             if (Instance != null)
@@ -99,6 +100,9 @@ namespace Static_Interface.Internal
                 Console.Instance.RegisterCommands(_commands);
             Loaded = true;
             conn.SendMessage("OnWorldInit", this);
+            var h = GetComponent<Terrain>().terrainData.size / 2;
+            h.y = transform.position.y + 3000;
+            Weather.transform.position = h;
         }
 
         protected override void OnDestroy()

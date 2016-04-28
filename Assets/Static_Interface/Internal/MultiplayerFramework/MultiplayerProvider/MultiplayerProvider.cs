@@ -35,7 +35,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider
             LogUtils.Log("Warning: " + warning + " (Severity: " + severity + ")");
         }
 
-        public abstract uint GetServerRealTime();
+        public abstract long GetServerRealTime();
         public abstract void Dispose();
         public bool SupportsPing { get; set; } = false;
         public bool SupportsAuthentification { get; set; } = false;

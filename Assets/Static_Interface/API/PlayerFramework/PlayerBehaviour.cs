@@ -5,6 +5,8 @@ namespace Static_Interface.API.PlayerFramework
     public abstract class PlayerBehaviour : NetworkedBehaviour
     {
         public Player Player { get; protected set; }
+        public bool IsLocalPlayer => Channel.IsOwner;
+
 
         protected override void Awake()
         {

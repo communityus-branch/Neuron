@@ -15,8 +15,8 @@ namespace Static_Interface.API.SchedulerFramework
         public bool IsAsync { get; internal set; }
         public uint Delay { get; internal set; }
         public uint Period { get; internal set; }
-        public uint ScheduledTime { get; internal set; }
-        public uint LastRunTime { get; internal set; }
+        public long ScheduledTime { get; internal set; }
+        public long LastRunTime { get; internal set; }
 
         public bool Pause { get; set; }
 

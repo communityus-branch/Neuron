@@ -2,12 +2,14 @@
 using Static_Interface.API.GUIFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.API.WeaponFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
 {
     public class PlayerHealth : PlayerBehaviour
     {
+        public const float MIN_COLLISION_MOMENTUM = 50;
         private Rigidbody _rigidbody;
         private ProgressBar _healthProgressBar;
         protected override void Awake()
@@ -15,6 +17,35 @@ namespace Static_Interface.API.PlayerFramework
             base.Awake();
             MaxHealth = 100;
             _health = 100;
+        }
+
+        protected override void OnCollisionEnter(Collision collision)
+        {
+            base.OnCollisionEnter(collision);
+
+
+            var collider = collision.collider;
+            if (collider.GetComponent<Bullet>() != null)
+            {
+                var bullet = collider.GetComponent<Bullet>();
+                Physics.IgnoreCollision(GetComponent<Collider>(), collider);
+                if (bullet.Damage != null)
+                {
+                    bool wasDead = IsDead;
+                    Player.Health.DamagePlayer((int) bullet.Damage.Value);
+                    if (!wasDead && IsDead)
+                    {
+                        OnPlayerDeath(EPlayerDeathCause.SHOT);
+                    }
+                    return;
+                }
+            }
+
+            var momentum = collision.relativeVelocity * _rigidbody.mass;
+            if (momentum.magnitude > MIN_COLLISION_MOMENTUM * _rigidbody.mass)
+            {
+                Player.Health.PlayerCollision(momentum);
+            }
         }
 
         protected override void OnPlayerLoaded()
@@ -94,7 +125,7 @@ namespace Static_Interface.API.PlayerFramework
             OnPlayerDeath(deathcause);
         }
 
-        private void OnPlayerDeath(EPlayerDeathCause reason)
+        private void OnPlayerDeath(EPlayerDeathCause reason, object arg = null)
         {
             if (IsServer())
             {

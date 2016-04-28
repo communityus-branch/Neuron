@@ -14,8 +14,6 @@ namespace Static_Interface.API.NetworkFramework
         private float _syncTime;
         private Quaternion? _syncStartRotation;
         private Quaternion? _syncEndRotation;
-        private uint _lastSync;
-        public const uint UPDATE_PERIOD = 20;
 
         protected override void Update()
         {
@@ -30,21 +28,19 @@ namespace Static_Interface.API.NetworkFramework
             }
         }
 
-        protected override void FixedUpdate()
+        protected override bool OnSync()
         {
-            base.FixedUpdate();
-            if (TimeUtil.GetCurrentTime() - _lastSync < UPDATE_PERIOD) return;
-            if (!Channel.IsOwner) return;
+            base.OnSync();
             if (_cachedAngle == transform.rotation)
             {
                 // no changes, no need for updates
-                return;
+                return false;
             }
 
             _cachedAngle = transform.rotation;
 
-            Channel.Send(nameof(Network_ReadAngleServer), ECall.Server, (object) transform.rotation.eulerAngles);
-            _lastSync = TimeUtil.GetCurrentTime();
+            Channel.Send(nameof(Network_ReadAngleServer), ECall.Server, (object)transform.rotation.eulerAngles);
+            return true;
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true)]
@@ -70,7 +66,7 @@ namespace Static_Interface.API.NetworkFramework
             _syncTime = 0f;
             _syncDelay = Time.time - _lastSynchronizationTime;
             _lastSynchronizationTime = Time.time;
-            _lastSync = TimeUtil.GetCurrentTime();
+            LastSync = TimeUtil.GetCurrentTime();
             _syncStartRotation = transform.rotation;
             _syncEndRotation = Quaternion.Euler(angle);
         }

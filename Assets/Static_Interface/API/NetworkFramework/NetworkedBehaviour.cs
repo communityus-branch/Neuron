@@ -1,4 +1,5 @@
 ﻿using System;
+using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
 
 namespace Static_Interface.API.NetworkFramework
@@ -8,6 +9,25 @@ namespace Static_Interface.API.NetworkFramework
         public virtual Channel Channel => GetComponent<Channel>();
         public Connection Connection => Connection.CurrentConnection;
         protected virtual int PreferredChannelID  => 0;
+        public virtual bool SyncOwnerOnly => true;
+        public virtual uint UpdatePeriod => 20;
+        protected long LastSync;
+        protected virtual bool OnSync()
+        {
+            return false;
+        }
+
+
+        protected override void FixedUpdate()
+        {
+            base.FixedUpdate();
+            if (SyncOwnerOnly && !Channel.IsOwner) return;
+            if (TimeUtil.GetCurrentTime() - LastSync < UpdatePeriod) return;
+            if (OnSync())
+            {
+                LastSync = TimeUtil.GetCurrentTime();
+            }
+        }
 
         protected override void Awake()
         {

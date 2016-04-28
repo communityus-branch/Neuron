@@ -240,7 +240,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Steamworks
             SteamGameServer.SetMapName(map);
         }
 
-        public override uint GetServerRealTime()
+        public override long GetServerRealTime()
         {
             return SteamUtils.GetServerRealTime();
         }

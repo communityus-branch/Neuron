@@ -5,6 +5,7 @@
         COLLISION,
         UNKNOWN,
         CONSOLE,
-        SUICIDE
+        SUICIDE,
+        SHOT
     }
 }

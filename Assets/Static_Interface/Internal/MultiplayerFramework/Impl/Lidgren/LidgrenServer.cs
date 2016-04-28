@@ -37,7 +37,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren
             LidgrenCommon.CloseConnection(user, _peers);
         }
 
-        public override uint GetServerRealTime()
+        public override long GetServerRealTime()
         {
             return TimeUtil.GetCurrentTime();
         }

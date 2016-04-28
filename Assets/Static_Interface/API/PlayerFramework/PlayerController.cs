@@ -10,7 +10,6 @@ namespace Static_Interface.API.PlayerFramework
     public class PlayerController : PlayerBehaviour
     {
         private Rigidbody _rigidbody;
-        public const float MIN_COLLISION_MOMENTUM = 15;
 
         protected override void OnPlayerLoaded()
         {
@@ -105,17 +104,6 @@ namespace Static_Interface.API.PlayerFramework
             base.OnCollisionStay(collision);
 	        _grounded = true;    
 	    }
-
-        protected override void OnCollisionEnter(Collision collision)
-        {
-            base.OnCollisionEnter(collision);
-
-            var momentum = collision.relativeVelocity * _rigidbody.mass;
-            if (momentum.magnitude > MIN_COLLISION_MOMENTUM * _rigidbody.mass)
-            {
-                Player.Health.PlayerCollision(momentum);
-            }
-        }
 
         float CalculateJumpVerticalSpeed () {
 	        return Mathf.Sqrt(2 * JumpHeight * -transform.InverseTransformDirection(Physics.gravity).y);

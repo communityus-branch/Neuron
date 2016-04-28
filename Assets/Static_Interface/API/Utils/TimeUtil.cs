@@ -4,9 +4,9 @@ namespace Static_Interface.API.Utils
 {
     public class TimeUtil
     {
-        public static uint GetCurrentTime()
+        public static long GetCurrentTime()
         {
-            return (uint) DateTime.UtcNow.Millisecond;
+            return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         } 
     }
 }

@@ -45,7 +45,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public string ClientName { get; protected internal set; }
 
-        public uint CurrentTime { get; protected set; }
+        public long CurrentTime { get; protected set; }
 
         public MultiplayerProvider.MultiplayerProvider Provider { get; protected set; }
 

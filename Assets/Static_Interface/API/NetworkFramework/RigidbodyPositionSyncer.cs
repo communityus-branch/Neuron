@@ -16,8 +16,7 @@ namespace Static_Interface.API.NetworkFramework
         private float _syncTime;
         private Vector3? _syncStartPosition;
         private Vector3? _syncEndPosition;
-        private uint _lastSync;
-        public const uint UPDATE_PERIOD = 20;
+
         public IPositionValidator PositionValidator;
         
         protected override void Update()
@@ -33,23 +32,21 @@ namespace Static_Interface.API.NetworkFramework
                 _syncStartPosition = null;
                 _syncEndPosition = null;
             }
-
         }
-        protected override void FixedUpdate()
+
+        protected override bool OnSync()
         {
-            base.FixedUpdate();
-            if (TimeUtil.GetCurrentTime() - _lastSync < UPDATE_PERIOD) return;
-            if (!Channel.IsOwner) return;
+            base.OnSync();
             if (_cachedPosition == Rigidbody.position && _cachedVelocity == Rigidbody.velocity)
             {
                 // no changes, no need for updates
-                return;
+                return false;
             }
 
             _cachedPosition = Rigidbody.position;
             _cachedVelocity = Rigidbody.velocity;
             Channel.Send(nameof(Network_ReadPositionServer), ECall.Server, (object)Rigidbody.position, Rigidbody.velocity);
-            _lastSync = TimeUtil.GetCurrentTime();
+            return true;
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true)]
@@ -87,7 +84,7 @@ namespace Static_Interface.API.NetworkFramework
             _syncTime = 0f;
             _syncDelay = Time.time - _lastSynchronizationTime;
             _lastSynchronizationTime = Time.time;
-            _lastSync = TimeUtil.GetCurrentTime();
+            LastSync = TimeUtil.GetCurrentTime();
             _syncEndPosition = syncPosition + syncVelocity * _syncDelay;
             _syncStartPosition = Rigidbody.position;
         }
