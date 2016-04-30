@@ -171,7 +171,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             Player.MainPlayer = playerTransform.GetComponent<Player>();
 
             playerTransform.GetComponent<Channel>().IsOwner = true;
-            playerTransform.gameObject.AddComponent<MouseLook>();
+            playerTransform.gameObject.AddComponent<SmoothMouseLook>();
 
             var sunShafts = playerTransform.GetComponentInChildren<SunShafts>();
             if (sunShafts != null && GameObject.Find("Sun_Moon") != null)

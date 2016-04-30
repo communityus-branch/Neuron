@@ -25,17 +25,15 @@ namespace Static_Interface.API.Utils
 
         private bool GetMouseLookEnabled()
         {
-            var mouseLook = Player.MainPlayer?.GetComponent<MouseLook>();
-            return mouseLook == null || mouseLook.enabled;
+            var mouseLook = Player.MainPlayer.MovementController.GetComponent<SmoothMouseLook>();
+            return mouseLook != null && mouseLook.enabled;
         }
 
         public void SetMouseLookEnabled(bool v)
         {
-            var mouseLook = Player.MainPlayer?.GetComponent<MouseLook>();
-            if (mouseLook != null)
-            {
-                mouseLook.enabled = v;
-            }
+            var mouseLook = Player.MainPlayer.MovementController.GetComponent<SmoothMouseLook>();
+            if (!mouseLook) return;
+            mouseLook.enabled = v;
         }
 
         public void UnlockInput(object o)

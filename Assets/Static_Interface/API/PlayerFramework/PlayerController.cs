@@ -1,6 +1,4 @@
-﻿using Static_Interface.API.NetworkFramework;
-using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework;
+﻿using Static_Interface.API.Utils;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
@@ -17,7 +15,9 @@ namespace Static_Interface.API.PlayerFramework
             if (!Channel.IsOwner)
             {
                 Destroy(this);
+                return;
             }
+            Cursor.visible = false;
         }
 
         protected override void Start()
@@ -32,7 +32,30 @@ namespace Static_Interface.API.PlayerFramework
         public bool CanJump = true;
         public float JumpHeight = 2.0f;
         private bool _grounded;
-        public bool GravityEnabled = true;
+        private bool _wasRigidGravityEnabled = true;
+        private bool _customGravityEnabled;
+        public bool CustomGravityEnabled
+        {
+            set
+            {
+                _customGravityEnabled = value;
+                if (_customGravityEnabled)
+                {
+                    _wasRigidGravityEnabled = _rigidbody.useGravity;
+                    _rigidbody.useGravity = false;
+                }
+                else
+                {
+                    _rigidbody.useGravity = _wasRigidGravityEnabled;
+                }
+            }
+            get
+            {
+                return _customGravityEnabled;
+            }
+        }
+
+        public Vector3 CustomGravity = Vector3.zero;
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -42,6 +65,7 @@ namespace Static_Interface.API.PlayerFramework
                 ApplyGravity();
                 return;
             }
+            CustomGravity = Physics.gravity;
             var inputX = 0f;
             var inputY = 0f;
             bool jump = Input.GetKeyDown(KeyCode.Space);
@@ -69,7 +93,7 @@ namespace Static_Interface.API.PlayerFramework
             if (_grounded)
             {
                 vel = transform.TransformDirection(vel);
-                var speed = Speed/100*_rigidbody.mass;
+                var speed = Speed / 100 * _rigidbody.mass;
                 vel *= speed;
                 if (sprint)
                 {
@@ -95,43 +119,46 @@ namespace Static_Interface.API.PlayerFramework
 
         private void ApplyGravity()
         {
-            if (true) return; //Let the Rigidbody handle this
-            if (!GravityEnabled) return;
-            _rigidbody.AddForce(Physics.gravity * _rigidbody.mass);
+            if (!CustomGravityEnabled) return;
+            _rigidbody.AddForce(CustomGravity * _rigidbody.mass);
         }
 
-        protected override void OnCollisionStay (Collision collision) {
+        protected override void OnCollisionStay(Collision collision)
+        {
             base.OnCollisionStay(collision);
-	        _grounded = true;    
-	    }
+            _grounded = true;
+        }
 
-        float CalculateJumpVerticalSpeed () {
-	        return Mathf.Sqrt(2 * JumpHeight * -transform.InverseTransformDirection(Physics.gravity).y);
-	    }
+        float CalculateJumpVerticalSpeed()
+        {
+            return Mathf.Sqrt(2 * JumpHeight * -transform.InverseTransformDirection(Physics.gravity).y);
+        }
 
         bool _disabled;
         public void EnableControl()
         {
-            if (!IsDedicatedServer() && Channel.IsOwner)
+            var comp = Player.GetComponent<SmoothMouseLook>();
+            if (!comp)
             {
-                var comp = Player.GetComponent<MouseLook>();
-                if (comp == null)
-                {
-                    comp = Player.gameObject.AddComponent<MouseLook>();
-                } 
-                comp.enabled = true;
+                comp = Player.gameObject.AddComponent<SmoothMouseLook>();
             }
+            comp.enabled = true;
             _disabled = false;
+            Cursor.visible = false;
         }
 
         public void DisableControl()
         {
-            if (!IsDedicatedServer() && Channel.IsOwner)
-            {
-                var comp = Player.GetComponent<MouseLook>();
-                Destroy(comp);
-            }
+            var comp = Player.GetComponent<SmoothMouseLook>();
+            if(comp) Destroy(comp);
             _disabled = true;
+        }
+
+        protected override void OnApplicationFocus(bool focusStatus)
+        {
+            base.OnApplicationFocus(focusStatus);
+            if (focusStatus && !_disabled)
+                Cursor.visible = false;
         }
     }
 }
