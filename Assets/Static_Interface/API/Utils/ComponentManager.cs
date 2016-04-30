@@ -24,22 +24,7 @@ namespace Static_Interface.API.Utils
             //Todo
         };
 
-        public static GameObject InstantiateSafe(this GameObject @object, Extension ext)
-        {
-            CheckCriticialObject(@object);
-            throw new NotImplementedException();
-        }
-        public static T AddComponentSafe<T>(this GameObject @object, Extension ext) where T : Component
-        {
-            return AddComponent<T>(ext, @object);
-        }
-
-        public static void SetEnabled(this Component c, Extension ext, bool value)
-        {
-            CheckCriticialComponent(c);
-        }
-
-        private static void CheckCriticialObject(Object obj)
+        internal static void CheckCriticialObject(Object obj)
         {
             if (!(obj is GameObject)) return;
             foreach (Component c in ((GameObject)obj).GetComponents<Component>())
@@ -48,14 +33,14 @@ namespace Static_Interface.API.Utils
             }
         }
 
-        private static void CheckCriticialComponent(Component c)
+        internal static void CheckCriticialComponent(Component c)
         {
             if (c == null) return;
             CheckCriticialComponent(c.GetType());
         }
 
 
-        private static void CheckCriticialComponent(Type t)
+        internal static void CheckCriticialComponent(Type t)
         {
             bool critical = CriticalComponents.Any(c => c == t || t.IsSubclassOf(c));
 
@@ -63,41 +48,6 @@ namespace Static_Interface.API.Utils
             {
                 throw new SecurityException("Access to component " + t.FullName + " is restricted");
             }
-        }
-
-        /// <summary>
-        /// See <see cref="GameObject.AddComponent(System.Type)"/>
-        /// </summary>
-        public static T AddComponent<T>(this Extension ext, GameObject @object) where T : Component
-        {
-            CheckCriticialComponent(typeof (T));
-            var dictionary = !RegisteredComponents.ContainsKey(ext) ? new Dictionary<GameObject, List<Component>>() : RegisteredComponents[ext];
-
-            var list = !dictionary.ContainsKey(@object) ? new List<Component>() : dictionary[@object];
-
-            var comp = @object.AddComponent<T>();
-            list.Add(comp);
-
-            if (RegisteredComponents.ContainsKey(ext))
-            {
-                RegisteredComponents[ext] = dictionary;
-            }
-            else
-            {
-                RegisteredComponents.Add(ext, dictionary);
-            }
-
-
-            if (dictionary.ContainsKey(@object))
-            {
-                dictionary[@object] = list;
-            }
-            else
-            {
-                dictionary.Add(@object, list);
-            }
-
-            return comp;
         }
 
         public static void DestroyExtension(this Object obj, Extension ext)

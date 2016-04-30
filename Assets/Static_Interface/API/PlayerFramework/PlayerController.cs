@@ -154,11 +154,19 @@ namespace Static_Interface.API.PlayerFramework
             _disabled = true;
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            Cursor.visible = true;
+        }
+
+#if !UNITY_EDITOR
         protected override void OnApplicationFocus(bool focusStatus)
         {
             base.OnApplicationFocus(focusStatus);
             if (focusStatus && !_disabled)
                 Cursor.visible = false;
         }
+#endif
     }
 }

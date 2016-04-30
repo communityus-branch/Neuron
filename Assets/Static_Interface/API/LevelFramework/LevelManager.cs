@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
@@ -9,7 +12,7 @@ using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using Object = UnityEngine.Object;
 namespace Static_Interface.API.LevelFramework 
 {
     public class LevelManager : PersistentScript<LevelManager>
@@ -20,8 +23,43 @@ namespace Static_Interface.API.LevelFramework
         public bool IsLoading { get; private set; }
         public string PendingLevel { get; private set; }
 
+        private readonly Dictionary<Object, List<Component>> _whitelistedObjects = new Dictionary<Object, List<Component>>();
+
+        internal void InitObjects()
+        {
+            foreach (Object o in FindObjectsOfType<Object>())
+            {
+                List<Component> list = null;
+                if (o is GameObject)
+                {
+                    list = ((GameObject) o).GetComponents<Component>().ToList();
+                }
+                _whitelistedObjects.Add(o, list);
+            }
+        }
+
+        internal void DestroyObjects()
+        {
+            foreach (Object o in FindObjectsOfType<Object>())
+            {
+                if (!_whitelistedObjects.ContainsKey(o))
+                {
+                    DestroyImmediate(o);
+                }
+
+                if (!(o is GameObject)) continue;
+                var registeredComponents = _whitelistedObjects[o];
+                foreach (Component comp in ((GameObject) o).GetComponents<Component>().Where(comp => !registeredComponents.Contains(comp)))
+                {
+                    DestroyImmediate(comp);
+                }
+            }
+        }
+
         public void LoadLevel(string level, bool isMenu = false)
         {
+            DestroyObjects();
+            Cursor.visible = true;
             LogUtils.Log("Loading level: " + level);
             Action action = delegate 
             {

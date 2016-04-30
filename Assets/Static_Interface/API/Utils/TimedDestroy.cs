@@ -1,9 +1,23 @@
-﻿using Static_Interface.API.UnityExtensions;
+﻿using System;
+using Static_Interface.API.UnityExtensions;
 
 namespace Static_Interface.API.Utils
 {
     public class TimedDestroy : MonoBehaviour
     {
+        protected override void Awake()
+        {
+            base.Awake();
+            try
+            {
+                ComponentManager.CheckCriticialObject(gameObject)
+            }
+            catch (Exception)
+            {
+                DestroyImmediate(this);
+            }
+        }
+
         public long DestroyTimestamp;
         protected override void FixedUpdate()
         {

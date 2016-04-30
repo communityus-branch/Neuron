@@ -18,13 +18,13 @@ namespace Static_Interface.Neuron.Menus
     [RequireComponent(typeof(AudioSource))]
     public class MainMenu : MonoBehaviour
     {
-        private static bool firstStart = true;
+        private static bool _firstStart = true;
         private FluentCommandLineParser<ApplicationArguments> _parser;
         protected override void Awake()
         {
             base.Awake();
             CameraManager.Instance.CurrentCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-            if (firstStart)
+            if (_firstStart)
             {
                 DefaultConsoleCommands defaultCmds = new DefaultConsoleCommands();
                 API.ConsoleFramework.Console.Instance.RegisterCommands(defaultCmds);
@@ -55,7 +55,7 @@ namespace Static_Interface.Neuron.Menus
                     LogUtils.LogError("Couldn't parse arguments: " + result.ErrorText);
                 }
 
-                firstStart = false;
+                _firstStart = false;
             }
 
 
@@ -71,6 +71,7 @@ namespace Static_Interface.Neuron.Menus
 
         private void HostDedicated()
         {
+            LevelManager.Instance.InitObjects();
             AudioListener.pause = true;
             EnableConsole();
             Connection.IsDedicated = true;
@@ -104,6 +105,7 @@ namespace Static_Interface.Neuron.Menus
 
         public void StartGame(string scene)
         {
+            LevelManager.Instance.InitObjects();
             GameObject serverObject = GameObject.Find("Server");
             DestroyImmediate(serverObject.GetComponent<ClientConnection>());
             DestroyImmediate(serverObject.GetComponent<ServerConnection>());
@@ -117,6 +119,7 @@ namespace Static_Interface.Neuron.Menus
 
         public void Host()
         {
+            LevelManager.Instance.InitObjects();
             GameObject serverObject = GameObject.Find("Server");
             DestroyImmediate(serverObject.GetComponent<ClientConnection>());
             DestroyImmediate(serverObject.GetComponent<ServerConnection>());

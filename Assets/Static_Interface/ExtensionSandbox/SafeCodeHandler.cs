@@ -19,7 +19,7 @@ namespace Static_Interface.ExtensionSandbox
     //Now, God only knows   
     public static class SafeCodeHandler
     {
-        private static readonly Disassembler _disassembler = new Disassembler();
+        private static readonly Disassembler Disassembler = new Disassembler();
         private static readonly List<string> AllowedNamespaces = new List<string>
         {
             "Static_Interface.*",
@@ -128,9 +128,9 @@ namespace Static_Interface.ExtensionSandbox
 
         private static readonly Dictionary<Type, List<string>> DisallowedMethods = new Dictionary<Type, List<string>>
         {
-            {typeof(Object), new List<string> { "Destroy", "DestroyImmediate", "DestroyObject", "DontDestroyOnLoad", "Instantiate" }},
-            {typeof(GameObject), new List<string> { "AddComponent" } },
-            {typeof(Behaviour), new List<string> {"set_enabled"} } //dont allow disabling critical components like ExtensionManager
+            {typeof(Object), new List<string> { "Destroy", "DestroyImmediate", "DestroyObject", "DontDestroyOnLoad" }},
+            {typeof(Behaviour), new List<string> {"set_enabled" }}, //dont allow disabling critical components like ExtensionManager
+            {typeof(GameObject), new List<string> { "set_active" }}
         };
 
         private static readonly Dictionary<Type, List<string>> AllowedMethods = new Dictionary<Type, List<string>>
@@ -215,7 +215,6 @@ namespace Static_Interface.ExtensionSandbox
         {
             illegalInstruction = null;
             failedAt = null;
-
             foreach (Type type in baseAssembly.GetTypes())
             {
                 if (!CheckType(baseAssembly, type, out illegalInstruction, out failedAt)) return false;
@@ -288,7 +287,7 @@ namespace Static_Interface.ExtensionSandbox
             if (!CheckMethodAttributes(method.Attributes)) return false;
             if (!type.IsGenericTypeDefinition && type.IsGenericType && CheckGenericType(asm, type.GetGenericTypeDefinition(), method, out illegalInstruction, out failedAt)) return false;
 
-            foreach (Instruction ins in _disassembler.ReadInstructions(method))
+            foreach (Instruction ins in Disassembler.ReadInstructions(method))
             {
                 if (recur)
                 {
