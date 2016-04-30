@@ -29,7 +29,7 @@ namespace Static_Interface.API.UnityExtensions
             Setup();
         }
 
-        protected override void OnDestroy()
+        protected override void OnDestroySafe()
         {
             Clear();
         }

@@ -105,8 +105,9 @@ namespace Static_Interface.Internal
             Weather.transform.position = h;
         }
 
-        protected override void OnDestroy()
+        protected override void OnDestroySafe()
         {
+            base.OnDestroySafe();
             if (_selfDestruct)
             {
                 _selfDestruct = false;

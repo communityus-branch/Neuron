@@ -154,9 +154,9 @@ namespace Static_Interface.API.PlayerFramework
             _disabled = true;
         }
 
-        protected override void OnDestroy()
+        protected override void OnDestroySafe()
         {
-            base.OnDestroy();
+            base.OnDestroySafe();
             Cursor.visible = true;
         }
 

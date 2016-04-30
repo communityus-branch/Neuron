@@ -17,9 +17,9 @@ namespace Static_Interface.API.SchedulerFramework
             Instance = this;
         }
 
-        protected override void OnDestroy()
+        protected override void OnDestroySafe()
         {
-            base.OnDestroy();
+            base.OnDestroySafe();
             Instance = null;
         }
 

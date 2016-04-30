@@ -34,9 +34,9 @@ namespace Static_Interface.API.NetworkFramework
             Channel.Send(nameof(Network_ReceiveMessage), ECall.All, Channel.Connection.ServerID, text);
         }
 
-        protected override void OnDestroy()
+        protected override void OnDestroySafe()
         {
-            base.OnDestroy();
+            base.OnDestroySafe();
             Instance = null;
         }
 

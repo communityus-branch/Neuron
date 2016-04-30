@@ -212,9 +212,9 @@ namespace Static_Interface.API.NetworkFramework
         {
         }
 
-        protected override void OnDestroy()
+        protected override void OnDestroySafe()
         {
-            base.OnDestroy();
+            base.OnDestroySafe();
             if (ID != 0)
             {
                 Listen = false;

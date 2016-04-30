@@ -6,6 +6,7 @@ namespace Static_Interface.API.UnityExtensions
 {
     public abstract class MonoBehaviour : UnityEngine.MonoBehaviour
     {
+        internal bool BlockOnDestroy;
         /// <summary>
         /// Awake is called when the script instance is being loaded.
         /// <para/>
@@ -155,7 +156,18 @@ namespace Static_Interface.API.UnityExtensions
         /// OnDestroy cannot be a co-routine.
         /// </summary>
         [UnityMessage]
-        protected virtual void OnDestroy()
+        protected internal virtual void OnDestroy()
+        {
+            if (!BlockOnDestroy)
+            {
+                OnDestroySafe();
+            }
+        }
+
+        /// <summary>
+        /// Extensions may only use this method instead of <see cref="OnDestroy"/>.
+        /// </summary>
+        protected virtual void OnDestroySafe()
         {
             
         }

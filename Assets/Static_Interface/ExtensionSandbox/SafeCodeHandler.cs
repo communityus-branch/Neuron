@@ -12,6 +12,7 @@ using System.Threading;
 using Static_Interface.API.UnityExtensions;
 using Steamworks;
 using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 using Object = UnityEngine.Object;
 namespace Static_Interface.ExtensionSandbox
 {
@@ -218,6 +219,13 @@ namespace Static_Interface.ExtensionSandbox
             failedAt = null;
             foreach (Type type in baseAssembly.GetTypes())
             {
+                if ((!type.IsSubclassOf(typeof(MonoBehaviour)) ||  type != typeof (MonoBehaviour) )&&
+                    (type.IsSubclassOf(typeof (Behaviour)) || type == typeof (Behaviour)))
+                {
+                    illegalInstruction = type.FullName;
+                    failedAt = "Extending Unitys Behaviour [please use UnityExtensions.MonoBehaviour]";
+                    return false;
+                }
                 if (!CheckType(baseAssembly, type, out illegalInstruction, out failedAt)) return false;
             }
 

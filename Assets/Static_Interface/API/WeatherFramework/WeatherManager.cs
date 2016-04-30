@@ -14,9 +14,9 @@ namespace Static_Interface.API.WeatherFramework
         private UniStormWeatherSystem_C _weatherSystem;
         public static WeatherManager Instance { get; private set; }
 
-        protected override void OnDestroy()
+        protected override void OnDestroySafe()
         {
-            base.OnDestroy();
+            base.OnDestroySafe();
             Instance = null;
         }
 

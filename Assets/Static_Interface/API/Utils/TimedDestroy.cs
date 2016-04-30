@@ -10,7 +10,7 @@ namespace Static_Interface.API.Utils
             base.Awake();
             try
             {
-                ComponentManager.CheckCriticialObject(gameObject)
+                ComponentManager.CheckCriticialObject(gameObject);
             }
             catch (Exception)
             {

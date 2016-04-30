@@ -66,7 +66,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
             DontDestroyOnLoad(this);
         }
 
-        protected override void OnDestroy()
+        protected internal override void OnDestroy()
         {
             base.OnDestroy();
             ClientsInternal.Clear();

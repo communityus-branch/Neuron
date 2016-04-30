@@ -12,6 +12,7 @@ using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 using Object = UnityEngine.Object;
 namespace Static_Interface.API.LevelFramework 
 {
@@ -51,6 +52,10 @@ namespace Static_Interface.API.LevelFramework
                 var registeredComponents = _whitelistedObjects[o];
                 foreach (Component comp in ((GameObject) o).GetComponents<Component>().Where(comp => !registeredComponents.Contains(comp)))
                 {
+                    if (comp is MonoBehaviour)
+                    {
+                        ((MonoBehaviour) comp).BlockOnDestroy = true;
+                    }
                     DestroyImmediate(comp);
                 }
             }
