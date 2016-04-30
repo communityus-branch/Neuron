@@ -17,6 +17,8 @@ namespace Static_Interface.API.NetworkFramework
         private Vector3? _syncStartPosition;
         private Vector3? _syncEndPosition;
 
+        protected override bool IsSyncable => true;
+
         public IPositionValidator PositionValidator;
         
         protected override void Update()

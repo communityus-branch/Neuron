@@ -1,12 +1,20 @@
 ﻿using System;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.API.InteractionFramework
 {
-    public class InteractManager : UnityExtensions.MonoBehaviour
+    public class InteractManager : NetworkedBehaviour
     {
+        public override Channel Channel => World.Instance.GetComponent<Channel>();
+        protected override void SetupChannel()
+        {
+            Channel.Build(this);
+        }
+
         public const float INTERACT_RANGE = 5.0f;
         public KeyCode InteractKey = KeyCode.F;
         private RaycastHit _hit;

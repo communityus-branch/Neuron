@@ -8,7 +8,7 @@ namespace Static_Interface.API.NetworkFramework
     public class AngleSyncer : NetworkedBehaviour
     {
         private Quaternion? _cachedAngle;
-
+        protected override bool IsSyncable => true;
         private float _lastSynchronizationTime;
         private float _syncDelay;
         private float _syncTime;

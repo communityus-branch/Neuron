@@ -9,18 +9,19 @@ namespace Static_Interface.API.NetworkFramework
         public virtual Channel Channel => GetComponent<Channel>();
         public Connection Connection => Connection.CurrentConnection;
         protected virtual int PreferredChannelID  => 0;
-        public virtual bool SyncOwnerOnly => true;
-        public virtual uint UpdatePeriod => 20;
+        public bool SyncOwnerOnly = true;
+        public uint UpdatePeriod = 20;
+        protected virtual bool IsSyncable => false;
         protected long LastSync;
         protected virtual bool OnSync()
         {
             return false;
         }
-
-
+        
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            if (!IsSyncable) return;
             if (SyncOwnerOnly && !Channel.IsOwner) return;
             if (TimeUtil.GetCurrentTime() - LastSync < UpdatePeriod) return;
             if (OnSync())

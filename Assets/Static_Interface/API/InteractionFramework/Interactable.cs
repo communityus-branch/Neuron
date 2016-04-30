@@ -11,12 +11,6 @@ namespace Static_Interface.API.InteractionFramework
     /// </summary>
     public abstract class Interactable : NetworkedBehaviour
     {
-        public override Channel Channel => World.Instance.GetComponent<Channel>();
-        protected override void SetupChannel()
-        {
-            Channel.Build(this);
-        }
-
         /// <summary>
         /// Called when a player interacts with it
         /// </summary>

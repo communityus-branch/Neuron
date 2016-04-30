@@ -9,6 +9,7 @@ namespace Static_Interface.API.WeaponFramework
     {
         private long _lastUsage;
         public bool DrawCrosshair = true;
+        protected override bool IsSyncable => true;
         protected override void Awake()
         {
             base.Awake();

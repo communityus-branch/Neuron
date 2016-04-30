@@ -97,6 +97,7 @@ namespace Static_Interface.ExtensionSandbox
         private static readonly List<Type> DisallowedTypes = new List<Type>
         {
             typeof(Time),
+            typeof(AssetBundle),
             typeof(Physics),
             typeof(Physics2D),
             typeof(Network),
@@ -332,7 +333,7 @@ namespace Static_Interface.ExtensionSandbox
         private static bool CheckGenericType(Assembly asm, Type type, MethodInfo method, out string illegalInstruction, out string failedAt)
         {
             if (!CheckMethod(asm, type, method, out illegalInstruction, out failedAt)) return false;
-            if (method == null) return true;
+            if (method?.DeclaringType == null) return true;
             foreach (var gType in method.DeclaringType.GetGenericArguments())
             {
                 if (!CheckType(asm, gType, out illegalInstruction, out failedAt))
