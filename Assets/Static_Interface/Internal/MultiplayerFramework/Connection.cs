@@ -68,6 +68,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         protected internal override void OnDestroy()
         {
+            LogUtils.Debug("OnDestroy Connection");
             base.OnDestroy();
             ClientsInternal.Clear();
             if (CurrentConnection == this) CurrentConnection = null;

@@ -9,30 +9,28 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 namespace Static_Interface.API.AssetsFramework
 {
-    public sealed class Asset
+    public class Asset
     {
         private readonly AssetBundle _assetBundle;
         public readonly string Name;
-        public readonly string Path;
         private readonly string _assetFile;
         private readonly List<Object> _loadedObjects = new List<Object>();
         public ReadOnlyCollection<Object> LoadedObjects => _loadedObjects.AsReadOnly();
+        public string FilePath => _assetFile;
+
         private GameObject _bundleScripts;
-        public Asset(string name, string path)
+        internal Asset(string name, string file) : this(name, file, 0U)
         {
-            Path = path;
-            _assetFile = System.IO.Path.Combine(path, "bundle.unity3d");
-            _assetBundle = AssetBundle.LoadFromFile(_assetFile);
+        }
+
+        internal Asset(string name, string file, uint crc)
+        {
+            _assetFile = file;
+            _assetBundle = AssetBundle.LoadFromFile(file, crc);
             Name = name;
         }
 
-        public Asset(string name, string path, uint crc)
-        {
-            _assetBundle = AssetBundle.LoadFromFile(path, crc);
-            Name = name;
-        }
-
-        public Component[] LoadScripts()
+        public Component[] LoadScripts(Type t = null)
         {
             TextAsset asset = null;
             try
@@ -65,6 +63,7 @@ namespace Static_Interface.API.AssetsFramework
             foreach (var type in types)
             {
                 if (!type.IsSubclassOf(typeof (Component)) && type != typeof (Component)) continue;
+                if(t != null && (!type.IsSubclassOf(t) && type != t)) continue;
                 AttachToGameObjectAttribute[] attrs = (AttachToGameObjectAttribute[]) type.GetCustomAttributes(typeof (AttachToGameObjectAttribute),
                     true);
 

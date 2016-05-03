@@ -6,6 +6,7 @@ namespace Static_Interface.API.UnityExtensions
 {
     public abstract class MonoBehaviour : UnityEngine.MonoBehaviour
     {
+        protected internal virtual bool ForceSafeDestroy => false;
         internal bool BlockOnDestroy;
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -158,7 +159,7 @@ namespace Static_Interface.API.UnityExtensions
         [UnityMessage]
         protected internal virtual void OnDestroy()
         {
-            if (!BlockOnDestroy)
+            if (ForceSafeDestroy || !BlockOnDestroy)
             {
                 OnDestroySafe();
             }

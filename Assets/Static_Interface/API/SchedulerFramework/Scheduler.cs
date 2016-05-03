@@ -20,7 +20,7 @@ namespace Static_Interface.API.SchedulerFramework
         protected override void OnDestroySafe()
         {
             base.OnDestroySafe();
-            Instance = null;
+            Shutdown();
         }
 
         public static Scheduler Instance { get; private set; }

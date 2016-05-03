@@ -138,7 +138,7 @@ namespace Static_Interface.API.EventFramework
 
         public void ClearListeners(Extension extension)
         {
-            throw new NotImplementedException();
+            //Todo
         }
 
         internal void Shutdown()

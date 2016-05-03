@@ -412,7 +412,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             ((ServerMultiplayerProvider)Provider).SetServerName(((ServerMultiplayerProvider)Provider).Description);
             ((ServerMultiplayerProvider)Provider).SetPasswordProtected(false); //Todo
             ((ServerMultiplayerProvider)Provider).SetMapName(Map);
-            LevelManager.Instance.LoadLevel(Map); //Todo
+            LevelManager.Instance.LoadLevel(Map, false, true); //Todo
 
 
             ServerID = Provider.GetServerIdent();

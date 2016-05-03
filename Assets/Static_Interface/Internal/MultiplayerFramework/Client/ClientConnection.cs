@@ -118,7 +118,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
                 Send(ServerID, EPacket.WORKSHOP, new byte[] {}, 0, 0);
                 //Todo: Load Level specified by server
-                LevelManager.Instance.LoadLevel(info.Map);
+                LevelManager.Instance.LoadLevel(info.Map, false, true);
             });
         }
 

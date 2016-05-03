@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Static_Interface.API.AssetsFramework;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Console = Static_Interface.API.ConsoleFramework.Console;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 using Object = UnityEngine.Object;
 namespace Static_Interface.API.LevelFramework 
@@ -63,7 +66,12 @@ namespace Static_Interface.API.LevelFramework
 
         public void LoadLevel(string level, bool isMenu = false)
         {
-            DestroyObjects();
+            LoadLevel(level, isMenu, false);
+        }
+
+        public void LoadLevel(string level, bool isMenu, bool keepObjects)
+        {
+            if(!keepObjects) DestroyObjects();
             Cursor.visible = true;
             LogUtils.Log("Loading level: " + level);
             Action action = delegate 
@@ -116,12 +124,7 @@ namespace Static_Interface.API.LevelFramework
             Action action = delegate
             {
 
-                ExtensionManager.Instance?.Shutdown();
-                EventManager.Instance?.Shutdown();
-                Scheduler.Instance?.Shutdown();
-                NetvarManager.Instance?.Shutdown();
-                Connection.CurrentConnection?.Dispose();
-                Connection.CurrentConnection = null;
+                Unload();
                 LoadLevel("MainMenu", true);
             };
             if (ThreadPool.Instance.IsMainThread)
@@ -130,6 +133,23 @@ namespace Static_Interface.API.LevelFramework
                 return;
             }
             ThreadPool.Instance.QueueMain(action);
+        }
+
+        protected override void OnApplicationQuit()
+        {
+            base.OnApplicationQuit();
+            Unload();
+        }
+
+        private void Unload()
+        {
+            EventManager.Instance?.Shutdown();
+            NetvarManager.Instance?.Shutdown();
+            if (World.Instance?.CommandsObj != null)
+            {
+                Console.Instance.UnregisterCommands(World.Instance.CommandsObj);
+                AssetManager.ClearAssets();
+            }
         }
     }
 }

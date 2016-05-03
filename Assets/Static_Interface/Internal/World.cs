@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Static_Interface.API.AssetsFramework;
 using Static_Interface.API.ConsoleFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
@@ -8,6 +9,7 @@ using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.API.WeatherFramework;
+using Static_Interface.ExtensionSandbox;
 using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
@@ -25,10 +27,10 @@ namespace Static_Interface.Internal
         public GameObject Weather;
         private bool _selfDestruct;
         public Transform DefaultSpawnPosition;
-        private object _commands;
+        private object _commandsObj;
         public static bool Loaded;
         protected override int PreferredChannelID => 1;
-
+        internal object CommandsObj => _commandsObj;
         protected override void Start ()
         {
             transform.position = new Vector3(0,0,0);
@@ -42,12 +44,10 @@ namespace Static_Interface.Internal
             }          
 
             Instance = this;
-            Connection conn = FindObjectOfType<Connection>();
             LogUtils.Log("Initializing World...");
 	        NetvarManager.Instance.RegisterNetvar(new GravityNetvar());
             NetvarManager.Instance.RegisterNetvar(new GameSpeedNetvar());
-            var extensionsDir = Path.Combine(GameInfo.GameBaseDir, "Plugins");
-			ExtensionManager.Init(extensionsDir);
+			ExtensionManager.Init(IOUtil.GetExtensionsDir());
             gameObject.AddComponent<Scheduler>();
             Weather = ObjectUtils.LoadWeather();
             var enviromentSun = GameObject.Find("__SUN__");
@@ -83,26 +83,53 @@ namespace Static_Interface.Internal
 
             weatherSys.moonLight = moon.FindChild("MoonLight").GetComponent<Light>();
             gameObject.AddComponent<WeatherManager>();
+            Connection conn = FindObjectOfType<Connection>();
             conn.SendMessage("OnWeatherInit", Weather);
             var chat = gameObject.AddComponent<Chat>();
             conn.SendMessage("OnChatInit", chat);
 
             if (Connection.IsClient() && !Connection.IsSinglePlayer)
             {
-                _commands = new ClientConsoleCommands();
+                _commandsObj = new ClientConsoleCommands();
             }
             else if (Connection.IsServer())
             {
-                _commands = new ServerConsoleCommands();
+                _commandsObj = new ServerConsoleCommands();
             }
 
-            if(_commands != null)
-                Console.Instance.RegisterCommands(_commands);
+            if(_commandsObj != null)
+                Console.Instance.RegisterCommands(_commandsObj);
             Loaded = true;
             conn.SendMessage("OnWorldInit", this);
             var h = GetComponent<Terrain>().terrainData.size / 2;
             h.y = transform.position.y + 3000;
             Weather.transform.position = h;
+
+            LoadExtensions();
+        }
+
+        private void LoadExtensions()
+        {
+            if (!Directory.Exists(IOUtil.GetExtensionsDir()))
+            {
+                Directory.CreateDirectory(IOUtil.GetExtensionsDir());
+            }
+            LogUtils.Log("Loading extensions from dir: " + IOUtil.GetExtensionsDir());
+            foreach (string s in Directory.GetDirectories(IOUtil.GetExtensionsDir()))
+            {
+                LogUtils.Debug("Extensions: Loading directory: " + s);
+                string[] bundles = Directory.GetFiles(s, "*.unity3d");
+                foreach(string file in bundles)
+                {
+                    string name = Path.GetFileName(file);
+                    AssetManager.LoadAsset(name, file);
+                }
+                string pluginFile = Path.Combine(s, "Plugin.dll");
+                if (File.Exists(pluginFile))
+                {
+                    ExtensionManager.Instance.LoadExtension(pluginFile);
+                }
+            }
         }
 
         protected override void OnDestroySafe()
@@ -115,10 +142,6 @@ namespace Static_Interface.Internal
             }
 
             Instance = null;
-            if (_commands != null)
-            {
-                Console.Instance.UnregisterCommands(_commands);
-            }
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Static_Interface.API.ExtensionFramework
 
         public Extension()
         {
+            Name = GetType().Name;
             //Todo: assign Name from attribute
         }
 
@@ -47,8 +48,7 @@ namespace Static_Interface.API.ExtensionFramework
             }
             catch (Exception e)
             {
-                e.Log("Couldn't enable plugin: " + Name);
-                Disable();
+                e.Log("Exception while enabling plugin: " + Name);
             }
         }
 

@@ -13,11 +13,11 @@ namespace Static_Interface.API.ExtensionFramework
     //Todo: load at world load and unload when going back to MainMenu
     public class ExtensionManager : MonoBehaviour
     {
+        protected internal override bool ForceSafeDestroy => true;
         public static ExtensionManager Instance { get; private set; }
         private readonly List<Extension> _loadedExtensions = new List<Extension>();
         private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
         private static GameObject _parentObject;
-        public string ExtensionsDir { get; private set; }
 
         /// <summary>
         /// Get the instance of a loaded extension
@@ -45,8 +45,7 @@ namespace Static_Interface.API.ExtensionFramework
         {
             if (_parentObject != null) return;
             _parentObject = new GameObject("ExtensionManager");
-            var mgr = _parentObject.AddComponent<ExtensionManager>();
-            mgr.ExtensionsDir = extensionsdir;
+            _parentObject.AddComponent<ExtensionManager>();
             DontDestroyOnLoad(_parentObject);
         }
 
@@ -80,23 +79,35 @@ namespace Static_Interface.API.ExtensionFramework
             Instance = this;
         }
 
-        internal void LoadExtensions()
+        internal void LoadExtensions(string dir)
         {
-            if (!Directory.Exists(ExtensionsDir))
-            {
-                Directory.CreateDirectory(ExtensionsDir);
-                return;
-            }
-
-            var files = Directory.GetFiles(ExtensionsDir, "*.dll", SearchOption.TopDirectoryOnly);
+            var files = Directory.GetFiles(dir, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (string file in files.Where(file => !_loadedAssemblies.ContainsKey(file)))
             {
-                Assembly asm;
-                AppDomain domain;
-                Sandbox.Instance.LoadAssembly(file, out asm, out domain);
-                _loadedAssemblies.Add(file, asm);
-                LoadExtensionFromAssembly(asm, domain, file);
+                LoadExtension(file);
             }
+        }
+
+        internal void LoadExtension(string file)
+        {
+            LogUtils.Debug("Loading extension: " + Path.GetFileName(file));
+            Sandbox.Instance.LoadAssembly(file, ((success, assembly, appdomain) =>
+            {
+                if (!success)
+                {
+                    LogUtils.Debug("Couldn't load extension: " + file);
+                    return;
+                }
+                string failedInstruction;
+                string failReason;
+                if (!SafeCodeHandler.IsSafeAssembly(assembly, out failedInstruction, out failReason))
+                {
+                    LogUtils.LogWarning("WARNING: Plugin " + file + " access restricted code! Check failed: " + failedInstruction + (string.IsNullOrEmpty(failReason) ? "" : " (" + failReason + ")"));
+                    return;
+                }
+                _loadedAssemblies.Add(file, assembly);
+                LoadExtensionFromAssembly(assembly, appdomain, file);
+            }));
         }
 
         internal void LoadExtensionFromAssembly(Assembly asm, AppDomain domain, string path)
@@ -132,6 +143,8 @@ namespace Static_Interface.API.ExtensionFramework
                 return;
             }
 
+            _loadedExtensions.Add(ext);
+
             ext.Enabled = true;
         }
 
@@ -142,6 +155,12 @@ namespace Static_Interface.API.ExtensionFramework
             {
                 extension.Update();
             }
+        }
+
+        protected override void OnDestroySafe()
+        {
+            base.OnDestroySafe();
+            Shutdown();
         }
     }
 }
