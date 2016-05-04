@@ -61,8 +61,8 @@ namespace Static_Interface.API.ExtensionFramework
         {
             if (!_enabled) return;
             LogUtils.Log("Disabling extension: " + Name + " (" + GetType().Name + ")");
-            Scheduler.Instance.RemoveAllTasks(this);
-            EventManager.Instance.ClearListeners(this);
+            Scheduler.Instance?.RemoveAllTasks(this);
+            EventManager.Instance?.ClearListeners(this);
             try
             {
                 OnDisable();

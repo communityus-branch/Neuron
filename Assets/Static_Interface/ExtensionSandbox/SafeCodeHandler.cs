@@ -102,9 +102,7 @@ namespace Static_Interface.ExtensionSandbox
 
         private static readonly List<Type> DisallowedTypes = new List<Type>
         {
-            typeof(Time),
             typeof(AssetBundle),
-            typeof(Physics),
             typeof(Physics2D),
             typeof(Network),
             typeof(Process),
