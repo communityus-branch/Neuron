@@ -7,34 +7,45 @@ namespace Static_Interface.API.GUIFramework
     {
         public abstract GameObject GetViewObject();
 
-        public readonly string Name;
+        public readonly string ViewName;
+        public ViewParent ViewParent { get; internal set; }
+
+        public virtual void SetParent(ViewParent parent)
+        {
+            ViewParent = parent;
+        }
 
         public virtual void OnDraw()
         {
             
         }
 
-        protected View(string name) : this(name, null, 0, 0)
+        protected View(string viewName, ViewParent parent) : this(viewName, parent, 0, 0)
         {
         }
    
-        protected View(string name, Canvas parent, int x, int y)
+        protected View(string viewName, ViewParent parent, int x, int y)
         {
-            Name = name;
+            ViewName = viewName;
+            ViewParent = parent;
 
-            if (parent != null)
-                Parent = parent.transform;
             InitGameObject();
 
+            if (parent != null)
+                Parent = parent.Canvas.transform;
             Position = new Vector2(x, y);
             Draw = true;
         }
 
-        protected abstract void InitGameObject();
+        protected virtual void InitGameObject()
+        {
+            
+        }
 
         public void Destroy()
         {
             Object.Destroy(GetViewObject());
+            OnDestroy();
         }
 
         public virtual Vector2 Size

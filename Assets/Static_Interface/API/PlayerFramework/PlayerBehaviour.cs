@@ -14,7 +14,7 @@ namespace Static_Interface.API.PlayerFramework
             Player = GetComponent<Player>();
         }
 
-        protected bool UseGUI()
+        public bool UseGUI()
         {
             return Channel.IsOwner && !IsDedicatedServer();
         }

@@ -11,11 +11,11 @@ namespace Static_Interface.API.GUIFramework
         }
 
         protected abstract string PrefabLocation { get; }
-        protected PrefabView(string name) : base(name)
+        protected PrefabView(string viewName, ViewParent parent) : base(viewName, parent)
         {
         }
 
-        protected PrefabView(string name, Canvas parent, int x, int y) : base(name, parent, x, y)
+        protected PrefabView(string viewName, ViewParent parent, int x, int y) : base(viewName, parent, x, y)
         {
 
         }

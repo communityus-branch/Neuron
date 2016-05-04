@@ -4,15 +4,15 @@ using UnityEngine.UI;
 
 namespace Static_Interface.API.GUIFramework
 {
-    public class ProgressBar : PrefabView
+    public class ProgressBarView : PrefabView
     {
         protected readonly GameObject ProgressSlider;
-        protected override string PrefabLocation => "UI/ProgressBar";
+        protected override string PrefabLocation => "UI/ProgressBarView";
 
-        public ProgressBar(string name) : this(name, null, 0,0)
+        public ProgressBarView(string viewName, ViewParent parent) : this(viewName, parent, 0,0)
         { }
 
-        public ProgressBar(string name, Canvas parent, int x, int y) : base(name, parent, x, y) 
+        public ProgressBarView(string viewName, ViewParent parent, int x, int y) : base(viewName, parent, x, y) 
         {
             ProgressSlider = Prefab.transform.FindChild("ProgressSlider").gameObject;
         }

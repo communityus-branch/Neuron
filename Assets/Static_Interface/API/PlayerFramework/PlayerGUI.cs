@@ -8,17 +8,23 @@ namespace Static_Interface.API.PlayerFramework
 {
     public class PlayerGUI : PlayerBehaviour
     {
-        private Vector2 _res;
-        public Canvas MainCanvas { get; private set; }
-        private readonly List<View> _registeredViews = new List<View>(); 
+        private Vector2 _cachedResolution;
+
+        private PlayerGUIViewParent _viewParent;
+        public PlayerGUIViewParent ViewParent
+        {
+            get
+            {
+                if (_viewParent != null) return _viewParent;
+                _viewParent = new PlayerGUIViewParent();
+                return _viewParent;
+            }
+        }
 
         protected override void Awake()
         {
             base.Awake();
-            var cObject = (GameObject)Resources.Load("UI/Canvas");
-            cObject = Instantiate(cObject);
-            MainCanvas = cObject.GetComponent<Canvas>();
-            _res = new Vector2(Screen.width, Screen.height);
+            _cachedResolution = new Vector2(Screen.width, Screen.height);
         }
 
         protected override void OnPlayerLoaded()
@@ -26,83 +32,140 @@ namespace Static_Interface.API.PlayerFramework
             base.OnPlayerLoaded();
             if (UseGUI()) return;
             Destroy(this);
-            Destroy(MainCanvas.gameObject);
+            Destroy(ViewParent.Canvas.gameObject);
         }
 
-        public void AddView(View view)
+        protected override void OnDisable()
         {
-            view.Parent = MainCanvas.transform;
-            _registeredViews.Add(view);
+            base.OnDisable();
+            ViewParent.Draw = false;
         }
 
-        public void RemoveView(View view)
+        protected override void OnEnable()
         {
-            view.OnDestroy();
-            _registeredViews.Remove(view);
-            view.Parent = null;
+            base.OnEnable();
+            ViewParent.Draw = true;
         }
 
         protected override void Update()
         {
             base.Update();
-            Vector2 currentRes = new Vector2(Screen.width, Screen.height);
-            if (_res != currentRes)
-            {
-                OnResolutionUpdate(_res, currentRes);
-                _res = currentRes;
-            }
+            Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
+            if (_cachedResolution == currentResolution) return;
+            ViewParent.OnResolutionUpdate(_cachedResolution, currentResolution);
+            _cachedResolution = currentResolution;
         }
 
         protected override void OnGUI()
         {
             base.OnGUI();
+            ViewParent.OnDraw();
+        }
+
+        public void AddStatusProgressBar(ProgressBarView progressBarView)
+        {
+            ViewParent.AddStatusProgressBar(progressBarView);
+        }
+
+        public void RemoveStatusProgressBar(ProgressBarView progressBarView, bool destroy = true)
+        {
+            ViewParent.RemoveStatusProgressBar(progressBarView, destroy);
+        }
+    }
+
+    public class PlayerGUIViewParent : ViewParent
+    {
+        private readonly List<ProgressBarView> _statusProgressBars = new List<ProgressBarView>();
+        public ReadOnlyCollection<ProgressBarView> StatusProgressBars => _statusProgressBars.AsReadOnly();
+        private readonly List<View> _registeredViews = new List<View>();
+        public override Canvas Canvas => _canvas;
+        private Canvas _canvas;
+
+        public PlayerGUIViewParent() : base("PlayerGUI", null,0,0)
+        {
+
+        }
+
+        public override GameObject GetViewObject()
+        {
+            if (_canvas == null)
+            {
+                var cObject = (GameObject)Resources.Load("UI/Canvas");
+                cObject = Object.Instantiate(cObject);
+                _canvas = cObject.GetComponent<Canvas>();
+            }
+            return base.GetViewObject();
+        }
+
+        public override void SetParent(ViewParent parent)
+        {
+            throw new System.NotSupportedException();
+        }
+
+        public override Collection<View> GetChilds()
+        {
+            return new Collection<View>(_registeredViews);
+        }
+        
+        public override void AddView(View view)
+        {
+            view.Parent = Canvas.transform;
+            _registeredViews.Add(view);
+            view.ViewParent = this;
+        }
+
+        public override  void RemoveView(View view)
+        {
+            view.OnDestroy();
+            _registeredViews.Remove(view);
+            view.Parent = null;
+            view.ViewParent = null;
+        }
+
+        public override void OnDraw()
+        {
             foreach (View view in _registeredViews.Where(v => v.Draw))
             {
                 view.OnDraw();
             }
         }
 
-        private void OnResolutionUpdate(Vector2 res, Vector2 newRes)
+        public void OnResolutionUpdate(Vector2 res, Vector2 newRes)
         {
             foreach (View view in _registeredViews)
             {
                 view.OnResolutionChanged(res, newRes);
             }
-            UpdatePositions();   
-        }
-
-        private readonly List<ProgressBar> _statusProgressBars = new List<ProgressBar>();
-        public ReadOnlyCollection<ProgressBar> StatusProgressBars => _statusProgressBars.AsReadOnly();
-
-        public void AddStatusProgressBar(ProgressBar progressBar)
-        {
-            AddView(progressBar);
-            _statusProgressBars.Add(progressBar);
             UpdatePositions();
-        }
-
-        public void RemoveStatusProgressBar(ProgressBar progressBar, bool destroy = true)
-        {
-            if (!UseGUI()) return;
-            _statusProgressBars.Remove(progressBar);
-            UpdatePositions();
-            if(destroy) progressBar.Destroy();
         }
 
         public void UpdatePositions()
         {
-            if (!UseGUI()) return;
-            var scalefactor = MainCanvas.scaleFactor;
-            var x = -(Screen.width * scalefactor/2) + 20 * scalefactor;
-            var y = -(Screen.height * scalefactor/2) + 20 * scalefactor;
+            var scalefactor = Canvas.scaleFactor;
+            var x = -(Screen.width * scalefactor / 2) + 20 * scalefactor;
+            var y = -(Screen.height * scalefactor / 2) + 20 * scalefactor;
             Vector2 basePos = new Vector2(x, y);
-            foreach (ProgressBar progress in _statusProgressBars)
+            foreach (ProgressBarView progress in _statusProgressBars)
             {
                 Vector2 progressPos = new Vector2(basePos.x, basePos.y);
-                progressPos.x += progress.Size.x/2;
+                progressPos.x += progress.Size.x / 2;
                 progress.Position = progressPos;
                 basePos.y += 5 + progress.Size.x;
             }
+        }
+
+        public void AddStatusProgressBar(ProgressBarView progressBarView)
+        {
+            AddView(progressBarView);
+            _statusProgressBars.Add(progressBarView);
+            UpdatePositions();
+        }
+
+        public void RemoveStatusProgressBar(ProgressBarView progressBarView, bool destroy = true)
+        {
+            RemoveView(progressBarView);
+            UpdatePositions();
+            if (destroy) progressBarView.Destroy();
         }
     }
 }

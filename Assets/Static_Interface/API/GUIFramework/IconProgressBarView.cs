@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 namespace Static_Interface.API.GUIFramework
 {
-    public class IconProgressBar : ProgressBar
+    public class IconProgressBarView : ProgressBarView
     {
-        protected override string PrefabLocation => "UI/IconProgressBar";
+        protected override string PrefabLocation => "UI/IconProgressBarView";
         private readonly GameObject _iconGameObject;
         public Sprite Icon
         {
@@ -13,11 +13,11 @@ namespace Static_Interface.API.GUIFramework
             set { _iconGameObject.GetComponent<Image>().sprite = value; }
         }
 
-        public IconProgressBar(string name) : this(name, null, 0, 0)
+        public IconProgressBarView(string viewName, ViewParent parent) : this(viewName, parent, 0, 0)
         {
         }
 
-        public IconProgressBar(string name, Canvas parent, int x, int y) : base(name, parent, x, y)
+        public IconProgressBarView(string viewName, ViewParent parent, int x, int y) : base(viewName, parent, x, y)
         {
             _iconGameObject = Prefab.transform.FindChild("Icon").gameObject;
         }

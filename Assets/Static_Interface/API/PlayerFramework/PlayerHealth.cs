@@ -11,7 +11,7 @@ namespace Static_Interface.API.PlayerFramework
     {
         public const float MIN_COLLISION_MOMENTUM = 50;
         private Rigidbody _rigidbody;
-        private ProgressBar _healthProgressBar;
+        private ProgressBarView _healthProgressBarView;
         protected override void Awake()
         {
             base.Awake();
@@ -53,14 +53,14 @@ namespace Static_Interface.API.PlayerFramework
             base.OnPlayerLoaded();
             _rigidbody = GetComponent<Rigidbody>();
             if (!UseGUI()) return;
-            _healthProgressBar = new ProgressBar("Health")
+            _healthProgressBarView = new ProgressBarView("Health", Player.GUI.ViewParent)
             {
                 MaxValue = MaxHealth,
                 MinValue = 0,
                 Value = Health,
                 Label = "Health"
             };
-            Player.GUI.AddStatusProgressBar(_healthProgressBar);
+            Player.GUI.AddStatusProgressBar(_healthProgressBarView);
         }
 
         public bool IsDead => Health == 0;
@@ -94,8 +94,8 @@ namespace Static_Interface.API.PlayerFramework
                 {
                     _health = newHealth;
                 }
-                if (_healthProgressBar != null)
-                    _healthProgressBar.Value = newHealth;
+                if (_healthProgressBarView != null)
+                    _healthProgressBarView.Value = newHealth;
 
                 if (IsServer() && !Channel.IsOwner)
                 {
@@ -186,8 +186,8 @@ namespace Static_Interface.API.PlayerFramework
             set
             {
                 _maxHealth = value;
-                if (_healthProgressBar != null)
-                    _healthProgressBar.MaxValue = MaxHealth;
+                if (_healthProgressBarView != null)
+                    _healthProgressBarView.MaxValue = MaxHealth;
             }
         }
 
