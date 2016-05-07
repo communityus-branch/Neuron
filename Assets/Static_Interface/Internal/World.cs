@@ -19,13 +19,11 @@ using Console = Static_Interface.API.ConsoleFramework.Console;
 
 namespace Static_Interface.Internal
 {
-    public class World : NetworkedBehaviour
+    public class World : NetworkedSingletonBehaviour<World>
     {
         public Transform Water;
-        public static World Instance;
         public static GameObject Sun_Moon => GameObject.Find("Sun_Moon");
         public GameObject Weather;
-        private bool _selfDestruct;
         public Transform DefaultSpawnPosition;
         private object _commandsObj;
         public static bool Loaded;
@@ -33,17 +31,10 @@ namespace Static_Interface.Internal
         internal object CommandsObj => _commandsObj;
         protected override void Start ()
         {
-            transform.position = new Vector3(0,0,0);
             base.Start();
-            ObjectUtils.CheckObjects();
-            if (Instance != null)
-            {
-                _selfDestruct = true;
-                DestroyImmediate(this);
-                return;
-            }          
+            transform.position = new Vector3(0, 0, 0);
+            ObjectUtils.CheckObjects();      
 
-            Instance = this;
             LogUtils.Log("Initializing World...");
 	        NetvarManager.Instance.RegisterNetvar(new GravityNetvar());
             NetvarManager.Instance.RegisterNetvar(new GameSpeedNetvar());
@@ -86,6 +77,7 @@ namespace Static_Interface.Internal
             Connection conn = FindObjectOfType<Connection>();
             conn.SendMessage("OnWeatherInit", Weather);
             var chat = gameObject.AddComponent<Chat>();
+            Chat.SetInstance(chat);
             conn.SendMessage("OnChatInit", chat);
 
             if (Connection.IsClient() && !Connection.IsSinglePlayer)
@@ -130,18 +122,6 @@ namespace Static_Interface.Internal
                     ExtensionManager.Instance.LoadExtension(pluginFile);
                 }
             }
-        }
-
-        protected override void OnDestroySafe()
-        {
-            base.OnDestroySafe();
-            if (_selfDestruct)
-            {
-                _selfDestruct = false;
-                return;
-            }
-
-            Instance = null;
         }
     }
 }

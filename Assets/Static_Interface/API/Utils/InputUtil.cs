@@ -47,7 +47,7 @@ namespace Static_Interface.API.Utils
 
         public bool IsInputLocked(object o = null)
         {
-            if (Connection.CurrentConnection != null && Connection.IsServer()) return false;
+            if (Connection.IsDedicated) return false;
             if (o != null && o == LockObject) return false;
             return InputLocked;
         }

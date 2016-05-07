@@ -73,5 +73,17 @@ namespace Static_Interface.Internal.Objects
 
             return target;
         }
+
+        public static void BroadcastAll(string fun, object msg)
+        {
+            GameObject[] gos = (GameObject[])Object.FindObjectsOfType(typeof(GameObject));
+            foreach (GameObject go in gos)
+            {
+                if (go && go.transform.parent == null)
+                {
+                    go.gameObject.BroadcastMessage(fun, msg, SendMessageOptions.DontRequireReceiver);
+                }
+            }
+        }
     }
 }

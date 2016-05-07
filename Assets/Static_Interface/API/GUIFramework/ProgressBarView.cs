@@ -14,7 +14,7 @@ namespace Static_Interface.API.GUIFramework
 
         public ProgressBarView(string viewName, ViewParent parent, int x, int y) : base(viewName, parent, x, y) 
         {
-            ProgressSlider = Prefab.transform.FindChild("ProgressSlider").gameObject;
+            ProgressSlider = Transform.FindChild("ProgressSlider").gameObject;
         }
 
         public string Label { get; set; }

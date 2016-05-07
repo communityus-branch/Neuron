@@ -19,10 +19,12 @@ namespace Static_Interface.Neuron.Menus
     public class MainMenu : MonoBehaviour
     {
         private static bool _firstStart = true;
+        private GameObject Connection;
         private FluentCommandLineParser<ApplicationArguments> _parser;
         protected override void Awake()
         {
             base.Awake();
+            Connection = new GameObject("Connection");
             CameraManager.Instance.CurrentCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
             if (_firstStart)
             {
@@ -74,12 +76,11 @@ namespace Static_Interface.Neuron.Menus
             LevelManager.Instance.InitObjects();
             AudioListener.pause = true;
             EnableConsole();
-            Connection.IsDedicated = true;
+            Internal.MultiplayerFramework.Connection.IsDedicated = true;
             LogUtils.Log("Hosting dedicated server");
-            GameObject serverObject = GameObject.Find("Server");
-            ServerConnection conn = serverObject.AddComponent<ServerConnection>();
+            ServerConnection conn = Connection.AddComponent<ServerConnection>();
             conn.OpenGameServer();
-            DontDestroyOnLoad(serverObject);
+            DontDestroyOnLoad(Connection);
         }
 
         private void EnableConsole()
@@ -91,9 +92,9 @@ namespace Static_Interface.Neuron.Menus
         private void DedicatedCallback(bool obj)
         {
             LogUtils.Debug("IsDedicated: " + obj);
-            Connection.IsDedicated = obj;
+            Internal.MultiplayerFramework.Connection.IsDedicated = obj;
 
-            if (!Connection.IsDedicated)
+            if (!Internal.MultiplayerFramework.Connection.IsDedicated)
             {
                 // GetComponent<AudioSource>().Play();
             }
@@ -106,30 +107,28 @@ namespace Static_Interface.Neuron.Menus
         public void StartGame(string scene)
         {
             LevelManager.Instance.InitObjects();
-            GameObject serverObject = GameObject.Find("Server");
-            DestroyImmediate(serverObject.GetComponent<ClientConnection>());
-            DestroyImmediate(serverObject.GetComponent<ServerConnection>());
-            DestroyImmediate(serverObject.GetComponent<SingleplayerConnection>());
-            ClientConnection conn = serverObject.AddComponent<ClientConnection>();
+            DestroyImmediate(Connection.GetComponent<ClientConnection>());
+            DestroyImmediate(Connection.GetComponent<ServerConnection>());
+            DestroyImmediate(Connection.GetComponent<SingleplayerConnection>());
+            ClientConnection conn = Connection.AddComponent<ClientConnection>();
             //SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
             //conn.Init();
             conn.AttemptConnect("127.0.0.1", 27015, string.Empty);
-            DontDestroyOnLoad(serverObject);
+            DontDestroyOnLoad(Connection);
         }
 
         public void Host()
         {
             LevelManager.Instance.InitObjects();
-            GameObject serverObject = GameObject.Find("Server");
-            DestroyImmediate(serverObject.GetComponent<ClientConnection>());
-            DestroyImmediate(serverObject.GetComponent<ServerConnection>());
-            DestroyImmediate(serverObject.GetComponent<SingleplayerConnection>());
+            DestroyImmediate(Connection.GetComponent<ClientConnection>());
+            DestroyImmediate(Connection.GetComponent<ServerConnection>());
+            DestroyImmediate(Connection.GetComponent<SingleplayerConnection>());
             //ServerConnection conn = serverObject.AddComponent<ServerConnection>();
             //conn.OpenGameServer();
-            SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
+            SingleplayerConnection conn = Connection.AddComponent<SingleplayerConnection>();
             conn.Init();
             GameObject.Find("Host Button").GetComponent<Button>().enabled = false;
-            DontDestroyOnLoad(serverObject);
+            DontDestroyOnLoad(Connection);
         }
 
         public void Quit()

@@ -53,7 +53,7 @@ namespace Static_Interface.API.PlayerFramework
             base.OnPlayerLoaded();
             _rigidbody = GetComponent<Rigidbody>();
             if (!UseGUI()) return;
-            _healthProgressBarView = new ProgressBarView("Health", Player.GUI.ViewParent)
+            _healthProgressBarView = new ProgressBarView("Health", Player.GUI.RootView)
             {
                 MaxValue = MaxHealth,
                 MinValue = 0,

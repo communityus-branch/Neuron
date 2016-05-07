@@ -19,7 +19,7 @@ namespace Static_Interface.API.GUIFramework
 
         public IconProgressBarView(string viewName, ViewParent parent, int x, int y) : base(viewName, parent, x, y)
         {
-            _iconGameObject = Prefab.transform.FindChild("Icon").gameObject;
+            _iconGameObject = Transform.FindChild("Icon").gameObject;
         }
     }
 }

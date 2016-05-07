@@ -42,7 +42,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22476884}
   m_Layer: 0
-  m_Name: ProgressBar
+  m_Name: ProgressBarView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,7 +114,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 22474664}
   m_HandleRect: {fileID: 0}

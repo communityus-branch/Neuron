@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Static_Interface.API.GUIFramework;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.Internal.Objects;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
@@ -10,14 +12,14 @@ namespace Static_Interface.API.PlayerFramework
     {
         private Vector2 _cachedResolution;
 
-        private PlayerGUIViewParent _viewParent;
-        public PlayerGUIViewParent ViewParent
+        private PlayerGUIViewParent _rootView;
+        public PlayerGUIViewParent RootView
         {
             get
             {
-                if (_viewParent != null) return _viewParent;
-                _viewParent = new PlayerGUIViewParent();
-                return _viewParent;
+                if (_rootView != null) return _rootView;
+                _rootView = new PlayerGUIViewParent();
+                return _rootView;
             }
         }
 
@@ -30,21 +32,23 @@ namespace Static_Interface.API.PlayerFramework
         protected override void OnPlayerLoaded()
         {
             base.OnPlayerLoaded();
+            Chat.Instance.PrintMessage("");
+            Chat.Instance.ChatView.Clear();
             if (UseGUI()) return;
             Destroy(this);
-            Destroy(ViewParent.Canvas.gameObject);
+            Destroy(RootView.Canvas.gameObject);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            ViewParent.Draw = false;
+            RootView.Draw = false;
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            ViewParent.Draw = true;
+            RootView.Draw = true;
         }
 
         protected override void Update()
@@ -52,24 +56,29 @@ namespace Static_Interface.API.PlayerFramework
             base.Update();
             Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
             if (_cachedResolution == currentResolution) return;
-            ViewParent.OnResolutionUpdate(_cachedResolution, currentResolution);
+            ObjectUtils.BroadcastAll("OnResolutionChanged", currentResolution);
             _cachedResolution = currentResolution;
+        }
+
+        protected override void OnResolutionChanged(Vector2 newRes)
+        {
+            RootView.OnResolutionChanged(newRes);
         }
 
         protected override void OnGUI()
         {
             base.OnGUI();
-            ViewParent.OnDraw();
+            RootView.OnDraw();
         }
 
         public void AddStatusProgressBar(ProgressBarView progressBarView)
         {
-            ViewParent.AddStatusProgressBar(progressBarView);
+            RootView.AddStatusProgressBar(progressBarView);
         }
 
         public void RemoveStatusProgressBar(ProgressBarView progressBarView, bool destroy = true)
         {
-            ViewParent.RemoveStatusProgressBar(progressBarView, destroy);
+            RootView.RemoveStatusProgressBar(progressBarView, destroy);
         }
     }
 
@@ -130,12 +139,9 @@ namespace Static_Interface.API.PlayerFramework
             }
         }
 
-        public void OnResolutionUpdate(Vector2 res, Vector2 newRes)
+        public override void OnResolutionChanged(Vector2 newRes)
         {
-            foreach (View view in _registeredViews)
-            {
-                view.OnResolutionChanged(res, newRes);
-            }
+            base.OnResolutionChanged(newRes);
             UpdatePositions();
         }
 
@@ -148,9 +154,9 @@ namespace Static_Interface.API.PlayerFramework
             foreach (ProgressBarView progress in _statusProgressBars)
             {
                 Vector2 progressPos = new Vector2(basePos.x, basePos.y);
-                progressPos.x += progress.Size.x / 2;
-                progress.Position = progressPos;
-                basePos.y += 5 + progress.Size.x;
+                progressPos.x += progress.SizeDelta.x / 2;
+                progress.AnchoredPosition = progressPos;
+                basePos.y += 5 + progress.SizeDelta.x;
             }
         }
 

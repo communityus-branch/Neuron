@@ -29,5 +29,14 @@ namespace Static_Interface.API.GUIFramework
         {
             return Canvas.gameObject;
         }
+
+        public override void OnResolutionChanged(Vector2 newRes)
+        {
+            base.OnResolutionChanged(newRes);
+            foreach (View v in GetChilds())
+            {
+                v.OnResolutionChanged(newRes);
+            }
+        }
     }
 }

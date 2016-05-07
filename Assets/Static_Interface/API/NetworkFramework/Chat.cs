@@ -1,28 +1,48 @@
-﻿using System.Collections.Generic;
-using Fclp.Internals.Extensions;
+﻿using Static_Interface.API.GUIFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
 
 namespace Static_Interface.API.NetworkFramework
 {
-    public class Chat : NetworkedBehaviour
+    public class Chat : NetworkedSingletonBehaviour<Chat>
     {
-        public List<string> ChatHistory = new List<string>();
-        private Vector2 _scrollView = Vector2.zero;
         private string Message { get; set; } = "";
         private const string ChatTextFieldName = "ChatTextField";
-        public bool Draw { get; set; } = true;
-        public static Chat Instance;
-
         private bool ChatTextFieldFocused { get; set; }
-        public bool ChatTextFieldVisible { get; set; }
-        protected override void Start()
+
+        private bool _wasCursorVisible;
+        private bool _chatTextFieldVisible;
+
+        internal static void SetInstance(Chat instance)
         {
-            base.Start();
-            Instance = this;
+            InternalInstance = instance;
         }
 
+
+        public bool ChatTextFieldVisible
+        {
+            get { return _chatTextFieldVisible; }
+            set
+            {
+                if (value == _chatTextFieldVisible) return;
+                _chatTextFieldVisible = value;
+
+                //Enable cursor when chat field opens
+                if (_chatTextFieldVisible)
+                {
+                    _wasCursorVisible = Cursor.visible;
+                    Cursor.visible = true;
+                }
+                else
+                {
+                    Cursor.visible = _wasCursorVisible;
+                }
+            }
+        }
+
+        private ChatScrollView _chatView;
+        internal ChatScrollView ChatView => _chatView;
         public void SendPlayerMessage(string text)
         {
             Channel.Send(nameof(Network_SendUserMessage), ECall.Server, text);
@@ -34,30 +54,12 @@ namespace Static_Interface.API.NetworkFramework
             Channel.Send(nameof(Network_ReceiveMessage), ECall.All, Channel.Connection.ServerID, text);
         }
 
-        protected override void OnDestroySafe()
-        {
-            base.OnDestroySafe();
-            Instance = null;
-        }
-
         private bool _justFocused;
 
         protected override void OnGUI()
         {
             base.OnGUI();
             if (InputUtil.Instance.IsInputLocked(this)) return;
-            if (!Draw) return;
-
-            GUILayout.BeginArea(new Rect(0, 0, 400, 200));
-            _scrollView = GUILayout.BeginScrollView(_scrollView);
-            foreach (string c in ChatHistory)
-            {
-                GUILayout.Label(c);
-            }
-            GUILayout.EndArea();
-            GUILayout.EndScrollView();
-            _scrollView.y++;
-
             if (!ChatTextFieldVisible)
             {
                 if (!Input.GetKeyDown(KeyCode.Return)) return;
@@ -68,7 +70,6 @@ namespace Static_Interface.API.NetworkFramework
                 return;
             }
 
-#region DrawTextField
             GUI.SetNextControlName(ChatTextFieldName);
             Message = GUI.TextField(new Rect(0, 200, 150, 25), Message);
             if (ChatTextFieldFocused)
@@ -76,7 +77,6 @@ namespace Static_Interface.API.NetworkFramework
                 GUI.FocusControl(ChatTextFieldName);
                 ChatTextFieldFocused = false;
             }
-#endregion
 
             bool returnPressed = (Event.current.type == EventType.keyDown  && Event.current.character == '\n');
 
@@ -108,7 +108,7 @@ namespace Static_Interface.API.NetworkFramework
             {
                 Channel.Send(nameof(Network_ClearChatCommand), ECall.Clients);
             }
-            ChatHistory.Clear();
+            _chatView?.Clear();
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER)]
@@ -116,7 +116,7 @@ namespace Static_Interface.API.NetworkFramework
         {
             LogUtils.Debug(nameof(Network_SendUserMessage));
             //Todo: onchatevent
-            var userName = sender.GetUser()?.Name ?? "Server"; // if getuser returns null it means we are a server
+            var userName = sender.GetUser().Name;
             msg = "<color=yellow>" + userName + "</color>: " + msg;
             Channel.Send(nameof(Network_ReceiveMessage), ECall.All, sender, msg);
         }
@@ -124,10 +124,17 @@ namespace Static_Interface.API.NetworkFramework
         [NetworkCall(ConnectionEnd = ConnectionEnd.BOTH, ValidateServer = true)]
         private void Network_ReceiveMessage(Identity server, Identity sender, string formattedMessage)
         {
-            //Todo: onchatreceivedevent/onmessagereceived
-            LogUtils.Debug(nameof(Network_ReceiveMessage));
+            PrintMessage(formattedMessage);
+        }
+
+        internal void PrintMessage(string formattedMessage)
+        {
             LogUtils.Log(formattedMessage);
-            ChatHistory.Add(formattedMessage);
+            if (!IsDedicatedServer())
+            {
+                if(_chatView == null) _chatView = new ChatScrollView("PlayerChat", Player.MainPlayer.GUI.RootView);
+                _chatView.AddLine(formattedMessage);
+            }
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]

@@ -322,5 +322,11 @@ namespace Static_Interface.API.UnityExtensions
         {
             
         }
+
+
+        protected virtual void OnResolutionChanged(Vector2 newRes)
+        {
+            
+        }
     }
 }

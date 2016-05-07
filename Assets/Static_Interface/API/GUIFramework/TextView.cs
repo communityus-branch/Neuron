@@ -13,12 +13,18 @@ namespace Static_Interface.API.GUIFramework
         {
         }
 
-        protected override string PrefabLocation => "TextView";
+        protected override string PrefabLocation => "UI/TextView";
 
         public string Text
         {
             get { return GetViewObject().GetComponent<Text>().text; }
             set { GetViewObject().GetComponent<Text>().text = value; }
+        }
+
+        public int FontSize
+        {
+            get { return GetViewObject().GetComponent<Text>().fontSize; }
+            set { GetViewObject().GetComponent<Text>().fontSize= value; }
         }
     }
 }
