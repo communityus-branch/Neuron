@@ -32,8 +32,6 @@ namespace Static_Interface.API.PlayerFramework
         protected override void OnPlayerLoaded()
         {
             base.OnPlayerLoaded();
-            Chat.Instance.PrintMessage("");
-            Chat.Instance.ChatView.Clear();
             if (UseGUI()) return;
             Destroy(this);
             Destroy(RootView.Canvas.gameObject);

@@ -331,16 +331,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
                 int ch = ChannelCount;
 
-                if (!(user.Identity == ServerID && IsSinglePlayer))
-                {
-                    if (!IsSinglePlayer)
-                    {
-                        Transform player = AddPlayer(ident, user.Name, user.Group, spawn.Value, angle, ch,
-                            user.Identity == ServerID);
+                Transform player = AddPlayer(ident, user.Name, user.Group, spawn.Value, angle, ch,
+                    user.Identity == ServerID);
 
-                        player.GetComponent<Channel>().Owner = user.Identity;
-                        player.BroadcastMessage("OnPlayerLoaded");
-                    }
+                player.GetComponent<Channel>().Owner = user.Identity;
+                player.BroadcastMessage("OnPlayerLoaded");
+
+                if (!IsDedicated && user.Identity == ServerID)
+                {
+                    ClientConnection.SetupMainPlayer(player);
                 }
 
                 int size;

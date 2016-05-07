@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using Static_Interface.API.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +9,6 @@ namespace Static_Interface.API.GUIFramework
     public class ChatScrollView : ScrollView
     {
         private readonly List<TextView> _lines  = new List<TextView>();
-        private bool _scrollToBottom;
         public ReadOnlyCollection<TextView> Lines => _lines.AsReadOnly();
 
         protected override void InitGameObject()
@@ -85,6 +82,7 @@ namespace Static_Interface.API.GUIFramework
                     if (t == null)
                     {
                         toRemove.Add(t);
+                        continue;
                     }
                     height += t.Rect.height;
                 }

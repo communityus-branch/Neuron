@@ -284,88 +284,90 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 foreach (Channel ch in Receivers.Where(ch => ch.ID == channel))
                 {
                     ch.Receive(id, packet, 0, size);
-                    return;
                 }
+                return;
             }
-            else if (id == ServerID)
+
+            if (id != ServerID) return;
+            switch (parsedPacket)
             {
-                switch (parsedPacket)
+                case EPacket.WORKSHOP:
+                    //todo
+                    break;
+                case EPacket.TICK:
                 {
-                    case EPacket.WORKSHOP:
-                        //todo
-                        return;
-                    case EPacket.TICK:
-                        {
-                            Send(ServerID, EPacket.TIME, new byte[] { }, 0, 0);
-                            return;
-                        }
-                    case EPacket.TIME:
-                    {
-                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.SINGLE_TYPE);
-                        LastNet = Time.realtimeSinceStartup;
-                        OffsetNet = ((float) args[0]) + ((Time.realtimeSinceStartup - LastPing)/2f);
-                        Lag(Time.realtimeSinceStartup - LastPing);
-                        return;
-                    }
-                    case EPacket.SHUTDOWN:
-                        Disconnect();
-                        return;
-
-                    case EPacket.CONNECTED:
-                        {
-                            Type[] argTypes = {
-                                //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
-                                Types.IDENTITY_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE, Types.BOOLEAN_TYPE
-                            };
-
-                            object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, argTypes);
-                            if (World.Loaded)
-                            {
-                                AddPlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
-                                    (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
-                            }
-                            else
-                            {
-                                QueuePlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
-                                    (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
-                            }
-                            return;
-                        }
-                    case EPacket.VERIFY:
-                        LogUtils.Debug("Opening ticket");
-                        byte[] ticket = ((ClientMultiplayerProvider)Provider).OpenTicket();
-                        if (ticket == null)
-                        {
-                            LogUtils.Debug("ticket equals null");
-                            Disconnect();
-                            return;
-                        }
-                        Send(ServerID, EPacket.AUTHENTICATE, ticket, ticket.Length, 0);
-                        break;
-                    case EPacket.DISCONNECTED:
-                        RemovePlayer(packet[1]);
-                        return;
-                    case EPacket.REJECTED:
-                    case EPacket.KICKED:
-                        Disconnect();
-                        return;
-                    case EPacket.ACCEPTED:
-                    {
-                        object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.UINT64_TYPE, Types.INT32_TYPE);
-                        LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
-                        ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
-                        ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
-                        ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);
-                        IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(_currentIp, _currentPort);
-                        ((ClientMultiplayerProvider) Provider).FavoriteServer(_currentIp, _currentPort);
-
-                        //Todo: load extensions
-                        break;
-                    }
-                    default:
-                        LogUtils.LogWarning("Couldn't handle packet: " + parsedPacket);
-                        break;
+                    int pSize;
+                    var data = ObjectSerializer.GetBytes(0, out pSize, Time.realtimeSinceStartup);
+                    Send(ServerID, EPacket.TIME, data, pSize, 0);
+                    break;
                 }
+                case EPacket.TIME:
+                {
+                    object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.SINGLE_TYPE);
+                    LastNet = Time.realtimeSinceStartup;
+                    OffsetNet = ((float) args[0]) + ((Time.realtimeSinceStartup - LastPing)/2f);
+                    Lag(Time.realtimeSinceStartup - LastPing);
+                    break;
+                }
+                case EPacket.SHUTDOWN:
+                    Disconnect();
+                    break;
+
+                case EPacket.CONNECTED:
+                {
+                    Type[] argTypes = {
+                        //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
+                        Types.IDENTITY_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE, Types.BOOLEAN_TYPE
+                    };
+
+                    object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, argTypes);
+                    if (IsSinglePlayer) return;
+                    if (World.Loaded)
+                    {
+                        AddPlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
+                            (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
+                    }
+                    else
+                    {
+                        QueuePlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
+                            (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
+                    }
+                    break;
+                }
+                case EPacket.VERIFY:
+                    LogUtils.Debug("Opening ticket");
+                    byte[] ticket = ((ClientMultiplayerProvider)Provider).OpenTicket();
+                    if (ticket == null)
+                    {
+                        LogUtils.Debug("ticket equals null");
+                        Disconnect();
+                        break;
+                    }
+                    Send(ServerID, EPacket.AUTHENTICATE, ticket, ticket.Length, 0);
+                    break;
+                case EPacket.DISCONNECTED:
+                    RemovePlayer(packet[1]);
+                    break;
+                case EPacket.REJECTED:
+                case EPacket.KICKED:
+                    Disconnect();
+                    break;
+                case EPacket.ACCEPTED:
+                {
+                    object[] args = ObjectSerializer.GetObjects(id, 0, 0, packet, false, Types.UINT64_TYPE, Types.INT32_TYPE);
+                    LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
+                    ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
+                    ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
+                    ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);
+                    IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(_currentIp, _currentPort);
+                    ((ClientMultiplayerProvider) Provider).FavoriteServer(_currentIp, _currentPort);
+
+                    //Todo: load extensions
+                    break;
+                }
+                default:
+                    LogUtils.LogWarning("Couldn't handle packet: " + parsedPacket);
+                    break;
             }
         }
 
@@ -392,6 +394,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 AddPlayer(player.Identity, player.Name, player.Group, player.Pos, player.Rotation, player.Channel,
                     player.IsMainPlayer);
             }
+            _players.Clear();
         }
 
         public bool OnConnectionFailed()
