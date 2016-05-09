@@ -137,12 +137,8 @@ namespace Static_Interface.API.PlayerFramework
         bool _disabled;
         public void EnableControl()
         {
-            var comp = Player.GetComponent<SmoothMouseLook>();
-            if (!comp)
-            {
-                comp = Player.gameObject.AddComponent<SmoothMouseLook>();
-            }
-            comp.enabled = true;
+            var mouse = Player.gameObject.AddComponent<SmoothMouseLook>();
+            mouse.OriginalRotation = Quaternion.identity;
             _disabled = false;
             Cursor.visible = false;
         }

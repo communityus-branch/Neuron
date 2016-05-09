@@ -22,29 +22,30 @@ namespace Static_Interface.API.PlayerFramework
         protected override void OnCollisionEnter(Collision collision)
         {
             base.OnCollisionEnter(collision);
-
-
-            var collider = collision.collider;
-            if (collider.GetComponent<Bullet>() != null)
+            var deathCause = EPlayerDeathCause.COLLISION;
+            var hitTransform = collision.transform;
+            if (hitTransform.GetComponent<Bullet>() != null)
             {
-                var bullet = collider.GetComponent<Bullet>();
-                Physics.IgnoreCollision(GetComponent<Collider>(), collider);
+                var bullet = hitTransform.GetComponent<Bullet>();
+                Physics.IgnoreCollision(GetComponent<Collider>(), hitTransform.GetComponent<Collider>());
                 if (bullet.Damage != null)
                 {
                     bool wasDead = IsDead;
-                    Player.Health.DamagePlayer((int) bullet.Damage.Value);
+                    Player.Health.DamagePlayer((int) bullet.Damage.Value, null);
                     if (!wasDead && IsDead)
                     {
                         OnPlayerDeath(EPlayerDeathCause.SHOT);
                     }
                     return;
                 }
+                //If bullet.Damage == null we will calculate damamge from collision 
+                deathCause = EPlayerDeathCause.SHOT;
             }
 
             var momentum = collision.relativeVelocity * _rigidbody.mass;
             if (momentum.magnitude > MIN_COLLISION_MOMENTUM * _rigidbody.mass)
             {
-                Player.Health.PlayerCollision(momentum);
+                Player.Health.PlayerCollision(momentum, deathCause);
             }
         }
 
@@ -71,7 +72,14 @@ namespace Static_Interface.API.PlayerFramework
             get { return _health; }
             private set
             {
+                bool wasDead = _health == 0;
                 int newHealth = Mathf.Clamp(value, 0, MaxHealth);
+
+                if (!wasDead && newHealth == 0)
+                {
+                    _rigidbody.freezeRotation = false;
+                    Player.MovementController?.DisableControl();
+                }
 
                 if (IsDead && newHealth > 0)
                 {
@@ -88,7 +96,7 @@ namespace Static_Interface.API.PlayerFramework
 
                 if (newHealth < _health)
                 {
-                    DamagePlayer(_health - newHealth, true);
+                    DamagePlayer(_health - newHealth, null, true);
                 }
                 else
                 {
@@ -102,10 +110,6 @@ namespace Static_Interface.API.PlayerFramework
                     Channel.Send(nameof(Network_SetHealth), target, MaxHealth, Health);
                 }
                 if (!isStatusUpdate) return;
-                if (_health == 0)
-                {
-                    Kill(EPlayerDeathCause.UNKNOWN);
-                }
             }
         }
 
@@ -129,11 +133,8 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (IsServer())
             {
-                Chat.Instance.SendServerMessage("<b>" + Player.User.Name + "</b> died");
+                Chat.Instance.SendServerMessage("<b>" + Player.User.Name + "</b> died (" + reason + ")");
             }
-
-            _rigidbody.freezeRotation = false;
-            Player.MovementController?.DisableControl();
         }
 
         public void RevivePlayer()
@@ -144,10 +145,6 @@ namespace Static_Interface.API.PlayerFramework
 
         public void RevivePlayer(int health)
         {
-            if (IsServer())
-            {
-                Channel.Send(nameof(Network_Revive), ECall.Clients, health);
-            }
             RevivePlayer(health, false);   
         }
 
@@ -173,11 +170,10 @@ namespace Static_Interface.API.PlayerFramework
 
             if (IsServer() && !Channel.IsOwner)
             {
-                Channel.Send(nameof(Network_Revive), ECall.Owner, _health);
+                Channel.Send(nameof(Network_Revive), ECall.Clients, _health);
             }
         }
-
-
+        
         private int _maxHealth;
 
         public int MaxHealth
@@ -191,30 +187,35 @@ namespace Static_Interface.API.PlayerFramework
             }
         }
 
-        public void PlayerCollision(Vector3 momentum)
+        public void PlayerCollision(Vector3 momentum, EPlayerDeathCause deathCause = EPlayerDeathCause.COLLISION)
         {
             if (!IsServer()) return;
             bool wasDead = IsDead;
             var magnitude = momentum.magnitude;
             var speed = magnitude / GetComponent<Rigidbody>().mass;
             var damage = (10 / 4) * speed;  // 100 damage at 40 m/s
-            DamagePlayer((int)damage);
+            DamagePlayer((int)damage, null);
             if (!wasDead && IsDead)
             {
-                OnPlayerDeath(EPlayerDeathCause.COLLISION);
+                OnPlayerDeath(deathCause);
             }
         }
 
-        public void DamagePlayer(int damage)
+        public void DamagePlayer(int damage, EPlayerDeathCause? cause = EPlayerDeathCause.UNKNOWN)
         {
-            DamagePlayer(damage, false);
+            DamagePlayer(damage, cause, false);
         }
 
-        protected void DamagePlayer(int damage, bool internallCall)
+        protected void DamagePlayer(int damage, EPlayerDeathCause? cause, bool internallCall)
         {
             if (!internallCall && !IsServer()) return;
+            bool wasDead = IsDead;
             if (internallCall) _health -= damage;
             else Health -= damage;
+            if (cause != null && IsDead && !wasDead)
+            {
+                OnPlayerDeath(cause.Value);
+            }
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]

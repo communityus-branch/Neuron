@@ -30,7 +30,7 @@ namespace Static_Interface.API.Utils
 
         public float FrameCounter = 20;
 
-        Quaternion _originalRotation;
+        public Quaternion? OriginalRotation;
 
         protected override void Update()
         {
@@ -75,7 +75,7 @@ namespace Static_Interface.API.Utils
                     Quaternion yQuaternion = Quaternion.AngleAxis(_rotAverageY, Vector3.left);
                     Quaternion xQuaternion = Quaternion.AngleAxis(_rotAverageX, Vector3.up);
 
-                    transform.localRotation = _originalRotation * xQuaternion * yQuaternion;
+                    transform.localRotation = OriginalRotation.GetValueOrDefault(Quaternion.identity) * xQuaternion * yQuaternion;
                 }
                     break;
                 case RotationAxes.MOUSE_X:
@@ -99,7 +99,7 @@ namespace Static_Interface.API.Utils
                     _rotAverageX = ClampAngle(_rotAverageX, MinimumX, MaximumX);
 
                     Quaternion xQuaternion = Quaternion.AngleAxis(_rotAverageX, Vector3.up);
-                    transform.localRotation = _originalRotation * xQuaternion;
+                    transform.localRotation = OriginalRotation.GetValueOrDefault(Quaternion.identity) * xQuaternion;
                 }
                     break;
                 default:
@@ -123,7 +123,7 @@ namespace Static_Interface.API.Utils
                     _rotAverageY = ClampAngle(_rotAverageY, MinimumY, MaximumY);
 
                     Quaternion yQuaternion = Quaternion.AngleAxis(_rotAverageY, Vector3.left);
-                    transform.localRotation = _originalRotation * yQuaternion;
+                    transform.localRotation = OriginalRotation.GetValueOrDefault(Quaternion.identity) * yQuaternion;
                 }
                     break;
             }
@@ -135,7 +135,7 @@ namespace Static_Interface.API.Utils
             Rigidbody rb = GetComponent<Rigidbody>();
             if (rb)
                 rb.freezeRotation = true;
-            _originalRotation = transform.localRotation;
+            if(OriginalRotation == null) OriginalRotation = transform.localRotation;
         }
 
         public static float ClampAngle(float angle, float min, float max)
