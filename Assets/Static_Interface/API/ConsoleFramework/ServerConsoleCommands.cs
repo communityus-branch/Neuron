@@ -20,7 +20,7 @@ namespace Static_Interface.API.ConsoleFramework
         [CommandUsage("<player>")]
         public void Kill(Player player)
         {
-            player.Health.Kill(EPlayerDeathCause.CONSOLE);
+            player.Health.Kill(EDamageCause.CONSOLE);
         }
 
         [ConsoleCommand(Runtime = ConsoleCommandRuntime.SERVER)]

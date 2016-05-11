@@ -435,5 +435,10 @@ namespace Static_Interface.API.ConsoleFramework
             obj = parameters[1];
             return result;
         }
+
+        public void ClearCommands()
+        {
+            _commands.Clear();
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Static_Interface.API.PlayerFramework
 {
-    public enum EPlayerDeathCause
+    public enum EDamageCause
     {
         COLLISION,
         UNKNOWN,

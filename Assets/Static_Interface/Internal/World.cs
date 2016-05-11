@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using Static_Interface.API.AssetsFramework;
 using Static_Interface.API.ConsoleFramework;
+using Static_Interface.API.EntityFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
@@ -19,7 +20,7 @@ using Console = Static_Interface.API.ConsoleFramework.Console;
 
 namespace Static_Interface.Internal
 {
-    public class World : NetworkedSingletonBehaviour<World>
+    public class World : NetworkedSingletonBehaviour<World>, IEntity
     {
         public Transform Water;
         public static GameObject Sun_Moon => GameObject.Find("Sun_Moon");
@@ -123,5 +124,7 @@ namespace Static_Interface.Internal
                 }
             }
         }
+
+        public string Name => "World";
     }
 }

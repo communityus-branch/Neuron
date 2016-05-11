@@ -1,8 +1,12 @@
 ﻿using System;
+using Static_Interface.API.EntityFramework;
+using Static_Interface.API.EventFramework;
 using Static_Interface.API.GUIFramework;
 using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework.Events;
 using Static_Interface.API.Utils;
 using Static_Interface.API.WeaponFramework;
+using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
@@ -22,7 +26,7 @@ namespace Static_Interface.API.PlayerFramework
         protected override void OnCollisionEnter(Collision collision)
         {
             base.OnCollisionEnter(collision);
-            var deathCause = EPlayerDeathCause.COLLISION;
+            var deathCause = EDamageCause.COLLISION;
             var hitTransform = collision.transform;
             if (hitTransform.GetComponent<Bullet>() != null)
             {
@@ -30,16 +34,11 @@ namespace Static_Interface.API.PlayerFramework
                 Physics.IgnoreCollision(GetComponent<Collider>(), hitTransform.GetComponent<Collider>());
                 if (bullet.Damage != null)
                 {
-                    bool wasDead = IsDead;
-                    Player.Health.DamagePlayer((int) bullet.Damage.Value, null);
-                    if (!wasDead && IsDead)
-                    {
-                        OnPlayerDeath(EPlayerDeathCause.SHOT);
-                    }
+                    Player.Health.DamagePlayer(bullet.Damage.Value, EDamageCause.SHOT, bullet.Owner);
                     return;
                 }
                 //If bullet.Damage == null we will calculate damamge from collision 
-                deathCause = EPlayerDeathCause.SHOT;
+                deathCause = EDamageCause.SHOT;
             }
 
             var momentum = collision.relativeVelocity * _rigidbody.mass;
@@ -94,26 +93,19 @@ namespace Static_Interface.API.PlayerFramework
                     isStatusUpdate = true;
                 }
 
-                if (newHealth < _health)
-                {
-                    DamagePlayer(_health - newHealth, null, true);
-                }
-                else
-                {
-                    _health = newHealth;
-                }
+                _health = newHealth;
                 if (_healthProgressBarView != null)
                     _healthProgressBarView.Value = newHealth;
 
+                if (!isStatusUpdate) return;
                 if (IsServer() && !Channel.IsOwner)
                 {
                     Channel.Send(nameof(Network_SetHealth), target, MaxHealth, Health);
                 }
-                if (!isStatusUpdate) return;
             }
         }
 
-        public void Kill(EPlayerDeathCause deathcause)
+        public void Kill(EDamageCause deathcause)
         {
             if (IsServer())
             {
@@ -122,18 +114,23 @@ namespace Static_Interface.API.PlayerFramework
             Kill(deathcause, false);
         }
 
-        private void Kill(EPlayerDeathCause deathcause, bool ignoreServer)
+        private void Kill(EDamageCause deathcause, bool ignoreServer)
         {
             if (!ignoreServer && !IsServer()) return;
             Health = 0;
-            OnPlayerDeath(deathcause);
+            OnPlayerDeath(deathcause, null);
         }
 
-        private void OnPlayerDeath(EPlayerDeathCause reason, object arg = null)
+        private void OnPlayerDeath(EDamageCause reason, IEntity killedBy)
         {
-            if (IsServer())
+            PlayerDeathEvent @event = new PlayerDeathEvent(Player);
+            @event.DeathMessage = "<b>" + Player.User.Name + "</b> died (" + reason + ")";
+            @event.Killer = killedBy;
+            @event.DeathCause = reason;
+            EventManager.Instance.CallEvent(@event);
+            if (@event.DeathMessage != null && IsServer())
             {
-                Chat.Instance.SendServerMessage("<b>" + Player.User.Name + "</b> died (" + reason + ")");
+                Chat.Instance.SendServerMessage(@event.DeathMessage);
             }
         }
 
@@ -168,6 +165,9 @@ namespace Static_Interface.API.PlayerFramework
             _rigidbody.freezeRotation = true;
             Player.MovementController?.EnableControl();
 
+            PlayerReviveEvent @event = new PlayerReviveEvent(Player);
+            EventManager.Instance.CallEvent(@event);
+
             if (IsServer() && !Channel.IsOwner)
             {
                 Channel.Send(nameof(Network_Revive), ECall.Clients, _health);
@@ -187,34 +187,30 @@ namespace Static_Interface.API.PlayerFramework
             }
         }
 
-        public void PlayerCollision(Vector3 momentum, EPlayerDeathCause deathCause = EPlayerDeathCause.COLLISION)
+        public void PlayerCollision(Vector3 momentum, EDamageCause deathCause = EDamageCause.COLLISION)
         {
             if (!IsServer()) return;
-            bool wasDead = IsDead;
             var magnitude = momentum.magnitude;
             var speed = magnitude / GetComponent<Rigidbody>().mass;
             var damage = (10 / 4) * speed;  // 100 damage at 40 m/s
-            DamagePlayer((int)damage, null);
-            if (!wasDead && IsDead)
-            {
-                OnPlayerDeath(deathCause);
-            }
+            DamagePlayer((int)damage, deathCause, World.Instance);
         }
 
-        public void DamagePlayer(int damage, EPlayerDeathCause? cause = EPlayerDeathCause.UNKNOWN)
-        {
-            DamagePlayer(damage, cause, false);
-        }
 
-        protected void DamagePlayer(int damage, EPlayerDeathCause? cause, bool internallCall)
-        {
-            if (!internallCall && !IsServer()) return;
+        public void DamagePlayer(int damage, EDamageCause cause, IEntity damagingEntity = null)
+        {         
+            PlayerDamageEvent @event = new PlayerDamageEvent(Player);
+            @event.Damage = damage;
+            @event.DamageCausingEntity = damagingEntity;
+            @event.DamageCause = cause;
+            EventManager.Instance.CallEvent(@event);
+
             bool wasDead = IsDead;
-            if (internallCall) _health -= damage;
-            else Health -= damage;
-            if (cause != null && IsDead && !wasDead)
+            Health -= @event.Damage;
+
+            if (IsDead && !wasDead)
             {
-                OnPlayerDeath(cause.Value);
+                OnPlayerDeath(@event.DamageCause, damagingEntity);
             }
         }
 
@@ -222,14 +218,22 @@ namespace Static_Interface.API.PlayerFramework
         private void Network_SetHealth(Identity identity, int maxhealth, int health)
         {
             MaxHealth = maxhealth;
-            Health = health;
+            if (Health > health)
+            {
+                //Todo: Networked damaging!!
+                DamagePlayer(Health - health, EDamageCause.UNKNOWN);
+            }
+            else
+            {
+                Health = health;
+            }
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_Kill(Identity identity, int cause)
         {
             if (identity == Connection.ClientID) return;
-            Kill((EPlayerDeathCause) cause, true);
+            Kill((EDamageCause) cause, true);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]

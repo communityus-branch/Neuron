@@ -26,11 +26,21 @@ namespace Static_Interface.Neuron.Menus
             base.Awake();
             Connection = new GameObject("Connection");
             CameraManager.Instance.CurrentCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+
             if (_firstStart)
             {
-                DefaultConsoleCommands defaultCmds = new DefaultConsoleCommands();
-                API.ConsoleFramework.Console.Instance.RegisterCommands(defaultCmds);
                 API.ConsoleFramework.Console.Init();
+            }
+            else
+            {
+                API.ConsoleFramework.Console.Instance.ClearCommands();
+            }
+
+            DefaultConsoleCommands defaultCmds = new DefaultConsoleCommands();
+            API.ConsoleFramework.Console.Instance.RegisterCommands(defaultCmds);
+
+            if (_firstStart)
+            {
                 ObjectUtils.CheckObjects();
                 if (!Debug.isDebugBuild && SteamAPI.RestartAppIfNecessary(GameInfo.ID))
                 {
