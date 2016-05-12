@@ -12,11 +12,9 @@ namespace Static_Interface.API.EventFramework
     public class EventManager
     {
         private static EventManager _instance;
-
-        private readonly List<object> _listeners = new List<object>();
         private readonly Dictionary<Type, List<MethodInfo>> _eventListeners = new Dictionary<Type, List<MethodInfo>>();
-        private readonly Dictionary<MethodInfo, IListener> _listenerInstances = new Dictionary<MethodInfo, IListener>();
-
+        private readonly Dictionary<IListener, List<MethodInfo>> _listenerMethods = new Dictionary<IListener, List<MethodInfo>>();
+        private readonly Dictionary<Extension, List<IListener>> _listeners = new Dictionary<Extension, List<IListener>>(); 
         public static EventManager Instance => _instance ?? (_instance = new EventManager());
 
         /// <summary>
@@ -26,14 +24,14 @@ namespace Static_Interface.API.EventFramework
         /// <param name="extension">The extension which wants to register a new listener</param>
         public void RegisterEvents(IListener listener, Extension extension)
         {
-            //Todo
-            RegisterEvents(listener);
-        }
-
-
-        internal void RegisterEvents(IListener listener)
-        {
-            if (!_listeners.Contains(listener)) _listeners.Add(listener);
+            if (!_listeners.ContainsKey(extension))
+            {
+                _listeners.Add(extension, new List<IListener>());
+            }
+            if (!_listeners[extension].Contains(listener))
+            {
+                _listeners[extension].Add(listener);
+            }
 
             Type type = listener.GetType();
             foreach (MethodInfo method in type.GetMethods())
@@ -80,7 +78,12 @@ namespace Static_Interface.API.EventFramework
                     _eventListeners.Add(t, methods);
                 }
 
-                if (!_listenerInstances.ContainsKey(method)) _listenerInstances.Add(method, listener);
+                if (!_listenerMethods.ContainsKey(listener))
+                {
+                    _listenerMethods.Add(listener, new List<MethodInfo>());
+                }
+                
+                if (!_listenerMethods[listener].Contains(method)) _listenerMethods[listener].Add(method);
             }
         }
 
@@ -110,7 +113,7 @@ namespace Static_Interface.API.EventFramework
                 object instance;
                 try
                 {
-                    instance = _listenerInstances[info];
+                    instance = _listenerMethods.Where(c => c.Value.Contains(info));
                 }
                 catch (KeyNotFoundException e)
                 {
@@ -138,7 +141,16 @@ namespace Static_Interface.API.EventFramework
 
         public void ClearListeners(Extension extension)
         {
-            //Todo
+            if (!_listeners.ContainsKey(extension)) return;
+            foreach (IListener listener in _listeners[extension])
+            {
+                if (_listenerMethods.ContainsKey(listener))
+                {
+                    _listenerMethods.Remove(listener);
+                }
+            }
+
+            _listeners.Remove(extension);
         }
 
         internal void Shutdown()
