@@ -1,7 +1,11 @@
-﻿using Static_Interface.API.GUIFramework;
+﻿using System.Text.RegularExpressions;
+using Static_Interface.API.EventFramework;
+using Static_Interface.API.GUIFramework;
+using Static_Interface.API.NetworkFramework.Events;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
+using Event = UnityEngine.Event;
 
 namespace Static_Interface.API.NetworkFramework
 {
@@ -114,16 +118,24 @@ namespace Static_Interface.API.NetworkFramework
         [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER)]
         private void Network_SendUserMessage(Identity sender, string msg)
         {
-            LogUtils.Debug(nameof(Network_SendUserMessage));
-            //Todo: onchatevent
+            PlayerChatEvent @event = new PlayerChatEvent(sender.Owner.Player);
+            @event.Message = msg;
+            @event.Format = "<color=yellow>{NAME}</color>: {MESSAGE}";
+            EventManager.Instance.CallEvent(@event);
+            if (@event.IsCancelled) return;
+            Regex.Replace(msg, @"({\p{Lu}.})", ""); // {UPPERCASE} is reserved and may not be used by players
             var userName = sender.GetUser().Name;
-            msg = "<color=yellow>" + userName + "</color>: " + msg;
-            Channel.Send(nameof(Network_ReceiveMessage), ECall.All, sender, msg);
+            string formattedMsg = @event.Format.Replace("{NAME}", userName).Replace("{MESSAGE}", @event.Message);
+            Channel.Send(nameof(Network_ReceiveMessage), ECall.All, sender, formattedMsg);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.BOTH, ValidateServer = true)]
         private void Network_ReceiveMessage(Identity server, Identity sender, string formattedMessage)
         {
+            ReceiveMessageEvent @event = new ReceiveMessageEvent(sender);
+            @event.Message = formattedMessage;
+            EventManager.Instance.CallEvent(@event);
+            if (@event.IsCancelled) return;
             PrintMessage(formattedMessage);
         }
 

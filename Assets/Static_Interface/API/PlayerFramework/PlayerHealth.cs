@@ -26,9 +26,17 @@ namespace Static_Interface.API.PlayerFramework
         protected override void OnCollisionEnter(Collision collision)
         {
             base.OnCollisionEnter(collision);
+            var momentum = collision.relativeVelocity * _rigidbody.mass;
             var deathCause = EDamageCause.COLLISION;
             var hitTransform = collision.transform;
-            if (hitTransform.GetComponent<Bullet>() != null)
+            bool isBullet = hitTransform.GetComponent<Bullet>() != null;
+
+            PlayerCollisionEvent @event = new PlayerCollisionEvent(Player, collision, momentum);
+            @event.IsBullet = isBullet;
+            EventManager.Instance.CallEvent(@event);
+            if (@event.IsCancelled) return;
+
+            if (isBullet)
             {
                 var bullet = hitTransform.GetComponent<Bullet>();
                 Physics.IgnoreCollision(GetComponent<Collider>(), hitTransform.GetComponent<Collider>());
@@ -41,7 +49,6 @@ namespace Static_Interface.API.PlayerFramework
                 deathCause = EDamageCause.SHOT;
             }
 
-            var momentum = collision.relativeVelocity * _rigidbody.mass;
             if (momentum.magnitude > MIN_COLLISION_MOMENTUM * _rigidbody.mass)
             {
                 Player.Health.PlayerCollision(momentum, deathCause);
