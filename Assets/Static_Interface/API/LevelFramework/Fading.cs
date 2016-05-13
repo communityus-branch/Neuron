@@ -16,6 +16,7 @@ namespace Static_Interface.API.LevelFramework
         protected override void OnGUI()
         {
             base.OnGUI();
+            if (FadeOutTexture == null) return;
             // fade out/in the alpha value using a direction, a Speed and Time.deltaTime to convert the operation to seconds
             Alpha += _fadeDir * FadeSpeed * Time.deltaTime;
             // force (clamp) the number to be between 0 and 1 because GUI.color uses Alpha values between 0 and 1

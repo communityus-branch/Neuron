@@ -93,7 +93,6 @@ namespace Static_Interface.API.EventFramework
         /// <param name="evnt">The event to fire</param>
         public void CallEvent(Event evnt)
         {
-            LogUtils.Debug("Firing event:" + evnt.Name);
             Type t = evnt.GetType();
             List<MethodInfo> methods;
 
@@ -110,10 +109,13 @@ namespace Static_Interface.API.EventFramework
 
             foreach (MethodInfo info in from info in methods let handler = info.GetCustomAttributes(false).OfType<EventHandler>().FirstOrDefault() where handler != null where !(evnt is ICancellable) || !((ICancellable)evnt).IsCancelled || handler.IgnoreCancelled select info)
             {
-                object instance;
+                object instance = null;
                 try
                 {
-                    instance = _listenerMethods.Where(c => c.Value.Contains(info));
+                    foreach (var c in _listenerMethods.Keys.Where(c => _listenerMethods[c].Contains(info)))
+                    {
+                        instance = c;
+                    }
                 }
                 catch (KeyNotFoundException e)
                 {

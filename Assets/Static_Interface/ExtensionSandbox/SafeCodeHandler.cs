@@ -276,11 +276,11 @@ namespace Static_Interface.ExtensionSandbox
 
             foreach (PropertyInfo def in type.GetProperties())
             {
-                if (!CheckMethod(asm, type, def.GetGetMethod(), ref illegalInstruction, ref failReason))
+                if (def.GetGetMethod() != null && !CheckMethod(asm, type, def.GetGetMethod(), ref illegalInstruction, ref failReason))
                 {
                     return false;
                 }
-                if (!CheckMethod(asm, type, def.GetSetMethod(), ref illegalInstruction, ref failReason))
+                if (def.GetSetMethod() != null && !CheckMethod(asm, type, def.GetSetMethod(), ref illegalInstruction, ref failReason))
                 {
                     return false;
                 }

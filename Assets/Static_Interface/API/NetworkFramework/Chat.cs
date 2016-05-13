@@ -76,7 +76,14 @@ namespace Static_Interface.API.NetworkFramework
             }
 
             GUI.SetNextControlName(ChatTextFieldName);
-            Message = GUI.TextField(new Rect(0, 200, 150, 25), Message);
+            var width = 150f;
+            var y = 200f;
+            if (_chatView != null)
+            {
+                y = _chatView.SizeDelta.y;
+                width = _chatView.SizeDelta.x;
+            }
+            Message = GUI.TextField(new Rect(0, y, width, 25), Message);
             if (ChatTextFieldFocused)
             {
                 GUI.FocusControl(ChatTextFieldName);
@@ -126,10 +133,6 @@ namespace Static_Interface.API.NetworkFramework
                 var cmdLine = msg.Substring(1).Trim();
                 var cmdName = cmdLine.Split(' ')[0];
                 string[] args = {};
-                if (cmdLine.Length > cmdName.Length)
-                {
-                    args = StringUtils.ToArguments(cmdLine.Substring(cmdName.Length + 1));
-                }
                 CommandManager.Instance.Eval(sender.GetUser().Player, cmdName, cmdLine);
                 return;
             }

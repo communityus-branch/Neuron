@@ -34,15 +34,21 @@ namespace Static_Interface.API.ExtensionFramework
             set
             {
                 if (value == _enabled) return;
-                if (_enabled && !value) Disable();
-                else if (!_enabled && value) Enable();
-                _enabled = value;
+                if (_enabled && !value)
+                {
+                    Disable();
+                }
+                else if (!_enabled && value)
+                {
+                    Enable();
+                }
             }
         }
 
         private void Enable()
         {
             if (_enabled) return;
+            _enabled = true;
             LogUtils.Log("Enablign extension: " + Name + " (" + GetType().Name + ")");
             try
             {
@@ -74,6 +80,7 @@ namespace Static_Interface.API.ExtensionFramework
             {
                 e.Log("Exception while disabling plugin: " + Name);
             }
+            _enabled = false;
         }
 
         /// <summary>

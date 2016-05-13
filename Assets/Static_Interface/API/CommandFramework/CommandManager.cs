@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Static_Interface.API.EventFramework;
 using Static_Interface.API.ExtensionFramework;
-using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
@@ -25,6 +25,7 @@ namespace Static_Interface.API.CommandFramework
 
         public void RegisterCommand(ICommand command, Extension ext)
         {
+            LogUtils.Debug(nameof(RegisterCommand));
             if (!ext.Enabled) return;
             RegisterCommand(command, command.Name, ext);
             if (command.Aliases == null) return;
@@ -36,8 +37,17 @@ namespace Static_Interface.API.CommandFramework
 
         public void UnregisterCommand(ICommand command)
         {
-            var cmd = _commands.Where(c => c.Value == command).Select(c => c.Key);
-            foreach (string commandName in cmd)
+            //http://answers.unity3d.com/answers/928540/view.html
+            var keys = _commands.Keys;
+            var toRemove = new List<String>();
+            foreach (string cmdName in keys)
+            {
+                if (_commands[cmdName] == command)
+                {
+                    toRemove.Add(cmdName);
+                }
+            }
+            foreach (string commandName in toRemove)
             {
                 _commands.Remove(commandName);
             }
@@ -103,7 +113,11 @@ namespace Static_Interface.API.CommandFramework
                 return;
             }
 
-            var parsedArgs = cmdLine.Split('"');
+            string[] parsedArgs = {};
+            if (cmdLine.Trim().Length > cmd.Length)
+            {
+                parsedArgs = StringUtils.ToArguments(cmdLine.Substring(cmd.Length + 1));
+            }
             cmdInstance.Execute(sender, cmdLine, parsedArgs);
         }
     }
