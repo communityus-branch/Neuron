@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using Static_Interface.API.AssetsFramework;
+using Static_Interface.API.CommandFramework;
 using Static_Interface.API.ConsoleFramework;
 using Static_Interface.API.EntityFramework;
 using Static_Interface.API.ExtensionFramework;
@@ -39,8 +40,11 @@ namespace Static_Interface.Internal
             LogUtils.Log("Initializing World...");
             gameObject.AddComponent<GravityNetvar>();
             gameObject.AddComponent<GameSpeedNetvar>();
-			ExtensionManager.Init(IOUtil.GetExtensionsDir());
+            if(IsServer()) gameObject.AddComponent<CommandManager>();
             gameObject.AddComponent<Scheduler>();
+
+            ExtensionManager.Init(IOUtil.GetExtensionsDir());
+
             Weather = ObjectUtils.LoadWeather();
             var enviromentSun = GameObject.Find("__SUN__");
             var weatherParent = GameObject.Find("WeatherSystems").transform;

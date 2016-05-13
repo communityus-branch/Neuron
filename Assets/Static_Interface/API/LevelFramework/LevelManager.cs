@@ -144,6 +144,7 @@ namespace Static_Interface.API.LevelFramework
         private void Unload()
         {
             EventManager.Instance?.Shutdown();
+            NetvarManager.Instance?.Shutdown();
             if (World.Instance?.CommandsObj != null)
             {
                 Console.Instance.UnregisterCommands(World.Instance.CommandsObj);

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Static_Interface.API.CommandFramework;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.GUIFramework;
 using Static_Interface.API.NetworkFramework.Events;
@@ -118,6 +119,20 @@ namespace Static_Interface.API.NetworkFramework
         [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER)]
         private void Network_SendUserMessage(Identity sender, string msg)
         {
+            if (msg.StartsWith("/"))
+            {
+                if (sender.GetUser()?.Player == null) return;
+                if (msg.Length == 1) return;
+                var cmdLine = msg.Substring(1).Trim();
+                var cmdName = cmdLine.Split(' ')[0];
+                string[] args = {};
+                if (cmdLine.Length > cmdName.Length)
+                {
+                    args = StringUtils.ToArguments(cmdLine.Substring(cmdName.Length + 1));
+                }
+                CommandManager.Instance.Eval(sender.GetUser().Player, cmdName, cmdLine);
+                return;
+            }
             PlayerChatEvent @event = new PlayerChatEvent(sender.Owner.Player);
             @event.Message = msg;
             @event.Format = "<color=yellow>{NAME}</color>: {MESSAGE}";
@@ -141,7 +156,7 @@ namespace Static_Interface.API.NetworkFramework
 
         internal void PrintMessage(string formattedMessage)
         {
-            LogUtils.Log(formattedMessage);
+            LogUtils.Log("[CHAT] " + formattedMessage);
             if (!IsDedicatedServer())
             {
                 if(_chatView == null) _chatView = new ChatScrollView("PlayerChat", Player.MainPlayer.GUI.RootView);
@@ -153,6 +168,18 @@ namespace Static_Interface.API.NetworkFramework
         private void Network_ClearChatCommand(Identity server)
         {
             ClearChat();
+        }
+
+        public void SendMessageToPlayer(Player player, string msg)
+        {
+            if (!IsServer()) return;
+            SendMessageToPlayer(player, Connection.ServerID, msg);
+        }
+
+        public void SendMessageToPlayer(Player player, Identity sender, string msg)
+        {
+            if (!IsServer()) return;
+            Channel.Send(nameof(Network_ReceiveMessage), player.User.Identity, sender, msg);
         }
     }
 }

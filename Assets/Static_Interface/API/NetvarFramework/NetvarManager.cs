@@ -7,6 +7,7 @@ namespace Static_Interface.API.NetvarFramework
 {
     public class NetvarManager
     {
+        //Todo: When a player connects, send all netvars
         private static NetvarManager _instance;
         public static NetvarManager Instance => _instance ?? (_instance = new NetvarManager());
 

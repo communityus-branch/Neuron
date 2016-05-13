@@ -1,11 +1,12 @@
 ﻿using System.Linq;
+using Static_Interface.API.CommandFramework;
 using Static_Interface.API.EntityFramework;
 using Static_Interface.API.NetworkFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
 {
-    public class Player : UnityExtensions.MonoBehaviour, IEntity
+    public class Player : UnityExtensions.MonoBehaviour, IEntity, ICommandSender
     {
         public static Player MainPlayer { get; internal set; } = null;
         public PlayerController MovementController => GetComponent<PlayerController>();
@@ -16,5 +17,16 @@ namespace Static_Interface.API.PlayerFramework
         public Channel Channel => GetComponent<Channel>();
         public PlayerGUI GUI => GetComponent<PlayerGUI>();
         public string Name => User.Name;
+
+
+        public bool HasPermission(string permission)
+        {
+            return true; //Todo
+        }
+
+        public void Message(string msg)
+        {
+            Chat.Instance.SendMessageToPlayer(this, msg);
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace Static_Interface.API.NetvarFramework
         {
             if (GetDefaultValue() == null)
             {
-                throw new ArgumentException("GetDefaultValue == null, GetValueType should be overwritten");
+                throw new ArgumentException("Netvar \"" + Name + "\": GetDefaultValue == null, GetValueType should be overwritten");
             }
 
             return GetDefaultValue().GetType();
@@ -57,14 +57,15 @@ namespace Static_Interface.API.NetvarFramework
         {
             if (!IsServer()) return;
             byte[] serializedData = Serialize();
-            Channel.Send(nameof(Network_ReceiveValueUpdate), ECall.Clients, serializedData);
+            Channel.Send(nameof(Network_ReceiveValueUpdate), ECall.Clients, Name, serializedData);
         }
 
 
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
-        public void Network_ReceiveValueUpdate(Identity ident, byte[] serializedData)
+        public void Network_ReceiveValueUpdate(Identity ident, String name, byte[] serializedData)
         {
+            if (Name != name) return;
             Value = Deserialize(serializedData);
         }
 
