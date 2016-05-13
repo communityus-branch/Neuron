@@ -8,10 +8,16 @@ namespace Static_Interface.API.NetvarFramework
 {
     public abstract class Netvar : NetworkedBehaviour
     {
-        protected override void Awake()
+        protected sealed override void Awake()
         {
             base.Awake();
             NetvarManager.Instance.RegisterNetvar(this);
+            OnInit();
+        }
+
+        protected virtual void OnInit()
+        {
+            
         }
 
         public abstract string Name { get; }
