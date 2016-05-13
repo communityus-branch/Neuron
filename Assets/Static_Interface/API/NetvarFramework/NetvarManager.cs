@@ -12,7 +12,7 @@ namespace Static_Interface.API.NetvarFramework
 
         private readonly List<object> _netvars = new List<object>();
 
-        public void RegisterNetvar(Netvar netvar)
+        internal void RegisterNetvar(Netvar netvar)
         {
             LogUtils.Log("Registering Netvar: " + netvar.Name);
             if (GetNetvar(netvar.Name) != null)

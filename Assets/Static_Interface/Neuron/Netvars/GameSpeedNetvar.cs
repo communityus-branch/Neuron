@@ -1,5 +1,5 @@
 ﻿using Static_Interface.API.NetvarFramework;
-using Static_Interface.Internal.Objects;
+using UnityEngine;
 
 namespace Static_Interface.Neuron.Netvars
 {
@@ -7,9 +7,15 @@ namespace Static_Interface.Neuron.Netvars
     {
         public override string Name => "sv_speed";
 
+        protected override void OnSetValue(object oldValue, object newValue)
+        {
+            base.OnSetValue(oldValue, newValue);
+            Time.timeScale = (float)newValue;
+        }
+
         public override object GetDefaultValue()
         {
-            return 1;
+            return 1f;
         }
     }
 }
