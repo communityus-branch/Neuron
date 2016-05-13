@@ -155,7 +155,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.SINGLE_TYPE
                     };
                 
-                    var args = ObjectSerializer.GetObjects(source, 0, 0, packet, false, argTypes);
+                    var args = ObjectSerializer.GetObjects(0, 0, packet, argTypes);
                     var playerName = (string) args[0];
                     var group = (ulong) args[1];
                     var version = (string) args[2];
@@ -207,7 +207,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
             else
             {
-                object[] args = ObjectSerializer.GetObjects(source, 0, 0, packet, false,Types.BYTE_ARRAY_TYPE);
+                object[] args = ObjectSerializer.GetObjects(0, 0, packet, Types.BYTE_ARRAY_TYPE);
                 if (!((ServerMultiplayerProvider)Provider).VerifyTicket(source, (byte[])args[0]))
                 {
                     Reject(source, ERejectionReason.AUTH_VERIFICATION);

@@ -1,4 +1,5 @@
 ﻿using Static_Interface.API.NetvarFramework;
+using Static_Interface.Internal.Objects;
 
 namespace Static_Interface.Neuron.Netvars
 {

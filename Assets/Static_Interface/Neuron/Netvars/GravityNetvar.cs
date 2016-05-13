@@ -1,4 +1,6 @@
-﻿using Static_Interface.API.NetvarFramework;
+﻿using System;
+using Static_Interface.API.NetvarFramework;
+using Static_Interface.Internal.Objects;
 using UnityEngine;
 
 namespace Static_Interface.Neuron.Netvars

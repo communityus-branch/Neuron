@@ -37,8 +37,8 @@ namespace Static_Interface.Internal
             ObjectUtils.CheckObjects();      
 
             LogUtils.Log("Initializing World...");
-	        NetvarManager.Instance.RegisterNetvar(new GravityNetvar());
-            NetvarManager.Instance.RegisterNetvar(new GameSpeedNetvar());
+            NetvarManager.Instance.RegisterNetvar(gameObject.AddComponent<GravityNetvar>());
+            NetvarManager.Instance.RegisterNetvar(gameObject.AddComponent<GameSpeedNetvar>());
 			ExtensionManager.Init(IOUtil.GetExtensionsDir());
             gameObject.AddComponent<Scheduler>();
             Weather = ObjectUtils.LoadWeather();

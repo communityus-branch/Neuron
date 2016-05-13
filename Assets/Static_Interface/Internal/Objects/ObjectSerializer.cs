@@ -49,16 +49,19 @@ namespace Static_Interface.Internal.Objects
             return block.GetBytes(out size);
         }
 
+        public static object[] GetObjects(int offset, int prefix, byte[] bytes, params Type[] types)
+        {
+            return GetObjects(null, offset, prefix, bytes, false, types);
+        }
+
         public static object[] GetObjects(Identity ident, int offset, int prefix, byte[] bytes, bool isChannel, params Type[] types)
         {
             block.Reset(offset + prefix, bytes);
-            if (isChannel)
-            {
-                object[] objArray = block.Read(1, types);
-                objArray[0] = ident;
-                return objArray;
-            }
-            return block.Read(types);
+            if (!isChannel) return block.Read(types);
+
+            object[] objArray = block.Read(1, types);
+            objArray[0] = ident;
+            return objArray;
         }
 
         public static void OpenRead(int prefix, byte[] bytes)

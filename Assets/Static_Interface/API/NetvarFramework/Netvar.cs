@@ -1,9 +1,12 @@
 ﻿using System;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.Objects;
 
 namespace Static_Interface.API.NetvarFramework
 {
-    public abstract class Netvar
+    public abstract class Netvar : NetworkedBehaviour
     {
         public abstract string Name { get; }
 
@@ -34,7 +37,34 @@ namespace Static_Interface.API.NetvarFramework
                 OnSetValue(_value, value);
                 LogUtils.Log("Netvar \"" + @event.Name + "\" updated:" + @event.OldValue + " -> " + @event.NewValue);
                 _value = value;
+                SendNetvarUpdate();
             }
+        }
+
+        private void SendNetvarUpdate()
+        {
+            if (!IsServer()) return;
+            byte[] serializedData = Serialize();
+            Channel.Send(nameof(Network_ReceiveValueUpdate), ECall.Clients, serializedData);
+        }
+
+
+
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
+        public void Network_ReceiveValueUpdate(Identity ident, byte[] serializedData)
+        {
+            Value = Deserialize(serializedData);
+        }
+
+        public byte[] Serialize()
+        {
+            int size;
+            return ObjectSerializer.GetBytes(0, out size, Value);
+        }
+
+        public object Deserialize(byte[] serializedData)
+        {
+            return ObjectSerializer.GetObjects(0, 0, serializedData, GetValueType());
         }
 
         public bool ValidateType(object t, bool throwException = false)
