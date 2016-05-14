@@ -11,7 +11,7 @@ namespace Static_Interface.API.AssetsFramework
     {
         private static readonly List<AssetBundle> InternalBundles = new List<AssetBundle>();
         public static ReadOnlyCollection<AssetBundle> Bundles => InternalBundles.AsReadOnly();
-         
+
         public static AssetBundle GetAssetBundle(string assetName)
         {
             return InternalBundles.FirstOrDefault(a => a.Name == assetName);
@@ -25,7 +25,8 @@ namespace Static_Interface.API.AssetsFramework
                 return assetBundle;
             }
             assetBundle = GetAssetBundle(bundle);
-            if (assetBundle != null) throw new Exception("An asset with the same name but different location has been already loaded!");
+            if (assetBundle != null)
+                throw new Exception("An asset with the same name but different location has been already loaded!");
             LogUtils.Debug("Loading asset: " + bundle + "(" + file + ")");
             assetBundle = new AssetBundle(bundle, file);
             assetBundle.LoadAllAssets<Object>();
@@ -37,4 +38,5 @@ namespace Static_Interface.API.AssetsFramework
         {
             InternalBundles.Clear();
         }
+    }
 }
