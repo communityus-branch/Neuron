@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.LevelFramework;
+using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
@@ -384,6 +385,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
                 chat?.SendServerMessage("<b>" + user.Name + "</b> connected.");
                 WeatherManager.Instance.SendWeatherTimeUpdate(ident);
+                NetvarManager.Instance.SendAllNetvars(ident);
                //Todo: OnUserConnectedEvent
             }
             _queuedUsers.Clear();

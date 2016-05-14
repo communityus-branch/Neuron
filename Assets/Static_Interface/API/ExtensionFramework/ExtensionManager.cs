@@ -137,6 +137,20 @@ namespace Static_Interface.API.ExtensionFramework
                 return;
             }
 
+            if (ext is GameMode)
+            {
+                if (GameMode.CurrentGameMode != null)
+                {
+                    LogUtils.LogError("Assembly: " + asm + " is registering a gamemode but a gamemode is already loaded!");
+                    cancel = true;
+                }
+                else
+                {
+                    GameMode.CurrentGameMode = (GameMode) ext;
+                    LogUtils.Log("Loading gamemode: " + ext.Name);
+                }
+            }
+
             if (cancel)
             {
                 Sandbox.Instance.UnloadAssembly(asm);

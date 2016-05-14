@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Static_Interface.API.AssetsFramework;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.ExtensionFramework;
-using Static_Interface.API.NetvarFramework;
-using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal;
@@ -111,7 +108,7 @@ namespace Static_Interface.API.LevelFramework
             if (!IsLoading) return;
             if (scene == 1)
             {
-                return; // Skip loading scene
+                return; // Skip the loading scene
             }
             IsLoading = false;
             CurrentLevel = PendingLevel;
@@ -123,7 +120,6 @@ namespace Static_Interface.API.LevelFramework
         {
             Action action = delegate
             {
-
                 Unload();
                 LoadLevel("MainMenu", true);
             };
@@ -144,6 +140,7 @@ namespace Static_Interface.API.LevelFramework
         private void Unload()
         {
             EventManager.Instance?.Shutdown();
+            GameMode.CurrentGameMode = null;
             if (World.Instance?.CommandsObj != null)
             {
                 Console.Instance.UnregisterCommands(World.Instance.CommandsObj);

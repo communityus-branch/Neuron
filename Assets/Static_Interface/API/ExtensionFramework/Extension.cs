@@ -19,7 +19,7 @@ namespace Static_Interface.API.ExtensionFramework
         /// </summary>
         public readonly string Name;
 
-        public Extension()
+        protected Extension()
         {
             Name = GetType().Name;
             //Todo: assign Name from attribute

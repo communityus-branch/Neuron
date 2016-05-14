@@ -1,7 +1,8 @@
 ﻿namespace Static_Interface.API.ExtensionFramework
 {
-    public class GameMode : Extension
+    public abstract class GameMode : Extension
     {
-         
+        public static GameMode CurrentGameMode { get; internal set; }
+        public abstract string Description { get; }
     }
 }
