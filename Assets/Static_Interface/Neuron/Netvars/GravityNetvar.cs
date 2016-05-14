@@ -5,17 +5,19 @@ namespace Static_Interface.Neuron.Netvars
 {
     public class GravityNetvar : Netvar
     {
-        private readonly float _defaultValue;
-        public GravityNetvar()
+        private Vector3 _defaultValue;
+
+        protected override void OnPreInit()
         {
-            _defaultValue = Physics.gravity.y;
+            base.OnPreInit();
+            _defaultValue = Physics.gravity;
         }
 
         public override string Name => "sv_gravity";
 
         protected override void OnSetValue(object oldValue, object newValue)
         {
-            Physics.gravity = new Vector3(0, -(float) newValue, 0);
+            Physics.gravity = (Vector3) newValue;
         }
 
         public override object GetDefaultValue()

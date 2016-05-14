@@ -31,6 +31,14 @@ namespace Static_Interface.API.NetvarFramework
         public void Network_ReceiveValueUpdate(Identity ident, String name, byte[] serializedData)
         {
             Netvar netvar = GetNetvar(name);
+            if (netvar == null)
+            {
+                if (IsClient() && !IsServer())
+                {
+                    throw new Exception("Netvar: " + name + " not found!");
+                }
+                return;
+            } 
             netvar.Value = netvar.Deserialize(serializedData);
         }
 

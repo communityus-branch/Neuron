@@ -8,6 +8,17 @@ namespace Static_Interface.API.NetvarFramework
 {
     public abstract class Netvar
     {
+        protected Netvar()
+        {
+            OnPreInit();
+            Value = GetDefaultValue();
+        }
+
+        protected virtual void OnPreInit()
+        {
+            
+        }
+
         public abstract string Name { get; }
 
         public abstract object GetDefaultValue();
@@ -28,6 +39,7 @@ namespace Static_Interface.API.NetvarFramework
             get { return OnGetValue(); }
             set
             {
+                if (_value == value) return;
                 ValidateType(value, true);
                 NetvarChangedEvent @event = new NetvarChangedEvent(this, _value, value);
                 if (@event.IsCancelled)
@@ -35,7 +47,7 @@ namespace Static_Interface.API.NetvarFramework
                     return;
                 }
                 OnSetValue(_value, value);
-                LogUtils.Log("Netvar \"" + @event.Name + "\" updated:" + @event.OldValue + " -> " + @event.NewValue);
+                LogUtils.Log("Netvar \"" + Name + "\" updated:" + @event.OldValue + " -> " + @event.NewValue);
                 _value = value;
                 SendNetvarUpdate();
             }
@@ -44,19 +56,20 @@ namespace Static_Interface.API.NetvarFramework
         private void SendNetvarUpdate()
         {
             if (!Connection.IsServer()) return;
-            byte[] serializedData = Serialize();
-            NetvarManager.Instance.Channel.Send("Network_ReceiveValueUpdate", ECall.Clients, Name, serializedData);
+            NetvarManager.Instance.Channel.Send("Network_ReceiveValueUpdate", ECall.Clients, Name, Value);
         }
 
 
         public byte[] Serialize()
         {
+            if(Value == null) return new byte[0];
             int size;
             return ObjectSerializer.GetBytes(0, out size, Value);
         }
 
         public object Deserialize(byte[] serializedData)
         {
+            if (serializedData.Length == 0) return null;
             return ObjectSerializer.GetObjects(0, 0, serializedData, GetValueType());
         }
 
