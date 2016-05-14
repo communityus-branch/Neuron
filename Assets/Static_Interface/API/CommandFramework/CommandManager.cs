@@ -39,14 +39,7 @@ namespace Static_Interface.API.CommandFramework
         {
             //http://answers.unity3d.com/answers/928540/view.html
             var keys = _commands.Keys;
-            var toRemove = new List<String>();
-            foreach (string cmdName in keys)
-            {
-                if (_commands[cmdName] == command)
-                {
-                    toRemove.Add(cmdName);
-                }
-            }
+            var toRemove = keys.Where(cmdName => _commands[cmdName] == command).ToList();
             foreach (string commandName in toRemove)
             {
                 _commands.Remove(commandName);

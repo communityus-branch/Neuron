@@ -38,8 +38,9 @@ namespace Static_Interface.Internal
             ObjectUtils.CheckObjects();      
 
             LogUtils.Log("Initializing World...");
-            gameObject.AddComponent<GravityNetvar>();
-            gameObject.AddComponent<GameSpeedNetvar>();
+            var mgr = gameObject.AddComponent<NetvarManager>();
+            mgr.RegisterNetvar(new GravityNetvar());
+            mgr.RegisterNetvar(new GameSpeedNetvar());
             if(IsServer()) gameObject.AddComponent<CommandManager>();
             gameObject.AddComponent<Scheduler>();
 

@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Static_Interface.API.EventFramework;
+using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 
 namespace Static_Interface.API.NetvarFramework
 {
-    public class NetvarManager
+    public class NetvarManager : NetworkedSingletonBehaviour<NetvarManager>, IListener
     {
-        //Todo: When a player connects, send all netvars
-        private static NetvarManager _instance;
-        public static NetvarManager Instance => _instance ?? (_instance = new NetvarManager());
-
-        private readonly List<object> _netvars = new List<object>();
+        private readonly List<Netvar> _netvars = new List<Netvar>();
 
         internal void RegisterNetvar(Netvar netvar)
         {
@@ -23,14 +22,25 @@ namespace Static_Interface.API.NetvarFramework
             _netvars.Add(netvar);
         }
 
-        internal void Shutdown()
-        {
-            _instance = null;
-        }
-
         public Netvar GetNetvar(string name)
         {
-            return _netvars.Cast<Netvar>().FirstOrDefault(tmp => tmp.Name.Equals(name));
+            return _netvars.FirstOrDefault(tmp => tmp.Name.Equals(name));
+        }
+
+        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
+        public void Network_ReceiveValueUpdate(Identity ident, String name, byte[] serializedData)
+        {
+            Netvar netvar = GetNetvar(name);
+            netvar.Value = netvar.Deserialize(serializedData);
+        }
+
+        public void SendAllNetvars(Identity target)
+        {
+            if (!IsServer()) return;
+            foreach (Netvar netvar in _netvars)
+            {
+                Channel.Send(nameof(Network_ReceiveValueUpdate), target, netvar.Name, netvar.Serialize());
+            }
         }
     }
 }

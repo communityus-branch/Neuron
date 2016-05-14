@@ -2,24 +2,13 @@
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.Objects;
 
 namespace Static_Interface.API.NetvarFramework
 {
-    public abstract class Netvar : NetworkedBehaviour
+    public abstract class Netvar
     {
-        protected sealed override void Awake()
-        {
-            base.Awake();
-            NetvarManager.Instance.RegisterNetvar(this);
-            OnInit();
-        }
-
-        protected virtual void OnInit()
-        {
-            
-        }
-
         public abstract string Name { get; }
 
         public abstract object GetDefaultValue();
@@ -55,19 +44,11 @@ namespace Static_Interface.API.NetvarFramework
 
         private void SendNetvarUpdate()
         {
-            if (!IsServer()) return;
+            if (!Connection.IsServer()) return;
             byte[] serializedData = Serialize();
-            Channel.Send(nameof(Network_ReceiveValueUpdate), ECall.Clients, Name, serializedData);
+            NetvarManager.Instance.Channel.Send("Network_ReceiveValueUpdate", ECall.Clients, Name, serializedData);
         }
 
-
-
-        [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
-        public void Network_ReceiveValueUpdate(Identity ident, String name, byte[] serializedData)
-        {
-            if (Name != name) return;
-            Value = Deserialize(serializedData);
-        }
 
         public byte[] Serialize()
         {
