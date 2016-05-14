@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Static_Interface.API.EventFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;

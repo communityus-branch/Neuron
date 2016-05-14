@@ -1,8 +1,6 @@
 ﻿using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
-using Static_Interface.Internal;
 using UnityEngine;
-using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.InteractionFramework
 {

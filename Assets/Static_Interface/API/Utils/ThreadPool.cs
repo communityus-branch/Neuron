@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Static_Interface.API.UnityExtensions;
-using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.Utils
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using Static_Interface.API.NetworkFramework;
+﻿using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using UnityEngine;
 

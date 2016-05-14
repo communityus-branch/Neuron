@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Static_Interface.API.CommandFramework
+﻿namespace Static_Interface.API.CommandFramework
 {
     public interface ICommandSender
     {

@@ -1,6 +1,4 @@
-﻿using Static_Interface.API.PlayerFramework;
-
-namespace Static_Interface.API.ConsoleFramework
+﻿namespace Static_Interface.API.ConsoleFramework
 {
     public class ClientConsoleCommands
     {

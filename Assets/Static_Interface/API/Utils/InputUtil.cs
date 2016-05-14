@@ -3,7 +3,6 @@ using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.Internal.MultiplayerFramework;
 using ConsoleGUI = Static_Interface.API.ConsoleFramework.ConsoleGUI;
-using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.Utils
 {

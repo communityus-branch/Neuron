@@ -1,5 +1,4 @@
-﻿using Static_Interface.API.PlayerFramework;
-using Static_Interface.Internal.MultiplayerFramework;
+﻿using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.UnityExtensions

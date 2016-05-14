@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Static_Interface.API.EntityFramework
+﻿namespace Static_Interface.API.EntityFramework
 {
     public interface IEntity
     {

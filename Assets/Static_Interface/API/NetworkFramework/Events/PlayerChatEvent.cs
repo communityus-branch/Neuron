@@ -1,6 +1,4 @@
-﻿using System;
-using System.Security.Policy;
-using Static_Interface.API.EventFramework;
+﻿using Static_Interface.API.EventFramework;
 using Static_Interface.API.PlayerFramework;
 
 namespace Static_Interface.API.NetworkFramework.Events

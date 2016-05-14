@@ -3,7 +3,6 @@ using Fclp;
 using Static_Interface.API.ConsoleFramework;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.Utils;
-using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.Server;
 using Static_Interface.Internal.Objects;
