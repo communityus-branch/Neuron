@@ -102,7 +102,7 @@ namespace Static_Interface.API.ExtensionFramework
                 string failReason;
                 if (!SafeCodeHandler.IsSafeAssembly(assembly, out failedInstruction, out failReason))
                 {
-                    LogUtils.LogWarning("WARNING: Plugin " + file + " access restricted code! Check failed: " + failedInstruction + (string.IsNullOrEmpty(failReason) ? "" : " (" + failReason + ")"));
+                    LogUtils.LogWarning("WARNING: Plugin " + file + " accesses restricted code! Check failed: " + failedInstruction + (string.IsNullOrEmpty(failReason) ? "" : " (" + failReason + ")"));
                     return;
                 }
                 _loadedAssemblies.Add(file, assembly);

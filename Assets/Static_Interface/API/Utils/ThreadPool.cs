@@ -11,12 +11,14 @@ namespace Static_Interface.API.Utils
         private static readonly List<Action> QueuedMainFixedActions = new List<Action>();
         private static readonly List<Action> QueuedAsyncActions = new List<Action>();
         private static int _mainThreadId;
+        private Thread _thread;
 
         protected override void Start()
         {
             base.Start();
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
-            new Thread(AsyncUpdate).Start();
+            _thread = new Thread(AsyncUpdate);
+            _thread.Start();
         }
 
         public bool IsMainThread => Thread.CurrentThread.ManagedThreadId == _mainThreadId;
@@ -117,6 +119,28 @@ namespace Static_Interface.API.Utils
                 QueuedAsyncActions.Clear();
             }
             Thread.Sleep(10);
+        }
+
+        public void Shutdown()
+        {
+            lock (QueuedAsyncActions)
+            {
+                QueuedAsyncActions.Clear();
+            }
+
+            lock (QueuedMainActions)
+            {
+                QueuedAsyncActions.Clear();
+            }
+
+            lock (QueuedAsyncActions)
+            {
+                QueuedAsyncActions.Clear();
+            }
+
+            _thread.Interrupt();
+            _thread = new Thread(AsyncUpdate);
+            _thread.Start();
         }
     }
 }

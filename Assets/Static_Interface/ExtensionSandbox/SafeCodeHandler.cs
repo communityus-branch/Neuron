@@ -79,7 +79,10 @@ namespace Static_Interface.ExtensionSandbox
             typeof(TextReader),
             typeof(BinaryWriter),
             typeof(BinaryReader),
-
+            typeof(Directory),
+            typeof(File),
+            typeof(Path),
+            typeof(FileSystemInfo),
             typeof(NullReferenceException),
             typeof(ArgumentException),
             typeof(ArgumentNullException),

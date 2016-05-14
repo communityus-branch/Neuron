@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Static_Interface.API.CommandFramework;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.SchedulerFramework;
@@ -24,6 +25,8 @@ namespace Static_Interface.API.ExtensionFramework
             Name = GetType().Name;
             //Todo: assign Name from attribute
         }
+
+        public string DataDir => Directory.GetParent(Path).FullName;
 
         /// <summary>
         /// Get or set the enabled status of the extension

@@ -142,6 +142,7 @@ namespace Static_Interface.API.SchedulerFramework
 
         public void Shutdown()
         {
+            ThreadPool.Instance?.Shutdown();
             Instance = null;
             Destroy(this);
         }

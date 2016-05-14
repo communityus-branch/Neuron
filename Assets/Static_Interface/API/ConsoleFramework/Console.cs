@@ -56,6 +56,7 @@ namespace Static_Interface.API.ConsoleFramework
         private bool ParseNetvar(string line, out Netvar obj)
         {
             obj = NetvarManager.Instance.GetNetvar(line);
+            Print("Netvar \"" + line + "\" not found");
             return obj != null;
         }
         
@@ -391,7 +392,7 @@ namespace Static_Interface.API.ConsoleFramework
             string cmd = Regex.Split(commandLine, " ").ToArray()[0];
             string[] args = Regex.Split(commandLine, " ").Skip(1).ToArray();
 
-            AbstractConsoleCommand command = _commands.FirstOrDefault(c => c.CommandName.ToLower() == cmd);
+            AbstractConsoleCommand command = _commands.FirstOrDefault(c => c.CommandName.ToLower() == cmd.ToLower());
             if (command != null && command.CommandRuntime != ConsoleCommandRuntime.NONE)
             {
 

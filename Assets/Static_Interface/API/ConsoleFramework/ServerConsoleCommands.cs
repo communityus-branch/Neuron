@@ -22,7 +22,8 @@ namespace Static_Interface.API.ConsoleFramework
         [CommandHelp("Set values of netvars")]
         public void SetCommand(Netvar netvar, string args)
         {
-            object value = ParseObject(args);
+            object value = Console.Instance.ParseArgs(new[] {args}, new[] {typeof (Vector3)})?[0];
+
             if (!netvar.ValidateType(value))
             {
                 Console.Instance.Print("Cannot set value: " + args);
@@ -59,75 +60,6 @@ namespace Static_Interface.API.ConsoleFramework
             RigidbodyPositionSyncer posSyncer = p.GetComponentInChildren<RigidbodyPositionSyncer>();
             var ch = posSyncer.Channel;
             ch.Send("Network_ReadPositionClient", ECall.Clients, (object) rigidbody.position, Vector3.up * speed, false);
-        }
-
-
-        private object ParseObject(string s)
-        {
-            if (s.Trim().Equals("null"))
-            {
-                return null;
-            }
-
-            if (s.Trim().Equals("true"))
-            {
-                return true;
-            }
-
-            if (s.Trim().Equals("false"))
-            {
-                return false;
-            }
-
-            try
-            {
-                return Convert.ToSingle(s.Trim());
-            }
-            catch (Exception)
-            {
-
-            }
-
-            try
-            {
-                return Convert.ToDouble(s.Trim());
-            }
-            catch (Exception)
-            {
-
-            }
-
-            try
-            {
-                var l = Convert.ToInt64(s.Trim());
-                if (l <= byte.MaxValue)
-                {
-                    return Convert.ToByte(s.Trim());
-                }
-
-                if (l <= short.MaxValue)
-                {
-                    return Convert.ToInt16(s.Trim());
-                }
-
-                if (l <= int.MaxValue)
-                {
-                    return Convert.ToInt16(s.Trim());
-                }
-
-                return l;
-            }
-            catch (Exception)
-            {
-
-            }
-
-            if (s.StartsWith("'") && s.EndsWith("'") && s.Length == 3)
-            {
-                return s.ToCharArray()[1];
-            }
-
-            return s;
         }
     }
 }

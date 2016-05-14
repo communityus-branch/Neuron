@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Static_Interface.API.AssetsFramework;
@@ -114,20 +115,27 @@ namespace Static_Interface.Internal
                 Directory.CreateDirectory(IOUtil.GetExtensionsDir());
             }
             LogUtils.Log("Loading extensions from dir: " + IOUtil.GetExtensionsDir());
+
+            List<string> plugins = new List<string>();
             foreach (string s in Directory.GetDirectories(IOUtil.GetExtensionsDir()))
             {
                 LogUtils.Debug("Extensions: Loading directory: " + s);
                 string[] bundles = Directory.GetFiles(s, "*.unity3d");
                 foreach(string file in bundles)
                 {
-                    string name = Path.GetFileName(file);
-                    AssetManager.LoadAssetBundle(s + @"\" + name, file);
+                    string name = Path.GetFileNameWithoutExtension(file);
+                    AssetManager.LoadAssetBundle(new DirectoryInfo(s).Name + @"/" + name, file);
                 }
                 string pluginFile = Path.Combine(s, "Plugin.dll");
                 if (File.Exists(pluginFile))
                 {
-                    ExtensionManager.Instance.LoadExtension(pluginFile);
+                    plugins.Add(pluginFile);
                 }
+            }
+
+            foreach (string file in plugins)
+            {
+                ExtensionManager.Instance.LoadExtension(file);
             }
         }
 
