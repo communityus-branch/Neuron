@@ -66,6 +66,11 @@ namespace Static_Interface.Internal.MultiplayerFramework
             DontDestroyOnLoad(this);
         }
 
+        public User GetUser(byte index)
+        {
+            return ClientsInternal[index];
+        }
+
         protected internal override void OnDestroy()
         {
             LogUtils.Debug("OnDestroy Connection");
@@ -146,7 +151,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
                 LogUtils.LogError("Failed to find player: " + index);
                 return;
             }
-            //Todo: on player disconnected event
+
             Destroy(ClientsInternal[index].Model.gameObject);
             ClientsInternal.RemoveAt(index);
         }

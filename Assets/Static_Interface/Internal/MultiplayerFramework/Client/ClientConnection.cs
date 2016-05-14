@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Static_Interface.API.EventFramework;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.PlayerFramework.Events;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
@@ -156,6 +158,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 SetupMainPlayer(playerTransform);
             }
             playerTransform.BroadcastMessage("OnPlayerLoaded");
+            if (!IsSinglePlayer)
+            {
+                //If singleplayre (local server) we will already fire this event at ServerConnection
+                PlayerJoinEvent @event = new PlayerJoinEvent(ident.Owner.Player);
+                EventManager.Instance.CallEvent(@event);
+            }
+
             return playerTransform;
         }
 
@@ -346,7 +355,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     Send(ServerID, EPacket.AUTHENTICATE, ticket, ticket.Length, 0);
                     break;
                 case EPacket.DISCONNECTED:
-                    RemovePlayer(packet[1]);
+                    var index = packet[1];
+                    if (!IsSinglePlayer)
+                    {
+                        var user = GetUser(index);
+                        //If singleplayre (local server) we will already fire this event at ServerConnection
+                        PlayerQuitEvent @event = new PlayerQuitEvent(user.Player);
+                        EventManager.Instance.CallEvent(@event);
+                    }
+                    RemovePlayer(index);
                     break;
                 case EPacket.REJECTED:
                 case EPacket.KICKED:
