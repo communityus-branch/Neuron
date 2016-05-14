@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Static_Interface.API.EventFramework;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.PlayerFramework.Events;
 using Static_Interface.API.Utils;
 using Static_Interface.API.WeatherFramework;
 using Static_Interface.Internal.MultiplayerFramework.Client;
@@ -246,8 +248,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             byte[] packet = ObjectSerializer.GetBytes(0, out size, index);
             AnnounceToAll(EPacket.DISCONNECTED, packet, size, 0);
             if(sendKicked) Send(ident, EPacket.KICKED, new byte[0], 0);
-            Chat.Instance.SendServerMessage("<b>" + user.Name + "</b> disconnected.");
             ((ServerMultiplayerProvider) Provider).RemoveClient(ident);
+
+            PlayerQuitEvent @event = new PlayerQuitEvent(ident.Owner.Player);
+            @event.QuitMessage = "<b>" + user.Name + "</b> disconnected.";
+            EventManager.Instance.CallEvent(@event);
+            if (string.IsNullOrEmpty(@event.QuitMessage)) return;
+            Chat.Instance.SendServerMessage(@event.QuitMessage);
         }
 
         public byte GetUserIndex(Identity user)
@@ -383,10 +390,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 packet = ObjectSerializer.GetBytes(0, out size, data);
                 Send(user.Identity, EPacket.ACCEPTED, packet, size, 0);
 
-                chat?.SendServerMessage("<b>" + user.Name + "</b> connected.");
                 WeatherManager.Instance.SendWeatherTimeUpdate(ident);
                 NetvarManager.Instance.SendAllNetvars(ident);
-               //Todo: OnUserConnectedEvent
+
+                PlayerJoinEvent @event = new PlayerJoinEvent(ident.GetUser().Player);
+                @event.JoinMessage = "<b>" + user.Name + "</b> connected.";
+                EventManager.Instance.CallEvent(@event);
+                if (string.IsNullOrEmpty(@event.JoinMessage)) return;
+                chat?.SendServerMessage(@event.JoinMessage);
             }
             _queuedUsers.Clear();
         }
