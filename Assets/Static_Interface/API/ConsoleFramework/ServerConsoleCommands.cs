@@ -17,8 +17,8 @@ namespace Static_Interface.API.ConsoleFramework
             player.Health.RevivePlayer();
         }
 
-        [ConsoleCommand(Runtime = ConsoleCommandRuntime.SERVER)]
-        [CommandUsage("nv_set <netvar> <value>")]
+        [ConsoleCommand(Runtime = ConsoleCommandRuntime.SERVER, Name = "nv_set")]
+        [CommandUsage("<netvar> <value>")]
         [CommandHelp("Set values of netvars")]
         public void SetCommand(Netvar netvar, string args)
         {

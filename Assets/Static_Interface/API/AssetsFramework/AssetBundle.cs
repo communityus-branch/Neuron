@@ -9,9 +9,9 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 namespace Static_Interface.API.AssetsFramework
 {
-    public class Asset
+    public class AssetBundle
     {
-        private readonly AssetBundle _assetBundle;
+        private readonly UnityEngine.AssetBundle _assetBundle;
         public readonly string Name;
         private readonly string _assetFile;
         private readonly List<Object> _loadedObjects = new List<Object>();
@@ -19,14 +19,14 @@ namespace Static_Interface.API.AssetsFramework
         public string FilePath => _assetFile;
 
         private GameObject _bundleScripts;
-        internal Asset(string name, string file) : this(name, file, 0U)
+        internal AssetBundle(string name, string file) : this(name, file, 0U)
         {
         }
 
-        internal Asset(string name, string file, uint crc)
+        internal AssetBundle(string name, string file, uint crc)
         {
             _assetFile = file;
-            _assetBundle = AssetBundle.LoadFromFile(file, crc);
+            _assetBundle = UnityEngine.AssetBundle.LoadFromFile(file, crc);
             Name = name;
         }
 
@@ -90,6 +90,11 @@ namespace Static_Interface.API.AssetsFramework
             return components.ToArray();
         }
 
+        public string[] GetAllAssetNames()
+        {
+            return _assetBundle.GetAllAssetNames();
+        }
+
         private T GetLoadedObject<T>(string s) where T : Object
         {
             return (T) _loadedObjects.FirstOrDefault(o => o.name == s);
@@ -107,6 +112,11 @@ namespace Static_Interface.API.AssetsFramework
             }
 
             return _assetBundle.LoadAsset<T>(name);
+        }
+
+        public bool Contains(string asset)
+        {
+            return _assetBundle.Contains(asset);
         }
 
         public T[] LoadAllAssets<T>() where T : Object

@@ -43,7 +43,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             {
                 LastCheck = Time.realtimeSinceStartup;
                 LastPing = Time.realtimeSinceStartup;
-                Send(ServerID, EPacket.TICK, new byte[] {}, 0, 0);
+                Send(ServerID, EPacket.TICK, new byte[] { }, 0, 0);
             }
         }
 
@@ -64,7 +64,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
             if (Provider.SupportsAuthentification)
             {
-                ((ClientMultiplayerProvider) Provider).CloseTicket();
+                ((ClientMultiplayerProvider)Provider).CloseTicket();
             }
             IsConnected = false;
 
@@ -99,7 +99,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             _currentPort = port;
             CurrentPassword = password;
 
-            ((ClientMultiplayerProvider) Provider).AttemptConnect(ip, port, password);
+            ((ClientMultiplayerProvider)Provider).AttemptConnect(ip, port, password);
         }
 
 
@@ -108,17 +108,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             ThreadPool.Instance.RunOnMainThread(delegate
             {
                 if (IsConnected) return;
-                ClientID = ((ClientMultiplayerProvider) Provider).GetUserID();
+                ClientID = ((ClientMultiplayerProvider)Provider).GetUserID();
                 LogUtils.Debug("Connected to server: " + info.Name);
                 CurrentServerInfo = info;
                 ServerID = info.ServerID;
                 IsConnected = true;
                 _pings = new float[4];
-                Lag((info.Ping)/1000f);
+                Lag((info.Ping) / 1000f);
                 LastNet = Time.realtimeSinceStartup;
                 OffsetNet = 0f;
 
-                Send(ServerID, EPacket.WORKSHOP, new byte[] {}, 0, 0);
+                Send(ServerID, EPacket.WORKSHOP, new byte[] { }, 0, 0);
                 //Todo: Load Level specified by server
                 LevelManager.Instance.LoadLevel(info.Map, false, true);
             });
@@ -128,13 +128,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
         protected override void OnLevelWasLoaded(int level)
         {
             base.OnLevelWasLoaded(level);
-
+            //skip first OnLevelWasLoaded since its the loading scene
             if (_levelLoadedCalled) return;
             _levelLoadedCalled = true;
-    
+
             int size;
             ulong group = 1; //Todo
-            object[] args = { ClientName, group, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f};
+            object[] args = { ClientName, group, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f };
             byte[] packet = ObjectSerializer.GetBytes(0, out size, args);
             Send(ServerID, EPacket.CONNECT, packet, size, 0);
         }
@@ -151,7 +151,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             if (!mainPlayer)
             {
                 LogUtils.Debug("Adding foreign player: " + ident);
-                ((ClientMultiplayerProvider) Provider).SetPlayedWith(ident);
+                ((ClientMultiplayerProvider)Provider).SetPlayedWith(ident);
             }
             else
             {
@@ -160,7 +160,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             playerTransform.BroadcastMessage("OnPlayerLoaded");
             if (!IsSinglePlayer)
             {
-                //If singleplayre (local server) we will already fire this event at ServerConnection
+                //If singleplayer (local server) we will already fire this event at ServerConnection
                 PlayerJoinEvent @event = new PlayerJoinEvent(ident.Owner.Player);
                 EventManager.Instance.CallEvent(@event);
             }
@@ -170,7 +170,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         public static void SetupMainPlayer(Transform playerTransform)
         {
-            if(playerTransform == null) throw new ArgumentNullException(nameof(playerTransform));
+            if (playerTransform == null) throw new ArgumentNullException(nameof(playerTransform));
             LogUtils.Debug("Setting up main player");
             if (Player.MainPlayer != null)
             {
@@ -195,13 +195,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             CameraManager.Instance.CurrentCamera = cam.GetComponent<Camera>();
 
             LogUtils.Debug("Loading WeatherParticles");
-            var fallLeaves = ((GameObject) Resources.Load("ParticleEffects/FallLeaves"));
-            var lightningBugs = ((GameObject) Resources.Load("ParticleEffects/LightningBugs"));
+            var fallLeaves = ((GameObject)Resources.Load("ParticleEffects/FallLeaves"));
+            var lightningBugs = ((GameObject)Resources.Load("ParticleEffects/LightningBugs"));
             var lightningPosition = ((GameObject)Resources.Load("ParticleEffects/LightningPosition"));
-            var rain = ((GameObject) Resources.Load("ParticleEffects/Rain")); 
+            var rain = ((GameObject)Resources.Load("ParticleEffects/Rain"));
             var rainMist = ((GameObject)Resources.Load("ParticleEffects/RainMist"));
-            var rainStreaks = (GameObject) Resources.Load("ParticleEffects/RainStreaks");
-            var snow = ((GameObject)Resources.Load("ParticleEffects/Snow")); 
+            var rainStreaks = (GameObject)Resources.Load("ParticleEffects/RainStreaks");
+            var snow = ((GameObject)Resources.Load("ParticleEffects/Snow"));
             var snowDust = ((GameObject)Resources.Load("ParticleEffects/SnowDust"));
 
             fallLeaves = Instantiate(fallLeaves);
@@ -216,7 +216,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             var rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
 
             fallLeaves.transform.SetParent(playerTransform);
-            fallLeaves.transform.localPosition = new Vector3(0,46,0);
+            fallLeaves.transform.localPosition = new Vector3(0, 46, 0);
             fallLeaves.transform.localRotation = rotation;
 
             lightningBugs.transform.SetParent(playerTransform);
@@ -224,23 +224,23 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             lightningBugs.transform.localRotation = rotation;
 
             lightningPosition.transform.SetParent(playerTransform);
-            lightningPosition.transform.localPosition = new Vector3(-2, 27,5);
+            lightningPosition.transform.localPosition = new Vector3(-2, 27, 5);
             lightningPosition.transform.localRotation = Quaternion.identity;
 
             rain.transform.SetParent(playerTransform);
-            rain.transform.localPosition = new Vector3(0,30,0);
+            rain.transform.localPosition = new Vector3(0, 30, 0);
             rain.transform.localRotation = rotation;
 
             rainMist.transform.SetParent(playerTransform);
-            rainMist.transform.localPosition = new Vector3(0,37,0);
+            rainMist.transform.localPosition = new Vector3(0, 37, 0);
             rainMist.transform.localRotation = rotation;
 
             rainStreaks.transform.SetParent(playerTransform);
-            rainStreaks.transform.localPosition = new Vector3(0, 180 ,0);
+            rainStreaks.transform.localPosition = new Vector3(0, 180, 0);
             rainStreaks.transform.localRotation = Quaternion.identity;
 
             snow.transform.SetParent(playerTransform);
-            snow.transform.localPosition = new Vector3(0,25,0);
+            snow.transform.localPosition = new Vector3(0, 25, 0);
             snow.transform.localRotation = rotation;
 
             snowDust.transform.SetParent(playerTransform);
@@ -252,13 +252,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             try
             {
                 var weather = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
-                weather.butterflies = lightningBugs.GetComponent<ParticleSystem>(); 
-                weather.windyLeaves = fallLeaves.GetComponent<ParticleSystem>(); 
+                weather.butterflies = lightningBugs.GetComponent<ParticleSystem>();
+                weather.windyLeaves = fallLeaves.GetComponent<ParticleSystem>();
                 weather.mistFog = rainStreaks;
-                weather.snowMistFog = snowDust.GetComponent<ParticleSystem>(); 
-                weather.snow = snow.GetComponent<ParticleSystem>(); 
-                weather.rainMist = rainMist.GetComponent<ParticleSystem>(); 
-                weather.rain = rain.GetComponent<ParticleSystem>(); 
+                weather.snowMistFog = snowDust.GetComponent<ParticleSystem>();
+                weather.snow = snow.GetComponent<ParticleSystem>();
+                weather.rainMist = rainMist.GetComponent<ParticleSystem>();
+                weather.rain = rain.GetComponent<ParticleSystem>();
                 weather.lightningSpawn = lightningPosition.transform;
                 weather.cameraObject = CameraManager.Instance.UnistormCamera;
                 weather.cameraObjectComponent = CameraManager.Instance.UnistormCamera.GetComponent<Camera>();
@@ -283,8 +283,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
         internal override void Receive(Identity id, byte[] packet, int size, int channel)
         {
-            base.Receive(id, packet,  size, channel);
-            EPacket parsedPacket = (EPacket) packet[0];
+            base.Receive(id, packet, size, channel);
+            EPacket parsedPacket = (EPacket)packet[0];
 
             StripPacketByte(ref packet, ref size);
 
@@ -304,45 +304,45 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     //todo
                     break;
                 case EPacket.TICK:
-                {
-                    int pSize;
-                    var data = ObjectSerializer.GetBytes(0, out pSize, Time.realtimeSinceStartup);
-                    Send(ServerID, EPacket.TIME, data, pSize, 0);
-                    break;
-                }
+                    {
+                        int pSize;
+                        var data = ObjectSerializer.GetBytes(0, out pSize, Time.realtimeSinceStartup);
+                        Send(ServerID, EPacket.TIME, data, pSize, 0);
+                        break;
+                    }
                 case EPacket.TIME:
-                {
-                    object[] args = ObjectSerializer.GetObjects(0, 0, packet, Types.SINGLE_TYPE);
-                    LastNet = Time.realtimeSinceStartup;
-                    OffsetNet = ((float) args[0]) + ((Time.realtimeSinceStartup - LastPing)/2f);
-                    Lag(Time.realtimeSinceStartup - LastPing);
-                    break;
-                }
+                    {
+                        object[] args = ObjectSerializer.GetObjects(0, 0, packet, Types.SINGLE_TYPE);
+                        LastNet = Time.realtimeSinceStartup;
+                        OffsetNet = ((float)args[0]) + ((Time.realtimeSinceStartup - LastPing) / 2f);
+                        Lag(Time.realtimeSinceStartup - LastPing);
+                        break;
+                    }
                 case EPacket.SHUTDOWN:
                     Disconnect();
                     break;
 
                 case EPacket.CONNECTED:
-                {
-                    Type[] argTypes = {
+                    {
+                        Type[] argTypes = {
                         //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
                         Types.IDENTITY_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE, Types.BOOLEAN_TYPE
                     };
 
-                    object[] args = ObjectSerializer.GetObjects(0, 0, packet, argTypes);
-                    if (IsSinglePlayer) return;
-                    if (World.Loaded)
-                    {
-                        AddPlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
-                            (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
+                        object[] args = ObjectSerializer.GetObjects(0, 0, packet, argTypes);
+                        if (IsSinglePlayer) return;
+                        if (World.Loaded)
+                        {
+                            AddPlayer(Provider.Deserialilze((Identity)args[0]), (string)args[1], (ulong)args[2],
+                                (Vector3)args[3], (Vector3)args[4], (int)args[5], (bool)args[6]);
+                        }
+                        else
+                        {
+                            QueuePlayer(Provider.Deserialilze((Identity)args[0]), (string)args[1], (ulong)args[2],
+                                (Vector3)args[3], (Vector3)args[4], (int)args[5], (bool)args[6]);
+                        }
+                        break;
                     }
-                    else
-                    {
-                        QueuePlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
-                            (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
-                    }
-                    break;
-                }
                 case EPacket.VERIFY:
                     LogUtils.Debug("Opening ticket");
                     byte[] ticket = ((ClientMultiplayerProvider)Provider).OpenTicket();
@@ -355,14 +355,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     Send(ServerID, EPacket.AUTHENTICATE, ticket, ticket.Length, 0);
                     break;
                 case EPacket.DISCONNECTED:
+                    //If singleplayer (local server) we will already do this at ServerConnection
+                    if (IsSinglePlayer) return;
                     var index = packet[1];
-                    if (!IsSinglePlayer)
-                    {
-                        var user = GetUser(index);
-                        //If singleplayre (local server) we will already fire this event at ServerConnection
-                        PlayerQuitEvent @event = new PlayerQuitEvent(user.Player);
-                        EventManager.Instance.CallEvent(@event);
-                    }
+
+                    var user = GetUser(index);
+
+                    PlayerQuitEvent @event = new PlayerQuitEvent(user.Player);
+                    EventManager.Instance.CallEvent(@event);
+
                     RemovePlayer(index);
                     break;
                 case EPacket.REJECTED:
@@ -370,18 +371,18 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     Disconnect();
                     break;
                 case EPacket.ACCEPTED:
-                {
-                    object[] args = ObjectSerializer.GetObjects(0, 0, packet, Types.UINT64_TYPE, Types.INT32_TYPE);
-                    LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
-                    ((ClientMultiplayerProvider)Provider).SetIdentity((ulong) args[0]);    
-                    ((ClientMultiplayerProvider) Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);    
-                    ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);
-                    IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(_currentIp, _currentPort);
-                    ((ClientMultiplayerProvider) Provider).FavoriteServer(_currentIp, _currentPort);
+                    {
+                        object[] args = ObjectSerializer.GetObjects(0, 0, packet, Types.UINT64_TYPE, Types.INT32_TYPE);
+                        LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
+                        ((ClientMultiplayerProvider)Provider).SetIdentity((ulong)args[0]);
+                        ((ClientMultiplayerProvider)Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);
+                        ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);
+                        IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(_currentIp, _currentPort);
+                        ((ClientMultiplayerProvider)Provider).FavoriteServer(_currentIp, _currentPort);
 
-                    //Todo: load extensions
-                    break;
-                }
+                        //Todo: load extensions
+                        break;
+                    }
                 default:
                     LogUtils.LogWarning("Couldn't handle packet: " + parsedPacket);
                     break;

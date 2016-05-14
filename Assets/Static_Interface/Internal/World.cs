@@ -38,6 +38,7 @@ namespace Static_Interface.Internal
             ObjectUtils.CheckObjects();      
 
             LogUtils.Log("Initializing World...");
+            gameObject.AddComponent<SpawnManager>();
             var mgr = gameObject.AddComponent<NetvarManager>();
             mgr.RegisterNetvar(new GravityNetvar());
             mgr.RegisterNetvar(new GameSpeedNetvar());
@@ -120,7 +121,7 @@ namespace Static_Interface.Internal
                 foreach(string file in bundles)
                 {
                     string name = Path.GetFileName(file);
-                    AssetManager.LoadAsset(name, file);
+                    AssetManager.LoadAssetBundle(s + @"\" + name, file);
                 }
                 string pluginFile = Path.Combine(s, "Plugin.dll");
                 if (File.Exists(pluginFile))

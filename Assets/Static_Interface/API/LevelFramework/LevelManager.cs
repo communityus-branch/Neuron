@@ -144,7 +144,7 @@ namespace Static_Interface.API.LevelFramework
             if (World.Instance?.CommandsObj != null)
             {
                 Console.Instance.UnregisterCommands(World.Instance.CommandsObj);
-                AssetManager.ClearAssets();
+                AssetManager.ClearAssetBundles();
             }
         }
     }

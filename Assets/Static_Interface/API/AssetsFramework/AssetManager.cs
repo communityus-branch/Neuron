@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Static_Interface.API.Utils;
 using Object = UnityEngine.Object;
@@ -8,32 +9,32 @@ namespace Static_Interface.API.AssetsFramework
 {
     public static class AssetManager
     {
-        private static readonly List<Asset> Assets = new List<Asset>();
-
-        public static Asset GetAsset(string assetName)
+        private static readonly List<AssetBundle> InternalBundles = new List<AssetBundle>();
+        public static ReadOnlyCollection<AssetBundle> Bundles => InternalBundles.AsReadOnly();
+         
+        public static AssetBundle GetAssetBundle(string assetName)
         {
-            return Assets.FirstOrDefault(a => a.Name == assetName);
+            return InternalBundles.FirstOrDefault(a => a.Name == assetName);
         }
 
-        public static Asset LoadAsset(string assetName, string file, bool forceNew = false)
+        public static AssetBundle LoadAssetBundle(string bundle, string file, bool forceNew = false)
         {
-            Asset asset = Assets.FirstOrDefault(a => a.FilePath == file);
-            if (asset != null && !forceNew)
+            AssetBundle assetBundle = InternalBundles.FirstOrDefault(a => a.FilePath == file);
+            if (assetBundle != null && !forceNew)
             {
-                return asset;
+                return assetBundle;
             }
-            asset = GetAsset(assetName);
-            if (asset != null) throw new Exception("An asset with the same name but different location has been already loaded!");
-            LogUtils.Debug("Loading asset: " + assetName + "(" + file + ")");
-            asset = new Asset(assetName, file);
-            asset.LoadAllAssets<Object>();
-            Assets.Add(asset);
-            return asset;
+            assetBundle = GetAssetBundle(bundle);
+            if (assetBundle != null) throw new Exception("An asset with the same name but different location has been already loaded!");
+            LogUtils.Debug("Loading asset: " + bundle + "(" + file + ")");
+            assetBundle = new AssetBundle(bundle, file);
+            assetBundle.LoadAllAssets<Object>();
+            InternalBundles.Add(assetBundle);
+            return assetBundle;
         }
 
-        internal static void ClearAssets()
+        internal static void ClearAssetBundles()
         {
-            Assets.Clear();
+            InternalBundles.Clear();
         }
-    }
 }
