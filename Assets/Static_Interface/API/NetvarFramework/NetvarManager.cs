@@ -28,7 +28,7 @@ namespace Static_Interface.API.NetvarFramework
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
-        public void Network_ReceiveValueUpdate(Identity ident, String name, byte[] serializedData)
+        public void Network_ReceiveValueUpdate(Identity ident, string name, byte[] serializedData)
         {
             Netvar netvar = GetNetvar(name);
             if (netvar == null)

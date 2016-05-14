@@ -39,7 +39,7 @@ namespace Static_Interface.API.NetvarFramework
             get { return OnGetValue(); }
             set
             {
-                if (_value == value) return;
+                if ((_value == null && value == null) || (_value != null && _value.Equals(value))) return;
                 ValidateType(value, true);
                 NetvarChangedEvent @event = new NetvarChangedEvent(this, _value, value);
                 if (@event.IsCancelled)
@@ -56,21 +56,13 @@ namespace Static_Interface.API.NetvarFramework
         private void SendNetvarUpdate()
         {
             if (!Connection.IsServer()) return;
-            NetvarManager.Instance.Channel.Send("Network_ReceiveValueUpdate", ECall.Clients, Name, Value);
-        }
-
-
-        public byte[] Serialize()
-        {
-            if(Value == null) return new byte[0];
-            int size;
-            return ObjectSerializer.GetBytes(0, out size, Value);
+            NetvarManager.Instance.Channel.Send("Network_ReceiveValueUpdate", ECall.Clients, Name, Serialize());
         }
 
         public object Deserialize(byte[] serializedData)
         {
             if (serializedData.Length == 0) return null;
-            return ObjectSerializer.GetObjects(0, 0, serializedData, GetValueType());
+            return ObjectSerializer.GetObjects(0, 0, serializedData, GetValueType())[0];
         }
 
         public bool ValidateType(object t, bool throwException = false)
@@ -110,6 +102,14 @@ namespace Static_Interface.API.NetvarFramework
         protected virtual object OnGetValue()
         {
             return _value;
-        }                    
+        }
+
+        public byte[] Serialize()
+        {
+            if (Value == null) return new byte[0];
+            int size;
+            var data = ObjectSerializer.GetBytes(0, out size, Value);
+            return data;
+        }
     }
 }

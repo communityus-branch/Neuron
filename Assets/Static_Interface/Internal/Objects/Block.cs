@@ -41,7 +41,9 @@ namespace Static_Interface.Internal.Objects
             if (_block == null)
             {
                 size = _step;
-                return Buffer;
+                var tmp = new byte[size];
+                System.Buffer.BlockCopy(Buffer, 0, tmp, 0, _step);
+                return tmp;
             }
             size = _block.Length;
             return _block;

@@ -32,7 +32,7 @@ namespace Static_Interface.Internal.Objects
     public class ObjectSerializer
     {
         private static readonly Block block = new Block();
-
+        public static Block Block => block;
         public static void CloseRead()
         {
         }
