@@ -7,6 +7,7 @@ using Static_Interface.API.Utils;
 using Static_Interface.ExtensionSandbox;
 using UnityEngine;
 using Object = UnityEngine.Object;
+
 namespace Static_Interface.API.AssetsFramework
 {
     public class AssetBundle
@@ -30,12 +31,32 @@ namespace Static_Interface.API.AssetsFramework
             Name = name;
         }
 
-        public Component[] LoadScripts(Type t = null)
+        public Component[] LoadAllScripts()
+        {
+            var components = new List<Component>();
+            foreach (string s in GetAllAssetNames())
+            {
+                try
+                {
+                    if (s.EndsWith("Script") || s.EndsWith("Scripts"))
+                    {
+                        components.AddRange(LoadScripts(s));
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.Log();
+                }
+            }
+            return components.ToArray();
+        }
+
+        public Component[] LoadScripts(string assetName, Type t = null)
         {
             TextAsset asset = null;
             try
             {
-                asset = _assetBundle.LoadAsset<TextAsset>("BundleScripts");
+                asset = _assetBundle.LoadAsset<TextAsset>(assetName);
             }
             catch (Exception)
             {
