@@ -8,7 +8,7 @@ namespace Static_Interface.API.GUIFramework
         public abstract Canvas Canvas { get; }
         public abstract void AddView(View view);
         public abstract void RemoveView(View view);
-        public abstract Collection<View> GetChilds();
+        public abstract ReadOnlyCollection<View> GetChilds();
         protected ViewParent(string viewName, ViewParent parent) : base(viewName, parent)
         {
         }
@@ -23,6 +23,13 @@ namespace Static_Interface.API.GUIFramework
             {
                 v.Destroy();
             }
+        }
+
+        public override void OnDraw()
+        {
+            base.OnDraw();
+            foreach (View v in GetChilds())
+                v.OnDraw();
         }
 
         public override GameObject GetViewObject()

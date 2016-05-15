@@ -18,6 +18,9 @@ namespace Static_Interface.API.PlayerFramework
             {
                 if (_rootView != null) return _rootView;
                 _rootView = new PlayerGUIViewParent();
+                WindowView test = new WindowView("testwindow", RootView);
+                test.SetTitle("Test lol");
+                test.Position = new Vector2(test.Width, -test.Height);
                 return _rootView;
             }
         }
@@ -108,9 +111,9 @@ namespace Static_Interface.API.PlayerFramework
             throw new System.NotSupportedException();
         }
 
-        public override Collection<View> GetChilds()
+        public override ReadOnlyCollection<View> GetChilds()
         {
-            return new Collection<View>(_registeredViews);
+            return _registeredViews.AsReadOnly();
         }
         
         public override void AddView(View view)

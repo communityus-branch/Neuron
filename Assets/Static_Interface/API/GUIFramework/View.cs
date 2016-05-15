@@ -30,14 +30,13 @@ namespace Static_Interface.API.GUIFramework
         {
             ViewName = viewName;
             ViewParent = parent;
-
             InitGameObject();
-
+            parent?.AddView(this);
+            GetViewObject().name = viewName;
             if (parent != null)
                 Parent = parent.Canvas.transform;
             AnchoredPosition = new Vector2(x, y);
             Draw = true;
-            parent?.AddView(this);
         }
 
         protected virtual void InitGameObject()
@@ -110,6 +109,26 @@ namespace Static_Interface.API.GUIFramework
         public virtual void OnResolutionChanged(Vector2 newRes)
         {
 
+        }
+
+        public float Width
+        {
+            get { return SizeDelta.x; }
+
+            set
+            {
+                SizeDelta = new Vector2(value, SizeDelta.y);
+            }
+        }
+
+        public float Height
+        {
+            get { return SizeDelta.y; }
+
+            set
+            {
+                SizeDelta = new Vector2(SizeDelta.x, value);
+            }
         }
 
         public RectTransform Transform => (RectTransform)GetViewObject().transform;
