@@ -1,4 +1,6 @@
-﻿namespace Static_Interface.API.EventFramework
+﻿using System;
+
+namespace Static_Interface.API.EventFramework
 {
     public abstract class Event
     {
@@ -20,6 +22,12 @@
         {
             Name = GetType().Name;
             IsAsync = isAsync;
+        }
+
+        public void Fire()
+        {
+            if(EventManager.Instance == null) throw new Exception("EventManager instance is null");
+            EventManager.Instance.CallEvent(this);
         }
     }
 }

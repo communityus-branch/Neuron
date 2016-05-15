@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -17,6 +18,9 @@ namespace Static_Interface.API.GUIFramework
         public RectTransform Content { get; private set; }
         public Text Title { get; private set; }
 
+        public UnityEvent ShowEvent { get; } = new UnityEvent();
+        public UnityEvent HideEvent { get; } = new UnityEvent();
+
         //Todo: implement moving/draging with mouse
         public bool Moveable { get; set; }
 
@@ -24,17 +28,20 @@ namespace Static_Interface.API.GUIFramework
         {
             if(parent == null) throw new ArgumentNullException(nameof(parent));
             Canvas = parent.Canvas;
+            Show();
         }
 
         public WindowView(string viewName, ViewParent parent, int x, int y) : base(viewName, parent, x, y)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             Canvas = parent.Canvas;
+            Show();
         }
 
         public WindowView(string viewName, Canvas canvas) : base(viewName, null)
         {
             Canvas = canvas;
+            Show();
         }
 
         public override Canvas Canvas { get; }
@@ -71,7 +78,7 @@ namespace Static_Interface.API.GUIFramework
             Title = Prefab.transform.FindChild("Title").GetComponent<Text>();
             SetTitle(ViewName);
             _closeButton = Prefab.transform.FindChild("CloseButton").GetComponent<Button>();
-            _closeButton.onClick.AddListener(Close);
+            _closeButton.onClick.AddListener(Hide);
             Width = Screen.width/2;
             Height = Screen.height/2;
         }
@@ -81,26 +88,16 @@ namespace Static_Interface.API.GUIFramework
             Title.text = title;
         }
 
-        public void Close()
+        public void Hide()
         {
             Draw = false;
-            OnClose();
-        }
-
-        protected virtual void OnClose()
-        {
-
+            HideEvent.Invoke();
         }
 
         public void Show()
         {
             Draw = true;
-            OnShow();
-        }
-
-        protected virtual void OnShow()
-        {
-
+            ShowEvent.Invoke();
         }
     }
 }

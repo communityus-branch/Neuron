@@ -125,20 +125,20 @@ namespace Static_Interface.API.Utils
         {
             lock (QueuedAsyncActions)
             {
-                QueuedAsyncActions.Clear();
+                QueuedAsyncActions?.Clear();
             }
 
             lock (QueuedMainActions)
             {
-                QueuedAsyncActions.Clear();
+                QueuedAsyncActions?.Clear();
             }
 
             lock (QueuedAsyncActions)
             {
-                QueuedAsyncActions.Clear();
+                QueuedAsyncActions?.Clear();
             }
 
-            _thread.Interrupt();
+            _thread?.Interrupt();
             _thread = new Thread(AsyncUpdate);
             _thread.Start();
         }

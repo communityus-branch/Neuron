@@ -239,8 +239,8 @@ namespace Static_Interface.ExtensionSandbox
             AddWhitelist(baseAssembly);
             foreach (Type type in baseAssembly.GetTypes())
             {
-                if ((!type.IsSubclassOf(typeof(MonoBehaviour)) ||  type != typeof (MonoBehaviour) )&&
-                    (type.IsSubclassOf(typeof (Behaviour)) || type == typeof (Behaviour)))
+                if ((!type.IsSubclassOf(typeof(MonoBehaviour)) &&  type != typeof (MonoBehaviour) && !typeof(MonoBehaviour).IsAssignableFrom(type))&&
+                    (type.IsSubclassOf(typeof (Behaviour)) || type == typeof (Behaviour) || typeof(Behaviour).IsAssignableFrom(type)))
                 {
                     RemoveWhitelist(baseAssembly);
                     illegalInstruction = type.FullName;
@@ -304,6 +304,7 @@ namespace Static_Interface.ExtensionSandbox
 
         private static bool CheckMethod(Assembly asm, Type type, MethodInfo method, ref string illegalInstruction, ref string failReason, bool recur = true)
         {
+            if (method.DeclaringType != type) return true; // this method is from super class
             if (!IsAllowedMethod(type, method.Name))
             {
                 failReason = "Method or property restricted" + type.FullName + "." + method.Name;
