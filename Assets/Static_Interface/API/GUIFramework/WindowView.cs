@@ -7,6 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Static_Interface.API.GUIFramework
 {
+    //Todo: Implement overlapping of windows, focusing etc
     public class WindowView : ViewParent
     {
         protected GameObject Prefab { get; set; }

@@ -33,9 +33,7 @@ namespace Static_Interface.API.GUIFramework
             InitGameObject();
             parent?.AddView(this);
             GetViewObject().name = viewName;
-            if (parent != null)
-                Parent = parent.Canvas.transform;
-            AnchoredPosition = new Vector2(x, y);
+            Position = new Vector2(x, y);
             Draw = true;
         }
 

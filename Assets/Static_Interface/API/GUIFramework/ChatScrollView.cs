@@ -60,9 +60,9 @@ namespace Static_Interface.API.GUIFramework
         {
             TextView tv = new TextView(null, ViewParent)
             {
-                Parent = Content,
-                Text = s
+                Parent = Content
             };
+            tv.SetText(s);
 
             _lines.Add(tv);
 
