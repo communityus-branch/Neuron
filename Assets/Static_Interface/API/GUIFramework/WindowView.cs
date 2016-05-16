@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using Static_Interface.API.Utils;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Tizen;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -16,10 +15,10 @@ namespace Static_Interface.API.GUIFramework
         protected GameObject Prefab { get; set; }
         protected string PrefabLocation => "UI/Window";
         private readonly List<View> _childs = new List<View>();
-        public Button CloseButton { get; protected set; }
+        public virtual Button CloseButton { get; protected set; }
 
-        public RectTransform Content { get; private set; }
-        public Text Title { get; private set; }
+        public virtual RectTransform Content { get; private set; }
+        public virtual Text Title { get; protected set; }
 
         public UnityEvent ShowEvent { get; } = new UnityEvent();
         public UnityEvent HideEvent { get; } = new UnityEvent();

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -41,6 +42,15 @@ namespace Static_Interface.API.GUIFramework
         protected virtual void InitGameObject()
         {
 
+        }
+
+        public void FillParent()
+        {
+            if(!(Parent?.transform is RectTransform)) throw new Exception("View has no parent or parent is not RectTransform");
+            var rect = ((RectTransform) Parent.transform).rect;
+            Width = rect.width;
+            Height = rect.height;
+            LocalPosition = Vector2.zero;
         }
 
         public void Destroy()
@@ -110,7 +120,7 @@ namespace Static_Interface.API.GUIFramework
 
         }
 
-        public float Width
+        public virtual float Width
         {
             get { return SizeDelta.x; }
 
@@ -120,7 +130,7 @@ namespace Static_Interface.API.GUIFramework
             }
         }
 
-        public float Height
+        public virtual float Height
         {
             get { return SizeDelta.y; }
 

@@ -18,14 +18,6 @@ namespace Static_Interface.API.PlayerFramework
             {
                 if (_rootView != null) return _rootView;
                 _rootView = new PlayerGUIViewParent();
-                /*
-                WindowView testWindow = new WindowView("testwindow", RootView);
-                testWindow.SetTitle("Test title");
-                testWindow.Position = new Vector2(testWindow.Width, -testWindow.Height);
-
-                TextView tv = new TextView("testchild", testWindow);
-                tv.SetText("Child textview");
-                */
                 return _rootView;
             }
         }
