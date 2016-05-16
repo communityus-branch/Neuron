@@ -35,6 +35,7 @@ namespace Static_Interface.API.GUIFramework
             GetViewObject().name = viewName;
             Position = new Vector2(x, y);
             Draw = true;
+            Scale = Vector3.one;
         }
 
         protected virtual void InitGameObject()
@@ -86,7 +87,7 @@ namespace Static_Interface.API.GUIFramework
             set { Transform.localPosition = value; }
         }
 
-        public virtual Vector2 Scale
+        public virtual Vector3 Scale
         {
             get { return Transform.localScale; }
             set { Transform.localScale = value; }

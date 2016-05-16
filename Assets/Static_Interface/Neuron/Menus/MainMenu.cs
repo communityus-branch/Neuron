@@ -26,6 +26,8 @@ namespace Static_Interface.Neuron.Menus
             Connection = new GameObject("Connection");
             CameraManager.Instance.CurrentCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 
+            DontDestroyOnLoad(GameObject.Find("EventSystem"));
+
             if (_firstStart)
             {
                 API.ConsoleFramework.Console.Init();

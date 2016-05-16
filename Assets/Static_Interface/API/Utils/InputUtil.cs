@@ -1,6 +1,7 @@
 ﻿using System;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.UnityExtensions;
+using Static_Interface.API.WeaponFramework;
 using Static_Interface.Internal.MultiplayerFramework;
 using ConsoleGUI = Static_Interface.API.ConsoleFramework.ConsoleGUI;
 
@@ -10,7 +11,8 @@ namespace Static_Interface.API.Utils
     {
         private static bool InputLocked { get; set; } 
         private static object LockObject { get; set; }
-        private static bool valBefore;
+        private static bool _valBefore;
+        private static bool _wasCrosshairEnabled = true;
         public void LockInput(object o)
         {
             if(o == null) throw new ArgumentNullException(nameof(o));
@@ -18,7 +20,7 @@ namespace Static_Interface.API.Utils
             if (IsInputLocked(o)) throw new Exception("Input already locked by " + LockObject.GetType().FullName);
             InputLocked = true;
             LockObject = o;
-            valBefore = GetMouseLookEnabled();
+            _valBefore = GetMouseLookEnabled();
             SetMouseLookEnabled(false);
         }
 
@@ -30,8 +32,22 @@ namespace Static_Interface.API.Utils
 
         public void SetMouseLookEnabled(bool v)
         {
-            var mouseLook = Player.MainPlayer.MovementController.GetComponent<SmoothMouseLook>();
-            if (!mouseLook) return;
+            WeaponController weaponController = Player.MainPlayer?.GetComponent<WeaponController>();
+            if (weaponController != null)
+            {
+                if (v)
+                {
+                    weaponController.DrawCrosshair = _wasCrosshairEnabled;
+                }
+                else
+                {
+                    _wasCrosshairEnabled = weaponController.DrawCrosshair;
+                    weaponController.DrawCrosshair = false;
+                }
+            }
+
+            SmoothMouseLook mouseLook = Player.MainPlayer?.MovementController?.GetComponent<SmoothMouseLook>();
+            if (mouseLook == null) return;
             mouseLook.enabled = v;
         }
 
@@ -41,7 +57,7 @@ namespace Static_Interface.API.Utils
             if(o != LockObject) throw new ArgumentException("Input was not locked by given object!");
             LockObject = null;
             InputLocked = false;
-            SetMouseLookEnabled(valBefore);
+            SetMouseLookEnabled(_valBefore);
         }
 
         public bool IsInputLocked(object o = null)
