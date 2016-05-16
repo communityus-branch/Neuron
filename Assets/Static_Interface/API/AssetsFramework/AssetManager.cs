@@ -33,6 +33,10 @@ namespace Static_Interface.API.AssetsFramework
             assetBundle = new AssetBundle(bundleName, file);
             assetBundle.LoadAllAssets<Object>();
             InternalBundles.Add(assetBundle);
+
+            AssetBundleLoadedEvent @event = new AssetBundleLoadedEvent(assetBundle);
+            @event.Fire();
+
             return assetBundle;
         }
 

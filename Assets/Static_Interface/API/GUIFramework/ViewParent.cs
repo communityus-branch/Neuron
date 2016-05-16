@@ -40,7 +40,7 @@ namespace Static_Interface.API.GUIFramework
             ClearChilds();
         }
 
-        private void ClearChilds()
+        public void ClearChilds()
         {
             var tmp = _childs;
             foreach (View v in tmp)
@@ -70,7 +70,7 @@ namespace Static_Interface.API.GUIFramework
             }
         }
 
-        public void NotifyDestroyed(View view)
+        internal void NotifyDestroyed(View view)
         {
             if (_childs.Contains(view))
                 _childs.Remove(view);

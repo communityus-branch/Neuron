@@ -100,7 +100,8 @@ namespace Static_Interface.ExtensionSandbox
             typeof(StringComparison),
             typeof(StringBuilder),
             typeof(IComparable<>),
-            typeof(Type)
+            typeof(Type),
+            typeof(IDisposable)
         };
 
         private static readonly List<Type> DisallowedTypes = new List<Type>
