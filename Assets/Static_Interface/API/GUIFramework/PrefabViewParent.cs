@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -10,7 +8,6 @@ namespace Static_Interface.API.GUIFramework
     {
         protected GameObject Prefab { get; set; }
         protected abstract string PrefabLocation { get; }
-        private readonly List<View> _childs = new List<View>();
         public override Canvas Canvas { get; }
 
         protected PrefabViewParent(string viewName, ViewParent parent) : base(viewName, parent)
@@ -28,6 +25,7 @@ namespace Static_Interface.API.GUIFramework
         protected PrefabViewParent(string viewName, Canvas canvas) : base(viewName, null)
         {
             Canvas = canvas;
+            Parent = canvas.transform;
         }
 
         public override GameObject GetViewObject()
@@ -40,25 +38,6 @@ namespace Static_Interface.API.GUIFramework
             base.InitGameObject();
             Prefab = (GameObject)Resources.Load(PrefabLocation);
             Prefab = Object.Instantiate(Prefab);
-        }
-
-        public override void AddView(View view)
-        {
-            view.ViewParent = this;
-            view.Parent = Transform;
-            _childs.Add(view);
-        }
-
-
-        public override void RemoveView(View view)
-        {
-            _childs.Remove(view);
-            view.Destroy();
-        }
-
-        public override ReadOnlyCollection<View> GetChilds()
-        {
-            return _childs.AsReadOnly();
         }
     }
 }

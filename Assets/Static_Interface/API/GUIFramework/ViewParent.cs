@@ -1,14 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Static_Interface.API.GUIFramework
 {
     public abstract class ViewParent : View
     {
+        private readonly List<View> _childs = new List<View>();
         public abstract Canvas Canvas { get; }
-        public abstract void AddView(View view);
-        public abstract void RemoveView(View view);
-        public abstract ReadOnlyCollection<View> GetChilds();
+
         protected ViewParent(string viewName, ViewParent parent) : base(viewName, parent)
         {
         }
@@ -17,11 +17,35 @@ namespace Static_Interface.API.GUIFramework
         {
         }
 
+        public virtual void AddView(View view)
+        {
+            view.ViewParent = this;
+            view.Parent = Transform;
+            _childs.Add(view);
+        }
+
+        public void RemoveView(View view)
+        {
+            _childs.Remove(view);
+            view.Destroy();
+        }
+
+        public ReadOnlyCollection<View> GetChilds()
+        {
+            return _childs.AsReadOnly();
+        }
+
         public override void OnDestroy()
         {
-            foreach (View v in GetChilds())
+            ClearChilds();
+        }
+
+        private void ClearChilds()
+        {
+            var tmp = _childs;
+            foreach (View v in tmp)
             {
-                v.Destroy();
+                RemoveView(v);
             }
         }
 
@@ -44,6 +68,12 @@ namespace Static_Interface.API.GUIFramework
             {
                 v.OnResolutionChanged(newRes);
             }
+        }
+
+        public void NotifyDestroyed(View view)
+        {
+            if (_childs.Contains(view))
+                _childs.Remove(view);
         }
     }
 }

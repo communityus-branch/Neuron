@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Static_Interface.API.GUIFramework;
 using Static_Interface.Internal.Objects;
 using UnityEngine;
@@ -83,7 +82,6 @@ namespace Static_Interface.API.PlayerFramework
     {
         private readonly List<ProgressBarView> _statusProgressBars = new List<ProgressBarView>();
         public ReadOnlyCollection<ProgressBarView> StatusProgressBars => _statusProgressBars.AsReadOnly();
-        private readonly List<View> _registeredViews = new List<View>();
         public override Canvas Canvas => _canvas;
         private Canvas _canvas;
 
@@ -107,33 +105,11 @@ namespace Static_Interface.API.PlayerFramework
         {
             throw new System.NotSupportedException();
         }
-
-        public override ReadOnlyCollection<View> GetChilds()
-        {
-            return _registeredViews.AsReadOnly();
-        }
         
         public override void AddView(View view)
         {
+            base.AddView(view);
             view.Parent = Canvas.transform;
-            _registeredViews.Add(view);
-            view.ViewParent = this;
-        }
-
-        public override  void RemoveView(View view)
-        {
-            view.OnDestroy();
-            _registeredViews.Remove(view);
-            view.Parent = null;
-            view.ViewParent = null;
-        }
-
-        public override void OnDraw()
-        {
-            foreach (View view in _registeredViews.Where(v => v.Draw))
-            {
-                view.OnDraw();
-            }
         }
 
         public override void OnResolutionChanged(Vector2 newRes)

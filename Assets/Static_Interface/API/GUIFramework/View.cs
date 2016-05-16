@@ -55,6 +55,7 @@ namespace Static_Interface.API.GUIFramework
 
         public void Destroy()
         {
+            ViewParent?.NotifyDestroyed(this);
             Object.Destroy(GetViewObject());
             OnDestroy();
         }

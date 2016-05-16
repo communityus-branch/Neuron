@@ -64,10 +64,6 @@ namespace Static_Interface.API.GUIFramework
             _lines.Add(tv);
 
             tv.SizeDelta = new Vector2(SizeDelta.x, 16f);
-            //var basePos = new Vector2(4, 0);
-            //basePos.x += tv.SizeDelta.x/2;
-            //basePos.y -= Lines.Count*tv.FontSize*2;
-            //tv.LocalPosition = basePos;
             var content = (RectTransform) Transform.FindChild("Viewport").FindChild("Content").transform;
             float height = 0;
             
