@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Static_Interface.API.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace Static_Interface.API.GUIFramework
 {
     //Todo: Implement overlapping of windows, focusing etc
-    public class WindowView : ViewParent
+    public class WindowView : PrefabViewParent
     {
-        protected GameObject Prefab { get; set; }
-        protected string PrefabLocation => "UI/Window";
-        private readonly List<View> _childs = new List<View>();
+        protected override string PrefabLocation => "UI/Window";
+
         public virtual Button CloseButton { get; protected set; }
 
         public virtual RectTransform Content { get; private set; }
@@ -58,37 +54,17 @@ namespace Static_Interface.API.GUIFramework
             OnCreate(canvas);
         }
 
-        private Canvas _canvas;
-        public override Canvas Canvas => _canvas;
-
-        public override GameObject GetViewObject()
-        {
-            return Prefab;
-        }
-
         public override void AddView(View view)
         {
-            view.ViewParent = this;
             view.Parent = Content;
-            _childs.Add(view);
         }
+
+        private Canvas _canvas;
+        public override Canvas Canvas => _canvas;
         
-        public override void RemoveView(View view)
-        {
-            _childs.Remove(view);
-            view.Destroy();
-        }
-
-        public override ReadOnlyCollection<View> GetChilds()
-        {
-            return _childs.AsReadOnly();
-        }
-
         protected override void InitGameObject()
         {
             base.InitGameObject();
-            Prefab = (GameObject)Resources.Load(PrefabLocation);
-            Prefab = Object.Instantiate(Prefab);
             Content = (RectTransform) Prefab.transform.FindChild("Content").transform;
             Title = Prefab.transform.FindChild("Title").GetComponent<Text>();
             SetTitle(ViewName);
