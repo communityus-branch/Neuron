@@ -58,10 +58,7 @@ namespace Static_Interface.API.GUIFramework
 
         public void AddLine(string s)
         {
-            TextView tv = new TextView(null, ViewParent)
-            {
-                Parent = Content
-            };
+            TextView tv = new TextView(null, this);
             tv.SetText(s);
 
             _lines.Add(tv);

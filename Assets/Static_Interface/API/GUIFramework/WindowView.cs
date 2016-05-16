@@ -30,37 +30,31 @@ namespace Static_Interface.API.GUIFramework
 
         public WindowView(string viewName, ViewParent parent) : base(viewName, parent)
         {
-            if(parent == null) throw new ArgumentNullException(nameof(parent));
             OnCreate(parent.Canvas);
         }
 
+        public WindowView(string viewName, ViewParent parent, int x, int y) : base(viewName, parent, x, y)
+        {
+            OnCreate(parent.Canvas);
+        }
+
+        public WindowView(string viewName, Canvas canvas) : base(viewName, canvas)
+        {
+            OnCreate(canvas);
+        }
+        
         private void OnCreate(Canvas canvas)
         {
-            _canvas = canvas;
             Scale = Vector3.one;
             _wasCursorVisible = Cursor.visible;
             Show();
         }
 
-        public WindowView(string viewName, ViewParent parent, int x, int y) : base(viewName, parent, x, y)
-        {
-            if (parent == null) throw new ArgumentNullException(nameof(parent));
-            OnCreate(parent.Canvas);
-        }
-
-        public WindowView(string viewName, Canvas canvas) : base(viewName, null)
-        {
-            GetViewObject().transform.SetParent(canvas.transform);
-            OnCreate(canvas);
-        }
-
         public override void AddView(View view)
         {
+            base.AddView(view);
             view.Parent = Content;
         }
-
-        private Canvas _canvas;
-        public override Canvas Canvas => _canvas;
         
         protected override void InitGameObject()
         {

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Static_Interface.API.GUIFramework
 {
-    public class ScrollView : PrefabView
+    public class ScrollView : PrefabViewParent
     {
         public ScrollView(string viewName, ViewParent parent) : base(viewName, parent)
         {
@@ -55,6 +55,12 @@ namespace Static_Interface.API.GUIFramework
         {
             get { return GetViewObject().GetComponent<ScrollRect>().decelerationRate; }
             set { GetViewObject().GetComponent<ScrollRect>().decelerationRate = value; }
+        }
+
+        public override void AddView(View view)
+        {
+            base.AddView(view);
+            view.Parent = Content;
         }
     }
 }
