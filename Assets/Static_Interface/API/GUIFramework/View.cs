@@ -25,6 +25,7 @@ namespace Static_Interface.API.GUIFramework
 
         protected View(string viewName, ViewParent parent) : this(viewName, parent, 0, 0)
         {
+
         }
 
         protected View(string viewName, ViewParent parent, int x, int y)
@@ -33,10 +34,17 @@ namespace Static_Interface.API.GUIFramework
             ViewParent = parent;
             InitGameObject();
             parent?.AddView(this);
-            GetViewObject().name = viewName;
-            Position = new Vector2(x, y);
+            if (viewName != null) GetViewObject().name = viewName;
+            else ViewName = GetViewObject().name;
+            Position = new Vector3(x, y);
             Draw = true;
             Scale = Vector3.one;
+            OnPostInit();
+        }
+
+        protected virtual void OnPostInit()
+        {
+
         }
 
         protected virtual void InitGameObject()
@@ -50,7 +58,7 @@ namespace Static_Interface.API.GUIFramework
             var rect = ((RectTransform) Parent.transform).rect;
             Width = rect.width;
             Height = rect.height;
-            LocalPosition = Vector2.zero;
+            LocalPosition = Vector3.zero;
         }
 
         public void Destroy()
@@ -86,15 +94,15 @@ namespace Static_Interface.API.GUIFramework
             set { Transform.anchoredPosition = value; }
         }
 
-        public virtual Vector2 Position
+        public virtual Vector3 Position
         {
-            get { return new Vector2(Transform.position.x, Transform.position.y); }
+            get { return new Vector3(Transform.position.x, Transform.position.y, Transform.position.z); }
             set { Transform.position = value; }
         }
 
-        public virtual Vector2 LocalPosition
+        public virtual Vector3 LocalPosition
         {
-            get { return new Vector2(Transform.localPosition.x, Transform.localPosition.y); }
+            get { return new Vector3(Transform.localPosition.x, Transform.localPosition.y, Transform.localPosition.z); }
             set { Transform.localPosition = value; }
         }
 

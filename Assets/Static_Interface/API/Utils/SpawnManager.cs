@@ -108,10 +108,10 @@ namespace Static_Interface.API.Utils
             return obj;
         }
 
-        private void FindAssetBundleForAsset(String assetPath, out AssetBundle bundle)
+        private void FindAssetBundleForAsset(string assetPath, out AssetBundle bundle)
         {
             bundle = null;
-            var assetName = assetPath.Split('\\')[0];
+            var assetName = assetPath.Split('/')[0];
             foreach (AssetBundle assetBundle in AssetManager.Bundles.Where(assetBundle => assetBundle.Contains(assetName)))
             {
                 if (bundle != null) throw new Exception("Multiple asset bundles include the asset \"" + assetName + "\", please specify the bundle!");
@@ -126,7 +126,7 @@ namespace Static_Interface.API.Utils
 
         private GameObject FindObject(AssetBundle bundle, string assetPath)
         {
-            var args = assetPath.Split('\\');
+            var args = assetPath.Split('/');
             var obj = bundle.LoadAsset<GameObject>(args[0]);
             if (args.Length > 1)
             {

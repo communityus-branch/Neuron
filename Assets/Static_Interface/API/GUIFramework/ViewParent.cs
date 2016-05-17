@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Static_Interface.API.GUIFramework
 {
@@ -8,7 +10,7 @@ namespace Static_Interface.API.GUIFramework
     {
         private readonly List<View> _childs = new List<View>();
         public abstract Canvas Canvas { get; }
-
+        public UnityEvent OnClearChilds { get;} = new UnityEvent();
         protected ViewParent(string viewName, ViewParent parent) : base(viewName, parent)
         {
         }
@@ -21,6 +23,7 @@ namespace Static_Interface.API.GUIFramework
         {
             view.ViewParent = this;
             view.Parent = Transform;
+            view.LocalPosition = Vector3.zero;
             _childs.Add(view);
         }
 
@@ -42,6 +45,7 @@ namespace Static_Interface.API.GUIFramework
 
         public void ClearChilds()
         {
+            OnClearChilds.Invoke();
             var tmp = _childs;
             foreach (View v in tmp)
             {

@@ -8,7 +8,9 @@ namespace Static_Interface.API.GUIFramework
 {
     public class ChatScrollView : ScrollView
     {
-        private readonly List<TextView> _lines  = new List<TextView>();
+        protected override string PrefabLocation => "UI/ScrollView";
+
+        private readonly List<TextView> _lines = new List<TextView>();
         public ReadOnlyCollection<TextView> Lines => _lines.AsReadOnly();
 
         protected override void InitGameObject()
@@ -18,6 +20,17 @@ namespace Static_Interface.API.GUIFramework
             Transform.localPosition = Vector2.zero;
             UpdatePos(new Vector2(Screen.width, Screen.height));
             ScrollToTop();
+            OnClearChilds.AddListener(delegate
+            {
+                _lines.Clear();
+                _yPosition = 0;
+            });
+        }
+
+        protected override void OnPostInit()
+        {
+            base.OnPostInit();
+            GetViewObject().GetComponent<ScrollRect>().verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
         }
 
         public override void OnResolutionChanged(Vector2 newRes)
@@ -29,10 +42,10 @@ namespace Static_Interface.API.GUIFramework
         private void UpdatePos(Vector2 newRes, Vector2? sizeDelta = null)
         {
             if (sizeDelta == null) sizeDelta = SizeDelta;
-            var x = -Screen.width / 2 + sizeDelta.Value.x / 2;
-            var y = Screen.height / 2 - sizeDelta.Value.y / 2;
+            var x = -Screen.width/2 + sizeDelta.Value.x/2;
+            var y = Screen.height/2 - sizeDelta.Value.y/2;
             LocalPosition = new Vector2(x, y);
-            SizeDelta = new Vector2(newRes.x / 3, newRes.y / 2);
+            SizeDelta = new Vector2(newRes.x/3, newRes.y/2);
         }
 
         public ChatScrollView(string viewName, ViewParent parent) : base(viewName, parent)
@@ -50,67 +63,29 @@ namespace Static_Interface.API.GUIFramework
                 UpdatePos(new Vector2(Screen.width, Screen.height), base.SizeDelta);
                 return base.SizeDelta;
             }
-            set
-            {
-                base.SizeDelta = value;
-            }
+            set { base.SizeDelta = value; }
         }
 
+        private float _yPosition;
         public void AddLine(string s)
         {
             TextView tv = new TextView(null, this);
-            tv.SetText(s);
-
+            tv.SetText(s);      
             _lines.Add(tv);
 
-            tv.SizeDelta = new Vector2(SizeDelta.x, 16f);
-            var content = (RectTransform) Transform.FindChild("Viewport").FindChild("Content").transform;
-            float height = 0;
-            
-            List<TextView> toRemove = new List<TextView>();
-            foreach (TextView t in Lines)
-            {
-                try
-                {
-                    if (t == null)
-                    {
-                        toRemove.Add(t);
-                        continue;
-                    }
-                    height += t.Rect.height;
-                }
-                catch (Exception e)
-                {
-                    toRemove.Add(t);
-                }
+            int marginLeft = 2;
+            int marginTop = 2;
 
-            }
-            foreach (TextView t in toRemove)
-            {
-                _lines.Remove(t);
-            }
-            content.sizeDelta = new Vector2(content.sizeDelta.x, height);
+            tv.SizeDelta = new Vector2(SizeDelta.x, tv.SizeDelta.y);
+            if (_yPosition == 0) _yPosition = -tv.Height / 2 + -marginTop;
+            tv.LocalPosition = new Vector3(tv.Width/2 + marginLeft, _yPosition);
+            _yPosition -= tv.Height - marginTop;
             ScrollToBottom();
-        }
-
-
-        private void ScrollToTop()
-        {
-            Transform.GetComponent<ScrollRect>().verticalNormalizedPosition = 1f;
-        }
-
-        public void ScrollToBottom()
-        {
-            Transform.GetComponent<ScrollRect>().verticalNormalizedPosition = 0f;
         }
 
         public void Clear()
         {
-            foreach (TextView tv in _lines)
-            {
-                ViewParent.RemoveView(tv);
-                tv.Destroy();
-            }
+            ClearChilds();
         }
     }
 }

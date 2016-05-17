@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Static_Interface.API.GUIFramework
@@ -11,6 +13,38 @@ namespace Static_Interface.API.GUIFramework
 
         public ScrollView(string viewName, ViewParent parent, int x, int y) : base(viewName, parent, x, y)
         {
+        }
+
+        public override void AddView(View view)
+        {
+            base.AddView(view);
+            view.Parent = Content;
+
+            float height = 0;
+
+            List<View> toRemove = new List<View>();
+            foreach (View v in GetChilds())
+            {
+                try
+                {
+                    if (v == null)
+                    {
+                        toRemove.Add(v);
+                        continue;
+                    }
+                    height += v.Rect.height;
+                }
+                catch (Exception e)
+                {
+                    toRemove.Add(v);
+                }
+
+            }
+            foreach (View v in toRemove)
+            {
+                v.Destroy();
+            }
+            Content.sizeDelta = new Vector2(Content.sizeDelta.x, height);
         }
 
         protected override string PrefabLocation => "UI/ScrollView";
@@ -57,10 +91,14 @@ namespace Static_Interface.API.GUIFramework
             set { GetViewObject().GetComponent<ScrollRect>().decelerationRate = value; }
         }
 
-        public override void AddView(View view)
+        public void ScrollToTop()
         {
-            base.AddView(view);
-            view.Parent = Content;
+            Transform.GetComponent<ScrollRect>().verticalNormalizedPosition = 1f;
+        }
+
+        public void ScrollToBottom()
+        {
+            Transform.GetComponent<ScrollRect>().verticalNormalizedPosition = 0f;
         }
     }
 }
