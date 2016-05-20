@@ -29,7 +29,7 @@ namespace Static_Interface.API.PlayerFramework
             var momentum = collision.relativeVelocity * _rigidbody.mass;
             var deathCause = EDamageCause.COLLISION;
             var hitTransform = collision.transform;
-            bool isBullet = hitTransform.GetComponent<Bullet>() != null;
+            bool isBullet = hitTransform.GetComponent<Projectile>() != null;
 
             PlayerCollisionEvent @event = new PlayerCollisionEvent(Player, collision, momentum);
             @event.IsBullet = isBullet;
@@ -38,7 +38,7 @@ namespace Static_Interface.API.PlayerFramework
 
             if (isBullet)
             {
-                var bullet = hitTransform.GetComponent<Bullet>();
+                var bullet = hitTransform.GetComponent<Projectile>();
                 Physics.IgnoreCollision(GetComponent<Collider>(), hitTransform.GetComponent<Collider>());
                 if (bullet.Damage != null)
                 {

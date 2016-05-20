@@ -9,6 +9,7 @@ using Static_Interface.API.EntityFramework;
 using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.Objects;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.API.WeatherFramework;
@@ -19,6 +20,7 @@ using Static_Interface.Neuron;
 using Static_Interface.Neuron.Netvars;
 using UnityEngine;
 using Console = Static_Interface.API.ConsoleFramework.Console;
+using ObjectUtils = Static_Interface.Internal.Objects.ObjectUtils;
 
 namespace Static_Interface.Internal
 {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Static_Interface.API.Utils
+namespace Static_Interface.API.Objects
 {
-    public static class GameObjectExtensions
+    public static class ObjectUtils
     {
         public static GameObject[] FindChildsDeep(this GameObject parent, string child)
         {
@@ -35,5 +35,16 @@ namespace Static_Interface.API.Utils
             }
             return obj;
         }
+
+        public static List<Transform> GetAllChildren(this Transform parent)
+        {
+            List<Transform> list = new List<Transform>();
+            foreach (Transform t in parent)
+            {
+                list.Add(t);
+                list.AddRange(GetAllChildren(t));
+            }
+            return list;
+        } 
     }
 }

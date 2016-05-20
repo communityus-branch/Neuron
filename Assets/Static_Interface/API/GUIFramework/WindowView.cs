@@ -1,5 +1,4 @@
-﻿using System;
-using Static_Interface.API.Utils;
+﻿using Static_Interface.API.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;

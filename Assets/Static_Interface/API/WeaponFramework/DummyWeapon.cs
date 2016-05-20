@@ -12,7 +12,7 @@ namespace Static_Interface.API.WeaponFramework
         {
             GameObject bullet = (GameObject) Object.Instantiate(Resources.Load("SimpleBullet"));
             bullet.name = "Bullet #" + _bulletCount;
-            var bullcomp = bullet.AddComponent<Bullet>();
+            var bullcomp = bullet.AddComponent<Projectile>();
             bullcomp.Owner = Player;
             bullet.transform.rotation = Player.transform.rotation;
             bullet.transform.position = Player.transform.TransformPoint(Vector3.forward/1000);

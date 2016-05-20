@@ -136,6 +136,10 @@ namespace Static_Interface.Internal.Objects
             {
                 return ReadIdentity();
             }
+            if (type == typeof (Quaternion))
+            {
+                return Quaternion.Euler(ReadSingleVector3());
+            }
             LogUtils.LogError("Failed to read type: " + type);
             return null;
         }
@@ -460,6 +464,9 @@ namespace Static_Interface.Internal.Objects
             } else if (type ==Types.IDENTITY_TYPE || type.IsSubclassOf(Types.IDENTITY_TYPE))
             {
                 WriteUInt64(((Identity)objects).Serialize());
+            } else if (type == typeof (Quaternion))
+            {
+                WriteSingleVector3(((Quaternion)objects).eulerAngles);
             }
             else
             {
