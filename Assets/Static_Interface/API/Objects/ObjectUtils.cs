@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Static_Interface.API.Objects
@@ -36,15 +37,27 @@ namespace Static_Interface.API.Objects
             return obj;
         }
 
-        public static List<Transform> GetAllChildren(this Transform parent)
+        public static void AddDefaultCollider(GameObject obj)
         {
-            List<Transform> list = new List<Transform>();
-            foreach (Transform t in parent)
+            var newCollider = obj.gameObject.AddComponent<MeshCollider>();
+            newCollider.convex = true;
+            newCollider.sharedMesh = GetCombinedMesh(obj);
+        }
+
+        public static Mesh GetCombinedMesh(GameObject o)
+        {
+            MeshFilter[] meshFilters = o.GetComponentsInChildren<MeshFilter>();
+            CombineInstance[] combine = new CombineInstance[meshFilters.Length];
+            int i = 0;
+            while (i < meshFilters.Length)
             {
-                list.Add(t);
-                list.AddRange(GetAllChildren(t));
+                combine[i].mesh = meshFilters[i].sharedMesh;
+                combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
+                i++;
             }
-            return list;
-        } 
+            var mesh = new Mesh();
+            mesh.CombineMeshes(combine);
+            return mesh;
+        }
     }
 }

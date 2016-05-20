@@ -81,22 +81,12 @@ namespace Static_Interface.API.Objects
                 throw new Exception("Object with path: " + assetPath + " in bundle " + bundle.Name + " not found");
             }
 
-            //add default collider
-            if (obj.GetComponent<Collider>() == null)
+            //obj has not collider, add a default one
+            if (!obj.GetComponent<Collider>() && !obj.GetComponentsInChildren<Transform>().Any(t => t.GetComponent<Collider>()))
             {
-                var list = obj.transform.GetAllChildren().Select(c => c.gameObject).ToList();
-                list.Add(obj);
-                foreach (GameObject o in list)
-                {
-                    MeshFilter viewedModelFilter = o.gameObject.AddComponent<MeshFilter>();
-                    if (viewedModelFilter?.mesh == null) continue;
-                    var mesh = Instantiate(viewedModelFilter.mesh);
-                    viewedModelFilter.sharedMesh = mesh;
-                    var newCollider = o.gameObject.AddComponent<MeshCollider>();
-                    newCollider.convex = true;
-                    newCollider.sharedMesh = mesh;
-                }
+                ObjectUtils.AddDefaultCollider(obj);
             }
+
             return obj;
         }
 
@@ -152,7 +142,10 @@ namespace Static_Interface.API.Objects
             SpawnRequestClient(callback, bundle, asset, postion, Quaternion.identity,  out callbackId);
         }
 
-        private readonly Dictionary<Identity, Dictionary<uint, List<Action<uint, bool, GameObject>>>> _callbacks = new Dictionary<Identity, Dictionary<uint, List<Action<uint, bool, GameObject>>>>(); 
+
+        //oh god, why??
+        private readonly Dictionary<Identity, Dictionary<uint, List<Action<uint, bool, GameObject>>>> _callbacks = new Dictionary<Identity, Dictionary<uint, List<Action<uint, bool, GameObject>>>>();
+
         private uint _currentObjectId = 1;
 
         public void SpawnRequestClient(Action<uint, bool, GameObject> callback, string bundle, string asset, Vector3 position,
