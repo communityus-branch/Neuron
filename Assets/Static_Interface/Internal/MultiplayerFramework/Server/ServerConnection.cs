@@ -74,6 +74,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             Destroy(this);
         }
 
+        protected override void OnChannelCountUpdate()
+        {
+            int length;
+            object[] objects = { ChannelCount };
+            byte[] data = ObjectSerializer.GetBytes(0, out length, objects);
+            foreach (User u in Clients.Where(u => u.Identity != ServerID))
+            {
+                Send(u.Identity, EPacket.UPDATE_CHANNELS, data, length, 0);
+            }
+        }
+
         internal override void Receive(Identity source, byte[] packet, int size, int channel)
         {
             base.Receive(source, packet, size, channel);

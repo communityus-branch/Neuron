@@ -281,6 +281,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             cam.gameObject.GetComponents<SunShafts>()[1].sunTransform = moon;
         }
 
+        protected override void OnChannelCountUpdate()
+        {
+            LogUtils.Log("ChannelCount Updated: " + ChannelCount);
+        }
+
         internal override void Receive(Identity id, byte[] packet, int size, int channel)
         {
             base.Receive(id, packet, size, channel);
@@ -383,6 +388,12 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                         //Todo: load extensions
                         break;
                     }
+                case EPacket.UPDATE_CHANNELS:
+                {
+                    object[] args = ObjectSerializer.GetObjects(0, 0, packet, ChannelCount.GetType());
+                    ChannelCount = (int) args[0];
+                    break;
+                }
                 default:
                     LogUtils.LogWarning("Couldn't handle packet: " + parsedPacket);
                     break;

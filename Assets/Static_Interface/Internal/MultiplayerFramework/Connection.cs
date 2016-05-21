@@ -51,7 +51,18 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public Identity ClientID { get; internal set; }
 
-        public int ChannelCount => FindObjectsOfType<Channel>().Length + 1;
+        private int _channelCount = 1;
+        public int ChannelCount
+        {
+            get { return _channelCount; }
+            set
+            {
+                _channelCount = value;
+                OnChannelCountUpdate();
+            }
+        }
+
+        protected abstract void OnChannelCountUpdate();
 
         private static readonly List<User> ClientsInternal = new List<User>();
 

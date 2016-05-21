@@ -18,12 +18,12 @@ namespace Static_Interface.ExtensionSandbox
         private readonly List<SecurityPermissionFlag> _permissions = new List<SecurityPermissionFlag>
         {
             SecurityPermissionFlag.Execution
-        }; 
+        };
 
         private static Sandbox _instance;
         public static Sandbox Instance => _instance ?? (_instance = new Sandbox());
-        private readonly List<string> _loadedFiles = new List<string>(); 
-        private readonly List<AppDomain> _domains = new List<AppDomain>();  
+        private readonly List<string> _loadedFiles = new List<string>();
+        private readonly List<AppDomain> _domains = new List<AppDomain>();
         public AppDomain CreateAppDomain(string file)
         {
             PermissionSet permSet = new PermissionSet(PermissionState.None);
@@ -34,7 +34,7 @@ namespace Static_Interface.ExtensionSandbox
 
             var parentDir = Directory.GetParent(file).FullName;
 
-            string[] allowedFiles = {parentDir, IOUtil.GetExtensionsDir()};
+            string[] allowedFiles = { parentDir, IOUtil.GetExtensionsDir() };
             permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read, allowedFiles));
             permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Write, allowedFiles));
             permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.PathDiscovery, allowedFiles));
@@ -66,6 +66,8 @@ namespace Static_Interface.ExtensionSandbox
                 return;
             }
 
+            //TODO: DEBUG CODE: REMOVE BEFORE RELEASE!!!!!
+            //Todo: Disabled app domains for development purporses
             //var domain = CreateAppDomain(path);
 
             //var proxy = (SandboxProxy)
@@ -84,8 +86,7 @@ namespace Static_Interface.ExtensionSandbox
             //var loadedAssembly = proxy.LoadAssemby(path);
             //callback.Invoke(true, loadedAssembly, domain);
 
-            //TODO: DEBUG CODE: REMOVE BEFORE RELEASE!!!!!
-            
+
             callback.Invoke(true, Assembly.LoadFrom(path), AppDomain.CurrentDomain);
             _loadedFiles.Add(path);
             //_domains.Add(domain);
@@ -107,6 +108,7 @@ namespace Static_Interface.ExtensionSandbox
 
         public bool UnloadAssembly(Assembly asm)
         {
+            LogUtils.Debug("Unloading assembly: " + asm.Location);
             foreach (AppDomain domain in _domains)
             {
                 if (domain.GetAssemblies().Contains(asm))
@@ -117,6 +119,19 @@ namespace Static_Interface.ExtensionSandbox
                 }
             }
 
+            /* This is only for development enviroment: Unlock related files, otherwise the files will remain locked even 
+             * after stopping the game from the editor, which would require to restart the editor everytime someone wants
+             * to update the extensions            
+             */
+            foreach (var f in asm.GetFiles())
+                try
+                {
+                    f.Unlock(0, f.Length);
+                }
+                catch (IOException)
+                {
+                    // ignore
+                }
             return true;
         }
 

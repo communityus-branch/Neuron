@@ -629,6 +629,7 @@ namespace Static_Interface.API.NetworkFramework
             if (ID == 0) ID = Connection.ChannelCount;
             if (ID < 1) throw new Exception("Channel ID is < 0!! (ID: " + ID + ")");
             Listen = true;
+            Connection.ChannelCount += 1;
         }
 
         public void Write(params object[] objects)

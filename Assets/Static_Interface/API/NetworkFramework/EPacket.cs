@@ -39,7 +39,8 @@ namespace Static_Interface.API.NetworkFramework
         [EPacketAttr(true, true, false, true)] UPDATE_UNRELIABLE_CHUNK_BUFFER = 0x11,
         [EPacketAttr(true, false, true, true)] UPDATE_RELIABLE_CHUNK_INSTANT = 0x12,
         [EPacketAttr(true, true, true, true)] UPDATE_UNRELIABLE_CHUNK_INSTANT = 0x13,
-        [EPacketAttr(true, true, false, false)] UPDATE_VOICE = 0x14
+        [EPacketAttr(true, true, false, false)] UPDATE_VOICE = 0x14,
+        [EPacketAttr(false, false, true, false)] UPDATE_CHANNELS = 0x15
     }
 
     public static class Packets
