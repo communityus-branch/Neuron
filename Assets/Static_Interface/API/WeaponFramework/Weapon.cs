@@ -5,12 +5,14 @@ namespace Static_Interface.API.WeaponFramework
 {
     public abstract class Weapon
     {
+        public WeaponController Controller { get; }
         public readonly Player Player;
         public Texture2D Crosshair { get; protected set; } = null;
         public uint? CrosshairScale { get; protected set; } = null;
         public bool DrawCrosshair { get; protected set; } = true;
-        protected Weapon(Player player)
+        protected Weapon(WeaponController controller, Player player)
         {
+            Controller = controller;
             Player = player;
         }
 

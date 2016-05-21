@@ -304,6 +304,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4419e77167448974490b333dfa327a54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SyncOwnerOnly: 1
+  UpdatePeriod: 20
   DrawCrosshair: 1
 --- !u!114 &11452604
 MonoBehaviour:
@@ -330,6 +332,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 549d334e1ad725b4fae5e5a59eb6b560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SyncOwnerOnly: 1
+  UpdatePeriod: 5000
 --- !u!114 &11469006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -341,6 +345,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a265bf96cc87cdb48874ec3d065c3b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SyncOwnerOnly: 1
+  UpdatePeriod: 20
 --- !u!114 &11481794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -352,12 +358,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dff8a30c48aa3e43b9611d9adee5c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SyncOwnerOnly: 1
+  UpdatePeriod: 20
   Speed: 10
   RunSpeedModifier: 1.25
   MaxVelocityChange: 10
   CanJump: 1
   JumpHeight: 2
-  GravityEnabled: 1
+  CustomGravity: {x: 0, y: 0, z: 0}
 --- !u!114 &11484092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -369,6 +377,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32d8c61526510eb429ba5f1372d2821c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SyncOwnerOnly: 1
+  UpdatePeriod: 20
 --- !u!114 &11487186
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -391,6 +401,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea325f3eed3d9dc4289db146486c7b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SyncOwnerOnly: 1
+  UpdatePeriod: 5000
 --- !u!114 &11493612
 MonoBehaviour:
   m_ObjectHideFlags: 1

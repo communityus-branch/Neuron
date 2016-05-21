@@ -3,8 +3,6 @@ using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.SerialisationFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
-using Static_Interface.Internal.Objects;
-
 namespace Static_Interface.API.NetvarFramework
 {
     public abstract class Netvar
@@ -108,8 +106,7 @@ namespace Static_Interface.API.NetvarFramework
         public byte[] Serialize()
         {
             if (Value == null) return new byte[0];
-            int size;
-            var data = ObjectSerializer.GetBytes(0, out size, Value);
+            var data = ObjectSerializer.GetBytes(0, Value);
             return data;
         }
     }

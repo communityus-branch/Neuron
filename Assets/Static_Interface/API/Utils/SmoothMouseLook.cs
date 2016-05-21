@@ -28,7 +28,7 @@ namespace Static_Interface.API.Utils
         private readonly List<float> _rotArrayY = new List<float>();
         float _rotAverageY;
 
-        public float FrameCounter = 20;
+        public float FrameCounter = 5;
 
         public Quaternion? OriginalRotation;
 

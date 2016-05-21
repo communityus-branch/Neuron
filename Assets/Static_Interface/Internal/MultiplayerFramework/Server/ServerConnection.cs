@@ -76,12 +76,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         protected override void OnChannelCountUpdate()
         {
-            int length;
             object[] objects = { ChannelCount };
-            byte[] data = ObjectSerializer.GetBytes(0, out length, objects);
+            byte[] data = ObjectSerializer.GetBytes(0, objects);
             foreach (User u in Clients.Where(u => u.Identity != ServerID))
             {
-                Send(u.Identity, EPacket.UPDATE_CHANNELS, data, length, 0);
+                Send(u.Identity, EPacket.UPDATE_CHANNELS, data, 0);
             }
         }
 
@@ -132,10 +131,9 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
                 case EPacket.TICK:
                 {
-                    int length;
                     object[] objects = { net };
-                    byte[] buffer2 = ObjectSerializer.GetBytes(0, out length, objects);
-                    Send(source, EPacket.TIME, buffer2, length, 0);
+                    byte[] buffer2 = ObjectSerializer.GetBytes(0, objects);
+                    Send(source, EPacket.TIME, buffer2, 0);
                     return;
                 }
                 case EPacket.TIME:
@@ -255,9 +253,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             var user = ident.GetUser();
             byte index = GetUserIndex(ident);
             RemovePlayer(index);
-            int size;
-            byte[] packet = ObjectSerializer.GetBytes(0, out size, index);
-            AnnounceToAll(EPacket.DISCONNECTED, packet, size, 0);
+            byte[] packet = ObjectSerializer.GetBytes(0, index);
+            AnnounceToAll(EPacket.DISCONNECTED, packet, 0);
             if(sendKicked) Send(ident, EPacket.KICKED, new byte[0], 0);
             ((ServerMultiplayerProvider) Provider).RemoveClient(ident);
 
@@ -283,11 +280,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             throw new Exception("User not found: " + user);
         }
 
-        public void AnnounceToAll(EPacket packet, byte[] data, int size, int channel)
+        public void AnnounceToAll(EPacket packet, byte[] data, int channel)
         {
             foreach (var c in Clients)
             {
-                Send(c.Identity, packet, data, size, channel);
+                Send(c.Identity, packet, data, channel);
             }
         }
 
@@ -361,7 +358,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     ClientConnection.SetupMainPlayer(player);
                 }
 
-                int size;
                 object[] data;
                 byte[] packet;
 
@@ -375,8 +371,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         user.Identity.Serialize(), user.Name, user.Group, spawn,
                         angle, ch, false
                     };
-                    packet = ObjectSerializer.GetBytes(0, out size, data);
-                    Send(c.Identity, EPacket.CONNECTED, packet, size, 0);
+                    packet = ObjectSerializer.GetBytes(0, data);
+                    Send(c.Identity, EPacket.CONNECTED, packet, 0);
                 }
 
                 LogUtils.Debug("Sending connected player data to client");
@@ -387,19 +383,19 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                         ident.Serialize(), c.Name, c.Group, c.Model.transform.position,
                         c.Model.transform.rotation.eulerAngles, c.Model.GetComponent<Channel>().ID, false
                     };
-                    packet = ObjectSerializer.GetBytes(0, out size, data);
-                    Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
+                    packet = ObjectSerializer.GetBytes(0, data);
+                    Send(user.Identity, EPacket.CONNECTED, packet, 0);
                 }
 
                 LogUtils.Debug("Sending accepted data to client");
                 data = new object[]
                 {ident.Serialize(), user.Name, user.Group, spawn.Value, angle, ch, true};
-                packet = ObjectSerializer.GetBytes(0, out size, data);
-                Send(user.Identity, EPacket.CONNECTED, packet, size, 0);
+                packet = ObjectSerializer.GetBytes(0, data);
+                Send(user.Identity, EPacket.CONNECTED, packet, 0);
 
                 data = new object[] {ident.Serialize(), ch};
-                packet = ObjectSerializer.GetBytes(0, out size, data);
-                Send(user.Identity, EPacket.ACCEPTED, packet, size, 0);
+                packet = ObjectSerializer.GetBytes(0, data);
+                Send(user.Identity, EPacket.ACCEPTED, packet, 0);
 
                 WeatherManager.Instance.SendWeatherTimeUpdate(ident);
                 NetvarManager.Instance.SendAllNetvars(ident);

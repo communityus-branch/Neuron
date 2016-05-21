@@ -10,10 +10,11 @@ namespace Static_Interface.API.WeaponFramework
         private long _lastUsage;
         public bool DrawCrosshair = true;
         protected override bool IsSyncable => true;
+        public AudioSource AudioSource { get; protected set; }
         protected override void Awake()
         {
             base.Awake();
-            SetCurrentWeapon(new DummyWeapon(Player));
+            SetCurrentWeapon(new DummyWeapon(this, Player));
         }
 
         public Weapon CurrentWeapon { get; private set; }
@@ -62,6 +63,9 @@ namespace Static_Interface.API.WeaponFramework
 
         internal void SetCurrentWeapon(Weapon weapon)
         {
+            //Reset audio
+            if(AudioSource != null && AudioSource) Destroy(AudioSource);
+            AudioSource = gameObject.AddComponent<AudioSource>();
             CurrentWeapon?.OnUnequip();
             CurrentWeapon = weapon;
             weapon?.OnEquip();

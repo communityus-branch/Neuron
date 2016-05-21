@@ -131,11 +131,10 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             if (_levelLoadedCalled) return;
             _levelLoadedCalled = true;
 
-            int size;
             ulong group = 1; //Todo
             object[] args = { ClientName, group, GameInfo.VERSION, CurrentServerInfo.Ping / 1000f };
-            byte[] packet = ObjectSerializer.GetBytes(0, out size, args);
-            Send(ServerID, EPacket.CONNECT, packet, size, 0);
+            byte[] packet = ObjectSerializer.GetBytes(0, args);
+            Send(ServerID, EPacket.CONNECT, packet, packet.Length, 0);
         }
 
         private void Lag(float currentPing)
@@ -180,7 +179,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
             playerTransform.GetComponent<Channel>().IsOwner = true;
             playerTransform.gameObject.AddComponent<SmoothMouseLook>();
-
             var sunShafts = playerTransform.GetComponentInChildren<SunShafts>();
             if (sunShafts != null && GameObject.Find("Sun_Moon") != null)
             {
@@ -309,9 +307,8 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     break;
                 case EPacket.TICK:
                     {
-                        int pSize;
-                        var data = ObjectSerializer.GetBytes(0, out pSize, Time.realtimeSinceStartup);
-                        Send(ServerID, EPacket.TIME, data, pSize, 0);
+                        var data = ObjectSerializer.GetBytes(0, Time.realtimeSinceStartup);
+                        Send(ServerID, EPacket.TIME, data, 0);
                         break;
                     }
                 case EPacket.TIME:

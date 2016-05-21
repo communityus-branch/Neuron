@@ -137,8 +137,7 @@ namespace Static_Interface.PluginSandbox
         {
             {typeof(Object), new List<string> { "Destroy", "DestroyImmediate", "DestroyObject", "DontDestroyOnLoad" }},
             {typeof(Behaviour), new List<string> {"set_enabled" }}, //dont allow disabling critical components like PluginManager
-            {typeof(GameObject), new List<string> { "set_active" }},
-            {typeof(GameObject), new List<string> { "SetActive" }}
+            {typeof(GameObject), new List<string> { "set_active, SetActive" }}
         };
 
         private static readonly Dictionary<Type, List<string>> AllowedMethods = new Dictionary<Type, List<string>>

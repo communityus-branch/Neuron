@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Static_Interface.API.SerialisationFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.PluginSandbox;
 using UnityEngine;
@@ -174,6 +175,7 @@ namespace Static_Interface.API.PluginFramework
         {
             base.OnDestroySafe();
             Shutdown();
+            ObjectSerializer.ResetSerializers();
         }
     }
 }

@@ -7,7 +7,6 @@ using Static_Interface.API.SerialisationFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Client;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
-using Static_Interface.Internal.Objects;
 using UnityEngine;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
@@ -35,7 +34,7 @@ namespace Static_Interface.Internal.MultiplayerFramework
 
         public static Connection CurrentConnection { get; internal set; }
 
-        protected byte[] Buffer  = new byte[Block.BUFFER_SIZE];
+        protected byte[] Buffer  = new byte[DataBuffer.BUFFER_SIZE];
 
         public Identity ServerID { get; protected set; }
 

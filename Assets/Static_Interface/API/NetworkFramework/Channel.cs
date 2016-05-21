@@ -6,15 +6,15 @@ using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.SerialisationFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
-using Static_Interface.Internal.Objects;
 using UnityEngine;
 
 namespace Static_Interface.API.NetworkFramework
 {
     public class Channel : UnityExtensions.MonoBehaviour
     {
+        protected readonly DataBuffer Buffer = new DataBuffer();
         [HideInInspector]
-        public bool Listen = false;
+        public bool Listen;
         [HideInInspector]
         public Connection Connection;
         private int _id;
@@ -129,10 +129,9 @@ namespace Static_Interface.API.NetworkFramework
                 var index =
                     GetCall(channelName, out networkCall);
                 if (index == -1) return;
-                int size;
                 byte[] buffer;
-                GetPacket(type, index, out size, out buffer);
-                Send(mode, type, size, buffer);
+                GetPacket(type, index, out buffer);
+                Send(mode, type, buffer);
             }
         }
 
@@ -148,20 +147,19 @@ namespace Static_Interface.API.NetworkFramework
                 var index =
                     GetCall(channelName, out networkCall);
                 if (index == -1) return;
-                int length;
                 byte[] buffer;
-                GetPacket(type, index, out length, out buffer);
+                GetPacket(type, index, out buffer);
                 if (IsOwner && (user == Connection.ClientID))
                 {
-                    Receive(Connection.ClientID, buffer, 0, length);
+                    Receive(Connection.ClientID, buffer);
                 }
                 else if (Connection.IsServer() && (user == Connection.ServerID))
                 {
-                    Receive(Connection.ServerID, buffer, 0, length);
+                    Receive(Connection.ServerID, buffer);
                 }
                 else
                 {
-                    Connection.Send(user, type, buffer, length, ID);
+                    Connection.Send(user, type, buffer, ID);
                 }
             }
         }
@@ -184,16 +182,16 @@ namespace Static_Interface.API.NetworkFramework
             return -1;
         }
 
-        private void GetPacket(EPacket type, int index, out int size, out byte[] packet)
+        private void GetPacket(EPacket type, int index, out byte[] packet)
         {
-            packet = ObjectSerializer.CloseWrite(out size);
+            packet = Buffer.GetBytes();
             packet[0] = (byte)type;
             packet[1] = (byte)index;
         }
 
-        private void GetPacket(EPacket type, int index, out int size, out byte[] packet, params object[] arguments)
+        private void GetPacket(EPacket type, int index, out byte[] packet, params object[] arguments)
         {
-            packet = ObjectSerializer.GetBytes(2, out size, arguments);
+            packet = ObjectSerializer.GetBytes(2, arguments);
             packet[0] = (byte)type;
             packet[1] = (byte)index;
         }
@@ -224,7 +222,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void OpenWrite()
         {
-            ObjectSerializer.OpenWrite(2);
+            Buffer.Reset(2);
         }
 
         public T Read<T>()
@@ -244,20 +242,25 @@ namespace Static_Interface.API.NetworkFramework
 
         public object[] Read(params Type[] types)
         {
-            return ObjectSerializer.Read(types);
+            return Buffer.Read(types);
         }
 
-        public void Receive(Identity ident, byte[] packet, int offset, int size)
+        public void Receive(Identity ident, byte[] packet)
+        {
+            Receive(ident, packet, 0, packet.Length);
+        }
+
+        public void Receive(Identity ident, byte[] packet, int start, int end)
         {
             LogUtils.LogNetwork(nameof(Receive) + "; ident: " + ident);
-            if (size < sizeof(byte) * 2) return; // we need at least 2 bytes
+            if (end < sizeof(byte) * 2) return; // we need at least 2 bytes
             if (ident.GetUser() == null)
             {
                 ident = Connection.Provider.GetServerIdent();
             }
-            int index = packet[offset + 1];
+            int index = packet[start + 1];
             if ((index < 0) || (index >= Calls.Count)) return;
-            EPacket packet2 = (EPacket)packet[offset];
+            EPacket packet2 = (EPacket)packet[start];
 
 
             var call = Calls[index];
@@ -297,14 +300,13 @@ namespace Static_Interface.API.NetworkFramework
                 }
             }
 
-            if ((packet2 == EPacket.UPDATE_VOICE) && (size < 4)) return;
+            if ((packet2 == EPacket.UPDATE_VOICE) && (end < 4)) return;
             if ((packet2 == EPacket.UPDATE_UNRELIABLE_CHUNK_BUFFER) ||
                 (packet2 == EPacket.UPDATE_RELIABLE_CHUNK_BUFFER))
             {
-                ObjectSerializer.OpenRead(offset + 2, packet);
+                Buffer.Reset(start + 2, packet);
                 object[] parameters = { ident };
                 Calls[index].Method.Invoke(Calls[index].Component, parameters);
-                ObjectSerializer.CloseRead();
             }
             else if (Calls[index].Types.Length > 0)
             {
@@ -312,12 +314,12 @@ namespace Static_Interface.API.NetworkFramework
                 {
                     Voice[0] = ident;
                     Voice[1] = packet;
-                    Voice[2] = BitConverter.ToUInt16(packet, offset + 2);
+                    Voice[2] = BitConverter.ToUInt16(packet, start + 2);
                     Calls[index].Method.Invoke(Calls[index].Component, Voice);
                     return;
                 }
 
-                object[] objArray = ObjectSerializer.GetObjects(ident, offset, 2, packet, true,
+                object[] objArray = ObjectSerializer.GetObjects(ident, start, 2, packet, true,
                     Calls[index].Types);
                 if (objArray != null)
                 {
@@ -328,7 +330,12 @@ namespace Static_Interface.API.NetworkFramework
             Calls[index].Method.Invoke(Calls[index].Component, null);
         }
 
-        public void Send(ECall mode, EPacket type, int size, byte[] packet)
+        public void Send(ECall mode, EPacket type, byte[] packet)
+        {
+            Send(mode, type, packet, packet.Length);
+        }
+
+        public void Send(ECall mode, EPacket type, byte[] packet, int size)
         {
             LogUtils.LogNetwork(nameof(Send) + ": mode: " + mode + ", type: " + type + ", size: " + size);
             switch (mode)
@@ -427,10 +434,9 @@ namespace Static_Interface.API.NetworkFramework
                 return;
             }
             var type = networkCall.PacketType;
-            int size;
             byte[] buffer;
-            GetPacket(type, index, out size, out buffer, arguments);
-            Send(mode, type, size, buffer);
+            GetPacket(type, index, out buffer, arguments);
+            Send(mode, type, buffer);
         }
 
         public void Send(string pName, Identity user, params object[] arguments)
@@ -440,20 +446,19 @@ namespace Static_Interface.API.NetworkFramework
                 GetCall(pName, out networkCall);
             if (index == -1) return;
             var type = networkCall.PacketType;
-            int size;
             byte[] buffer;
-            GetPacket(type, index, out size, out buffer, arguments);
+            GetPacket(type, index, out buffer, arguments);
             if (IsOwner && (user == Connection.ClientID))
             {
-                Receive(Connection.ClientID, buffer, 0, size);
+                Receive(Connection.ClientID, buffer);
             }
             else if (Connection.IsServer() && (user == Connection.ServerID))
             {
-                Receive(Connection.ServerID, buffer, 0, size);
+                Receive(Connection.ServerID, buffer);
             }
             else
             {
-                Connection.Send(user, type, buffer, size, ID);
+                Connection.Send(user, type, buffer, ID);
             }
         }
 
@@ -467,10 +472,15 @@ namespace Static_Interface.API.NetworkFramework
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, bytes, length);
-            Send(mode, type, size, buffer);
+            Send(mode, type, buffer, size);
         }
 
-        public void Send(ECall mode, Vector3 point,  float radius, EPacket type, int size, byte[] packet)
+        public void Send(ECall mode, Vector3 point, float radius, EPacket type, byte[] packet)
+        {
+            Send(mode, point, radius, type, packet, packet.Length);
+        }
+
+        public void Send(ECall mode, Vector3 point,  float radius, EPacket type, byte[] packet, int size)
         {
             radius *= radius;
             switch (mode)
@@ -586,10 +596,9 @@ namespace Static_Interface.API.NetworkFramework
             if (index == -1) return;
             var type = networkCall.PacketType;
             float radius = networkCall.MaxRadius;
-            int size;
             byte[] buffer;
-            GetPacket(type, index, out size, out buffer, arguments);
-            Send(mode, point, radius, type, size, buffer);
+            GetPacket(type, index, out buffer, arguments);
+            Send(mode, point, radius, type, buffer);
         }
 
         public void Send(string pName, ECall mode, Vector3 point, byte[] bytes,
@@ -604,7 +613,7 @@ namespace Static_Interface.API.NetworkFramework
             int size;
             byte[] buffer;
             GetPacket(type, index, out size, out buffer, bytes, length);
-            Send(mode, point, radius, type, size, buffer);
+            Send(mode, point, radius, type, buffer, size);
         }
 
         public void SendAside(string pName, Identity u, params object[] arguments)
@@ -614,12 +623,11 @@ namespace Static_Interface.API.NetworkFramework
                 GetCall(pName, out networkCall);
             if (index == -1) return;
             var type = networkCall.PacketType;
-            int size;
             byte[] buffer;
-            GetPacket(type, index, out size, out buffer, arguments);
+            GetPacket(type, index, out buffer, arguments);
             foreach (User user in Connection.Clients.Where(user => user.Identity != u))
             {
-                Connection.Send(user.Identity, type, buffer, size, ID);
+                Connection.Send(user.Identity, type, buffer, ID);
             }
         }
 
@@ -635,7 +643,7 @@ namespace Static_Interface.API.NetworkFramework
 
         public void Write(params object[] objects)
         {
-            ObjectSerializer.Write(objects);
+            Buffer.Write(objects);
         }
     }
 }
