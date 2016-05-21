@@ -6,21 +6,19 @@ using Static_Interface.API.AssetsFramework;
 using Static_Interface.API.CommandFramework;
 using Static_Interface.API.ConsoleFramework;
 using Static_Interface.API.EntityFramework;
-using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
-using Static_Interface.API.Objects;
+using Static_Interface.API.PluginFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.API.WeatherFramework;
-using Static_Interface.ExtensionSandbox;
+using Static_Interface.PluginSandbox;
 using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
 using Static_Interface.Neuron.Netvars;
 using UnityEngine;
 using Console = Static_Interface.API.ConsoleFramework.Console;
-using ObjectUtils = Static_Interface.Internal.Objects.ObjectUtils;
 
 namespace Static_Interface.Internal
 {
@@ -38,7 +36,7 @@ namespace Static_Interface.Internal
         {
             base.Start();
             transform.position = new Vector3(0, 0, 0);
-            ObjectUtils.CheckObjects();      
+            InternalObjectUtils.CheckObjects();      
 
             LogUtils.Log("Initializing World...");
             gameObject.AddComponent<SpawnManager>();
@@ -48,15 +46,15 @@ namespace Static_Interface.Internal
             if(IsServer()) gameObject.AddComponent<CommandManager>();
             gameObject.AddComponent<Scheduler>();
 
-            ExtensionManager.Init(IOUtil.GetExtensionsDir());
+            PluginManager.Init(IOUtil.GetPluginsDir());
 
-            Weather = ObjectUtils.LoadWeather();
+            Weather = InternalObjectUtils.LoadWeather();
             var enviromentSun = GameObject.Find("__SUN__");
             var weatherParent = GameObject.Find("WeatherSystems").transform;
 
             var orgSunMoon = weatherParent.FindChild("Sun_Moon"); 
 
-            ObjectUtils.CopyComponents(orgSunMoon.gameObject, enviromentSun, typeof(Light));
+            InternalObjectUtils.CopyComponents(orgSunMoon.gameObject, enviromentSun, typeof(Light));
             enviromentSun.transform.SetParent(weatherParent);
             for (int i = 0; i < orgSunMoon.childCount; i++)
             {
@@ -64,8 +62,8 @@ namespace Static_Interface.Internal
                 child.SetParent(enviromentSun.transform);
             }
 
-            ObjectUtils.CopyFields(orgSunMoon.GetComponent<Light>(), enviromentSun.GetComponent<Light>());
-            ObjectUtils.CopyFields(orgSunMoon.transform, enviromentSun.transform);
+            InternalObjectUtils.CopyFields(orgSunMoon.GetComponent<Light>(), enviromentSun.GetComponent<Light>());
+            InternalObjectUtils.CopyFields(orgSunMoon.transform, enviromentSun.transform);
 
             Destroy(orgSunMoon.gameObject);
             enviromentSun.name = "Sun_Moon";
@@ -107,21 +105,21 @@ namespace Static_Interface.Internal
             h.y = transform.position.y + 3000;
             Weather.transform.position = h;
 
-            LoadExtensions();
+            LoadPlugins();
         }
 
-        private void LoadExtensions()
+        private void LoadPlugins()
         {
-            if (!Directory.Exists(IOUtil.GetExtensionsDir()))
+            if (!Directory.Exists(IOUtil.GetPluginsDir()))
             {
-                Directory.CreateDirectory(IOUtil.GetExtensionsDir());
+                Directory.CreateDirectory(IOUtil.GetPluginsDir());
             }
-            LogUtils.Log("Loading extensions from dir: " + IOUtil.GetExtensionsDir());
+            LogUtils.Log("Loading plugins from dir: " + IOUtil.GetPluginsDir());
 
             List<string> plugins = new List<string>();
-            foreach (string s in Directory.GetDirectories(IOUtil.GetExtensionsDir()))
+            foreach (string s in Directory.GetDirectories(IOUtil.GetPluginsDir()))
             {
-                LogUtils.Debug("Extensions: Loading directory: " + s);
+                LogUtils.Debug("Plugins: Loading directory: " + s);
                 string[] bundles = Directory.GetFiles(s, "*.unity3d");
                 foreach(string file in bundles)
                 {
@@ -137,7 +135,7 @@ namespace Static_Interface.Internal
 
             foreach (string file in plugins)
             {
-                ExtensionManager.Instance.LoadExtension(file);
+                PluginManager.Instance.LoadPlugin(file);
             }
         }
 

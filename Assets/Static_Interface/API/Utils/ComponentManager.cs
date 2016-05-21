@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
-using Static_Interface.API.ExtensionFramework;
+using Static_Interface.API.PluginFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
@@ -11,15 +11,15 @@ using Object = UnityEngine.Object;
 namespace Static_Interface.API.Utils
 {
     /// <summary>
-    /// Extensions may not use some methods for Components. However, they can use these safe-ones instead.
+    /// Plugins may not use some methods for Components. However, they can use these safe-ones instead.
     /// </summary>
     public static class ComponentManager
     {
-        private static readonly Dictionary<Extension, Dictionary<GameObject, List<Component>>> RegisteredComponents = new Dictionary<Extension, Dictionary<GameObject, List<Component>>>();
+        private static readonly Dictionary<Plugin, Dictionary<GameObject, List<Component>>> RegisteredComponents = new Dictionary<Plugin, Dictionary<GameObject, List<Component>>>();
         private static readonly List<Type> CriticalComponents = new List<Type>
         {
             typeof(PersistentScript<>),
-            typeof(ExtensionManager),
+            typeof(PluginManager),
             typeof(Connection)
             //Todo
         };
@@ -50,7 +50,7 @@ namespace Static_Interface.API.Utils
             }
         }
 
-        public static void DestroyExtension(this Object obj, Extension ext)
+        public static void DestroyPlugin(this Object obj, Plugin ext)
         {
             Destroy(ext, obj);
         }
@@ -58,7 +58,7 @@ namespace Static_Interface.API.Utils
         /// <summary>
         /// See <see cref="Object.Destroy(Object)"/>
         /// </summary>
-        public static void Destroy(this Extension ext, Object obj)
+        public static void Destroy(this Plugin ext, Object obj)
         {
             CheckCriticialObject(obj);
             Object.Destroy(obj);
@@ -67,7 +67,7 @@ namespace Static_Interface.API.Utils
         /// <summary>
         /// See <see cref="Object.DestroyImmediate(Object)"/>
         /// </summary>
-        public static void DestroyImmediate(this Extension ext, Object obj)
+        public static void DestroyImmediate(this Plugin ext, Object obj)
         {
             CheckCriticialObject(obj);
             Object.DestroyImmediate(obj);
@@ -76,7 +76,7 @@ namespace Static_Interface.API.Utils
         /// <summary>
         /// See <see cref="Object.DestroyObject(Object)"/>
         /// </summary>
-        public static void DestroyObject(this Extension ext, Object obj, float t = 0.00f)
+        public static void DestroyObject(this Plugin ext, Object obj, float t = 0.00f)
         {
             CheckCriticialObject(obj);
             Object.DestroyObject(obj, t);

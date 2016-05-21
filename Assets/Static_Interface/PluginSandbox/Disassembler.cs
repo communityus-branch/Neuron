@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Static_Interface.ExtensionSandbox
+namespace Static_Interface.PluginSandbox
 {
     public class Disassembler
     {

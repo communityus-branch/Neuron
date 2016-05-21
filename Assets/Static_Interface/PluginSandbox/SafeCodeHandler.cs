@@ -10,14 +10,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Static_Interface.API.UnityExtensions;
-using Static_Interface.API.Utils;
 using Steamworks;
 using UnityEngine;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 using Object = UnityEngine.Object;
 using ThreadPool = System.Threading.ThreadPool;
 
-namespace Static_Interface.ExtensionSandbox
+namespace Static_Interface.PluginSandbox
 {
     //When I wrote this, only God and I understood what I was doing
     //Now, God only knows   
@@ -46,7 +45,7 @@ namespace Static_Interface.ExtensionSandbox
             "UnityEngine.Network.*",
             "UnityEngine.SceneManagment.*",
             "Static_Interface.Internal.*",
-            "Static_Interface.ExtensionSandbox.*",
+            "Static_Interface.PluginSandbox.*",
         };
 
         private static readonly List<Type> AllowedTypes = new List<Type>
@@ -137,8 +136,9 @@ namespace Static_Interface.ExtensionSandbox
         private static readonly Dictionary<Type, List<string>> DisallowedMethods = new Dictionary<Type, List<string>>
         {
             {typeof(Object), new List<string> { "Destroy", "DestroyImmediate", "DestroyObject", "DontDestroyOnLoad" }},
-            {typeof(Behaviour), new List<string> {"set_enabled" }}, //dont allow disabling critical components like ExtensionManager
-            {typeof(GameObject), new List<string> { "set_active" }}
+            {typeof(Behaviour), new List<string> {"set_enabled" }}, //dont allow disabling critical components like PluginManager
+            {typeof(GameObject), new List<string> { "set_active" }},
+            {typeof(GameObject), new List<string> { "SetActive" }}
         };
 
         private static readonly Dictionary<Type, List<string>> AllowedMethods = new Dictionary<Type, List<string>>

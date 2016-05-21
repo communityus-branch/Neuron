@@ -7,6 +7,7 @@ using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.PlayerFramework.Events;
+using Static_Interface.API.SerialisationFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.API.WeatherFramework;
 using Static_Interface.Internal.MultiplayerFramework.Client;
@@ -15,7 +16,6 @@ using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
 using UnityEngine;
-using Types = Static_Interface.Internal.Objects.Types;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Server
 {
@@ -166,7 +166,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     Type[] argTypes =
                     {
                         // [0] name, [1] group, [2] version, [3] ping
-                        Types.STRING_TYPE, Types.UINT64_TYPE, Types.STRING_TYPE, Types.SINGLE_TYPE
+                        typeof(string), typeof(ulong), typeof(string), typeof(float)
                     };
                 
                     var args = ObjectSerializer.GetObjects(0, 0, packet, argTypes);
@@ -221,7 +221,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
             else
             {
-                object[] args = ObjectSerializer.GetObjects(0, 0, packet, Types.BYTE_ARRAY_TYPE);
+                object[] args = ObjectSerializer.GetObjects(0, 0, packet, typeof(byte[]));
                 if (!((ServerMultiplayerProvider)Provider).VerifyTicket(source, (byte[])args[0]))
                 {
                     Reject(source, ERejectionReason.AUTH_VERIFICATION);
@@ -415,7 +415,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public void OpenGameServer(bool lan = false)
         {
-            ObjectUtils.CheckObjects();
+            InternalObjectUtils.CheckObjects();
             if (Provider == null) Provider = new LidgrenServer(this);
             try
             {

@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Static_Interface.API.ConsoleFramework
 {
-    //Todo - Extensions: Destroy all commands when world unloads
+    //Todo - Plugins: Destroy all commands when world unloads
 
     public class Console : PersistentScript<Console>
     {

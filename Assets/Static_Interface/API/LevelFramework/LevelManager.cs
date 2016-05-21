@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.AssetsFramework;
 using Static_Interface.API.EventFramework;
-using Static_Interface.API.ExtensionFramework;
+using Static_Interface.API.PluginFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal;

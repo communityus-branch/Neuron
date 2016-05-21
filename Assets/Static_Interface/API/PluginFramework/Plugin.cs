@@ -5,22 +5,22 @@ using Static_Interface.API.EventFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 
-namespace Static_Interface.API.ExtensionFramework
+namespace Static_Interface.API.PluginFramework
 {
     /// <summary>
-    /// Base extension class. Every mod/gamemode etc may only have one extension class in the whole assembly.
+    /// Base plugin class. Every mod/gamemode etc may only have one plugin class in the whole assembly.
     /// </summary>
-    public abstract class Extension
+    public abstract class Plugin
     {
         internal string Path;
         private bool _enabled;
 
         /// <summary>
-        /// Human-Readable name of the extension
+        /// Human-Readable name of the plugin
         /// </summary>
         public readonly string Name;
 
-        protected Extension()
+        protected Plugin()
         {
             Name = GetType().Name;
             //Todo: assign Name from attribute
@@ -29,7 +29,7 @@ namespace Static_Interface.API.ExtensionFramework
         public string DataDir => Directory.GetParent(Path).FullName;
 
         /// <summary>
-        /// Get or set the enabled status of the extension
+        /// Get or set the enabled status of the plugin
         /// </summary>
         public bool Enabled
         {
@@ -52,7 +52,7 @@ namespace Static_Interface.API.ExtensionFramework
         {
             if (_enabled) return;
             _enabled = true;
-            LogUtils.Log("Enablign extension: " + Name + " (" + GetType().Name + ")");
+            LogUtils.Log("Enabling plugin: " + Name + " (" + GetType().Name + ")");
             try
             {
                 OnEnable();
@@ -64,17 +64,17 @@ namespace Static_Interface.API.ExtensionFramework
         }
 
         /// <summary>
-        /// Called when the extension gets enabled
+        /// Called when the plugin gets enabled
         /// </summary>
         protected virtual void OnEnable() { }
 
         private void Disable()
         {
             if (!_enabled) return;
-            LogUtils.Log("Disabling extension: " + Name + " (" + GetType().Name + ")");
+            LogUtils.Log("Disabling plugin: " + Name + " (" + GetType().Name + ")");
             Scheduler.Instance?.RemoveAllTasks(this);
             EventManager.Instance?.ClearListeners(this);
-            CommandManager.Instance?.OnExtensionDisabled(this);
+            CommandManager.Instance?.OnPluginDisabled(this);
             try
             {
                 OnDisable();
@@ -87,7 +87,7 @@ namespace Static_Interface.API.ExtensionFramework
         }
 
         /// <summary>
-        /// Called when the extension get disabled
+        /// Called when the plugin get disabled
         /// </summary>
         protected virtual void OnDisable() { }
 

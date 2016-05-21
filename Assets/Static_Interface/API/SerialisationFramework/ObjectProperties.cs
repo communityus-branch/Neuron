@@ -1,6 +1,6 @@
 ﻿using Static_Interface.API.UnityExtensions;
 
-namespace Static_Interface.API.Objects
+namespace Static_Interface.API.SerialisationFramework
 {
     public class ObjectProperties : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Static_Interface.API.ExtensionFramework;
+using Static_Interface.API.PluginFramework;
 using Static_Interface.API.Utils;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
@@ -25,25 +25,25 @@ namespace Static_Interface.API.SchedulerFramework
 
         public static Scheduler Instance { get; private set; }
 
-        public Task RunTask(Extension ext, Action action, uint delay = 1)
+        public Task RunTask(Plugin ext, Action action, uint delay = 1)
         {
             if (delay == 0) delay = 1;
             return GetTask(ext, action, false, delay);
         }
 
-        public Task RunAsyncTask(Extension ext, Action action, uint delay = 1)
+        public Task RunAsyncTask(Plugin ext, Action action, uint delay = 1)
         {
             if (delay == 0) delay = 1;
             return GetTask(ext, action, true, delay);
         }
 
-        private Task GetTask(Extension ext, Action action, bool isAsync, uint delay = 0, uint period = 0)
+        private Task GetTask(Plugin ext, Action action, bool isAsync, uint delay = 0, uint period = 0)
         {
             Task task = new Task
             {
                 Action = action,
                 Id = _lastId,
-                Extension = ext,
+                Plugin = ext,
                 IsAsync = isAsync,
                 Delay = delay,
                 Period = period,
@@ -64,12 +64,12 @@ namespace Static_Interface.API.SchedulerFramework
             return _tasks[id];
         }
 
-        public Task RunTaskTimer(Extension ext, Action action, uint delay, uint period = 1)
+        public Task RunTaskTimer(Plugin ext, Action action, uint delay, uint period = 1)
         {
             return GetTask(ext, action, false, delay, period);
         }
 
-        public Task RunAsyncTaskTimer(Extension ext, Action action, uint delay, uint period = 1)
+        public Task RunAsyncTaskTimer(Plugin ext, Action action, uint delay, uint period = 1)
         {
             return GetTask(ext, action, true, delay, period);
         }
@@ -132,9 +132,9 @@ namespace Static_Interface.API.SchedulerFramework
             }
         }
 
-        public void RemoveAllTasks(Extension ext)
+        public void RemoveAllTasks(Plugin ext)
         {
-            foreach (Task t in _tasks.Values.Where(t => t.Extension == ext))
+            foreach (Task t in _tasks.Values.Where(t => t.Plugin == ext))
             {
                 t.Remove();
             }

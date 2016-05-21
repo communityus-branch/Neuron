@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Static_Interface.API.ExtensionFramework;
+using Static_Interface.API.PluginFramework;
 using Static_Interface.API.Utils;
 
 namespace Static_Interface.API.EventFramework
@@ -14,23 +14,23 @@ namespace Static_Interface.API.EventFramework
         private static EventManager _instance;
         private readonly Dictionary<Type, List<MethodInfo>> _eventListeners = new Dictionary<Type, List<MethodInfo>>();
         private readonly Dictionary<IListener, List<MethodInfo>> _listenerMethods = new Dictionary<IListener, List<MethodInfo>>();
-        private readonly Dictionary<Extension, List<IListener>> _listeners = new Dictionary<Extension, List<IListener>>(); 
+        private readonly Dictionary<Plugin, List<IListener>> _listeners = new Dictionary<Plugin, List<IListener>>(); 
         public static EventManager Instance => _instance ?? (_instance = new EventManager());
 
         /// <summary>
         /// Register a listener for events
         /// </summary>
         /// <param name="listener">The listener class which implements the <see cref="EventHandler"/> listener methods</param>
-        /// <param name="extension">The extension which wants to register a new listener</param>
-        public void RegisterEvents(IListener listener, Extension extension)
+        /// <param name="plugin">The plugin which wants to register a new listener</param>
+        public void RegisterEvents(IListener listener, Plugin plugin)
         {
-            if (!_listeners.ContainsKey(extension))
+            if (!_listeners.ContainsKey(plugin))
             {
-                _listeners.Add(extension, new List<IListener>());
+                _listeners.Add(plugin, new List<IListener>());
             }
-            if (!_listeners[extension].Contains(listener))
+            if (!_listeners[plugin].Contains(listener))
             {
-                _listeners[extension].Add(listener);
+                _listeners[plugin].Add(listener);
             }
 
             Type type = listener.GetType();
@@ -141,10 +141,10 @@ namespace Static_Interface.API.EventFramework
             }
         }
 
-        public void ClearListeners(Extension extension)
+        public void ClearListeners(Plugin plugin)
         {
-            if (!_listeners.ContainsKey(extension)) return;
-            foreach (IListener listener in _listeners[extension])
+            if (!_listeners.ContainsKey(plugin)) return;
+            foreach (IListener listener in _listeners[plugin])
             {
                 if (_listenerMethods.ContainsKey(listener))
                 {
@@ -152,7 +152,7 @@ namespace Static_Interface.API.EventFramework
                 }
             }
 
-            _listeners.Remove(extension);
+            _listeners.Remove(plugin);
         }
 
         internal void Shutdown()

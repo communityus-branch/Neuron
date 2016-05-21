@@ -165,7 +165,7 @@ namespace Static_Interface.API.UnityExtensions
         }
 
         /// <summary>
-        /// Extensions may only use this method instead of <see cref="OnDestroy"/>.
+        /// Plugins may only use this method instead of <see cref="OnDestroy"/>.
         /// </summary>
         protected virtual void OnDestroySafe()
         {

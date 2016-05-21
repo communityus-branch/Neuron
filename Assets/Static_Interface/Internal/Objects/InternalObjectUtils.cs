@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace Static_Interface.Internal.Objects
 {
-    public class ObjectUtils
+    public class InternalObjectUtils
     {
         public static void CheckObjects()
         {

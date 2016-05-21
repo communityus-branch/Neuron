@@ -6,14 +6,13 @@ using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.PlayerFramework.Events;
+using Static_Interface.API.SerialisationFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework.Impl.Lidgren;
 using Static_Interface.Internal.MultiplayerFramework.MultiplayerProvider;
-using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron;
 using UnityEngine;
 using UnityStandardAssets.ImageEffects;
-using Types = Static_Interface.Internal.Objects.Types;
 
 namespace Static_Interface.Internal.MultiplayerFramework.Client
 {
@@ -317,7 +316,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     }
                 case EPacket.TIME:
                     {
-                        object[] args = ObjectSerializer.GetObjects(0, 0, packet, Types.SINGLE_TYPE);
+                        object[] args = ObjectSerializer.GetObjects(0, 0, packet, typeof(float));
                         LastNet = Time.realtimeSinceStartup;
                         OffsetNet = ((float)args[0]) + ((Time.realtimeSinceStartup - LastPing) / 2f);
                         Lag(Time.realtimeSinceStartup - LastPing);
@@ -331,7 +330,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     {
                         Type[] argTypes = {
                         //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
-                        Types.IDENTITY_TYPE, Types.STRING_TYPE, Types.UINT64_TYPE, Types.VECTOR3_TYPE, Types.VECTOR3_TYPE, Types.INT32_TYPE, Types.BOOLEAN_TYPE
+                        typeof(Identity), typeof(string), typeof(ulong), typeof(Vector3), typeof(Vector3), typeof(int), typeof(bool)
                     };
 
                         object[] args = ObjectSerializer.GetObjects(0, 0, packet, argTypes);
@@ -377,15 +376,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     break;
                 case EPacket.ACCEPTED:
                     {
-                        object[] args = ObjectSerializer.GetObjects(0, 0, packet, Types.UINT64_TYPE, Types.INT32_TYPE);
+                        object[] args = ObjectSerializer.GetObjects(0, 0, packet, typeof(ulong), typeof(int));
                         LogUtils.Debug("Setting MainPlayer channel to: " + (int)args[1]);
                         ((ClientMultiplayerProvider)Provider).SetIdentity((ulong)args[0]);
                         ((ClientMultiplayerProvider)Provider).AdvertiseGame(ServerID, _currentIp, _currentPort);
                         ((ClientMultiplayerProvider)Provider).SetConnectInfo(_currentIp, _currentPort);
                         IsFavoritedServer = ((ClientMultiplayerProvider)Provider).IsFavoritedServer(_currentIp, _currentPort);
                         ((ClientMultiplayerProvider)Provider).FavoriteServer(_currentIp, _currentPort);
-
-                        //Todo: load extensions
                         break;
                     }
                 case EPacket.UPDATE_CHANNELS:

@@ -52,7 +52,7 @@ namespace Static_Interface.API.PlayerFramework
             base.Update();
             Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
             if (_cachedResolution == currentResolution) return;
-            ObjectUtils.BroadcastAll("OnResolutionChanged", currentResolution);
+            InternalObjectUtils.BroadcastAll("OnResolutionChanged", currentResolution);
             _cachedResolution = currentResolution;
         }
 

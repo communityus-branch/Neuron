@@ -4,63 +4,62 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Static_Interface.API.Utils;
-using Static_Interface.ExtensionSandbox;
+using Static_Interface.PluginSandbox;
 using UnityEngine;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
-namespace Static_Interface.API.ExtensionFramework
+namespace Static_Interface.API.PluginFramework
 {
     //Todo: load at world load and unload when going back to MainMenu
-    public class ExtensionManager : MonoBehaviour
+    public class PluginManager : MonoBehaviour
     {
         protected internal override bool ForceSafeDestroy => true;
-        public static ExtensionManager Instance { get; private set; }
-        private readonly List<Extension> _loadedExtensions = new List<Extension>();
+        public static PluginManager Instance { get; private set; }
+        private readonly List<Plugin> _loadedPlugins = new List<Plugin>();
         private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
         private static GameObject _parentObject;
 
         /// <summary>
-        /// Get the instance of a loaded extension
+        /// Get the instance of a loaded plugin
         /// </summary>
-        /// <param name="name">The name of the extension</param>
+        /// <param name="name">The name of the plugin</param>
         /// <param name="exact">If true, it will match the name case-sensitive</param>
-        /// <returns>The instance of the extension which matched, or null if no extension was found</returns>
-        public Extension GetExtension(string @name, bool exact = false)
+        /// <returns>The instance of the plugin which matched, or null if no plugin was found</returns>
+        public Plugin GetPlugin(string @name, bool exact = false)
         {
-            foreach (Extension ext in _loadedExtensions)
+            foreach (Plugin pl in _loadedPlugins)
             {
-                if (ext.Name.Equals(@name))
+                if (pl.Name.Equals(@name))
                 {
-                    return ext;
+                    return pl;
                 }
-                if (!exact && ext.Name.Trim().ToLower().Equals(@name.Trim().ToLower()))
+                if (!exact && pl.Name.Trim().ToLower().Equals(@name.Trim().ToLower()))
                 {
-                    return ext;
+                    return pl;
                 }
             }
             return null;
         }
 
-        internal static void Init(string extensionsdir)
+        internal static void Init(string pluginsDir)
         {
             if (_parentObject != null) return;
-            _parentObject = new GameObject("ExtensionManager");
-            _parentObject.AddComponent<ExtensionManager>();
+            _parentObject = new GameObject("PluginManager");
+            _parentObject.AddComponent<PluginManager>();
             DontDestroyOnLoad(_parentObject);
         }
 
         internal void Shutdown()
         {
-            //Todo: unload all extensions
-            foreach (var extension in _loadedExtensions)
+            foreach (var pl in _loadedPlugins)
             {
-                if (extension.Enabled) extension.Enabled = false;
-                Assembly asm = _loadedAssemblies[extension.Path];
+                if (pl.Enabled) pl.Enabled = false;
+                Assembly asm = _loadedAssemblies[pl.Path];
                 Sandbox.Instance.UnloadAssembly(asm);
-                _loadedAssemblies.Remove(extension.Path);
+                _loadedAssemblies.Remove(pl.Path);
             }
 
-            _loadedExtensions.Clear();
+            _loadedPlugins.Clear();
 
             Destroy(_parentObject);
             Destroy(Instance);
@@ -79,23 +78,23 @@ namespace Static_Interface.API.ExtensionFramework
             Instance = this;
         }
 
-        internal void LoadExtensions(string dir)
+        internal void LoadPlugins(string dir)
         {
             var files = Directory.GetFiles(dir, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (string file in files.Where(file => !_loadedAssemblies.ContainsKey(file)))
             {
-                LoadExtension(file);
+                LoadPlugin(file);
             }
         }
 
-        internal void LoadExtension(string file)
+        internal void LoadPlugin(string file)
         {
-            LogUtils.Debug("Loading extension: " + Path.GetFileName(file));
+            LogUtils.Debug("Loading plugin: " + Path.GetFileName(file));
             Sandbox.Instance.LoadAssembly(file, ((success, assembly, appdomain) =>
             {
                 if (!success)
                 {
-                    LogUtils.Debug("Couldn't load extension: " + file);
+                    LogUtils.Debug("Couldn't load plugin: " + file);
                     return;
                 }
                 string failedInstruction;
@@ -106,25 +105,25 @@ namespace Static_Interface.API.ExtensionFramework
                     return;
                 }
                 _loadedAssemblies.Add(file, assembly);
-                LoadExtensionFromAssembly(assembly, appdomain, file);
+                LoadPluginFromAssembly(assembly, appdomain, file);
             }));
         }
 
-        internal void LoadExtensionFromAssembly(Assembly asm, AppDomain domain, string path)
+        internal void LoadPluginFromAssembly(Assembly asm, AppDomain domain, string path)
         {
             bool found = false;
             bool cancel = false;
-            Extension ext = null;
+            Plugin ext = null;
             foreach (var type in asm.GetTypes())
             {
-                if (!type.IsSubclassOf(typeof(Extension))) continue;
+                if (!type.IsSubclassOf(typeof(Plugin))) continue;
                 if (found)
                 {
-                    LogUtils.LogError("Assembly: " + asm + " has multiple Extension types");
+                    LogUtils.LogError("Assembly: " + asm + " has multiple Plugin types");
                     cancel = true;
                     break;
                 };
-                ext = (Extension)domain.CreateInstanceAndUnwrap(
+                ext = (Plugin)domain.CreateInstanceAndUnwrap(
                     type.Assembly.FullName,
                     type.FullName);
                 ext.Path = path;
@@ -133,7 +132,7 @@ namespace Static_Interface.API.ExtensionFramework
 
             if (!found)
             {
-                LogUtils.LogError("Assembly: " + asm + " has no Extension types (Not a plugin?)");
+                LogUtils.LogError("Assembly: " + asm + " has no Plugin types (Not a plugin?)");
                 return;
             }
 
@@ -157,7 +156,7 @@ namespace Static_Interface.API.ExtensionFramework
                 return;
             }
 
-            _loadedExtensions.Add(ext);
+            _loadedPlugins.Add(ext);
 
             ext.Enabled = true;
         }
@@ -165,9 +164,9 @@ namespace Static_Interface.API.ExtensionFramework
         protected override void Update()
         {
             base.Update();
-            foreach (Extension extension in _loadedExtensions.Where(ex => ex.Enabled))
+            foreach (Plugin pl in _loadedPlugins.Where(ex => ex.Enabled))
             {
-                extension.Update();
+                pl.Update();
             }
         }
 

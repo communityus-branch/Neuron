@@ -16,7 +16,7 @@ namespace Static_Interface.Neuron.Menus
         protected override void Start()
         {
             base.Start();
-            ObjectUtils.CheckObjects();
+            InternalObjectUtils.CheckObjects();
 
             if (!LevelManager.Instance.IsLoading)
             {

@@ -1,34 +1,8 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using Static_Interface.API.PlayerFramework;
-using Static_Interface.API.Utils;
 
-namespace Static_Interface.Internal.Objects
+namespace Static_Interface.API.SerialisationFramework
 {
-    public class Types
-    {
-        public static readonly Type BOOLEAN_ARRAY_TYPE = typeof(bool[]);
-        public static readonly Type BOOLEAN_TYPE = typeof(bool);
-        public static readonly Type BYTE_ARRAY_TYPE = typeof(byte[]);
-        public static readonly Type BYTE_TYPE = typeof(byte);
-        public static readonly Type COLOR_TYPE = typeof(Color);
-        public static readonly Type INT16_TYPE = typeof(short);
-        public static readonly Type INT32_ARRAY_TYPE = typeof(int[]);
-        public static readonly Type INT32_TYPE = typeof(int);
-        public static readonly Type INT64_TYPE = typeof(long);
-        public static readonly byte[] SHIFTS = { 1, 2, 4, 8, 0x10, 0x20, 0x40, 0x80 };
-        public static readonly Type SINGLE_TYPE = typeof(float);
-        public static readonly Type STRING_TYPE = typeof(string);
-        public static readonly Type UINT16_TYPE = typeof(ushort);
-        public static readonly Type UINT32_TYPE = typeof(uint);
-        public static readonly Type UINT64_ARRAY_TYPE = typeof(ulong[]);
-        public static readonly Type UINT64_TYPE = typeof(ulong);
-        public static readonly Type VECTOR3_TYPE = typeof(Vector3);
-        public static readonly Type KEYSTATE_TYPE = typeof (KeyState);
-        public static readonly Type KEYSTATE_ARRAY_TYPE = typeof(KeyState[]);
-        public static readonly Type IDENTITY_TYPE = typeof (Identity);
-    }
-
     public class ObjectSerializer
     {
         private static readonly Block block = new Block();

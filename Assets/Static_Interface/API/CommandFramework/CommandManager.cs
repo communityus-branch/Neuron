@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Static_Interface.API.ExtensionFramework;
+using Static_Interface.API.PluginFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
@@ -12,7 +12,7 @@ namespace Static_Interface.API.CommandFramework
     {
         protected internal override bool ForceSafeDestroy => true;
         private readonly Dictionary<string, ICommand> _commands = new Dictionary<string, ICommand>(); 
-        private readonly Dictionary<Extension, List<ICommand>> _extCommands = new Dictionary<Extension, List<ICommand>>(); 
+        private readonly Dictionary<Plugin, List<ICommand>> _extCommands = new Dictionary<Plugin, List<ICommand>>(); 
 
         protected override void Awake()
         {
@@ -22,7 +22,7 @@ namespace Static_Interface.API.CommandFramework
             throw new Exception("CommandManager can only init on server-side");
         }
 
-        public void RegisterCommand(ICommand command, Extension ext)
+        public void RegisterCommand(ICommand command, Plugin ext)
         {
             LogUtils.Debug(nameof(RegisterCommand));
             if (!ext.Enabled) return;
@@ -51,7 +51,7 @@ namespace Static_Interface.API.CommandFramework
             _commands.Remove(cmdName);
         }
 
-        internal void RegisterCommand(ICommand command, string cmdName, Extension extension)
+        internal void RegisterCommand(ICommand command, string cmdName, Plugin plugin)
         {
             LogUtils.Debug("Registering command: " + cmdName);
             if (GetCommand(cmdName) != null)
@@ -62,13 +62,13 @@ namespace Static_Interface.API.CommandFramework
             _commands.Add(cmdName, command);
             command.OnRegistered();
 
-            if (extension == null) return;
-            if (!_extCommands.ContainsKey(extension))
+            if (plugin == null) return;
+            if (!_extCommands.ContainsKey(plugin))
             {
-                _extCommands.Add(extension, new List<ICommand>());
+                _extCommands.Add(plugin, new List<ICommand>());
             }
 
-            var extCmds = _extCommands[extension];
+            var extCmds = _extCommands[plugin];
             extCmds.Add(command);
         }
 
@@ -79,15 +79,15 @@ namespace Static_Interface.API.CommandFramework
             _extCommands.Clear();
         }
 
-        internal void OnExtensionDisabled(Extension extension)
+        internal void OnPluginDisabled(Plugin plugin)
         {
-            if (!_extCommands.ContainsKey(extension)) return;
-            var cmds = _extCommands[extension];
+            if (!_extCommands.ContainsKey(plugin)) return;
+            var cmds = _extCommands[plugin];
             foreach (ICommand cmd in cmds)
             {
                 UnregisterCommand(cmd);
             }
-            _extCommands.Remove(extension);
+            _extCommands.Remove(plugin);
         }
 
         public ICommand GetCommand(string cmdName)

@@ -21,10 +21,10 @@ namespace Static_Interface.API.Utils
             return Path.Combine(GetDataFolder(), folderName);
         }
 
-        public static string GetExtensionsDir()
+        public static string GetPluginsDir()
         {
             //Todo: change to steam workshop folder
-            return GetDataSubFolder("Extensions");
+            return GetDataSubFolder("Plugins");
         }
     }
 }

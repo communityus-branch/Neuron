@@ -8,10 +8,9 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using System.Security.Policy;
-using Static_Interface.API.ExtensionFramework;
 using Static_Interface.API.Utils;
 
-namespace Static_Interface.ExtensionSandbox
+namespace Static_Interface.PluginSandbox
 {
     public class Sandbox
     {
@@ -34,7 +33,7 @@ namespace Static_Interface.ExtensionSandbox
 
             var parentDir = Directory.GetParent(file).FullName;
 
-            string[] allowedFiles = { parentDir, IOUtil.GetExtensionsDir() };
+            string[] allowedFiles = { parentDir, IOUtil.GetPluginsDir() };
             permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Read, allowedFiles));
             permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.Write, allowedFiles));
             permSet.AddPermission(new FileIOPermission(FileIOPermissionAccess.PathDiscovery, allowedFiles));
@@ -46,7 +45,7 @@ namespace Static_Interface.ExtensionSandbox
 
             setup.ApplicationBase =
                           AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            var ad = AppDomain.CreateDomain("ExtensionSandbox_" + file, 
+            var ad = AppDomain.CreateDomain("PluginSandbox_" + file, 
                 null, setup, permSet);
             return ad;
 #else
@@ -121,7 +120,7 @@ namespace Static_Interface.ExtensionSandbox
 
             /* This is only for development enviroment: Unlock related files, otherwise the files will remain locked even 
              * after stopping the game from the editor, which would require to restart the editor everytime someone wants
-             * to update the extensions            
+             * to update the plugins            
              */
             foreach (var f in asm.GetFiles())
                 try

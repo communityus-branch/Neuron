@@ -42,7 +42,7 @@ namespace Static_Interface.Neuron.Menus
 
             if (_firstStart)
             {
-                ObjectUtils.CheckObjects();
+                InternalObjectUtils.CheckObjects();
                 if (!Debug.isDebugBuild && SteamAPI.RestartAppIfNecessary(GameInfo.ID))
                 {
                     Application.Quit();

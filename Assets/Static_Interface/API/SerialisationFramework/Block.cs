@@ -5,11 +5,12 @@ using Static_Interface.API.Utils;
 using Static_Interface.Internal.MultiplayerFramework;
 using UnityEngine;
 
-namespace Static_Interface.Internal.Objects
+namespace Static_Interface.API.SerialisationFramework
 {
     public class Block
     {
         private byte[] _block;
+        public static readonly byte[] Shifts = { 1, 2, 4, 8, 0x10, 0x20, 0x40, 0x80 };
 
         public const int BUFFER_SIZE = 0x8000;
         private static readonly byte[] Buffer = new byte[BUFFER_SIZE];
@@ -60,79 +61,71 @@ namespace Static_Interface.Internal.Objects
 
         public object Read(Type type)
         {
-            if (type == Types.STRING_TYPE)
+            if (type == typeof(string))
             {
                 return ReadString();
             }
-            if (type == Types.BOOLEAN_TYPE)
+            if (type == typeof(bool))
             {
                 return ReadBoolean();
             }
-            if (type == Types.BOOLEAN_ARRAY_TYPE)
+            if (type == typeof(bool[]))
             {
                 return ReadBooleanArray();
             }
-            if (type == Types.BYTE_TYPE)
+            if (type == typeof(byte))
             {
                 return ReadByte();
             }
-            if (type == Types.BYTE_ARRAY_TYPE)
+            if (type == typeof(byte[]))
             {
                 return ReadByteArray();
             }
-            if (type == Types.INT16_TYPE)
+            if (type == typeof(short))
             {
                 return ReadInt16();
             }
-            if (type == Types.UINT16_TYPE)
+            if (type == typeof(ushort))
             {
                 return ReadUInt16();
             }
-            if (type == Types.INT32_TYPE)
+            if (type == typeof(int))
             {
                 return ReadInt32();
             }
-            if (type == Types.INT32_ARRAY_TYPE)
+            if (type == typeof(int[]))
             {
                 return ReadInt32Array();
             }
-            if (type == Types.UINT32_TYPE)
+            if (type == typeof(uint))
             {
                 return ReadUInt32();
             }
-            if (type == Types.SINGLE_TYPE)
+            if (type == typeof(float))
             {
                 return ReadSingle();
             }
-            if (type == Types.INT64_TYPE)
+            if (type == typeof(long))
             {
                 return ReadInt64();
             }
-            if (type == Types.UINT64_TYPE)
+            if (type == typeof(ulong))
             {
                 return ReadUInt64();
             }
-            if (type == Types.UINT64_ARRAY_TYPE)
+            if (type == typeof(ulong[]))
             {
                 return ReadUInt64Array();
             }
-            if (type == Types.VECTOR3_TYPE)
+            if (type == typeof(Vector3))
             {
                 return ReadSingleVector3();
             }
-            if (type == Types.KEYSTATE_TYPE)
-            {
-                return ReadKeyState();
-            }
-            if (type == Types.KEYSTATE_ARRAY_TYPE)
-            {
-                return ReadKeyStates();
-            }
-            if (type == Types.COLOR_TYPE)
+            if (type == typeof(Color))
             {
                 return ReadColor();
             }
-            if (type == Types.IDENTITY_TYPE || type.IsSubclassOf(Types.IDENTITY_TYPE))
+            if (type == typeof(Identity)|| type.IsSubclassOf(typeof(Identity)))
             {
                 return ReadIdentity();
             }
@@ -142,18 +135,6 @@ namespace Static_Interface.Internal.Objects
             }
             LogUtils.LogError("Failed to read type: " + type);
             return null;
-        }
-
-        private KeyState[] ReadKeyStates()
-        {
-            int size = ReadInt32();
-            KeyState[] states = new KeyState[size];
-            for (int i = 0; i < size; i++)
-            {
-                states[i] = ReadKeyState();
-            }
-
-            return states;
         }
 
         private Identity ReadIdentity()
@@ -204,7 +185,7 @@ namespace Static_Interface.Internal.Objects
                     {
                         break;
                     }
-                    flagArray[(i*8) + j] = (_block[_step + i] & Types.SHIFTS[j]) == Types.SHIFTS[j];
+                    flagArray[(i*8) + j] = (_block[_step + i] & Shifts[j]) == Shifts[j];
                 }
             }
             _step += num;
@@ -301,11 +282,6 @@ namespace Static_Interface.Internal.Objects
             return new Vector3(ReadSingle(), ReadSingle(), ReadSingle());
         }
 
-        public KeyState ReadKeyState()
-        {
-            return new KeyState {KeyCode = ReadInt32(), IsDown = ReadBoolean(), IsPressed = ReadBoolean()};
-        }
-
         public string ReadString()
         {
             if ((_block != null) && (_step < _block.Length))
@@ -390,78 +366,70 @@ namespace Static_Interface.Internal.Objects
             if(objects == null) throw new ArgumentNullException(nameof(objects));
 
             Type type = objects.GetType();
-            if (type == Types.STRING_TYPE)
+            if (type == typeof(String))
             {
                 WriteString((string) objects);
             }
-            else if (type == Types.BOOLEAN_TYPE)
+            else if (type == typeof(bool))
             {
                 WriteBoolean((bool) objects);
             }
-            else if (type == Types.BOOLEAN_ARRAY_TYPE)
+            else if (type == typeof(bool[]))
             {
                 WriteBooleanArray((bool[]) objects);
             }
-            else if (type == Types.BYTE_TYPE)
+            else if (type == typeof(byte))
             {
                 WriteByte((byte) objects);
             }
-            else if (type == Types.BYTE_ARRAY_TYPE)
+            else if (type == typeof(byte[]))
             {
                 WriteByteArray((byte[]) objects);
             }
-            else if (type == Types.INT16_TYPE)
+            else if (type == typeof(short))
             {
                 WriteInt16((short) objects);
             }
-            else if (type == Types.UINT16_TYPE)
+            else if (type == typeof(ushort))
             {
                 WriteUInt16((ushort) objects);
             }
-            else if (type == Types.INT32_TYPE)
+            else if (type == typeof(int))
             {
                 WriteInt32((int) objects);
             }
-            else if (type == Types.INT32_ARRAY_TYPE)
+            else if (type == typeof(int[]))
             {
                 WriteInt32Array((int[]) objects);
             }
-            else if (type == Types.UINT32_TYPE)
+            else if (type == typeof(uint))
             {
                 WriteUInt32((uint) objects);
             }
-            else if (type == Types.SINGLE_TYPE)
+            else if (type == typeof(float))
             {
                 WriteSingle((float) objects);
             }
-            else if (type == Types.INT64_TYPE)
+            else if (type == typeof(long))
             {
                 WriteInt64((long) objects);
             }
-            else if (type == Types.UINT64_TYPE)
+            else if (type == typeof(ulong))
             {
                 WriteUInt64((ulong) objects);
             }
-            else if (type == Types.UINT64_ARRAY_TYPE)
+            else if (type == typeof(ulong[]))
             {
                 WriteUInt64Array((ulong[]) objects);
             }
-            else if (type == Types.VECTOR3_TYPE)
+            else if (type == typeof(Vector3))
             {
                 WriteSingleVector3((Vector3) objects);
             }
-            else if (type == Types.KEYSTATE_TYPE)
-            {
-                WriteKeyState((KeyState) objects);
-            }
-            else if (type == Types.KEYSTATE_ARRAY_TYPE)
-            {
-                WriteKeyStates((KeyState[])objects);
-            }
-            else if (type == Types.COLOR_TYPE)
+            else if (type == typeof(Color))
             {
                 WriteColor((Color) objects);
-            } else if (type ==Types.IDENTITY_TYPE || type.IsSubclassOf(Types.IDENTITY_TYPE))
+            } else if (type == typeof(Identity) || type.IsSubclassOf(typeof(Identity)))
             {
                 WriteUInt64(((Identity)objects).Serialize());
             } else if (type == typeof (Quaternion))
@@ -471,15 +439,6 @@ namespace Static_Interface.Internal.Objects
             else
             {
                 LogUtils.LogError("Failed to write type: " + type + " (type not supported)");
-            }
-        }
-
-        private void WriteKeyStates(KeyState[] objects)
-        {
-            WriteInt32(objects.Length);
-            foreach (KeyState obj in objects)
-            {
-                WriteKeyState(obj);
             }
         }
 
@@ -513,7 +472,7 @@ namespace Static_Interface.Internal.Objects
                     }
                     if (values[(i*8) + j])
                     {
-                        Buffer[_step + i] = (byte) (Buffer[_step + i] | Types.SHIFTS[j]);
+                        Buffer[_step + i] = (byte) (Buffer[_step + i] | Shifts[j]);
                     }
                 }
             }
@@ -591,13 +550,6 @@ namespace Static_Interface.Internal.Objects
             WriteSingle(value.x);
             WriteSingle(value.y);
             WriteSingle(value.z);
-        }
-
-        public void WriteKeyState(KeyState value)
-        {
-            WriteInt32(value.KeyCode);
-            WriteBoolean(value.IsDown);
-            WriteBoolean(value.IsPressed);
         }
 
         public void WriteString(string value)
