@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.PlayerFramework;
-using Static_Interface.API.SerialisationFramework.Impl;
+using Static_Interface.API.SerializationFramework.Impl;
 
-namespace Static_Interface.API.SerialisationFramework
+namespace Static_Interface.API.SerializationFramework
 {
     public static class ObjectSerializer
     {

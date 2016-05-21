@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Static_Interface.API.SerialisationFramework.Impl
+namespace Static_Interface.API.SerializationFramework.Impl
 {
     public class DecimalSerializer : Serializer<decimal>
     {

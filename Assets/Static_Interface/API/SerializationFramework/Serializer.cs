@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Static_Interface.API.SerialisationFramework
+namespace Static_Interface.API.SerializationFramework
 {
     public abstract class Serializer<T> : ISerializer
     {

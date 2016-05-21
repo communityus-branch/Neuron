@@ -2,7 +2,7 @@
 using UnityEngine;
 using Event = Static_Interface.API.EventFramework.Event;
 
-namespace Static_Interface.API.SerialisationFramework
+namespace Static_Interface.API.SerializationFramework
 {
     public class ObjectSpawnRequestEvent : Event, ICancellable
     {

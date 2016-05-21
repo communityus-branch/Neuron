@@ -7,7 +7,7 @@ using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.PlayerFramework.Events;
-using Static_Interface.API.SerialisationFramework;
+using Static_Interface.API.SerializationFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.API.WeatherFramework;
 using Static_Interface.Internal.MultiplayerFramework.Client;

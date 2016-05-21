@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Static_Interface.API.SerialisationFramework
+namespace Static_Interface.API.SerializationFramework
 {
     public static class ObjectUtils
     {

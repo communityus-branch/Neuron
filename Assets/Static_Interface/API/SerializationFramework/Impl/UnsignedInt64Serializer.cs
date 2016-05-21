@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Static_Interface.API.SerialisationFramework.Impl
+namespace Static_Interface.API.SerializationFramework.Impl
 {
     public class UnsignedInt64Serializer : Serializer<ulong>
     {

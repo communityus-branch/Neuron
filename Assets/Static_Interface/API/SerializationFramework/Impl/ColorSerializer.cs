@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Static_Interface.API.SerialisationFramework.Impl
+namespace Static_Interface.API.SerializationFramework.Impl
 {
     public class ColorSerializer : Serializer<Color>
     {

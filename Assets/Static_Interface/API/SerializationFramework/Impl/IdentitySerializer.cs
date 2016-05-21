@@ -1,7 +1,7 @@
 ﻿using Static_Interface.API.PlayerFramework;
 using Static_Interface.Internal.MultiplayerFramework;
 
-namespace Static_Interface.API.SerialisationFramework.Impl
+namespace Static_Interface.API.SerializationFramework.Impl
 {
     public class IdentitySerializer : Serializer<Identity>
     {
