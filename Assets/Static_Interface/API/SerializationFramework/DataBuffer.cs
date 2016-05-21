@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Static_Interface.API.Utils;
-namespace Static_Interface.API.SerialisationFramework
+
+namespace Static_Interface.API.SerializationFramework
 {
     public class DataBuffer
     {
