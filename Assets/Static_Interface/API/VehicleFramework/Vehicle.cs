@@ -39,8 +39,8 @@ namespace Static_Interface.API.VehicleFramework
         //Todo: implement these
         public bool IsDestroyed => Health == 0;
         public bool Destroyable { get; set; }
-        public int Health { get; set; } //Todo: OnHealthSet
-
+        public int MaxHealth { get; set; } = 100;
+        public int Health { get; set; } = 100;
         protected override void Awake()
         {
             base.Awake();
@@ -59,6 +59,11 @@ namespace Static_Interface.API.VehicleFramework
             if (AddPassenger(player))
             {
                 player.GetComponent<PlayerController>().DisableControl();
+                player.GetComponent<Rigidbody>().isKinematic = true;
+                player.GetComponent<Rigidbody>().useGravity = false;
+                player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+
+                player.Vehicle = this;
                 _passengers.Add(player);
                 if (wasEmpty && !IsEngineStarted)
                 {
@@ -124,6 +129,10 @@ namespace Static_Interface.API.VehicleFramework
             RestoreCamera(player);
             if (Driver == player) Driver = null;
             player.transform.parent = null;
+            player.GetComponent<Rigidbody>().isKinematic = false;
+            player.GetComponent<Rigidbody>().useGravity = true;
+            player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+            player.Vehicle = null;
             return true;
         }
 
@@ -153,7 +162,7 @@ namespace Static_Interface.API.VehicleFramework
 
         public override bool CanInteract(Player player)
         {
-            return !_passengers.Contains(player) && !IsFull;
+            return !IsDestroyed && !_passengers.Contains(player) && !IsFull;
         }
 
         public bool IsFull => _passengers.Count >= MaxPassengers;

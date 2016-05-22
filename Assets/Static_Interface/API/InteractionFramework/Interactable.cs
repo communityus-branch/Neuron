@@ -17,7 +17,7 @@ namespace Static_Interface.API.InteractionFramework
         {
             if (player.Health.IsDead) return;
             if (IsInteractable && !CanInteract(player)) return;
-            if (IsClient())
+            if (IsClient() && !IsServer())
             {
                 Channel.Send(nameof(Network_InteractRequest), ECall.Server);
             }
@@ -29,20 +29,16 @@ namespace Static_Interface.API.InteractionFramework
 
         protected abstract void OnInteract(Player player);
 
-        [NetworkCall(ConnectionEnd = ConnectionEnd.BOTH)]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER)]
         public void Network_InteractRequest(Identity ident)
         {
-            if (ident != Connection.ServerID)
-            {
-                Channel.ValidateOwner(ident);
-            } 
             //todo: check player range to object
-            var player = ident.Owner.Player;
+            var player = ident.Owner?.Player;
             if (player == null || player.Health.IsDead) return;
-            if (IsInteractable && !CanInteract(player)) return;
+            if (!IsInteractable || !CanInteract(player)) return;
             OnInteract(player);
             //Todo: add radius
-            Channel.Send(nameof(Network_Interact), ECall.Clients, ident);
+            Channel.Send(nameof(Network_Interact), ECall.Others, ident);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]

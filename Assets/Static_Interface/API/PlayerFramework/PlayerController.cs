@@ -1,4 +1,5 @@
 ﻿using Static_Interface.API.Utils;
+using Static_Interface.API.WeaponFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
@@ -32,30 +33,6 @@ namespace Static_Interface.API.PlayerFramework
         public bool CanJump = true;
         public float JumpHeight = 2.0f;
         private bool _grounded;
-        private bool _wasRigidGravityEnabled = true;
-        private bool _customGravityEnabled;
-        public bool CustomGravityEnabled
-        {
-            set
-            {
-                _customGravityEnabled = value;
-                if (_customGravityEnabled)
-                {
-                    _wasRigidGravityEnabled = _rigidbody.useGravity;
-                    _rigidbody.useGravity = false;
-                }
-                else
-                {
-                    _rigidbody.useGravity = _wasRigidGravityEnabled;
-                }
-            }
-            get
-            {
-                return _customGravityEnabled;
-            }
-        }
-
-        public Vector3 CustomGravity = Vector3.zero;
 
         public static float GetInputX()
         {
@@ -85,16 +62,28 @@ namespace Static_Interface.API.PlayerFramework
             return inputY;
         }
 
+        public static float GetInputZ()
+        {
+            var inputZ = 0f;
+            if (Input.GetKey(KeyCode.Space))
+            {
+                inputZ += 1;
+            }
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                inputZ -= 1;
+            }
+            return inputZ;
+        }
+
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
             if (!IsServer() && !Channel.IsOwner) return;
             if (_disabled || Player.Health.IsDead)
             {
-                ApplyGravity();
                 return;
             }
-            CustomGravity = Physics.gravity;
 
             var inputX = GetInputX();
             var inputY = GetInputY();
@@ -128,14 +117,7 @@ namespace Static_Interface.API.PlayerFramework
                 }
             }
 
-            ApplyGravity();
             _grounded = false;
-        }
-
-        private void ApplyGravity()
-        {
-            if (!CustomGravityEnabled) return;
-            _rigidbody.AddForce(CustomGravity * _rigidbody.mass);
         }
 
         protected override void OnCollisionStay(Collision collision)
@@ -156,12 +138,14 @@ namespace Static_Interface.API.PlayerFramework
             mouse.OriginalRotation = Quaternion.identity;
             _disabled = false;
             Cursor.visible = false;
+            GetComponent<WeaponController>().enabled = true;
         }
 
         public void DisableControl()
         {
             var comp = Player.GetComponent<SmoothMouseLook>();
             if(comp) Destroy(comp);
+            GetComponent<WeaponController>().enabled = false;
             _disabled = true;
         }
 

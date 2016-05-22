@@ -2,6 +2,7 @@
 using Static_Interface.API.CommandFramework;
 using Static_Interface.API.EntityFramework;
 using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.VehicleFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
@@ -17,6 +18,7 @@ namespace Static_Interface.API.PlayerFramework
         public Channel Channel => GetComponent<Channel>();
         public PlayerGUI GUI => GetComponent<PlayerGUI>();
         public string Name => User.Name;
+        public Vehicle Vehicle { get; internal set; }
 
 
         public bool HasPermission(string permission)

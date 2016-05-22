@@ -8,10 +8,10 @@ namespace Static_Interface.API.VehicleFramework
     {
         protected override Camera Camera => CameraManager.Instance.CurrentCamera; //Todo
 
-        public GameObject MainRotor;
-        public GameObject TailRotor;
+        public GameObject MainRotor { get; protected set; }
+        public GameObject TailRotor { get; protected set; }
 
-        public float MaxMainRotorForce = 22241;
+        public float MaxMainRotorForce = 30000;
         public float MaxMainRotorVelocity = 7200;
         private float _mainRotorVelocity;
         private float _mainRotorRotation;
@@ -26,6 +26,7 @@ namespace Static_Interface.API.VehicleFramework
 
         public float ForwardRotorMultiplier = 0.5f;
         public float SidewaysRotorMultiplier = 0.5f;
+        private float UpRotorMultiplier = 0.5f;
 
         protected override void Awake()
         {
@@ -41,7 +42,7 @@ namespace Static_Interface.API.VehicleFramework
             if (IsDestroyed || Driver != Player.MainPlayer) return;
 
             Vector3 torque = new Vector3();
-            Vector3 controlTorque = new Vector3(PlayerController.GetInputX() * ForwardRotorMultiplier, 1.0f, -PlayerController.GetInputY() * SidewaysRotorMultiplier);
+            Vector3 controlTorque = new Vector3(PlayerController.GetInputX() * ForwardRotorMultiplier, PlayerController.GetInputZ() * UpRotorMultiplier, -PlayerController.GetInputY() * SidewaysRotorMultiplier);
             if (!IsEngineStarted) controlTorque = Vector3.zero;
 
             if (!MainRotorDamaged)
