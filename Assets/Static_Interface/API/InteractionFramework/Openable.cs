@@ -1,4 +1,5 @@
 ﻿using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.SerializationFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.InteractionFramework
@@ -9,7 +10,7 @@ namespace Static_Interface.API.InteractionFramework
 
         public bool IsOpen { get; private set; }
 
-        public override GameObject InteractableObject => OpenableObject;
+        public override Mesh InteractableObject => ObjectUtils.GetCombinedMesh(OpenableObject);
 
         public override bool CanInteract(Player player)
         {

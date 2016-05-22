@@ -9,13 +9,14 @@ namespace Static_Interface.API.InteractionFramework
     /// </summary>
     public abstract class Interactable : NetworkedBehaviour
     {
+        public bool IsInteractable { get; set; } = true;
         /// <summary>
         /// Called when a player interacts with it
         /// </summary>
         public virtual void Interact(Player player)
         {
             if (player.Health.IsDead) return;
-            if (!CanInteract(player)) return;
+            if (IsInteractable && !CanInteract(player)) return;
             if (IsClient())
             {
                 Channel.Send(nameof(Network_InteractRequest), ECall.Server);
@@ -28,12 +29,17 @@ namespace Static_Interface.API.InteractionFramework
 
         protected abstract void OnInteract(Player player);
 
-        [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER)]
+        [NetworkCall(ConnectionEnd = ConnectionEnd.BOTH)]
         public void Network_InteractRequest(Identity ident)
         {
+            if (ident != Connection.ServerID)
+            {
+                Channel.ValidateOwner(ident);
+            } 
+            //todo: check player range to object
             var player = ident.Owner.Player;
             if (player == null || player.Health.IsDead) return;
-            if (!CanInteract(player)) return;
+            if (IsInteractable && !CanInteract(player)) return;
             OnInteract(player);
             //Todo: add radius
             Channel.Send(nameof(Network_Interact), ECall.Clients, ident);
@@ -65,6 +71,6 @@ namespace Static_Interface.API.InteractionFramework
         /// <summary>
         /// The GameObject which can be interacted
         /// </summary>
-        public abstract GameObject InteractableObject { get; }
+        public abstract Mesh InteractableObject { get; }
     }
 }

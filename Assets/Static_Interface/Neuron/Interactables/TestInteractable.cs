@@ -1,6 +1,7 @@
 ﻿using Static_Interface.API.InteractionFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.SerializationFramework;
 using UnityEngine;
 
 namespace Static_Interface.Neuron.Interactables
@@ -31,6 +32,6 @@ namespace Static_Interface.Neuron.Interactables
             return true;
         }
 
-        public override GameObject InteractableObject => gameObject;
+        public override Mesh InteractableObject => ObjectUtils.GetCombinedMesh(gameObject);
     }
 }

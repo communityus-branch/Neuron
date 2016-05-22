@@ -20,8 +20,8 @@ namespace Static_Interface.API.SerializationFramework
         public static GameObject FindChildPath(this GameObject parent, string path)
         {
             GameObject obj = parent;
-            string[] args = path.Split('\\');
-            if (args.Length == 0)
+            string[] args = path.Split('/');
+            if (args.Length == 1)
             {
                 return obj.transform.Find(path)?.gameObject;
             }
@@ -30,7 +30,8 @@ namespace Static_Interface.API.SerializationFramework
             while (true)
             {
                 if (index == args.Length - 1) break;
-                obj = obj?.transform?.FindChild(args[index])?.gameObject;
+                obj = obj.transform.FindChild(args[index])?.gameObject;
+                if (obj == null) return null;
                 index++;
             }
             return obj;

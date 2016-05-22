@@ -4,6 +4,7 @@ using Static_Interface.API.CommandFramework;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.API.VehicleFramework;
 
 namespace Static_Interface.API.PluginFramework
 {
@@ -75,6 +76,8 @@ namespace Static_Interface.API.PluginFramework
             Scheduler.Instance?.RemoveAllTasks(this);
             EventManager.Instance?.ClearListeners(this);
             CommandManager.Instance?.OnPluginDisabled(this);
+            VehicleManager.Instance?.OnPluginDisabled(this);
+
             try
             {
                 OnDisable();

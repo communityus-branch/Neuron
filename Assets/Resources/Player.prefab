@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SyncOwnerOnly: 1
-  UpdatePeriod: 5000
+  UpdatePeriod: 20
 --- !u!114 &11469006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SyncOwnerOnly: 1
-  UpdatePeriod: 5000
+  UpdatePeriod: 20
 --- !u!114 &11493612
 MonoBehaviour:
   m_ObjectHideFlags: 1

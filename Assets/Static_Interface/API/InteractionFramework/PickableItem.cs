@@ -1,5 +1,6 @@
 ﻿using System;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.SerializationFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.InteractionFramework
@@ -24,6 +25,6 @@ namespace Static_Interface.API.InteractionFramework
             throw new NotImplementedException();
         }
 
-        public override GameObject InteractableObject => gameObject;
+        public override Mesh InteractableObject => ObjectUtils.GetCombinedMesh(gameObject);
     }
 }

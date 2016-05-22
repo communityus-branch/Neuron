@@ -6,11 +6,13 @@ using Static_Interface.API.AssetsFramework;
 using Static_Interface.API.CommandFramework;
 using Static_Interface.API.ConsoleFramework;
 using Static_Interface.API.EntityFramework;
+using Static_Interface.API.InteractionFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PluginFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.API.VehicleFramework;
 using Static_Interface.API.WeatherFramework;
 using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.Objects;
@@ -38,6 +40,8 @@ namespace Static_Interface.Internal
 
             LogUtils.Log("Initializing World...");
             gameObject.AddComponent<SpawnManager>();
+            gameObject.AddComponent<InteractManager>();
+            gameObject.AddComponent<VehicleManager>();
             var mgr = gameObject.AddComponent<NetvarManager>();
             mgr.RegisterNetvar(new GravityNetvar());
             mgr.RegisterNetvar(new GameSpeedNetvar());

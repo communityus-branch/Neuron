@@ -56,6 +56,35 @@ namespace Static_Interface.API.PlayerFramework
         }
 
         public Vector3 CustomGravity = Vector3.zero;
+
+        public static float GetInputX()
+        {
+            var inputX = 0f;
+            if (Input.GetKey(KeyCode.D))
+            {
+                inputX += 1;
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                inputX -= 1;
+            }
+            return inputX;
+        }
+
+        public static float GetInputY()
+        {
+            var inputY = 0f;
+            if (Input.GetKey(KeyCode.W))
+            {
+                inputY += 1;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                inputY -= 1;
+            }
+            return inputY;
+        }
+
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -66,27 +95,13 @@ namespace Static_Interface.API.PlayerFramework
                 return;
             }
             CustomGravity = Physics.gravity;
-            var inputX = 0f;
-            var inputY = 0f;
+
+            var inputX = GetInputX();
+            var inputY = GetInputY();
+
             bool jump = Input.GetKeyDown(KeyCode.Space);
             bool sprint = Input.GetKey(KeyCode.LeftShift);
 
-            if (Input.GetKey(KeyCode.W))
-            {
-                inputY += 1;
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                inputY -= 1;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                inputX += 1;
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                inputX -= 1;
-            }
 
             Vector3 vel = new Vector3(inputX, 0, inputY);
 

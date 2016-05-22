@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Static_Interface.API.InteractionFramework
 {
-    public class InteractManager : NetworkedBehaviour
+    public class InteractManager : NetworkedSingletonBehaviour<InteractManager>
     {
         public override Channel Channel => World.Instance.GetComponent<Channel>();
         protected override void SetupChannel()
@@ -18,20 +18,18 @@ namespace Static_Interface.API.InteractionFramework
         public const float INTERACT_RANGE = 5.0f;
         public KeyCode InteractKey = KeyCode.F;
         private RaycastHit _hit;
-        public static Interactable CurrentInteractable;
-        public static InteractManager Instance;
+        public Interactable CurrentInteractable;
 
         protected override void Start()
         {
             base.Start();
             if(Instance != null) throw new Exception("Only one instance allowed");
-            Instance = this;
         }
 
         private void ResetInteract()
         {
             if (CurrentInteractable == null) return;
-            Highlighter.Highlight(CurrentInteractable.InteractableObject);
+            Highlighter.Highlight(CurrentInteractable.gameObject);
             CurrentInteractable = null;
         }
 
@@ -76,7 +74,7 @@ namespace Static_Interface.API.InteractionFramework
             }
             if (previousInteractable != null && CurrentInteractable != previousInteractable)
             {
-                Highlighter.Unhighlight(previousInteractable.InteractableObject);
+                Highlighter.Unhighlight(previousInteractable.gameObject);
             }
 
             if (!CurrentInteractable.CanInteract(Player.MainPlayer))
@@ -85,7 +83,7 @@ namespace Static_Interface.API.InteractionFramework
                 return;
             }
 
-            Highlighter.Highlight(CurrentInteractable.InteractableObject);
+            Highlighter.Highlight(CurrentInteractable.gameObject);
 
             if (!Input.GetKeyDown(InteractKey))
             {
