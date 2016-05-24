@@ -41,14 +41,19 @@ namespace Static_Interface.API.VehicleFramework
             return _vehicles.FirstOrDefault(c => string.Equals(c.ID, id, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public Vehicle SpawnVehicle(string id)
+        public Vehicle SpawnVehicle(string id, Vector3 pos)
         {
-            if(!IsServer()) throw new Exception("Not server");
-            Channel.Send(nameof(Network_SpawnVehicle), ECall.Others, id);
-            return SpawnVehicleInternal(id);
+            return SpawnVehicle(id, pos, Quaternion.identity);
         }
 
-        private Vehicle SpawnVehicleInternal(string id)
+        public Vehicle SpawnVehicle(string id, Vector3 pos, Quaternion rot)
+        {
+            if(!IsServer()) throw new Exception("Not server");
+            Channel.Send(nameof(Network_SpawnVehicle), ECall.Others, id,pos, rot);
+            return SpawnVehicleInternal(id, pos, rot);
+        }
+
+        private Vehicle SpawnVehicleInternal(string id, Vector3 pos, Quaternion rot)
         {
             VehicleData data = GetVehicle(id);
             if (data == null) 
@@ -56,20 +61,20 @@ namespace Static_Interface.API.VehicleFramework
             GameObject veh = data.Bundle.LoadAsset<GameObject>(data.Asset);
             Vehicle vec = (Vehicle)veh.AddComponent(data.ControllerBehaviour);
             vec.ID = id;
-            Instantiate(vec);
+            Instantiate(vec, pos, rot);
             return vec;
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
-        private void Network_SpawnVehicle(Identity ident, string id)
+        private void Network_SpawnVehicle(Identity ident, string id, Vector3 pos, Quaternion rot)
         {
-            SpawnVehicleInternal(id);
+            SpawnVehicleInternal(id, pos, rot);
         }
 
         internal void OnPluginDisabled(Plugin plugin)
         {
             var registeredVehicles = _vehicles.Where(c => c.Plugin == plugin);
-            foreach (var veh in registeredVehicles)
+            foreach (var veh in registeredVehicles.ToList())
             {
                 _vehicles.Remove(veh);
             }

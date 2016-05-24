@@ -12,7 +12,7 @@ namespace Static_Interface.API.WeaponFramework
         public override void Use()
         {
             GameObject bullet = (GameObject) Object.Instantiate(Resources.Load("SimpleBullet"));
-            bullet.transform.rotation = Quaternion.Euler(Player.transform.TransformDirection(new Vector3(-90, 0, 0)));
+            bullet.transform.rotation = Quaternion.Euler(Player.transform.TransformPoint(new Vector3(-90, 0, 0)));
             bullet.name = "Bullet #" + _bulletCount;
             var bullcomp = bullet.AddComponent<Projectile>();
             bullcomp.Owner = Player;

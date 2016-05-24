@@ -45,7 +45,8 @@ namespace Static_Interface.API.NetworkFramework
         [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true)]
         protected void Network_ReadAngleServer(Identity ident, Vector3 angle)
         {
-            ReadAngle(angle, IsDedicatedServer());
+            if(ident != Connection.ServerID)
+                ReadAngle(angle, IsDedicatedServer());
             Channel.Send(nameof(Network_ReadAngleClient), ECall.NotOwner, transform.position, angle);
         }
 

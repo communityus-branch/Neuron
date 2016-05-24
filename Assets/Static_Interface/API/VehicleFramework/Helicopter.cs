@@ -11,12 +11,12 @@ namespace Static_Interface.API.VehicleFramework
         public GameObject MainRotor { get; protected set; }
         public GameObject TailRotor { get; protected set; }
 
-        public float MaxMainRotorForce = 30000;
+        public float MaxMainRotorForce = 50000;
         public float MaxMainRotorVelocity = 7200;
         private float _mainRotorVelocity;
         private float _mainRotorRotation;
 
-        public float MaxTailRotorForce = 15000;
+        public float MaxTailRotorForce = 7000;
         public float MaxTailRotorVelocity = 2200;
         private float _tailRotorVelocity;
         private float _tailRotorRotation;
@@ -26,24 +26,24 @@ namespace Static_Interface.API.VehicleFramework
 
         public float ForwardRotorMultiplier = 0.5f;
         public float SidewaysRotorMultiplier = 0.5f;
-        private float UpRotorMultiplier = 0.5f;
 
         protected override void Awake()
         {
             base.Awake();
             Rigidbody.drag = 0.1f;
             Rigidbody.angularDrag = 1.5f;
+            Rigidbody.mass = 2000;
         }
 
         //input control & torque calculations
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-            if (IsDestroyed || Driver != Player.MainPlayer) return;
+            if (IsDestroyed || Driver != Player.MainPlayer || Driver.Health.IsDead) return;
 
             Vector3 torque = new Vector3();
-            Vector3 controlTorque = new Vector3(PlayerController.GetInputX() * ForwardRotorMultiplier, PlayerController.GetInputZ() * UpRotorMultiplier, -PlayerController.GetInputY() * SidewaysRotorMultiplier);
-            if (!IsEngineStarted) controlTorque = Vector3.zero;
+            Vector3 controlTorque = Vector3.zero;
+            if (IsEngineStarted) controlTorque = new Vector3(PlayerController.GetInputY() * ForwardRotorMultiplier, 1.0f, -PlayerController.GetInputX() * SidewaysRotorMultiplier); 
 
             if (!MainRotorDamaged)
             {
@@ -62,7 +62,7 @@ namespace Static_Interface.API.VehicleFramework
                 torque -= (Vector3.up * MaxTailRotorForce * _tailRotorVelocity);
             }
 
-            Rigidbody.AddRelativeForce(torque);
+            Rigidbody.AddRelativeTorque(torque);
         }
 
         protected override void Update()
@@ -82,10 +82,7 @@ namespace Static_Interface.API.VehicleFramework
             _mainRotorRotation += MaxMainRotorVelocity * _mainRotorVelocity * Time.deltaTime;
             _tailRotorRotation += MaxTailRotorVelocity * _mainRotorVelocity * Time.deltaTime;
 
-            //todo: calculate this with transformed vector gravity, not hardcoded scalar y axis
-            //var transformedPoint = transform.InverseTransformPoint(Physics.gravity);
-
-            var hoverMainRotorVelocity = !MainRotor || MainRotorDamaged ? 0 : Rigidbody.mass * Mathf.Abs(Physics.gravity.y) / MaxMainRotorForce;
+            var hoverMainRotorVelocity = !MainRotor || MainRotorDamaged ? 0 : Rigidbody.mass * Physics.gravity.magnitude / MaxMainRotorForce;
             var hoverTailRotorVelocity = !TailRotor || TailRotorDamaged ? 0 : (MaxMainRotorForce * _mainRotorVelocity) / MaxTailRotorForce;
 
             if (MainRotor && IsEngineStarted && PlayerController.GetInputY() != 0.0 && !MainRotorDamaged)

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Static_Interface.API.InteractionFramework;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.SerializationFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal.MultiplayerFramework.Server;
 using UnityEngine;
 
 namespace Static_Interface.API.VehicleFramework
@@ -17,6 +19,7 @@ namespace Static_Interface.API.VehicleFramework
         public bool IsEngineStarted { get; private set; }
 
         private Player _driver;
+        readonly Dictionary<Player, Vector3> _playerPositions = new Dictionary<Player, Vector3>();
 
         public Player Driver
         {
@@ -27,10 +30,12 @@ namespace Static_Interface.API.VehicleFramework
                 if (value == null)
                 {
                     Channel.Owner = Connection.ServerID;
+                    if (IsServer()) Channel.Send(nameof(Network_SetDriver), ECall.Others, Connection.ServerID);
                     return;
                 }
 
                 Channel.Owner = _driver.User.Identity;
+                if(IsServer()) Channel.Send(nameof(Network_SetDriver), ECall.Others, _driver.User.Identity);
             }
         }
 
@@ -47,37 +52,69 @@ namespace Static_Interface.API.VehicleFramework
             Rigidbody = gameObject.GetComponent<Rigidbody>();
             if (!Rigidbody)
                 Rigidbody = gameObject.AddComponent<Rigidbody>();
+            var syncer = gameObject.GetComponent<RigidbodyPositionSyncer>();
+            if (!syncer)
+                gameObject.AddComponent<RigidbodyPositionSyncer>();
         }
 
         protected override void OnInteract(Player player)
         {
-            bool wasEmpty = IsEmpty;
+            if (player != Player.MainPlayer && !IsServer()) return;
+            AddPassenger(player);
+        }
 
-            var rotBefore = player.transform.rotation;
-            player.transform.parent = gameObject.transform;
-            player.transform.localRotation = Quaternion.identity;
-            if (AddPassenger(player))
-            {
-                player.GetComponent<PlayerController>().DisableControl();
-                player.GetComponent<Rigidbody>().isKinematic = true;
-                player.GetComponent<Rigidbody>().useGravity = false;
-                player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        [NetworkCall(ValidateServer = true)]
+        private void Network_SetDriver(Identity ident, Identity driver)
+        {
+            Driver = driver?.Owner?.Player;
+        }
 
-                player.Vehicle = this;
-                _passengers.Add(player);
-                if (wasEmpty && !IsEngineStarted)
-                {
-                    Driver = player;
-                    StartEngine();
-                }
-                _camerasBefore.Add(player, player.Camera);
-                SetCamera(player);
-            }
-            else
+        [NetworkCall]
+        private void Network_AddPassenger(Identity ident, Identity passenger)
+        {
+            if (ident != Connection.ServerID)
             {
-                player.transform.parent = null;
-                player.transform.rotation = rotBefore;
+                if (!IsServer()) return;
+                if (ident != passenger) return;
             }
+
+            AddPassenger(passenger.Owner.Player, false);
+        }
+
+        [NetworkCall]
+        private void Network_ExitPassenger(Identity ident, Identity passenger)
+        {
+            if (ident != Connection.ServerID)
+            {
+                if (!IsServer()) return;
+                if (ident != passenger) return;
+            }
+
+            ExitPassenger(passenger.Owner.Player, false);
+        }
+
+        protected override void FixedUpdate()
+        {
+            base.FixedUpdate();
+   
+            foreach (Player p in Passengers)
+            {
+                p.transform.position = transform.TransformPoint(_playerPositions[p]);
+            }
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            if (IsPassenger(Player.MainPlayer) && Input.GetKeyDown(InteractManager.Instance.InteractKey))
+            {
+                ExitPassenger(Player.MainPlayer);
+            }
+        }
+
+        public bool IsPassenger(Player player)
+        {
+            return _passengers.Contains(player);
         }
 
         protected virtual void SetCamera(Player player)
@@ -97,8 +134,12 @@ namespace Static_Interface.API.VehicleFramework
             _camerasBefore.Remove(player);
         }
 
-
         public void StartEngine()
+        {
+            StartEngine(false);
+        }
+
+        private void StartEngine(bool isCommand)
         {
             if(IsEngineStarted) return;
             //todo: on engine start event
@@ -106,22 +147,67 @@ namespace Static_Interface.API.VehicleFramework
             {
                 IsEngineStarted = true;
             }
+
+            if (IsServer())
+            {
+                Channel.Send(nameof(Network_StartEngine), ECall.NotOwner);
+            }
+            else if (!isCommand)
+            {
+                Channel.Send(nameof(Network_StartEngine), ECall.Server);
+            }
         }
-        
+
         public void StopEngine()
         {
+            StopEngine(false);
+        }
+
+        private void StopEngine(bool isCommand)
+        {
             if (!IsEngineStarted) return;
+
             //todo: on engine stop event
             if (OnEngineStop())
             {
                 IsEngineStarted = false;
             }
+
+            if (IsServer())
+            {
+                Channel.Send(nameof(Network_StopEngine), ECall.NotOwner);
+            }
+            else if (!isCommand)
+            {
+                Channel.Send(nameof(Network_StopEngine), ECall.Server);
+            }
+        }
+
+        [NetworkCall]
+        private void Network_StartEngine(Identity ident)
+        {
+            if (!Channel.ValidateServer(ident, false) && !Channel.ValidateOwner(ident, false))
+                return;
+            StartEngine(true);
+        }
+
+        [NetworkCall]
+        private void Network_StopEngine(Identity ident)
+        {
+            if (!Channel.ValidateServer(ident, false) && !Channel.ValidateOwner(ident, false))
+                return;
+            StopEngine(true);
         }
 
         protected abstract bool OnEngineStart();
         protected abstract bool OnEngineStop();
 
         public bool ExitPassenger(Player player)
+        {
+            return ExitPassenger(player, true);
+        }
+
+        private bool ExitPassenger(Player player, bool sendNetworkRequest)
         {
             if (!_passengers.Contains(player)) return false;
             //todo: on passender exit event
@@ -132,25 +218,66 @@ namespace Static_Interface.API.VehicleFramework
             player.GetComponent<Rigidbody>().isKinematic = false;
             player.GetComponent<Rigidbody>().useGravity = true;
             player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+            player.GetComponent<RigidbodyPositionSyncer>().enabled = true;
             player.Vehicle = null;
+            _playerPositions.Remove(player);
+
+            if (IsServer())
+            {
+                Channel.Send(nameof(Network_ExitPassenger), ECall.Others, player.User.Identity);
+            }
+            else if (sendNetworkRequest && player == Player.MainPlayer)
+            {
+                Channel.Send(nameof(Network_ExitPassenger), ECall.Server, player.User.Identity);
+            }
             return true;
         }
 
         protected abstract bool OnExitPassenger(Player player);
 
-        protected override void UpdateClient()
+        public bool AddPassenger(Player player)
         {
-            base.UpdateClient();
-
-            if (!Passengers.Contains(Player.MainPlayer)) return;
-            //todo: handle input
+            return AddPassenger(player, true);
         }
 
-        public bool AddPassenger(Player player)
+        private bool AddPassenger(Player player, bool sendNetworkRequest)
         {
             if (IsDestroyed || _passengers.Contains(player) || IsFull) return false;
             //todo: on passenger add event
-            return OnAddPassenger(player);
+
+            _playerPositions.Add(player, transform.InverseTransformPoint(player.transform.position));
+            bool wasEmpty = IsEmpty;
+            _passengers.Add(player);
+            if (!OnAddPassenger(player))
+            {
+                _playerPositions.Remove(player);
+                _passengers.Remove(player);
+                return false;
+            }
+
+            player.GetComponent<PlayerController>().DisableControl();
+            player.GetComponent<Rigidbody>().isKinematic = true;
+            player.GetComponent<Rigidbody>().useGravity = false;
+            player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            player.GetComponent<RigidbodyPositionSyncer>().enabled = false;
+            player.Vehicle = this;
+            if (wasEmpty && !IsEngineStarted)
+            {
+                Driver = player;
+                StartEngine();
+            }
+            _camerasBefore.Add(player, player.Camera);
+            SetCamera(player);
+
+            if (IsServer())
+            {
+                Channel.Send(nameof(Network_AddPassenger), ECall.Others, player.User.Identity);
+            }
+            else if (sendNetworkRequest && player == Player.MainPlayer)
+            {
+                Channel.Send(nameof(Network_ExitPassenger), ECall.Server, player.User.Identity);
+            }
+            return true;
         }
 
         protected abstract bool OnAddPassenger(Player player);

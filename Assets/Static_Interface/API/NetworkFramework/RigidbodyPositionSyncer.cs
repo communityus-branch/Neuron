@@ -54,18 +54,22 @@ namespace Static_Interface.API.NetworkFramework
         [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true)]
         protected void Network_ReadPositionServer(Identity ident, Vector3 syncPosition, Vector3 syncVelocity)
         {
-            if (PositionValidator != null)
+            if (ident != Connection.ServerID)
             {
-                var deltaPosition = syncPosition - Rigidbody.position;
-                var deltaVelocity = syncVelocity - Rigidbody.velocity;
-                if (!PositionValidator.ValidatePosition(Rigidbody.transform, deltaPosition, deltaVelocity))
+                if (PositionValidator != null)
                 {
-                    Channel.Send(nameof(Network_ReadPositionClient), ECall.Owner, (object)Rigidbody.position, Rigidbody.velocity, true);
-                    return;
+                    var deltaPosition = syncPosition - Rigidbody.position;
+                    var deltaVelocity = syncVelocity - Rigidbody.velocity;
+                    if (!PositionValidator.ValidatePosition(Rigidbody.transform, deltaPosition, deltaVelocity))
+                    {
+                        Channel.Send(nameof(Network_ReadPositionClient), ECall.Owner, (object) Rigidbody.position,
+                            Rigidbody.velocity, true);
+                        return;
+                    }
                 }
-            }
 
-            ReadPosition(syncPosition, syncVelocity, IsDedicatedServer());
+                ReadPosition(syncPosition, syncVelocity, IsDedicatedServer());
+            }
             Channel.Send(nameof(Network_ReadPositionClient), ECall.NotOwner, Rigidbody.position, syncPosition, syncVelocity, false);
         }
 

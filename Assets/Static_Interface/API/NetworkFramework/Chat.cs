@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using Static_Interface.API.CommandFramework;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.GUIFramework;
@@ -100,7 +101,15 @@ namespace Static_Interface.API.NetworkFramework
             }
             if (_justFocused) _justFocused = false;
             if (string.IsNullOrEmpty(Message)) return;
-            SendPlayerMessage(Message);
+            try
+            {
+                SendPlayerMessage(Message);
+            }
+            catch (Exception e)
+            {
+                e.Log();
+            }
+            
             Message = "";
         }
         
