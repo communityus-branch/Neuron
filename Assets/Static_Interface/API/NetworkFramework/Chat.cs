@@ -135,13 +135,11 @@ namespace Static_Interface.API.NetworkFramework
         [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER)]
         private void Network_SendUserMessage(Identity sender, string msg)
         {
-            if (msg.StartsWith("/"))
+            if (msg.StartsWith(sender.GetUser().Player.CommandPrefix))
             {
-                if (sender.GetUser()?.Player == null) return;
                 if (msg.Length == 1) return;
                 var cmdLine = msg.Substring(1).Trim();
                 var cmdName = cmdLine.Split(' ')[0];
-                string[] args = {};
                 CommandManager.Instance.Eval(sender.GetUser().Player, cmdName, cmdLine);
                 return;
             }

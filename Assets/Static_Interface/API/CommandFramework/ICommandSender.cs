@@ -5,5 +5,6 @@
         string Name { get; }
         bool HasPermission(string permission);
         void Message(string msg);
+        string CommandPrefix { get; }
     }
 }

@@ -30,5 +30,7 @@ namespace Static_Interface.API.PlayerFramework
         {
             Chat.Instance.SendMessageToPlayer(this, msg);
         }
+
+        public string CommandPrefix { get; set; } = "/";
     }
 }

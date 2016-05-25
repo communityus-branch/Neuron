@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Static_Interface.API.CommandFramework
 {
@@ -6,9 +7,10 @@ namespace Static_Interface.API.CommandFramework
     {
         bool HasPermission(ICommandSender sender);
         void Execute(ICommandSender sender, string cmdLine, string[] args);
-        string GetUsage(ICommandSender sender);
+        string Usage { get; }
+        string Description { get; }
         string Name { get; }
-        List<string> Aliases { get; }
+        ReadOnlyCollection<string> Aliases { get; }
         void OnRegistered();
     }
 }

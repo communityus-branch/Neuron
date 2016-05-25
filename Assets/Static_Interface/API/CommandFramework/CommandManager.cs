@@ -110,6 +110,12 @@ namespace Static_Interface.API.CommandFramework
             {
                 parsedArgs = StringUtils.ToArguments(cmdLine.Substring(cmd.Length + 1));
             }
+
+            if (!cmdInstance.HasPermission(sender))
+            {
+                sender.Message("<color=#B71C1C>You don't have permission</color>");
+                return;
+            }
             cmdInstance.Execute(sender, cmdLine, parsedArgs);
         }
     }
