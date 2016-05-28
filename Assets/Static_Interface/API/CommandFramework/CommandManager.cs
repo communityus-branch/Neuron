@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PluginFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.Utils;
@@ -24,6 +25,7 @@ namespace Static_Interface.API.CommandFramework
 
         public void RegisterCommand(ICommand command, Plugin ext)
         {
+            if (!NetworkUtils.IsServer()) return;
             LogUtils.Debug(nameof(RegisterCommand));
             if (!ext.Enabled) return;
             RegisterCommand(command, command.Name, ext);

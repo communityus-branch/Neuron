@@ -47,13 +47,13 @@ namespace Static_Interface.API.NetworkFramework
         {
             if(ident != Connection.ServerID)
                 ReadAngle(angle, IsDedicatedServer());
-            Channel.Send(nameof(Network_ReadAngleClient), ECall.NotOwner, transform.position, angle);
+            Channel.Send(nameof(Network_ReadAngleClient), ECall.NotOwner, transform.position, angle, false);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true, MaxRadius = 1000f)]
         protected void Network_ReadAngleClient(Identity ident, Vector3 angle, bool force)
         {
-            ReadAngle(angle, false);
+            ReadAngle(angle, force);
         }
 
         private void ReadAngle(Vector3 angle, bool force)

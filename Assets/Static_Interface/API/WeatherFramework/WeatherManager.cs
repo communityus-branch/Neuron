@@ -59,7 +59,7 @@ namespace Static_Interface.API.WeatherFramework
             _weatherSystem.realStartTime = realStartTime;
             _weatherSystem.realStartTimeMinutes = realStartTimeMinutes;
             _weatherSystem.LoadTime();
-            //World.Instance.Sun_Moon.transform.rotation = Quaternion.Euler(rot);
+            World.Sun_Moon.transform.rotation = Quaternion.Euler(rot);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]

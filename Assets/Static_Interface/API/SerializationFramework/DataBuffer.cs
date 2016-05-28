@@ -98,8 +98,6 @@ namespace Static_Interface.API.SerializationFramework
         {
             if ((_block == null))
                 throw new NullReferenceException("DataBuffer has not content!");
-            if((_step + length-1 > (_block.Length - 1)))
-                throw new BufferOverflowException(_block.Length, _step, length);
             byte[] data = new byte[length];
             for (int i = 0; i < length; i++)
             {
