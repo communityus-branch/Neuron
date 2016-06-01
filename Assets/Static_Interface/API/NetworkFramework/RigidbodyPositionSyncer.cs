@@ -20,7 +20,17 @@ namespace Static_Interface.API.NetworkFramework
         protected override bool IsSyncable => true;
 
         public IPositionValidator PositionValidator;
-        
+        /*
+        protected override void OnPlayerLoaded()
+        {
+            base.OnPlayerLoaded();
+            if (!Channel.IsOwner && !IsServer())
+            {
+                Rigidbody.useGravity = false;
+            }
+        }
+        */
+
         protected override void Update()
         {
             base.Update();

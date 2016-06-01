@@ -250,16 +250,17 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
         public void DisconnectClient(Identity ident, bool sendKicked = true)
         {
+            PlayerQuitEvent @event = new PlayerQuitEvent(ident.Owner.Player);
             var user = ident.GetUser();
+            @event.QuitMessage = "<b>" + user.Name + "</b> disconnected.";
+        
             byte index = GetUserIndex(ident);
             RemovePlayer(index);
             byte[] packet = ObjectSerializer.GetBytes(0, index);
             AnnounceToAll(EPacket.DISCONNECTED, packet, 0);
             if(sendKicked) Send(ident, EPacket.KICKED, new byte[0], 0);
             ((ServerMultiplayerProvider) Provider).RemoveClient(ident);
-
-            PlayerQuitEvent @event = new PlayerQuitEvent(ident.Owner.Player);
-            @event.QuitMessage = "<b>" + user.Name + "</b> disconnected.";
+            
             EventManager.Instance.CallEvent(@event);
             if (string.IsNullOrEmpty(@event.QuitMessage)) return;
             Chat.Instance.SendServerMessage(@event.QuitMessage);

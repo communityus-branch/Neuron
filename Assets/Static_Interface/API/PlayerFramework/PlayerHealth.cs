@@ -116,7 +116,7 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (IsServer())
             {
-                Channel.Send(nameof(Network_Kill), ECall.Clients);
+                Channel.Send(nameof(Network_Kill), ECall.Clients, (int)deathcause);
             }
             Kill(deathcause, false);
         }

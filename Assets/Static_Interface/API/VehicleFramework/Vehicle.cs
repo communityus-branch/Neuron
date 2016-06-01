@@ -19,7 +19,8 @@ namespace Static_Interface.API.VehicleFramework
         public bool IsEngineStarted { get; private set; }
 
         private Player _driver;
-        readonly Dictionary<Player, Vector3> _playerPositions = new Dictionary<Player, Vector3>();
+
+        public int CurrentSeat => Passengers.Count-1;
 
         public Player Driver
         {
@@ -91,16 +92,6 @@ namespace Static_Interface.API.VehicleFramework
             }
 
             ExitPassenger(passenger.Owner.Player, false);
-        }
-
-        protected override void FixedUpdate()
-        {
-            base.FixedUpdate();
-   
-            foreach (Player p in Passengers)
-            {
-                p.transform.position = transform.TransformPoint(_playerPositions[p]);
-            }
         }
 
         protected override void Update()
@@ -218,9 +209,9 @@ namespace Static_Interface.API.VehicleFramework
             player.GetComponent<Rigidbody>().isKinematic = false;
             player.GetComponent<Rigidbody>().useGravity = true;
             player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+            player.GetComponent<Rigidbody>().detectCollisions = true;
             player.GetComponent<RigidbodyPositionSyncer>().enabled = true;
             player.Vehicle = null;
-            _playerPositions.Remove(player);
 
             if (IsServer())
             {
@@ -244,21 +235,21 @@ namespace Static_Interface.API.VehicleFramework
         {
             if (IsDestroyed || _passengers.Contains(player) || IsFull) return false;
             //todo: on passenger add event
-
-            _playerPositions.Add(player, transform.InverseTransformPoint(player.transform.position));
             bool wasEmpty = IsEmpty;
-            _passengers.Add(player);
+
+            player.transform.parent = transform;
             if (!OnAddPassenger(player))
             {
-                _playerPositions.Remove(player);
-                _passengers.Remove(player);
+                player.transform.parent = null;
                 return false;
             }
 
+            _passengers.Add(player);
             player.GetComponent<PlayerController>().DisableControl();
             player.GetComponent<Rigidbody>().isKinematic = true;
             player.GetComponent<Rigidbody>().useGravity = false;
             player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            player.GetComponent<Rigidbody>().detectCollisions = false;
             player.GetComponent<RigidbodyPositionSyncer>().enabled = false;
             player.Vehicle = this;
             if (wasEmpty && !IsEngineStarted)

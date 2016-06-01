@@ -324,26 +324,30 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     break;
 
                 case EPacket.CONNECTED:
+                {
                     {
-                        Type[] argTypes = {
-                        //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
-                        typeof(Identity), typeof(string), typeof(ulong), typeof(Vector3), typeof(Vector3), typeof(int), typeof(bool)
-                    };
+                        Type[] argTypes =
+                        {
+                            //[0] id, [1] name, [2] group, [3] position, [4], angle, [5] channel
+                            typeof (Identity), typeof (string), typeof (ulong), typeof (Vector3), typeof (Vector3),
+                            typeof (int), typeof (bool)
+                        };
 
                         object[] args = ObjectSerializer.GetObjects(0, 0, packet, argTypes);
                         if (IsSinglePlayer) return;
                         if (World.Loaded)
                         {
-                            AddPlayer(Provider.Deserialilze((Identity)args[0]), (string)args[1], (ulong)args[2],
-                                (Vector3)args[3], (Vector3)args[4], (int)args[5], (bool)args[6]);
+                            AddPlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
+                                (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
                         }
                         else
                         {
-                            QueuePlayer(Provider.Deserialilze((Identity)args[0]), (string)args[1], (ulong)args[2],
-                                (Vector3)args[3], (Vector3)args[4], (int)args[5], (bool)args[6]);
+                            QueuePlayer(Provider.Deserialilze((Identity) args[0]), (string) args[1], (ulong) args[2],
+                                (Vector3) args[3], (Vector3) args[4], (int) args[5], (bool) args[6]);
                         }
                         break;
                     }
+                }
                 case EPacket.VERIFY:
                     LogUtils.Debug("Opening ticket");
                     byte[] ticket = ((ClientMultiplayerProvider)Provider).OpenTicket();
@@ -356,9 +360,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                     Send(ServerID, EPacket.AUTHENTICATE, ticket, ticket.Length, 0);
                     break;
                 case EPacket.DISCONNECTED:
+                {
                     //If singleplayer (local server) we will already do this at ServerConnection
                     if (IsSinglePlayer) return;
-                    var index = packet[1];
+                    object[] args = ObjectSerializer.GetObjects(0, 0, packet, typeof (byte));
+                    var index = (byte)args[0];
 
                     var user = GetUser(index);
 
@@ -367,6 +373,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
                     RemovePlayer(index);
                     break;
+                }
                 case EPacket.REJECTED:
                 case EPacket.KICKED:
                     Disconnect();

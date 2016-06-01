@@ -16,7 +16,7 @@ namespace Static_Interface.API.VehicleFramework
         private float _mainRotorVelocity;
         private float _mainRotorRotation;
 
-        public float MaxTailRotorForce = 7000;
+        public float MaxTailRotorForce = 3500;
         public float MaxTailRotorVelocity = 2200;
         private float _tailRotorVelocity;
         private float _tailRotorRotation;

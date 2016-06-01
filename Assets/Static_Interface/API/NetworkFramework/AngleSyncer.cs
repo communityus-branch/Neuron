@@ -46,23 +46,18 @@ namespace Static_Interface.API.NetworkFramework
         protected void Network_ReadAngleServer(Identity ident, Vector3 angle)
         {
             if(ident != Connection.ServerID)
-                ReadAngle(angle, IsDedicatedServer());
-            Channel.Send(nameof(Network_ReadAngleClient), ECall.NotOwner, transform.position, angle, false);
+                ReadAngle(angle);
+            Channel.Send(nameof(Network_ReadAngleClient), ECall.NotOwner, transform.position, angle);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true, MaxRadius = 1000f)]
-        protected void Network_ReadAngleClient(Identity ident, Vector3 angle, bool force)
+        protected void Network_ReadAngleClient(Identity ident, Vector3 angle)
         {
-            ReadAngle(angle, force);
+            ReadAngle(angle);
         }
 
-        private void ReadAngle(Vector3 angle, bool force)
+        private void ReadAngle(Vector3 angle)
         {
-            if (force)
-            {
-                transform.rotation = Quaternion.Euler(angle);
-                return;
-            }
             _syncTime = 0f;
             _syncDelay = Time.time - _lastSynchronizationTime;
             _lastSynchronizationTime = Time.time;

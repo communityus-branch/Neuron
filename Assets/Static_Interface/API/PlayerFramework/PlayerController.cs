@@ -1,4 +1,6 @@
-﻿using Static_Interface.API.Utils;
+﻿using System;
+using Static_Interface.API.ConsoleFramework;
+using Static_Interface.API.Utils;
 using Static_Interface.API.WeaponFramework;
 using UnityEngine;
 
@@ -85,6 +87,8 @@ namespace Static_Interface.API.PlayerFramework
                 return;
             }
 
+            if (ConsoleGUI.Instance.IsOpen) return;
+
             var inputX = GetInputX();
             var inputY = GetInputY();
 
@@ -134,8 +138,10 @@ namespace Static_Interface.API.PlayerFramework
         bool _disabled;
         public void EnableControl()
         {
-            var mouse = Player.gameObject.AddComponent<SmoothMouseLook>();
-            mouse.OriginalRotation = Quaternion.identity;
+            var mouse = Player.GetComponent<SmoothMouseLook>();
+            if(!mouse)
+                mouse = Player.gameObject.AddComponent<SmoothMouseLook>();
+            mouse.enabled = !ConsoleGUI.Instance.IsOpen;
             _disabled = false;
             Cursor.visible = false;
             GetComponent<WeaponController>().enabled = true;
