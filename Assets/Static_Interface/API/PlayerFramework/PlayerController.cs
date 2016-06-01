@@ -27,6 +27,7 @@ namespace Static_Interface.API.PlayerFramework
         {
             base.Start();
             _rigidbody = GetComponent<Rigidbody>();
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         public float Speed = 80f;
