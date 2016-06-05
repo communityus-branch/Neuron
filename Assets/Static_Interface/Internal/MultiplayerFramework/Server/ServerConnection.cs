@@ -63,7 +63,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
             }
         }
 
-        public override void Disconnect(string reason = null)
+        internal override void Disconnect(string reason, bool unload)
         {
             Dispose();
         }

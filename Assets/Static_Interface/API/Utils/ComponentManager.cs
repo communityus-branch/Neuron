@@ -27,6 +27,7 @@ namespace Static_Interface.API.Utils
         internal static void CheckCriticialObject(Object obj)
         {
             if (!(obj is GameObject)) return;
+            if (obj.name.StartsWith("PauseMenu")) throw new SecurityException("Access to object is restricted");
             foreach (Component c in ((GameObject)obj).GetComponents<Component>())
             {
                 CheckCriticialComponent(c);

@@ -234,7 +234,12 @@ namespace Static_Interface.Internal.MultiplayerFramework
             return false;
         }
 
-        public abstract void Disconnect(string reason = null);
+        public void Disconnect(string reason = null)
+        {
+            Disconnect(reason, true);
+        }
+
+        internal abstract void Disconnect(string reason, bool unloadLevel);
 
         protected void StripPacketByte(ref byte[] packet, ref int size)
         {

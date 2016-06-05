@@ -89,7 +89,7 @@ namespace Static_Interface.API.PlayerFramework
             }
 
             if (ConsoleGUI.Instance.IsOpen) return;
-
+            if (bl_PauseMenu.m_Pause) return;
             var inputX = GetInputX();
             var inputY = GetInputY();
 

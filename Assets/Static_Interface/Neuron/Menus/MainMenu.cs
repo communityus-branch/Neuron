@@ -121,10 +121,26 @@ namespace Static_Interface.Neuron.Menus
             DestroyImmediate(Connection.GetComponent<ClientConnection>());
             DestroyImmediate(Connection.GetComponent<ServerConnection>());
             DestroyImmediate(Connection.GetComponent<SingleplayerConnection>());
-            ClientConnection conn = Connection.AddComponent<ClientConnection>();
+
             //SingleplayerConnection conn = serverObject.AddComponent<SingleplayerConnection>();
             //conn.Init();
-            conn.AttemptConnect("127.0.0.1", 27015, string.Empty);
+            ushort port = 27015;
+            string host = GameObject.Find("TargetHostField").GetComponent<InputField>().text;
+            string[] parts = host.Split(':');
+            if (parts.Length > 1)
+            {
+                host = parts[0];
+                port = ushort.Parse(parts[1]);
+            }
+            ClientConnection conn = Connection.AddComponent<ClientConnection>();
+            try
+            {
+                conn.AttemptConnect(host, port, string.Empty);
+            }
+            catch (Exception)
+            {
+                DestroyImmediate(conn);
+            }
             DontDestroyOnLoad(Connection);
         }
 

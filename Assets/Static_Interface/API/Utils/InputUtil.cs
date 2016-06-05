@@ -1,4 +1,6 @@
 ﻿using System;
+using Static_Interface.API.LevelFramework;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.WeaponFramework;
@@ -15,6 +17,7 @@ namespace Static_Interface.API.Utils
         private static bool _wasCrosshairEnabled = true;
         public void LockInput(object o)
         {
+            if(_pauselocked) throw new Exception("Game paused, can not lock input");
             if(o == null) throw new ArgumentNullException(nameof(o));
             LogUtils.Debug(nameof(LockInput) + ": " + o.GetType().FullName);
             if (IsInputLocked(o)) throw new Exception("Input already locked by " + LockObject.GetType().FullName);
@@ -51,6 +54,12 @@ namespace Static_Interface.API.Utils
             mouseLook.enabled = v;
         }
 
+        public bool IsGamePaused()
+        {
+            return !NetworkUtils.IsDedicated() && bl_PauseMenu.m_Pause;
+        }
+
+
         public void UnlockInput(object o)
         {
             LogUtils.Debug(nameof(UnlockInput) + ": " + o.GetType().FullName);
@@ -64,6 +73,7 @@ namespace Static_Interface.API.Utils
         {
             if (Connection.IsDedicated) return false;
             if (o != null && o == LockObject) return false;
+            if (_pauselocked) return true;
             return InputLocked;
         }
 
@@ -83,6 +93,17 @@ namespace Static_Interface.API.Utils
         {
             base.FixedUpdate();
             CheckConsole();
+        }
+
+        bool _pauselocked;
+        internal void PauseLockInput()
+        {
+            _pauselocked = true;
+        }
+
+        internal void PauseUnlockInput()
+        {
+            _pauselocked = false;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Static_Interface.API.WeaponFramework
             if (Player.Health.IsDead) return false;
             if (InputUtil.Instance.IsInputLocked(this)) return false;
             if (CurrentWeapon == null) return false;
-
+            if (bl_PauseMenu.m_Pause) return false;
             if ((CurrentWeapon.SingleShot && Input.GetKeyDown(KeyCode.Mouse0)) || (!CurrentWeapon.SingleShot && Input.GetKey(KeyCode.Mouse0)))
             {
                 UseWeapon();

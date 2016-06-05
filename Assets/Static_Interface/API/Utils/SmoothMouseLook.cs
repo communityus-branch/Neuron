@@ -21,6 +21,7 @@ namespace Static_Interface.API.Utils
 
         protected override void Update()
         {
+            if (bl_PauseMenu.m_Pause) return;
             _mouse.y += (Input.GetAxis("Mouse Y")*Sensitivity)*(InvertY ? 1 : -1);
             _mouse.x += Input.GetAxis("Mouse X") * Sensitivity;
 

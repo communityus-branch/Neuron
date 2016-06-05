@@ -43,12 +43,20 @@ namespace Static_Interface.API.LevelFramework
         {
             foreach (Object o in FindObjectsOfType<Object>())
             {
+                if (!(o is GameObject) && !(o is Component))
+                {
+                    Destroy(o);
+                    continue;
+                }
+
                 if (!_whitelistedObjects.ContainsKey(o))
                 {
                     DestroyImmediate(o);
+                    continue;
                 }
 
                 if (!(o is GameObject)) continue;
+
                 var registeredComponents = _whitelistedObjects[o];
                 foreach (Component comp in ((GameObject) o).GetComponents<Component>().Where(comp => !registeredComponents.Contains(comp)))
                 {
@@ -139,6 +147,8 @@ namespace Static_Interface.API.LevelFramework
 
         private void Unload()
         {
+            if(Connection.CurrentConnection != null)
+                Connection.CurrentConnection.Disconnect(null, false);
             EventManager.Instance?.Shutdown();
             GameMode.CurrentGameMode = null;
             if (World.Instance?.CommandsObj != null)

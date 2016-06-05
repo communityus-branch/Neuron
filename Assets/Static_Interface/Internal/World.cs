@@ -7,6 +7,7 @@ using Static_Interface.API.CommandFramework;
 using Static_Interface.API.ConsoleFramework;
 using Static_Interface.API.EntityFramework;
 using Static_Interface.API.InteractionFramework;
+using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PluginFramework;
@@ -18,6 +19,7 @@ using Static_Interface.Internal.MultiplayerFramework;
 using Static_Interface.Internal.Objects;
 using Static_Interface.Neuron.Netvars;
 using UnityEngine;
+using UnityEngine.UI;
 using Console = Static_Interface.API.ConsoleFramework.Console;
 
 namespace Static_Interface.Internal
@@ -49,6 +51,18 @@ namespace Static_Interface.Internal
             gameObject.AddComponent<Scheduler>();
 
             PluginManager.Init(IOUtil.GetPluginsDir());
+
+
+            if (!NetworkUtils.IsDedicated())
+            {
+                var pausemenu = Instantiate(Resources.Load<GameObject>("UI/PauseMenu/PauseMenu"));
+                var btnTransform = pausemenu.transform.FindChild("Canvas").FindChild("PauseMenuUI").FindChild("Disconnect");
+                var button = btnTransform.GetComponent<Button>();
+                button.onClick.AddListener(delegate
+                {
+                    LevelManager.Instance.GoToMainMenu();
+                });
+            }
 
             Weather = InternalObjectUtils.LoadWeather();
             var enviromentSun = GameObject.Find("__SUN__");

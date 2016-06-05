@@ -46,10 +46,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             }
         }
 
-        public override void Disconnect(string reason = null)
+        internal override void Disconnect(string reason, bool unload)
         {
             IsConnecting = false;
-            LevelManager.Instance.GoToMainMenu();
+            if (unload)
+            {
+                LevelManager.Instance.GoToMainMenu();
+                return;
+            }
             Dispose();
         }
 
