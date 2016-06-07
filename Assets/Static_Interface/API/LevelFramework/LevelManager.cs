@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Fclp.Internals.Extensions;
 using Static_Interface.API.AssetsFramework;
 using Static_Interface.API.EventFramework;
 using Static_Interface.API.PluginFramework;
@@ -28,6 +29,7 @@ namespace Static_Interface.API.LevelFramework
 
         internal void InitObjects()
         {
+            if (_whitelistedObjects.Count > 0) return; //already initialized
             foreach (Object o in FindObjectsOfType<Object>())
             {
                 List<Component> list = null;

@@ -5,31 +5,55 @@ namespace Static_Interface.API.Utils
 {
     [AddComponentMenu("Camera/Simple Smooth Mouse Look ")]
     public class SmoothMouseLook : MonoBehaviour
+
     {
+        Vector2 _mouseAbsolute;
+        Vector2 _smoothMouse;
 
-        [Range(0.1f, 10f)] public float Sensitivity = 5f;
+        public Vector2 ClampInDegrees = new Vector2(360, 180);
+        public Vector2 Sensitivity = new Vector2(2, 2);
+        public Vector2 Smoothing = new Vector2(3, 3);
+        public Vector2 TargetDirection;
 
-        [Range(0.01f, 1f)] public float Smoothing = 0.05f;
-
-        public bool InvertY = false;
-
-        public Vector2 RotationVelocity;
-
-        private Vector2 _mouse;
-        private Vector2 _smooth;
-
+        protected override void Start()
+        {
+            // Set target direction to the camera's initial orientation.
+            TargetDirection = transform.rotation.eulerAngles;
+        }
 
         protected override void Update()
         {
-            if (bl_PauseMenu.m_Pause) return;
-            _mouse.y += (Input.GetAxis("Mouse Y")*Sensitivity)*(InvertY ? 1 : -1);
-            _mouse.x += Input.GetAxis("Mouse X") * Sensitivity;
+            // Allow the script to clamp based on a desired target value.
+            Quaternion targetOrientation = Quaternion.Euler(TargetDirection);
 
-            _smooth.x = Mathf.SmoothDamp(_smooth.x, _mouse.x, ref RotationVelocity.x, Smoothing);
-            _smooth.y = Mathf.SmoothDamp(_smooth.y, _mouse.y, ref RotationVelocity.y, Smoothing);
-            
-            transform.localRotation = Quaternion.identity;
-            transform.Rotate(_smooth.y, _smooth.x, 0);
+            // Get raw mouse input for a cleaner reading on more sensitive mice.
+            var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+
+            // Scale input against the Sensitivity setting and multiply that against the Smoothing value.
+            mouseDelta = Vector2.Scale(mouseDelta, new Vector2(Sensitivity.x * Smoothing.x, Sensitivity.y * Smoothing.y));
+
+            // Interpolate mouse movement over time to apply Smoothing delta.
+            _smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / Smoothing.x);
+            _smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / Smoothing.y);
+
+            // Find the absolute mouse movement value from point zero.
+            _mouseAbsolute += _smoothMouse;
+
+            // Clamp and apply the local x value first, so as not to be affected by world transforms.
+            if (ClampInDegrees.x < 360)
+                _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -ClampInDegrees.x * 0.5f, ClampInDegrees.x * 0.5f);
+
+            var xRotation = Quaternion.AngleAxis(-_mouseAbsolute.y, targetOrientation * Vector3.right);
+            transform.localRotation = xRotation;
+
+            // Then clamp and apply the global y value.
+            if (ClampInDegrees.y < 360)
+                _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -ClampInDegrees.y * 0.5f, ClampInDegrees.y * 0.5f);
+
+            var yRotation = Quaternion.AngleAxis(_mouseAbsolute.x, transform.InverseTransformDirection(Vector3.up));
+            transform.localRotation *= yRotation;
+            transform.rotation *= targetOrientation;
         }
+
     }
 }
