@@ -183,103 +183,15 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
 
             playerTransform.GetComponent<Channel>().IsOwner = true;
             playerTransform.gameObject.AddComponent<SmoothMouseLook>();
-            var sunShafts = playerTransform.GetComponentInChildren<SunShafts>();
-            if (sunShafts != null && GameObject.Find("Sun_Moon") != null)
-            {
-                sunShafts.sunTransform = GameObject.Find("Sun_Moon").transform;
-            }
 
             LogUtils.Debug("Setting up Camera");
-            var cam = playerTransform.FindChild("MainCamera");
+            var cam = playerTransform.FindChild("MainCamera").GetComponent<Camera>();
 
-            cam.tag = "MainCamera";
-            CameraManager.Instance.CurrentCamera = cam.GetComponent<Camera>();
+            cam.gameObject.tag = "MainCamera";
+            CameraManager.Instance.CurrentCamera = cam;
 
-            LogUtils.Debug("Loading WeatherParticles");
-            var fallLeaves = ((GameObject)Resources.Load("ParticleEffects/FallLeaves"));
-            var lightningBugs = ((GameObject)Resources.Load("ParticleEffects/LightningBugs"));
-            var lightningPosition = ((GameObject)Resources.Load("ParticleEffects/LightningPosition"));
-            var rain = ((GameObject)Resources.Load("ParticleEffects/Rain"));
-            var rainMist = ((GameObject)Resources.Load("ParticleEffects/RainMist"));
-            var rainStreaks = (GameObject)Resources.Load("ParticleEffects/RainStreaks");
-            var snow = ((GameObject)Resources.Load("ParticleEffects/Snow"));
-            var snowDust = ((GameObject)Resources.Load("ParticleEffects/SnowDust"));
-
-            fallLeaves = Instantiate(fallLeaves);
-            lightningBugs = Instantiate(lightningBugs);
-            lightningPosition = Instantiate(lightningPosition);
-            rain = Instantiate(rain);
-            rainMist = Instantiate(rainMist);
-            rainStreaks = Instantiate(rainStreaks);
-            snow = Instantiate(snow);
-            snowDust = Instantiate(snowDust);
-
-            var rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
-
-            fallLeaves.transform.SetParent(playerTransform);
-            fallLeaves.transform.localPosition = new Vector3(0, 46, 0);
-            fallLeaves.transform.localRotation = rotation;
-
-            lightningBugs.transform.SetParent(playerTransform);
-            lightningBugs.transform.localPosition = new Vector3(0, 7.8f, 0);
-            lightningBugs.transform.localRotation = rotation;
-
-            lightningPosition.transform.SetParent(playerTransform);
-            lightningPosition.transform.localPosition = new Vector3(-2, 27, 5);
-            lightningPosition.transform.localRotation = Quaternion.identity;
-
-            rain.transform.SetParent(playerTransform);
-            rain.transform.localPosition = new Vector3(0, 30, 0);
-            rain.transform.localRotation = rotation;
-
-            rainMist.transform.SetParent(playerTransform);
-            rainMist.transform.localPosition = new Vector3(0, 37, 0);
-            rainMist.transform.localRotation = rotation;
-
-            rainStreaks.transform.SetParent(playerTransform);
-            rainStreaks.transform.localPosition = new Vector3(0, 180, 0);
-            rainStreaks.transform.localRotation = Quaternion.identity;
-
-            snow.transform.SetParent(playerTransform);
-            snow.transform.localPosition = new Vector3(0, 25, 0);
-            snow.transform.localRotation = rotation;
-
-            snowDust.transform.SetParent(playerTransform);
-            snowDust.transform.localPosition = new Vector3(0, 37, 0);
-            snowDust.transform.localRotation = rotation;
-
-
-            LogUtils.Debug("Loading WeatherSystem");
-            try
-            {
-                var weather = World.Instance.Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
-                weather.butterflies = lightningBugs.GetComponent<ParticleSystem>();
-                weather.windyLeaves = fallLeaves.GetComponent<ParticleSystem>();
-                weather.mistFog = rainStreaks;
-                weather.snowMistFog = snowDust.GetComponent<ParticleSystem>();
-                weather.snow = snow.GetComponent<ParticleSystem>();
-                weather.rainMist = rainMist.GetComponent<ParticleSystem>();
-                weather.rain = rain.GetComponent<ParticleSystem>();
-                weather.lightningSpawn = lightningPosition.transform;
-                weather.cameraObject = CameraManager.Instance.UnistormCamera;
-                weather.cameraObjectComponent = CameraManager.Instance.UnistormCamera.GetComponent<Camera>();
-                weather.rainSplashes = rain.transform.FindChild("Splashes").GetComponent<ParticleSystem>();
-            }
-            catch (Exception e)
-            {
-                LogUtils.LogError("Couldn't load weather");
-                LogUtils.Debug(e.ToString());
-            }
-
-            cam = CameraManager.Instance.UnistormCamera.transform;
-            var worldAxle = World.Sun_Moon.transform.FindChild("WorldAxle");
-            var sun = worldAxle.FindChild("WorldAxle").FindChild("Sun");
-            cam.gameObject.GetComponents<SunShafts>()[0].enabled = true;
-            cam.gameObject.GetComponents<SunShafts>()[0].sunTransform = sun;
-
-            var moon = worldAxle.FindChild("WorldAxle").FindChild("Moon");
-            cam.gameObject.GetComponents<SunShafts>()[1].enabled = true;
-            cam.gameObject.GetComponents<SunShafts>()[1].sunTransform = moon;
+            World.Instance.WeatherSettings.SetupPlayer(playerTransform);
+            World.Instance.WeatherSettings.SetupCamera(cam);
         }
 
         protected override void OnChannelCountUpdate()

@@ -8,8 +8,9 @@ using UnityEngine;
 
 namespace Static_Interface.API.WeatherFramework
 {
-    public class WeatherManager : NetworkedBehaviour
+    public class WeatherManager : NetworkedSingletonBehaviour<WeatherManager>
     {
+        /*
         private Weather _forecast;
         private UniStormWeatherSystem_C _weatherSystem;
         public static WeatherManager Instance { get; private set; }
@@ -44,15 +45,15 @@ namespace Static_Interface.API.WeatherFramework
             Channel.Send(nameof(Network_SetTemperature), ident, _weatherSystem.temperature);
             Channel.Send(nameof(Network_ChangeWeatherInstant), ident);
         }
-
+        */
         public void SendWeatherTimeUpdate(Identity target)
         {
-            Channel.Send(nameof(Network_SetTime), target,
-                _weatherSystem.realStartTime,
-                _weatherSystem.realStartTimeMinutes,
-                World.Sun_Moon.transform.rotation.eulerAngles);
+           // Channel.Send(nameof(Network_SetTime), target,
+           //     _weatherSystem.realStartTime,
+           //     _weatherSystem.realStartTimeMinutes,
+           //     World.Sun_Moon.transform.rotation.eulerAngles);
         }
-
+        /*
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_SetTime(Identity ident, float realStartTime, int realStartTimeMinutes, Vector3 rot)
         {
@@ -79,7 +80,7 @@ namespace Static_Interface.API.WeatherFramework
             }
             if (Debug.isDebugBuild && Input.GetKey(KeyCode.F2))
             {
-                _weatherSystem.startTime += 6000;
+                _weatherSystem.startTime += 0.01f;
             }
             if (_weatherSystem.weatherForecaster != (int)_forecast)
             {
@@ -114,17 +115,17 @@ namespace Static_Interface.API.WeatherFramework
                 _weatherSystem.weatherForecaster = (int) value;
             }
         }
-
+        */
         public void ChangeWeatherInstant()
         {
-            _weatherSystem.InstantWeather();
+            //todo skymaster
             if (IsServer())
             {
-                Channel.Send(nameof(Network_SetWeather), ECall.Others, (int)_forecast);
-                Channel.Send(nameof(Network_ChangeWeatherInstant), ECall.Others);
+                //Channel.Send(nameof(Network_SetWeather), ECall.Others, (int)1);
+                //Channel.Send(nameof(Network_ChangeWeatherInstant), ECall.Others);
             }
         }
-
+        /*
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_ChangeWeatherInstant(Identity ident)
         {
@@ -137,5 +138,7 @@ namespace Static_Interface.API.WeatherFramework
             System.Random random = new System.Random();
             return (Weather)weatherValues.GetValue(random.Next(weatherValues.Length));
         }
+    }
+    */
     }
 }

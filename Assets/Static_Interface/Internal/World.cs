@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Artngame.SKYMASTER;
 using Static_Interface.API.AssetsFramework;
 using Static_Interface.API.CommandFramework;
 using Static_Interface.API.ConsoleFramework;
@@ -24,16 +25,17 @@ using Console = Static_Interface.API.ConsoleFramework.Console;
 
 namespace Static_Interface.Internal
 {
+
     public class World : NetworkedSingletonBehaviour<World>, IEntity
     {
         public Transform Water;
-        public static GameObject Sun_Moon => GameObject.Find("Sun_Moon");
-        public GameObject Weather;
         public Transform DefaultSpawnPosition;
         private object _commandsObj;
         public static bool Loaded;
         protected override int PreferredChannelID => 1;
         internal object CommandsObj => _commandsObj;
+        public WeatherSettings WeatherSettings;
+
         protected override void Start ()
         {
             base.Start();
@@ -64,42 +66,15 @@ namespace Static_Interface.Internal
                 });
             }
 
-            Weather = InternalObjectUtils.LoadWeather();
-            var enviromentSun = GameObject.Find("__SUN__");
-            var weatherParent = GameObject.Find("WeatherSystems").transform;
+            SkyMaster sky = gameObject.AddComponent<SkyMaster>();
 
-            var orgSunMoon = weatherParent.FindChild("Sun_Moon"); 
+            GameObject settingsObj = Resources.Load<GameObject>("WeatherSettings");
 
-            InternalObjectUtils.CopyComponents(orgSunMoon.gameObject, enviromentSun, typeof(Light));
-            enviromentSun.transform.SetParent(weatherParent);
-            for (int i = 0; i < orgSunMoon.childCount; i++)
-            {
-                var child = orgSunMoon.GetChild(i);
-                child.SetParent(enviromentSun.transform);
-            }
-
-            InternalObjectUtils.CopyFields(orgSunMoon.GetComponent<Light>(), enviromentSun.GetComponent<Light>());
-            InternalObjectUtils.CopyFields(orgSunMoon.transform, enviromentSun.transform);
-
-            Destroy(orgSunMoon.gameObject);
-            enviromentSun.name = "Sun_Moon";
-
-            var weatherSys = Weather.GetComponentInChildren<UniStormWeatherSystem_C>();
-            weatherSys.sun = enviromentSun.GetComponent<Light>();
-
-            var worldAxle = enviromentSun.transform.FindChild("WorldAxle").FindChild("WorldAxle");
-            Type t = weatherSys.GetType();
-            var f = t.GetField("sunComponent", BindingFlags.NonPublic | BindingFlags.Instance);
-            f.SetValue(weatherSys, worldAxle.FindChild("Sun").GetComponent<Light>());
-
-            var moon = worldAxle.FindChild("Moon");
-            f = t.GetField("moonComponent", BindingFlags.NonPublic | BindingFlags.Instance);
-            f.SetValue(weatherSys, moon.GetComponent<Light>());
-
-            weatherSys.moonLight = moon.FindChild("MoonLight").GetComponent<Light>();
+            WeatherSettings = settingsObj.GetComponent<WeatherSettings>();
+            WeatherSettings.SetupSky(sky);
+            WeatherSettings.SetupTerrain(GetComponent<Terrain>());
             gameObject.AddComponent<WeatherManager>();
             Connection conn = FindObjectOfType<Connection>();
-            conn.SendMessage("OnWeatherInit", Weather);
             var chat = gameObject.AddComponent<Chat>();
             Chat.SetInstance(chat);
             conn.SendMessage("OnChatInit", chat);
@@ -117,9 +92,6 @@ namespace Static_Interface.Internal
                 Console.Instance.RegisterCommands(_commandsObj);
             Loaded = true;
             conn.SendMessage("OnWorldInit", this);
-            var h = GetComponent<Terrain>().terrainData.size / 2;
-            h.y = transform.position.y + 3000;
-            Weather.transform.position = h;
 
             LoadPlugins();
         }
