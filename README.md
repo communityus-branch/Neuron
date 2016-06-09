@@ -7,11 +7,14 @@ This project uses alexzzzz's great [CSharp60 Support](https://bitbucket.org/alex
 **Notice**: some  features of C# 6.0 are not supported because of CLR 2.0 limitations. Please see [here](https://bitbucket.org/alexzzzz/unity-c-5.0-and-6.0-integration/src/531028fa9405927c6ef96c0d8c587b0388130cbf/README.md?at=default&fileviewer=file-view-default) for more information. You're also still limited to .NET 3.5.
 
 ## Compiling
-First you need to get the proprietary assets (currently only [UniStorm](https://www.assetstore.unity3d.com/en/#!/content/2714))
+First you need to get the proprietary assets (currently [SkyMaster ULTIMATE](https://www.assetstore.unity3d.com/en/#!/content/25357) and [UPause](https://www.assetstore.unity3d.com/en/#!/content/29218))
 
-Unpack UniStorm and move the "UniStorm (Desktop)" folder to Assets/Proprietary/Plugins/ (the path may not exist, create it if needed). You won't need the "UniStorm (Mobile)" folder.
+* Unpack SkyMaster ULTIMATE and move the "SkyMaster" folder to Assets/Proprietary/Plugins/ (the path may not exist, create it if needed).
+* Unpack UPause and move the "UPause Menu" folder to Assets/Proprietary/Plugins/
 
-**Important: Exclude UniStorm when commiting, since you aren't allowed to redistribute it.**
+After that you will need to insert 2 lines to "bl_PauseMenu.cs". Instructions are [here](https://github.com/Trojaner25/Neuron/blob/master/Assets/Static_Interface/Internal/PauseHook.cs#L10).
+
+**Important: Exclude the Proprietary folder when commiting, since you aren't allowed to redistribute these plugins.**
 
 After this, you'll need to patch Unity, because of a bug in UNet Weaver it will refuse to compile. Download [this file](https://github.com/Trojaner25/Neuron/blob/master/Utils/Unity.UNetWeaver.dll) and replace the one at C:\Program Files\Unity\Editor\Data\Managed
 
