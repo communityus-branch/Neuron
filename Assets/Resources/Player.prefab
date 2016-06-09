@@ -11,6 +11,7 @@ GameObject:
   - 20: {fileID: 2008628}
   - 124: {fileID: 12448040}
   - 92: {fileID: 9272320}
+  - 81: {fileID: 8106132}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: Untagged
@@ -77,7 +78,7 @@ Camera:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 101010}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
@@ -153,6 +154,13 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!81 &8106132
+AudioListener:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 101010}
+  m_Enabled: 1
 --- !u!82 &8264644
 AudioSource:
   m_ObjectHideFlags: 1

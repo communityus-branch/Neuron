@@ -76,6 +76,7 @@ namespace Static_Interface.Internal
         public GameObject FogPresetGradient15;//v3.3
         public Object UnityTreePrefab;
         public Material MeshTerrainSnowMat;
+        public SkyMaster SkyMaster => skyMaster;
 
         public void SetupSky(SkyMaster script)
         {
@@ -405,6 +406,7 @@ namespace Static_Interface.Internal
             skyMaster.TerrainManager.Foggy_Terrain = true;
             skyMaster.TerrainManager.Use_both_fogs = true;
             skyMaster.TerrainManager.SkyManager = skyMaster.SkyManager;
+
 
             if (skyMaster.TerrainManager != null && skyMaster.WaterManager != null)
             {
