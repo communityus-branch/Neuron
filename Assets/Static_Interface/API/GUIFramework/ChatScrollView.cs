@@ -66,19 +66,21 @@ namespace Static_Interface.API.GUIFramework
         }
 
         private float _yPosition;
+
         public void AddLine(string s)
         {
             TextView tv = new TextView(null, this);
-            tv.SetText(s);      
+            tv.SetText(s);
+
             _lines.Add(tv);
 
             int marginLeft = 2;
             int marginTop = 2;
 
-            tv.SizeDelta = new Vector2(SizeDelta.x, tv.SizeDelta.y);
-            if (_yPosition == 0) _yPosition = -tv.Height / 2 + -marginTop;
-            tv.LocalPosition = new Vector3(tv.Width/2 + marginLeft, _yPosition);
-            _yPosition -= tv.Height - marginTop;
+            tv.SizeDelta = new Vector2(SizeDelta.x - 20, tv.Text.preferredHeight);
+            _yPosition -= tv.Text.preferredHeight + -marginTop;
+            tv.LocalPosition = new Vector3(tv.Width / 2 + marginLeft, _yPosition + tv.Text.preferredHeight/2);
+
             ScrollToBottom();
         }
 
