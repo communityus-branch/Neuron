@@ -2,6 +2,7 @@
 using System.IO;
 using Static_Interface.API.CommandFramework;
 using Static_Interface.API.EventFramework;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.API.VehicleFramework;
@@ -77,6 +78,7 @@ namespace Static_Interface.API.PluginFramework
             EventManager.Instance?.ClearListeners(this);
             CommandManager.Instance?.OnPluginDisabled(this);
             VehicleManager.Instance?.OnPluginDisabled(this);
+            PlayerModel.OnPluginUnload(this);
 
             try
             {

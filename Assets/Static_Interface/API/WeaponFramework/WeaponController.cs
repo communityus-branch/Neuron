@@ -1,6 +1,7 @@
 ﻿using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
+using Static_Interface.Internal;
 using UnityEngine;
 
 namespace Static_Interface.API.WeaponFramework
@@ -24,7 +25,7 @@ namespace Static_Interface.API.WeaponFramework
             if (Player.Health.IsDead) return false;
             if (InputUtil.Instance.IsInputLocked(this)) return false;
             if (CurrentWeapon == null) return false;
-            if (bl_PauseMenu.m_Pause) return false;
+            if (PauseHook.IsPaused) return false;
             if ((CurrentWeapon.SingleShot && Input.GetKeyDown(KeyCode.Mouse0)) || (!CurrentWeapon.SingleShot && Input.GetKey(KeyCode.Mouse0)))
             {
                 UseWeapon();

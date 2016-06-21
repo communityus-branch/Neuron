@@ -179,13 +179,13 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
                 DestroyImmediate(Player.MainPlayer.gameObject);
             }
 
-            Player.MainPlayer = playerTransform.GetComponent<Player>();
-
-            playerTransform.GetComponent<Channel>().IsOwner = true;
-            playerTransform.gameObject.AddComponent<SmoothMouseLook>();
+            var container = playerTransform.FindChild("PlayerContainer");
+            Player.MainPlayer = container.GetComponent<Player>();
+            container.GetComponent<Channel>().IsOwner = true;
+            container.gameObject.AddComponent<SmoothMouseLook>();
 
             LogUtils.Debug("Setting up Camera");
-            var cam = playerTransform.FindChild("MainCamera").GetComponent<Camera>();
+            var cam = container.FindChild("MainCamera").GetComponent<Camera>();
 
             cam.gameObject.tag = "MainCamera";
             CameraManager.Instance.CurrentCamera = cam;

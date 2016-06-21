@@ -339,13 +339,14 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 LogUtils.Debug("Adding player");
                 var angle = new Vector3(0, 90, 0);
 
-                int ch = ChannelCount;
+                int chCount = ChannelCount;
 
-                Transform player = AddPlayer(ident, user.Name, user.Group, spawn.Value, angle, ch,
+                Transform player = AddPlayer(ident, user.Name, user.Group, spawn.Value, angle, chCount,
                     user.Identity == ServerID);
-
-                player.GetComponent<Channel>().Owner = user.Identity;
-                player.BroadcastMessage("OnPlayerLoaded");
+                var container = player.GetChild(0);
+                var ch = container.GetComponent<Channel>();
+                ch.Owner= user.Identity;
+                container.BroadcastMessage("OnPlayerLoaded");
 
                 if (!IsDedicated && user.Identity == ServerID)
                 {
@@ -363,7 +364,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     data = new object[]
                     {
                         user.Identity.Serialize(), user.Name, user.Group, spawn,
-                        angle, ch, false
+                        angle, chCount, false
                     };
                     packet = ObjectSerializer.GetBytes(0, data);
                     Send(c.Identity, EPacket.CONNECTED, packet, 0);
@@ -383,11 +384,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
 
                 LogUtils.Debug("Sending accepted data to client");
                 data = new object[]
-                {ident.Serialize(), user.Name, user.Group, spawn.Value, angle, ch, true};
+                {ident.Serialize(), user.Name, user.Group, spawn.Value, angle, chCount, true};
                 packet = ObjectSerializer.GetBytes(0, data);
                 Send(user.Identity, EPacket.CONNECTED, packet, 0);
 
-                data = new object[] {ident.Serialize(), ch};
+                data = new object[] {ident.Serialize(), chCount };
                 packet = ObjectSerializer.GetBytes(0, data);
                 Send(user.Identity, EPacket.ACCEPTED, packet, 0);
 

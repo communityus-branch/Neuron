@@ -100,9 +100,7 @@ namespace Static_Interface.PluginSandbox
             typeof(StringBuilder),
             typeof(IComparable<>),
             typeof(Type),
-            typeof(IDisposable),
-            typeof(bl_PauseMenu),
-            typeof(bl_PauseOptions)
+            typeof(IDisposable)
         };
 
         private static readonly List<Type> DisallowedTypes = new List<Type>

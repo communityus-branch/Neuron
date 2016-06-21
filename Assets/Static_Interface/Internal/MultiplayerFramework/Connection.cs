@@ -143,12 +143,13 @@ namespace Static_Interface.Internal.MultiplayerFramework
         {
             LogUtils.Debug("<b>" + nameof(AddPlayer) + ": " + playerName + "</b>");
             GameObject obj = (GameObject) Resources.Load("Player");
-            obj.transform.FindChild("MainCamera").GetComponent<Camera>().enabled = false;
+            obj.transform.GetChild(0).FindChild("MainCamera").GetComponent<Camera>().enabled = false;
             Transform newModel = ((GameObject)Instantiate(obj, point, Quaternion.Euler(angle))).transform;
+            var container = newModel.GetChild(0);
             LogUtils.Debug("Spawning player " + playerName + " at " + point);
             var user = new User(CurrentConnection, ident, newModel, channel) {Group = @group, Name = playerName };
-            newModel.GetComponent<Player>().User = user;
-            newModel.GetComponent<Channel>().Setup();
+            container.GetComponent<Player>().User = user;
+            container.GetComponent<Channel>().Setup();
             ClientsInternal.Add(user);
             newModel.gameObject.name = playerName + " @ ch-" + channel;
             return newModel;

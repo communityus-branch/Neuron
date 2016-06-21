@@ -75,10 +75,9 @@ namespace Static_Interface.API.GUIFramework
             _lines.Add(tv);
 
             int marginLeft = 2;
-            int marginTop = 2;
 
             tv.SizeDelta = new Vector2(SizeDelta.x - 20, tv.Text.preferredHeight);
-            _yPosition -= tv.Text.preferredHeight + -marginTop;
+            _yPosition -= tv.Text.preferredHeight;
             tv.LocalPosition = new Vector3(tv.Width / 2 + marginLeft, _yPosition + tv.Text.preferredHeight/2);
 
             ScrollToBottom();

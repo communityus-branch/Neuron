@@ -169,7 +169,11 @@ namespace Static_Interface.API.NetworkFramework
             LogUtils.Log("[CHAT] " + formattedMessage);
             if (!IsDedicatedServer())
             {
-                if(_chatView == null) _chatView = new ChatScrollView("PlayerChat", Player.MainPlayer.GUI.RootView);
+                if (_chatView == null)
+                {
+                    var gui = Player.MainPlayer.GUI;
+                    _chatView = new ChatScrollView("PlayerChat", gui.RootView);
+                }
                 _chatView.AddLine(formattedMessage);
             }
         }

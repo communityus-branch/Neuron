@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using Static_Interface.API.PlayerFramework;
+using Static_Interface.Internal;
+using UnityEngine;
 using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.Utils
 {
     [AddComponentMenu("Camera/Simple Smooth Mouse Look ")]
-    public class SmoothMouseLook : MonoBehaviour
+    public class SmoothMouseLook : PlayerBehaviour
 
     {
         Vector2 _mouseAbsolute;
@@ -18,11 +20,12 @@ namespace Static_Interface.API.Utils
         protected override void Start()
         {
             // Set target direction to the camera's initial orientation.
-            TargetDirection = transform.rotation.eulerAngles;
+            TargetDirection = Player.Model.rotation.eulerAngles;
         }
 
         protected override void Update()
         {
+            if (PauseHook.IsPaused) return;
             // Allow the script to clamp based on a desired target value.
             Quaternion targetOrientation = Quaternion.Euler(TargetDirection);
 
@@ -44,15 +47,15 @@ namespace Static_Interface.API.Utils
                 _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -ClampInDegrees.x * 0.5f, ClampInDegrees.x * 0.5f);
 
             var xRotation = Quaternion.AngleAxis(-_mouseAbsolute.y, targetOrientation * Vector3.right);
-            transform.localRotation = xRotation;
+            Player.Model.localRotation = xRotation;
 
             // Then clamp and apply the global y value.
             if (ClampInDegrees.y < 360)
                 _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -ClampInDegrees.y * 0.5f, ClampInDegrees.y * 0.5f);
 
-            var yRotation = Quaternion.AngleAxis(_mouseAbsolute.x, transform.InverseTransformDirection(Vector3.up));
-            transform.localRotation *= yRotation;
-            transform.rotation *= targetOrientation;
+            var yRotation = Quaternion.AngleAxis(_mouseAbsolute.x, Player.Model.InverseTransformDirection(Vector3.up));
+            Player.Model.localRotation *= yRotation;
+            Player.Model.rotation *= targetOrientation;
         }
 
     }

@@ -12,6 +12,8 @@ namespace Static_Interface.Internal
         //at the else insert a call to OnResume()
         private static bool _wasCursorVisible;
         private static bool _wasCrosshairVisible;
+        public static bool IsPaused { get; set; }
+
         internal static void OnPause()
         {
             _wasCursorVisible = Cursor.visible;

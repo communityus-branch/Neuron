@@ -1,16 +1,17 @@
-﻿using System;
-using Static_Interface.API.ConsoleFramework;
+﻿using Static_Interface.API.ConsoleFramework;
+using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.Utils;
 using Static_Interface.API.WeaponFramework;
+using Static_Interface.Internal;
 using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.PlayerFramework
 {
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(CapsuleCollider))]
     public class PlayerController : PlayerBehaviour
     {
         private Rigidbody _rigidbody;
+        private ListenerBehaviour _listener;
 
         protected override void OnPlayerLoaded()
         {
@@ -26,7 +27,15 @@ namespace Static_Interface.API.PlayerFramework
         protected override void Start()
         {
             base.Start();
-            _rigidbody = GetComponent<Rigidbody>();
+            _rigidbody = Player.Model.GetComponent<Rigidbody>();
+            if (!_rigidbody)
+                Player.Model.gameObject.AddComponent<Rigidbody>();
+            var obj = Player.Model.gameObject;
+            obj.SetActive(false);
+            var syncer = obj.AddComponent<RigidbodyPositionSyncer>();
+            syncer.Channel = Channel;
+            obj.SetActive(true);
+            _listener = obj.AddComponent<ListenerBehaviour>();
             Cursor.lockState = CursorLockMode.Locked;
         }
 
@@ -35,7 +44,6 @@ namespace Static_Interface.API.PlayerFramework
         public float MaxVelocityChange = 10.0f;
         public bool CanJump = true;
         public float JumpHeight = 2.0f;
-        private bool _grounded;
 
         public static float GetInputX()
         {
@@ -89,17 +97,16 @@ namespace Static_Interface.API.PlayerFramework
             }
 
             if (ConsoleGUI.Instance.IsOpen) return;
-            if (bl_PauseMenu.m_Pause) return;
+            if (PauseHook.IsPaused) return;
             var inputX = GetInputX();
             var inputY = GetInputY();
 
             bool jump = Input.GetKeyDown(KeyCode.Space);
             bool sprint = Input.GetKey(KeyCode.LeftShift);
-
-
+            
             Vector3 vel = new Vector3(inputX, 0, inputY);
 
-            if (_grounded)
+            if (_listener.Grounded)
             {
                 vel = transform.TransformDirection(vel);
                 var speed = Speed / 100 * _rigidbody.mass;
@@ -122,13 +129,14 @@ namespace Static_Interface.API.PlayerFramework
                 }
             }
 
-            _grounded = false;
+            _listener.Grounded = false;
         }
 
-        protected override void OnCollisionStay(Collision collision)
+        protected override void OnPlayerModelChange(GameObject newModel)
         {
-            base.OnCollisionStay(collision);
-            _grounded = true;
+            var oldModel = Player.Model;
+            Destroy(oldModel.GetComponent<ListenerBehaviour>());
+            _listener = newModel.AddComponent<ListenerBehaviour>();
         }
 
         float CalculateJumpVerticalSpeed()
@@ -170,5 +178,15 @@ namespace Static_Interface.API.PlayerFramework
                 Cursor.visible = false;
         }
 #endif
+
+        private class ListenerBehaviour : MonoBehaviour
+        {
+            public bool Grounded;
+            protected override void OnCollisionStay(Collision collision)
+            {
+                base.OnCollisionStay(collision);
+                Grounded = true;
+            }
+        }
     }
 }

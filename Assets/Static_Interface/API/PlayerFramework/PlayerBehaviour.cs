@@ -1,4 +1,5 @@
 ﻿using Static_Interface.API.NetworkFramework;
+using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
 {
@@ -6,7 +7,6 @@ namespace Static_Interface.API.PlayerFramework
     {
         public Player Player { get; protected set; }
         public bool IsLocalPlayer => Channel.IsOwner;
-
 
         protected override void Awake()
         {
@@ -17,6 +17,11 @@ namespace Static_Interface.API.PlayerFramework
         public bool UseGUI()
         {
             return Channel.IsOwner && !IsDedicatedServer();
+        }
+
+        protected virtual void OnPlayerModelChange(GameObject newModel)
+        {
+            
         }
     }
 }

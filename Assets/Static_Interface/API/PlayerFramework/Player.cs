@@ -9,6 +9,7 @@ namespace Static_Interface.API.PlayerFramework
 {
     public class Player : UnityExtensions.MonoBehaviour, IEntity, ICommandSender
     {
+        public Transform Model => transform.parent;
         public static Player MainPlayer { get; internal set; } = null;
         public PlayerController MovementController => GetComponent<PlayerController>();
         public PlayerHealth Health => GetComponent<PlayerHealth>();
@@ -19,7 +20,6 @@ namespace Static_Interface.API.PlayerFramework
         public PlayerGUI GUI => GetComponent<PlayerGUI>();
         public string Name => User.Name;
         public Vehicle Vehicle { get; internal set; }
-
 
         public bool HasPermission(string permission)
         {
@@ -32,5 +32,16 @@ namespace Static_Interface.API.PlayerFramework
         }
 
         public string CommandPrefix { get; set; } = "/";
+        private PlayerModel _playerModel;
+
+        public PlayerModel PlayerModel
+        {
+            get { return _playerModel; }
+            set
+            {
+                _playerModel = value;
+                _playerModel.Apply(this);
+            }
+        }
     }
 }

@@ -6,7 +6,16 @@ namespace Static_Interface.API.NetworkFramework
 {
     public abstract class NetworkedBehaviour : UnityExtensions.MonoBehaviour
     {
-        public virtual Channel Channel => GetComponent<Channel>();
+        private Channel _ch;
+        public virtual Channel Channel
+        {
+            get { return _ch ?? GetComponent<Channel>(); }
+            set
+            {
+                _ch = value;
+                _ch?.Build(this);
+            }
+        }
         public Connection Connection => Connection.CurrentConnection;
         protected virtual int PreferredChannelID  => 0;
         public bool SyncOwnerOnly = true;
@@ -32,7 +41,8 @@ namespace Static_Interface.API.NetworkFramework
 
         protected override void Awake()
         {
-            SetupChannel();
+            if(_ch == null)
+                SetupChannel();
         }
 
         protected virtual void SetupChannel()

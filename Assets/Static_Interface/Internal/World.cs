@@ -54,18 +54,6 @@ namespace Static_Interface.Internal
 
             PluginManager.Init(IOUtil.GetPluginsDir());
 
-
-            if (!NetworkUtils.IsDedicated())
-            {
-                var pausemenu = Instantiate(Resources.Load<GameObject>("UI/PauseMenu/PauseMenu"));
-                var btnTransform = pausemenu.transform.FindChild("Canvas").FindChild("PauseMenuUI").FindChild("Disconnect");
-                var button = btnTransform.GetComponent<Button>();
-                button.onClick.AddListener(delegate
-                {
-                    LevelManager.Instance.GoToMainMenu();
-                });
-            }
-
             SkyMaster sky = gameObject.AddComponent<SkyMaster>();
 
             GameObject settingsObj = Resources.Load<GameObject>("WeatherSettings");

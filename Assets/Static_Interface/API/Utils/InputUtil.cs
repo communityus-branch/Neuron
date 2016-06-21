@@ -4,6 +4,7 @@ using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.UnityExtensions;
 using Static_Interface.API.WeaponFramework;
+using Static_Interface.Internal;
 using Static_Interface.Internal.MultiplayerFramework;
 using ConsoleGUI = Static_Interface.API.ConsoleFramework.ConsoleGUI;
 
@@ -56,7 +57,7 @@ namespace Static_Interface.API.Utils
 
         public bool IsGamePaused()
         {
-            return !NetworkUtils.IsDedicated() && bl_PauseMenu.m_Pause;
+            return !NetworkUtils.IsDedicated() && PauseHook.IsPaused;
         }
 
 
