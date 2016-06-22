@@ -14,11 +14,17 @@ namespace Static_Interface.API.PlayerFramework
         private Plugin _plugin;
         public static void RegisterPlayerModel(Plugin plugin, PlayerModel model)
         {
-            if(GetModel(model.Name) != null)
+            if(plugin == null) throw new ArgumentNullException(nameof(plugin));
+            RegisterPlayerModelInternal(plugin, model);
+        }
+
+        internal static void RegisterPlayerModelInternal(Plugin plugin, PlayerModel model)
+        {
+            if (GetModel(model.Name) != null)
             {
                 LogUtils.LogError($"RegisterPlayerModel: A model with the name \"{model.Name}\" already exists!");
                 model.Name = model.Name + "_";
-                RegisterPlayerModel(plugin, model);
+                RegisterPlayerModelInternal(plugin, model);
                 return;
             }
 

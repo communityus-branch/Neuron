@@ -9,9 +9,11 @@ If Visual Studio doesn't allow you to use C# 6.0 features, just try to restart U
 **Notice**: some  features of C# 6.0 are not supported because of CLR 2.0 limitations. Please see [here](https://bitbucket.org/alexzzzz/unity-c-5.0-and-6.0-integration/src/531028fa9405927c6ef96c0d8c587b0388130cbf/README.md?at=default&fileviewer=file-view-default) for more information. You're also still limited to .NET 3.5.
 
 ## Compiling
-First you need to get the proprietary assets (currently [SkyMaster ULTIMATE](https://www.assetstore.unity3d.com/en/#!/content/25357)
+First you need to get the proprietary assets (currently [SkyMaster ULTIMATE](https://www.assetstore.unity3d.com/en/#!/content/25357))
 
 * Unpack SkyMaster ULTIMATE and move the "SkyMaster" folder to Assets/Proprietary/Plugins/ (the path may not exist, create it if needed).
+
+After that, download UMA 2 from the asset store and import it (you don't have to do anything else)
 
 **Important: Exclude the Proprietary folder when commiting, since you aren't allowed to redistribute these assets.**
 
