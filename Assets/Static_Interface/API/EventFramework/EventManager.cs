@@ -29,6 +29,7 @@ namespace Static_Interface.API.EventFramework
         }
         internal void RegisterEventsInternal(IListener listener, Plugin plugin)
         {
+            if (plugin == null) plugin = Plugin.CorePlugin;
             if (!_listeners.ContainsKey(plugin))
             {
                 _listeners.Add(plugin, new List<IListener>());

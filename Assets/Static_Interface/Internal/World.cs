@@ -57,15 +57,7 @@ namespace Static_Interface.Internal
 
             PluginManager.Init(IOUtil.GetPluginsDir());
             UMAModelController.Init();
-
-            SkyMaster sky = gameObject.AddComponent<SkyMaster>();
-
-            GameObject settingsObj = Resources.Load<GameObject>("WeatherSettings");
-
-            WeatherSettings = settingsObj.GetComponent<WeatherSettings>();
-            WeatherSettings.SetupSky(sky);
-            WeatherSettings.SetupTerrain(GetComponent<Terrain>());
-            gameObject.AddComponent<WeatherManager>();
+            
             Connection conn = FindObjectOfType<Connection>();
             var chat = gameObject.AddComponent<Chat>();
             Chat.SetInstance(chat);
@@ -83,9 +75,24 @@ namespace Static_Interface.Internal
             if(_commandsObj != null)
                 Console.Instance.RegisterCommands(_commandsObj);
             Loaded = true;
-            conn.SendMessage("OnWorldInit", this);
+            conn.SendMessage("OnWorldInit", this, SendMessageOptions.DontRequireReceiver);
 
             LoadPlugins();
+
+            if(IsDedicatedServer())
+                LoadWeather();
+        }
+
+        public void LoadWeather()
+        {
+            SkyMaster sky = gameObject.AddComponent<SkyMaster>();
+
+            GameObject settingsObj = Resources.Load<GameObject>("WeatherSettings");
+
+            WeatherSettings = settingsObj.GetComponent<WeatherSettings>();
+            WeatherSettings.SetupSky(sky);
+            WeatherSettings.SetupTerrain(GetComponent<Terrain>());
+            gameObject.AddComponent<WeatherManager>();
         }
 
         private void LoadPlugins()

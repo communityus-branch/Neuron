@@ -188,8 +188,11 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             var cam = container.FindChild("MainCamera").GetComponent<Camera>();
 
             cam.gameObject.tag = "MainCamera";
-            CameraManager.Instance.CurrentCamera = cam;
+            cam.gameObject.AddComponent<AudioListener>();
 
+            CameraManager.Instance.CurrentCamera = cam;
+     
+            World.Instance.LoadWeather();
             World.Instance.WeatherSettings.SetupPlayer(playerTransform);
             World.Instance.WeatherSettings.SetupCamera(cam);
         }

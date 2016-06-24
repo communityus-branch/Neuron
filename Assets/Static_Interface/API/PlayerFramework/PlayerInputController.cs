@@ -10,13 +10,13 @@ namespace Static_Interface.API.PlayerFramework
 {
     public class PlayerInputController : PlayerBehaviour
     {
-        private Rigidbody _rigidbody;
         private ListenerBehaviour _listener;
 
         protected override void OnPlayerLoaded()
         {
             base.OnPlayerLoaded();
-            if (!Channel.IsOwner)
+            RigidbodyPositionSyncer.AddRigidbodySyncer(Player.Model.gameObject, Channel);
+            if (!Channel.IsOwner && !NetworkUtils.IsServer())
             {
                 Destroy(this);
                 return;
@@ -27,19 +27,10 @@ namespace Static_Interface.API.PlayerFramework
         protected override void Start()
         {
             base.Start();
-            CheckRigidBody(Player.Model.gameObject);
+            Player.CheckRigidbody();
             var obj = Player.Model.gameObject;
-            AddRigidbodySyncer(obj);
             _listener = obj.AddComponent<ListenerBehaviour>();
             Cursor.lockState = CursorLockMode.Locked;
-        }
-
-        private void AddRigidbodySyncer(GameObject obj)
-        {
-            obj.SetActive(false);
-            var syncer = obj.AddComponent<RigidbodyPositionSyncer>();
-            syncer.Channel = Channel;
-            obj.SetActive(true);
         }
 
         public float Speed = 80f;
@@ -60,6 +51,11 @@ namespace Static_Interface.API.PlayerFramework
                 inputX -= 1;
             }
             return inputX;
+        }
+
+        protected override void OnPlayerModelChange(PlayerModel newModel)
+        {
+            _listener = newModel.Model.AddComponent<ListenerBehaviour>();
         }
 
         public static float GetInputY()
@@ -93,7 +89,7 @@ namespace Static_Interface.API.PlayerFramework
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-            if (!IsServer() && !Channel.IsOwner) return;
+            if (!Channel.IsOwner) return;
             if (_disabled || Player.Health.IsDead)
             {
                 return;
@@ -112,47 +108,29 @@ namespace Static_Interface.API.PlayerFramework
             if (_listener.Grounded)
             {
                 vel = transform.TransformDirection(vel);
-                var speed = Speed / 100 * _rigidbody.mass;
+                var speed = Speed / 100 * Player.Rigidbody.mass;
                 vel *= speed;
                 if (sprint)
                 {
                     vel *= RunSpeedModifier;
                 }
 
-                Vector3 velocity = _rigidbody.velocity;
+                Vector3 velocity = Player.Rigidbody.velocity;
                 Vector3 velocityChange = (vel - velocity);
                 velocityChange.x = Mathf.Clamp(velocityChange.x, -MaxVelocityChange, MaxVelocityChange);
                 velocityChange.z = Mathf.Clamp(velocityChange.z, -MaxVelocityChange, MaxVelocityChange);
                 velocityChange.y = 0;
-                _rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+                Player.Rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
 
                 if (CanJump && jump)
                 {
-                    _rigidbody.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
+                    Player.Rigidbody.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
                 }
             }
 
             _listener.Grounded = false;
         }
-
-        protected override void OnPlayerModelChange(PlayerModel newModel)
-        {
-            _listener = newModel.Model.AddComponent<ListenerBehaviour>();
-            CheckRigidBody(newModel.Model);
-            AddRigidbodySyncer(newModel.Model);
-        }
-
-        private void CheckRigidBody(GameObject model)
-        {
-            _rigidbody = model.GetComponent<Rigidbody>();
-            if (!_rigidbody)
-            {
-                _rigidbody = model.AddComponent<Rigidbody>();
-                _rigidbody.mass = 80;
-                _rigidbody.freezeRotation = true;
-            }
-        }
-
+        
         float CalculateJumpVerticalSpeed()
         {
             return Mathf.Sqrt(2 * JumpHeight * -transform.InverseTransformDirection(Physics.gravity).y);
@@ -161,6 +139,7 @@ namespace Static_Interface.API.PlayerFramework
         bool _disabled;
         public void EnableControl()
         {
+            if (!Channel.IsOwner) return;
             var mouse = Player.GetComponent<PlayerMouseLook>();
             if(!mouse)
                 mouse = Player.gameObject.AddComponent<PlayerMouseLook>();
@@ -172,6 +151,7 @@ namespace Static_Interface.API.PlayerFramework
 
         public void DisableControl()
         {
+            if (!Channel.IsOwner) return;
             var comp = Player.GetComponent<PlayerMouseLook>();
             if(comp) Destroy(comp);
             GetComponent<WeaponController>().enabled = false;

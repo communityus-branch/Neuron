@@ -16,7 +16,7 @@ namespace Static_Interface.API.PluginFramework
     {
         internal string Path;
         private bool _enabled;
-
+        internal static Plugin CorePlugin = new CorePlugin();
         /// <summary>
         /// Human-Readable name of the plugin
         /// </summary>
@@ -105,5 +105,10 @@ namespace Static_Interface.API.PluginFramework
         /// Called with Unity's FixedUpdate Method
         /// </summary>
         public virtual void FixedUpdate() { }
+    }
+
+    public class CorePlugin : Plugin
+    {
+
     }
 }

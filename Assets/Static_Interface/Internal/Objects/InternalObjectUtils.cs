@@ -17,13 +17,6 @@ namespace Static_Interface.Internal.Objects
             CheckObject("Console", out created);
         }
 
-        public static GameObject LoadWeather()
-        {
-            GameObject weather = (GameObject) Resources.Load("Weather");
-            weather = (GameObject)Object.Instantiate(weather, new Vector3(0,0,0), Quaternion.identity);
-            return weather;
-        }
-
         private static GameObject CheckObject(string name, out bool created, string path = null)
         {
             created = false;

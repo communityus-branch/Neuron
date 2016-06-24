@@ -133,5 +133,13 @@ namespace Static_Interface.API.NetworkFramework
             _syncEndPosition = syncPosition + syncVelocity * _syncDelay;
             _syncStartPosition = Rigidbody.position;
         }
+
+        public static void AddRigidbodySyncer(GameObject obj, Channel ch)
+        {
+            obj.SetActive(false);
+            var syncer = obj.AddComponent<RigidbodyPositionSyncer>();
+            syncer.Channel = ch;
+            obj.SetActive(true);
+        }
     }
 }

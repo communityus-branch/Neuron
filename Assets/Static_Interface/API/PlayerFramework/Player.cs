@@ -22,7 +22,7 @@ namespace Static_Interface.API.PlayerFramework
         public PlayerInputController MovementController => GetComponent<PlayerInputController>();
         public PlayerHealth Health => GetComponent<PlayerHealth>();
         public User User { get; internal set; }
-
+        public Rigidbody Rigidbody => Model?.GetComponent<Rigidbody>();
         public Camera Camera => GetComponentsInChildren<Camera>().FirstOrDefault(c => c.enabled);
         public Channel Channel => GetComponent<Channel>();
         public PlayerGUI GUI => GetComponent<PlayerGUI>();
@@ -52,6 +52,7 @@ namespace Static_Interface.API.PlayerFramework
             return playerName + " @ ch-" + channel;
         }
 
+        //send our current model to the player who connected
         [EventHandler(Priority = EventPriority.LOWEST)]
         public void OnPlayerJoin(PlayerJoinEvent @event)
         {
@@ -60,6 +61,28 @@ namespace Static_Interface.API.PlayerFramework
             if (this == player) return;
             if (PlayerModel == null) return;
             PlayerModelControllerNetwork.Instance.SendUpdate(player.User.Identity, this, PlayerModel.PlayerModelController);
+        }
+
+        internal void OnPlayerModelChange(PlayerModel newModel)
+        {
+            CheckRigidbody(newModel.Model);
+            RigidbodyPositionSyncer.AddRigidbodySyncer(newModel.Model, Channel);
+        }
+
+        public void CheckRigidbody()
+        {
+            CheckRigidbody(Model.gameObject);
+        }
+
+        private static void CheckRigidbody(GameObject model)
+        {
+            var rigidbody = model.GetComponent<Rigidbody>();
+            if (!rigidbody)
+            {
+                rigidbody = model.AddComponent<Rigidbody>();
+                rigidbody.mass = 80;
+                rigidbody.freezeRotation = true;
+            }
         }
     }
 }

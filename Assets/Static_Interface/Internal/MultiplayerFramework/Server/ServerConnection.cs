@@ -352,7 +352,6 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                 {
                     ClientConnection.SetupMainPlayer(player);
                 }
-
                 object[] data;
                 byte[] packet;
 
@@ -376,7 +375,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Server
                     data = new object[]
                     {
                         ident.Serialize(), c.Name, c.Group, c.Model.transform.position,
-                        c.Model.transform.rotation.eulerAngles, c.Model.GetComponent<Channel>().ID, false
+                        c.Model.transform.rotation.eulerAngles, c.Player.GetComponent<Channel>().ID, false
                     };
                     packet = ObjectSerializer.GetBytes(0, data);
                     Send(user.Identity, EPacket.CONNECTED, packet, 0);

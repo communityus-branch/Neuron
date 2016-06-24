@@ -6,6 +6,13 @@ namespace Static_Interface.API.PlayerFramework
 {
     public class PlayerMouseLook : PlayerBehaviour
     {
+        protected override void OnPlayerLoaded()
+        {
+            base.OnPlayerLoaded();
+            if(!Channel.IsOwner)
+                Destroy(this);
+        }
+
         public float SensitivityX = 5f;
         public float SensitivityY = 5f;
 

@@ -20,6 +20,7 @@ namespace Static_Interface.API.PlayerFramework
 
         public void SendUpdate(Identity target, Player toUpdate, PlayerModelController updateModel)
         {
+            if (!NetworkUtils.IsServer()) return;
             Channel.Send(nameof(Network_ChangeModel), target, toUpdate.User.Identity, updateModel.Name);
         }
     }

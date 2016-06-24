@@ -32,6 +32,11 @@ namespace Static_Interface.API.PlayerFramework
             Player.User = this;
         }
 
+        public T GetComponent<T>() where T : Component
+        {
+            return Player.GetComponent<T>();
+        }
+
         public void Lag(float value)
         {
             float lastPing;
