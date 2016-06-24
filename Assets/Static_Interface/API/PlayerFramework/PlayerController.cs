@@ -161,9 +161,9 @@ namespace Static_Interface.API.PlayerFramework
         bool _disabled;
         public void EnableControl()
         {
-            var mouse = Player.GetComponent<SmoothPlayerMouseLook>();
+            var mouse = Player.GetComponent<PlayerMouseLook>();
             if(!mouse)
-                mouse = Player.gameObject.AddComponent<SmoothPlayerMouseLook>();
+                mouse = Player.gameObject.AddComponent<PlayerMouseLook>();
             mouse.enabled = !ConsoleGUI.Instance.IsOpen;
             _disabled = false;
             Cursor.visible = false;
@@ -172,7 +172,7 @@ namespace Static_Interface.API.PlayerFramework
 
         public void DisableControl()
         {
-            var comp = Player.GetComponent<SmoothPlayerMouseLook>();
+            var comp = Player.GetComponent<PlayerMouseLook>();
             if(comp) Destroy(comp);
             GetComponent<WeaponController>().enabled = false;
             _disabled = true;

@@ -14,7 +14,7 @@ namespace Static_Interface.API.PlayerFramework.ModelImpl
 
         public static void Init()
         {
-            UMAObject = Object.Instantiate(Resources.Load<GameObject>("UMA"));
+            UMAObject = Object.Instantiate(Resources.Load<GameObject>("UMAKit"));
             Generator = UMAObject.GetComponentInChildren<UMAGenerator>();
             SlotLibrary = UMAObject.GetComponentInChildren<SlotLibrary>();
             OverlayLibrary = UMAObject.GetComponentInChildren<OverlayLibrary>();

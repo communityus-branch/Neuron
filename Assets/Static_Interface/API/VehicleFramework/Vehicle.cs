@@ -206,11 +206,11 @@ namespace Static_Interface.API.VehicleFramework
             RestoreCamera(player);
             if (Driver == player) Driver = null;
             player.transform.parent = null;
-            player.GetComponent<Rigidbody>().isKinematic = false;
-            player.GetComponent<Rigidbody>().useGravity = true;
-            player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-            player.GetComponent<Rigidbody>().detectCollisions = true;
-            player.GetComponent<RigidbodyPositionSyncer>().enabled = true;
+            player.Model.GetComponent<Rigidbody>().isKinematic = false;
+            player.Model.GetComponent<Rigidbody>().useGravity = true;
+            player.Model.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+            player.Model.GetComponent<Rigidbody>().detectCollisions = true;
+            player.Model.GetComponent<RigidbodyPositionSyncer>().enabled = true;
             player.Vehicle = null;
 
             if (IsServer())
@@ -246,11 +246,11 @@ namespace Static_Interface.API.VehicleFramework
 
             _passengers.Add(player);
             player.GetComponent<PlayerController>().DisableControl();
-            player.GetComponent<Rigidbody>().isKinematic = true;
-            player.GetComponent<Rigidbody>().useGravity = false;
-            player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-            player.GetComponent<Rigidbody>().detectCollisions = false;
-            player.GetComponent<RigidbodyPositionSyncer>().enabled = false;
+            player.Model.GetComponent<Rigidbody>().isKinematic = true;
+            player.Model.GetComponent<Rigidbody>().useGravity = false;
+            player.Model.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            player.Model.GetComponent<Rigidbody>().detectCollisions = false;
+            player.Model.GetComponent<RigidbodyPositionSyncer>().enabled = false;
             player.Vehicle = this;
             if (wasEmpty && !IsEngineStarted)
             {

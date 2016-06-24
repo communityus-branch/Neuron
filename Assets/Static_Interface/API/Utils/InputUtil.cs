@@ -30,7 +30,7 @@ namespace Static_Interface.API.Utils
 
         private bool GetMouseLookEnabled()
         {
-            var mouseLook = Player.MainPlayer.MovementController.GetComponent<SmoothPlayerMouseLook>();
+            var mouseLook = Player.MainPlayer.MovementController.GetComponent<PlayerMouseLook>();
             return mouseLook != null && mouseLook.enabled;
         }
 
@@ -50,7 +50,7 @@ namespace Static_Interface.API.Utils
                 }
             }
 
-            SmoothPlayerMouseLook playerMouseLook = Player.MainPlayer?.MovementController?.GetComponent<SmoothPlayerMouseLook>();
+            PlayerMouseLook playerMouseLook = Player.MainPlayer?.MovementController?.GetComponent<PlayerMouseLook>();
             if (playerMouseLook == null) return;
             playerMouseLook.enabled = v;
         }
