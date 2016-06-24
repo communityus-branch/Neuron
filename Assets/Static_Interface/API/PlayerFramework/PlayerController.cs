@@ -27,16 +27,19 @@ namespace Static_Interface.API.PlayerFramework
         protected override void Start()
         {
             base.Start();
-            _rigidbody = Player.Model.GetComponent<Rigidbody>();
-            if (!_rigidbody)
-                Player.Model.gameObject.AddComponent<Rigidbody>();
+            CheckRigidBody(Player.Model.gameObject);
             var obj = Player.Model.gameObject;
+            AddRigidbodySyncer(obj);
+            _listener = obj.AddComponent<ListenerBehaviour>();
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        private void AddRigidbodySyncer(GameObject obj)
+        {
             obj.SetActive(false);
             var syncer = obj.AddComponent<RigidbodyPositionSyncer>();
             syncer.Channel = Channel;
             obj.SetActive(true);
-            _listener = obj.AddComponent<ListenerBehaviour>();
-            Cursor.lockState = CursorLockMode.Locked;
         }
 
         public float Speed = 80f;
@@ -132,11 +135,22 @@ namespace Static_Interface.API.PlayerFramework
             _listener.Grounded = false;
         }
 
-        protected override void OnPlayerModelChange(GameObject newModel)
+        protected override void OnPlayerModelChange(PlayerModel newModel)
         {
-            var oldModel = Player.Model;
-            Destroy(oldModel.GetComponent<ListenerBehaviour>());
-            _listener = newModel.AddComponent<ListenerBehaviour>();
+            _listener = newModel.Model.AddComponent<ListenerBehaviour>();
+            CheckRigidBody(newModel.Model);
+            AddRigidbodySyncer(newModel.Model);
+        }
+
+        private void CheckRigidBody(GameObject model)
+        {
+            _rigidbody = model.GetComponent<Rigidbody>();
+            if (!_rigidbody)
+            {
+                _rigidbody = model.AddComponent<Rigidbody>();
+                _rigidbody.mass = 80;
+                _rigidbody.freezeRotation = true;
+            }
         }
 
         float CalculateJumpVerticalSpeed()
@@ -147,9 +161,9 @@ namespace Static_Interface.API.PlayerFramework
         bool _disabled;
         public void EnableControl()
         {
-            var mouse = Player.GetComponent<SmoothMouseLook>();
+            var mouse = Player.GetComponent<SmoothPlayerMouseLook>();
             if(!mouse)
-                mouse = Player.gameObject.AddComponent<SmoothMouseLook>();
+                mouse = Player.gameObject.AddComponent<SmoothPlayerMouseLook>();
             mouse.enabled = !ConsoleGUI.Instance.IsOpen;
             _disabled = false;
             Cursor.visible = false;
@@ -158,7 +172,7 @@ namespace Static_Interface.API.PlayerFramework
 
         public void DisableControl()
         {
-            var comp = Player.GetComponent<SmoothMouseLook>();
+            var comp = Player.GetComponent<SmoothPlayerMouseLook>();
             if(comp) Destroy(comp);
             GetComponent<WeaponController>().enabled = false;
             _disabled = true;

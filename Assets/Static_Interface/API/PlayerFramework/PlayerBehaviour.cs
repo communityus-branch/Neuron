@@ -19,7 +19,7 @@ namespace Static_Interface.API.PlayerFramework
             return Channel.IsOwner && !IsDedicatedServer();
         }
 
-        protected virtual void OnPlayerModelChange(GameObject newModel)
+        protected virtual void OnPlayerModelChange(PlayerModel newModel)
         {
             
         }

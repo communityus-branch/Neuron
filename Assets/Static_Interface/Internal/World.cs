@@ -11,6 +11,8 @@ using Static_Interface.API.InteractionFramework;
 using Static_Interface.API.LevelFramework;
 using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.PlayerFramework.ModelImpl;
 using Static_Interface.API.PluginFramework;
 using Static_Interface.API.SchedulerFramework;
 using Static_Interface.API.Utils;
@@ -43,8 +45,9 @@ namespace Static_Interface.Internal
             InternalObjectUtils.CheckObjects();      
 
             LogUtils.Log("Initializing World...");
-            gameObject.AddComponent<SpawnManager>();
+            gameObject.AddComponent<PlayerModelControllerNetwork>();
             gameObject.AddComponent<InteractManager>();
+            gameObject.AddComponent<SpawnManager>();
             gameObject.AddComponent<VehicleManager>();
             var mgr = gameObject.AddComponent<NetvarManager>();
             mgr.RegisterNetvar(new GravityNetvar());
@@ -53,6 +56,7 @@ namespace Static_Interface.Internal
             gameObject.AddComponent<Scheduler>();
 
             PluginManager.Init(IOUtil.GetPluginsDir());
+            UMAModelController.Init();
 
             SkyMaster sky = gameObject.AddComponent<SkyMaster>();
 

@@ -9,22 +9,10 @@ namespace Static_Interface.API.InteractionFramework
 {
     public class InteractManager : NetworkedSingletonBehaviour<InteractManager>
     {
-        public override Channel Channel => World.Instance.GetComponent<Channel>();
-        protected override void SetupChannel()
-        {
-            Channel.Build(this);
-        }
-
         public const float INTERACT_RANGE = 5.0f;
         public KeyCode InteractKey = KeyCode.F;
         private RaycastHit _hit;
         public Interactable CurrentInteractable;
-
-        protected override void Start()
-        {
-            base.Start();
-            if(Instance != null) throw new Exception("Only one instance allowed");
-        }
 
         private void ResetInteract()
         {

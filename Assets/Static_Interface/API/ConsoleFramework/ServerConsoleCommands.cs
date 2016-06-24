@@ -1,6 +1,7 @@
 ﻿using Static_Interface.API.NetvarFramework;
 using Static_Interface.API.NetworkFramework;
 using Static_Interface.API.PlayerFramework;
+using Static_Interface.API.PlayerFramework.ModelImpl;
 using Static_Interface.API.Utils;
 using UnityEngine;
 
@@ -49,6 +50,14 @@ namespace Static_Interface.API.ConsoleFramework
         public void Say(string text)
         {
             Chat.Instance.SendServerMessage("<b>SERVER</b>: " + text);
+        }
+
+        [ConsoleCommand(Runtime = ConsoleCommandRuntime.SERVER)]
+        [CommandHelp("UMATest")]
+        public void UMATest(Player p)
+        {
+            UMAModelController cont = (UMAModelController) PlayerModelController.GetPlayerModelController("UMA");
+            cont.Apply(p);
         }
 
         [ConsoleCommand(Runtime = ConsoleCommandRuntime.SERVER)]

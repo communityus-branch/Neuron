@@ -9,7 +9,7 @@ namespace Static_Interface.API.PlayerFramework
 {
     public class Player : UnityExtensions.MonoBehaviour, IEntity, ICommandSender
     {
-        public Transform Model => transform.parent;
+        public Transform Model => PlayerModel == null ? transform.parent : PlayerModel.Model.transform;
         public static Player MainPlayer { get; internal set; } = null;
         public PlayerController MovementController => GetComponent<PlayerController>();
         public PlayerHealth Health => GetComponent<PlayerHealth>();
@@ -18,6 +18,7 @@ namespace Static_Interface.API.PlayerFramework
         public Camera Camera => GetComponentsInChildren<Camera>().FirstOrDefault(c => c.enabled);
         public Channel Channel => GetComponent<Channel>();
         public PlayerGUI GUI => GetComponent<PlayerGUI>();
+        public PlayerModel PlayerModel => transform.parent?.GetComponent<PlayerModel>();
         public string Name => User.Name;
         public Vehicle Vehicle { get; internal set; }
 
@@ -32,16 +33,15 @@ namespace Static_Interface.API.PlayerFramework
         }
 
         public string CommandPrefix { get; set; } = "/";
-        private PlayerModel _playerModel;
 
-        public PlayerModel PlayerModel
+        public string FormatDebugName()
         {
-            get { return _playerModel; }
-            set
-            {
-                _playerModel = value;
-                _playerModel.Apply(this);
-            }
+            return FormatDebugName(User.Name, Channel.ID);
+        }
+
+        public static string FormatDebugName(string playerName, int channel)
+        {
+            return playerName + " @ ch-" + channel;
         }
     }
 }

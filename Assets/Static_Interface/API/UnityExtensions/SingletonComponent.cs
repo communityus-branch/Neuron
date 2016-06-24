@@ -10,6 +10,12 @@ namespace Static_Interface.API.UnityExtensions
 
         public override void Setup()
         {
+            if (InternalInstance?.GetType() == GetType())
+            {
+                Destroy(this);
+                return;
+            }
+
             if (InternalInstance != this) InternalInstance = this as T;
         }
 

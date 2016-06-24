@@ -1,24 +1,26 @@
-﻿using UnityEngine;
+﻿using System;
+using UMA;
+using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework.ModelImpl
 {
     public class UMAModel : PlayerModel
     {
-        public override string Name { get; protected set; } = "Random UMA Model";
+        //Todo: network sync DNA and slots
+        public UMADynamicAvatar UMADynamicAvatar => Model.GetComponent<UMADynamicAvatar>();
+        internal GameObject InternalModel;
+        internal PlayerModelController Controller;
+        public override PlayerModelController PlayerModelController => Controller;
+        public override GameObject Model => InternalModel;
 
-        protected override Quaternion GetCameraLocalRotation()
+        protected override Vector3 GetFPSCameraLocalPosition()
         {
-            throw new System.NotImplementedException();
+            return new Vector3(0f, UMADynamicAvatar.umaData.characterHeight - 0.35f, -0.18f);
         }
 
-        protected override Vector3 GetCameraLocalPosition()
+        protected override void OnModelUpdate()
         {
-            throw new System.NotImplementedException();
-        }
-
-        protected override GameObject LoadModel()
-        {
-            throw new System.NotImplementedException();
+            //do nothing
         }
     }
 }

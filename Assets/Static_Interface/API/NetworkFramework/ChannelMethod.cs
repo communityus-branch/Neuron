@@ -1,18 +1,19 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using UnityEngine;
 
 namespace Static_Interface.API.NetworkFramework
 {
     public class ChannelMethod
     {
-        public ChannelMethod(Component newComponent, MethodInfo newMethod, System.Type[] newTypes)
+        public ChannelMethod(object newComponent, MethodInfo newMethod, System.Type[] newTypes)
         {
             Component = newComponent;
             Method = newMethod;
             Types = newTypes;
         }
 
-        public Component Component { get; }
+        public object Component { get; }
 
         public MethodInfo Method { get; }
 

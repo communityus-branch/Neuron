@@ -35,7 +35,7 @@ namespace Static_Interface.API.NetworkFramework
         public List<ChannelMethod> Calls { get; } = new List<ChannelMethod>();
 
         private static readonly object[] Voice = new object[3];
-        private readonly List<Component> _componentsRead = new List<Component>();
+        private readonly List<object> _componentsRead = new List<object>();
 
         public static Channel GetChannel(int id)
         {
@@ -61,7 +61,7 @@ namespace Static_Interface.API.NetworkFramework
             }
         }
 
-        public void Build(Component c)
+        public void Build(object c)
         {
             if (_componentsRead.Contains(c)) return;
             var members = c.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).ToList();

@@ -80,6 +80,18 @@ namespace Static_Interface.API.NetworkFramework
 
                 ReadPosition(syncPosition, syncVelocity, IsDedicatedServer());
             }
+
+            try
+            {
+                var body = Rigidbody;
+                if(!body)
+                    throw new MissingReferenceException("Rigidbody not found");
+            }
+            catch (MissingReferenceException)
+            {
+                Destroy(this);
+                return;
+            }
             Channel.Send(nameof(Network_ReadPositionClient), ECall.NotOwner, Rigidbody.position, syncPosition, syncVelocity, false);
         }
 

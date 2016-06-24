@@ -78,7 +78,7 @@ namespace Static_Interface.API.PluginFramework
             EventManager.Instance?.ClearListeners(this);
             CommandManager.Instance?.OnPluginDisabled(this);
             VehicleManager.Instance?.OnPluginDisabled(this);
-            PlayerModel.OnPluginUnload(this);
+            PlayerModelController.OnPluginUnload(this);
 
             try
             {

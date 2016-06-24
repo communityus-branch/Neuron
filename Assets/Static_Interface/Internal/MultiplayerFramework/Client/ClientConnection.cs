@@ -182,7 +182,7 @@ namespace Static_Interface.Internal.MultiplayerFramework.Client
             var container = playerTransform.FindChild("PlayerContainer");
             Player.MainPlayer = container.GetComponent<Player>();
             container.GetComponent<Channel>().IsOwner = true;
-            container.gameObject.AddComponent<SmoothMouseLook>();
+            container.gameObject.AddComponent<SmoothPlayerMouseLook>();
 
             LogUtils.Debug("Setting up Camera");
             var cam = container.FindChild("MainCamera").GetComponent<Camera>();

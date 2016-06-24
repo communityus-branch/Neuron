@@ -12,7 +12,7 @@ namespace Static_Interface.Internal.Objects
         {
             bool created;
             CheckObject("PersistentScripts", out created);
-            
+ 
             CheckObject("SteamManager", out created);
             CheckObject("Console", out created);
         }

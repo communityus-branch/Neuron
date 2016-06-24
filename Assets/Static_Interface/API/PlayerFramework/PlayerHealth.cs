@@ -14,7 +14,7 @@ namespace Static_Interface.API.PlayerFramework
     public class PlayerHealth : PlayerBehaviour
     {
         public const float MIN_COLLISION_MOMENTUM = 50;
-        private Rigidbody _rigidbody;
+        private Rigidbody Rigidbody => Player.Model.GetComponent<Rigidbody>();
         private ProgressBarView _healthProgressBarView;
         protected override void Awake()
         {
@@ -26,7 +26,7 @@ namespace Static_Interface.API.PlayerFramework
         protected override void OnCollisionEnter(Collision collision)
         {
             base.OnCollisionEnter(collision);
-            var momentum = collision.relativeVelocity * _rigidbody.mass;
+            var momentum = collision.relativeVelocity * Rigidbody.mass;
             var deathCause = EDamageCause.COLLISION;
             var hitTransform = collision.transform;
             bool isBullet = hitTransform.GetComponent<Projectile>() != null;
@@ -49,7 +49,7 @@ namespace Static_Interface.API.PlayerFramework
                 deathCause = EDamageCause.SHOT;
             }
 
-            if (momentum.magnitude > MIN_COLLISION_MOMENTUM * _rigidbody.mass)
+            if (momentum.magnitude > MIN_COLLISION_MOMENTUM * Rigidbody.mass)
             {
                 Player.Health.PlayerCollision(momentum, deathCause);
             }
@@ -58,7 +58,6 @@ namespace Static_Interface.API.PlayerFramework
         protected override void OnPlayerLoaded()
         {
             base.OnPlayerLoaded();
-            _rigidbody = GetComponent<Rigidbody>();
             if (!UseGUI()) return;
             _healthProgressBarView = new ProgressBarView("Health", Player.GUI.RootView)
             {
@@ -83,7 +82,7 @@ namespace Static_Interface.API.PlayerFramework
 
                 if (!wasDead && newHealth == 0)
                 {
-                    _rigidbody.freezeRotation = false;
+                    Rigidbody.freezeRotation = false;
                     Player.MovementController?.DisableControl();
                 }
 
@@ -168,8 +167,8 @@ namespace Static_Interface.API.PlayerFramework
 
             _health = health;
 
-            _rigidbody.rotation = Quaternion.identity;
-            _rigidbody.freezeRotation = true;
+            Rigidbody.rotation = Quaternion.identity;
+            Rigidbody.freezeRotation = true;
             Player.MovementController?.EnableControl();
 
             PlayerReviveEvent @event = new PlayerReviveEvent(Player);
