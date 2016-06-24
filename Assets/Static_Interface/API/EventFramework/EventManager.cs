@@ -24,6 +24,11 @@ namespace Static_Interface.API.EventFramework
         /// <param name="plugin">The plugin which wants to register a new listener</param>
         public void RegisterEvents(IListener listener, Plugin plugin)
         {
+            if(plugin == null) throw new ArgumentNullException(nameof(plugin));
+            RegisterEventsInternal(listener, plugin);
+        }
+        internal void RegisterEventsInternal(IListener listener, Plugin plugin)
+        {
             if (!_listeners.ContainsKey(plugin))
             {
                 _listeners.Add(plugin, new List<IListener>());

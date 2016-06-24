@@ -245,7 +245,7 @@ namespace Static_Interface.API.VehicleFramework
             }
 
             _passengers.Add(player);
-            player.GetComponent<PlayerController>().DisableControl();
+            player.GetComponent<PlayerInputController>().DisableControl();
             player.Model.GetComponent<Rigidbody>().isKinematic = true;
             player.Model.GetComponent<Rigidbody>().useGravity = false;
             player.Model.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;

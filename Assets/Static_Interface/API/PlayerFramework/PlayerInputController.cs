@@ -8,7 +8,7 @@ using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.PlayerFramework
 {
-    public class PlayerController : PlayerBehaviour
+    public class PlayerInputController : PlayerBehaviour
     {
         private Rigidbody _rigidbody;
         private ListenerBehaviour _listener;
@@ -46,7 +46,7 @@ namespace Static_Interface.API.PlayerFramework
         public float RunSpeedModifier = 1.5f;
         public float MaxVelocityChange = 10.0f;
         public bool CanJump = true;
-        public float JumpHeight = 2.0f;
+        public float JumpHeight = 1.0f;
 
         public static float GetInputX()
         {

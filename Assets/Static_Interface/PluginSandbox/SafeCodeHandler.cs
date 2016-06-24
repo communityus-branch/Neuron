@@ -130,7 +130,8 @@ namespace Static_Interface.PluginSandbox
             typeof(AsyncOperation),
             typeof(System.ComponentModel.AsyncOperation),
             typeof(ThreadPool),
-            typeof(PersistentScript<>)
+            typeof(PersistentScript<>),
+            typeof(Resources)
         };
 
         private static readonly Dictionary<Type, List<string>> DisallowedMethods = new Dictionary<Type, List<string>>

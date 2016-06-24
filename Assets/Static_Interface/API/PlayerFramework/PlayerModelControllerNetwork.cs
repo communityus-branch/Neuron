@@ -17,5 +17,10 @@ namespace Static_Interface.API.PlayerFramework
             var controller = PlayerModelController.GetPlayerModelController(modelController);
             controller.ApplyLocal(player);
         }
+
+        public void SendUpdate(Identity target, Player toUpdate, PlayerModelController updateModel)
+        {
+            Channel.Send(nameof(Network_ChangeModel), target, toUpdate.User.Identity, updateModel.Name);
+        }
     }
 }

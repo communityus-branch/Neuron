@@ -1,17 +1,25 @@
 ﻿using System.Linq;
 using Static_Interface.API.CommandFramework;
 using Static_Interface.API.EntityFramework;
+using Static_Interface.API.EventFramework;
 using Static_Interface.API.NetworkFramework;
+using Static_Interface.API.PlayerFramework.Events;
 using Static_Interface.API.VehicleFramework;
 using UnityEngine;
 
 namespace Static_Interface.API.PlayerFramework
 {
-    public class Player : UnityExtensions.MonoBehaviour, IEntity, ICommandSender
+    public class Player : UnityExtensions.MonoBehaviour, IEntity, ICommandSender, IListener
     {
+        protected override void Awake()
+        {
+            base.Awake();
+            EventManager.Instance.RegisterEventsInternal(this, null);
+        }
+
         public Transform Model => PlayerModel == null ? transform.parent : PlayerModel.Model.transform;
         public static Player MainPlayer { get; internal set; } = null;
-        public PlayerController MovementController => GetComponent<PlayerController>();
+        public PlayerInputController MovementController => GetComponent<PlayerInputController>();
         public PlayerHealth Health => GetComponent<PlayerHealth>();
         public User User { get; internal set; }
 
@@ -42,6 +50,16 @@ namespace Static_Interface.API.PlayerFramework
         public static string FormatDebugName(string playerName, int channel)
         {
             return playerName + " @ ch-" + channel;
+        }
+
+        [EventHandler(Priority = EventPriority.LOWEST)]
+        public void OnPlayerJoin(PlayerJoinEvent @event)
+        {
+            if (!NetworkUtils.IsServer()) return;
+            var player = @event.Player;
+            if (this == player) return;
+            if (PlayerModel == null) return;
+            PlayerModelControllerNetwork.Instance.SendUpdate(player.User.Identity, this, PlayerModel.PlayerModelController);
         }
     }
 }

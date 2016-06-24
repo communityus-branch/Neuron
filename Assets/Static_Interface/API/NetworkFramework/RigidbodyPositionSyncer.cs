@@ -1,4 +1,8 @@
-﻿using Static_Interface.API.PlayerFramework;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Static_Interface.API.PlayerFramework;
 using Static_Interface.API.Utils;
 using UnityEngine;
 
@@ -19,7 +23,20 @@ namespace Static_Interface.API.NetworkFramework
 
         protected override bool IsSyncable => true;
 
-        public IPositionValidator PositionValidator;
+        private readonly List<IPositionValidator> _positionValidators = new List<IPositionValidator>();
+
+        public ReadOnlyCollection<IPositionValidator> PositionValidators => _positionValidators.AsReadOnly();
+
+        public void AddPositionValidator(IPositionValidator validator)
+        {
+            _positionValidators.Add(validator);
+        }
+
+        public void RemovePositionValidator(IPositionValidator validator)
+        {
+            _positionValidators.Remove(validator);
+        }
+
         /*
         protected override void OnPlayerLoaded()
         {
@@ -66,11 +83,11 @@ namespace Static_Interface.API.NetworkFramework
         {
             if (ident != Connection.ServerID)
             {
-                if (PositionValidator != null)
+                if (_positionValidators.Count > 0)
                 {
                     var deltaPosition = syncPosition - Rigidbody.position;
                     var deltaVelocity = syncVelocity - Rigidbody.velocity;
-                    if (!PositionValidator.ValidatePosition(Rigidbody.transform, deltaPosition, deltaVelocity))
+                    if (_positionValidators.Any(val => !val.ValidatePosition(ident, Rigidbody.transform, deltaPosition, deltaVelocity)))
                     {
                         Channel.Send(nameof(Network_ReadPositionClient), ECall.Owner, (object) Rigidbody.position,
                             Rigidbody.velocity, true);
@@ -87,7 +104,7 @@ namespace Static_Interface.API.NetworkFramework
                 if(!body)
                     throw new MissingReferenceException("Rigidbody not found");
             }
-            catch (MissingReferenceException)
+            catch (Exception)
             {
                 Destroy(this);
                 return;

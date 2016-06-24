@@ -43,7 +43,7 @@ namespace Static_Interface.API.VehicleFramework
 
             Vector3 torque = new Vector3();
             Vector3 controlTorque = Vector3.zero;
-            if (IsEngineStarted) controlTorque = new Vector3(PlayerController.GetInputY() * ForwardRotorMultiplier, 1.0f, -PlayerController.GetInputX() * SidewaysRotorMultiplier); 
+            if (IsEngineStarted) controlTorque = new Vector3(PlayerInputController.GetInputY() * ForwardRotorMultiplier, 1.0f, -PlayerInputController.GetInputX() * SidewaysRotorMultiplier); 
 
             if (!MainRotorDamaged)
             {
@@ -85,9 +85,9 @@ namespace Static_Interface.API.VehicleFramework
             var hoverMainRotorVelocity = !MainRotor || MainRotorDamaged ? 0 : Rigidbody.mass * Physics.gravity.magnitude / MaxMainRotorForce;
             var hoverTailRotorVelocity = !TailRotor || TailRotorDamaged ? 0 : (MaxMainRotorForce * _mainRotorVelocity) / MaxTailRotorForce;
 
-            if (MainRotor && IsEngineStarted && PlayerController.GetInputY() != 0.0 && !MainRotorDamaged)
+            if (MainRotor && IsEngineStarted && PlayerInputController.GetInputY() != 0.0 && !MainRotorDamaged)
             {
-                _mainRotorVelocity += PlayerController.GetInputY() * 0.001f;
+                _mainRotorVelocity += PlayerInputController.GetInputY() * 0.001f;
             }
             else
             {
@@ -98,7 +98,7 @@ namespace Static_Interface.API.VehicleFramework
 
             if (TailRotor && IsEngineStarted && !TailRotorDamaged)
             {
-                _tailRotorVelocity = hoverTailRotorVelocity - PlayerController.GetInputX();
+                _tailRotorVelocity = hoverTailRotorVelocity - PlayerInputController.GetInputX();
             }
             else
             {
