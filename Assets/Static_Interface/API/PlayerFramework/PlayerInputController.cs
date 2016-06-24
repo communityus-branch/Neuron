@@ -10,7 +10,7 @@ namespace Static_Interface.API.PlayerFramework
 {
     public class PlayerInputController : PlayerBehaviour
     {
-        private ListenerBehaviour _listener;
+        private PlayerInputListenerBehaviour _playerInputListener;
 
         protected override void OnPlayerLoaded()
         {
@@ -23,12 +23,12 @@ namespace Static_Interface.API.PlayerFramework
             Cursor.visible = false;
         }
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
+            base.Awake();
             Player.CheckRigidbody();
             var obj = Player.Model.gameObject;
-            _listener = obj.AddComponent<ListenerBehaviour>();
+            _playerInputListener = obj.AddComponent<PlayerInputListenerBehaviour>();
             Cursor.lockState = CursorLockMode.Locked;
         }
 
@@ -36,7 +36,7 @@ namespace Static_Interface.API.PlayerFramework
         public float RunSpeedModifier = 1.5f;
         public float MaxVelocityChange = 10.0f;
         public bool CanJump = true;
-        public float JumpHeight = 1.0f;
+        public float JumpHeight = 0.4f;
 
         public static float GetInputX()
         {
@@ -54,7 +54,7 @@ namespace Static_Interface.API.PlayerFramework
 
         protected override void OnPlayerModelChange(PlayerModel newModel)
         {
-            _listener = newModel.Model.AddComponent<ListenerBehaviour>();
+            _playerInputListener = newModel.Model.AddComponent<PlayerInputListenerBehaviour>();
         }
 
         public static float GetInputY()
@@ -104,7 +104,7 @@ namespace Static_Interface.API.PlayerFramework
             
             Vector3 vel = new Vector3(inputX, 0, inputY);
 
-            if (_listener.Grounded)
+            if (_playerInputListener.Grounded)
             {
                 vel = transform.TransformDirection(vel);
                 var speed = Speed / 100 * Player.Rigidbody.mass;
@@ -127,7 +127,7 @@ namespace Static_Interface.API.PlayerFramework
                 }
             }
 
-            _listener.Grounded = false;
+            _playerInputListener.Grounded = false;
         }
         
         float CalculateJumpVerticalSpeed()
@@ -172,7 +172,7 @@ namespace Static_Interface.API.PlayerFramework
         }
 #endif
 
-        private class ListenerBehaviour : MonoBehaviour
+        private class PlayerInputListenerBehaviour : MonoBehaviour
         {
             public bool Grounded;
             protected override void OnCollisionStay(Collision collision)

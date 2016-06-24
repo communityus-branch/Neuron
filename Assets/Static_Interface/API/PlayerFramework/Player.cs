@@ -69,6 +69,7 @@ namespace Static_Interface.API.PlayerFramework
         {
             CheckRigidbody(newModel.Model);
             GetComponent<RigidbodyPositionSyncer>().RigidbodyToSync = newModel.Model.GetComponent<Rigidbody>();
+            GetComponent<AngleSyncer>().TransformToSync = newModel.Model.transform;
         }
 
         public void CheckRigidbody()
@@ -85,6 +86,7 @@ namespace Static_Interface.API.PlayerFramework
                 rigidbody.mass = 80;
                 rigidbody.freezeRotation = true;
                 GetComponent<RigidbodyPositionSyncer>().RigidbodyToSync = rigidbody;
+                GetComponent<AngleSyncer>().TransformToSync = rigidbody.transform;
             }
         }
     }

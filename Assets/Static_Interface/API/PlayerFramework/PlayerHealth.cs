@@ -8,51 +8,30 @@ using Static_Interface.API.Utils;
 using Static_Interface.API.WeaponFramework;
 using Static_Interface.Internal;
 using UnityEngine;
+using MonoBehaviour = Static_Interface.API.UnityExtensions.MonoBehaviour;
 
 namespace Static_Interface.API.PlayerFramework
 {
     public class PlayerHealth : PlayerBehaviour
     {
-        public const float MIN_COLLISION_MOMENTUM = 50;
-        private Rigidbody Rigidbody => Player.Model.GetComponent<Rigidbody>();
+        private PlayerHealthListenerBehaviour _playerHealthListener;
+        public const float MIN_COLLISION_MOMENTUM_VELOCITY = 35;
         private ProgressBarView _healthProgressBarView;
+
         protected override void Awake()
         {
             base.Awake();
             MaxHealth = 100;
             _health = 100;
+            var obj = Player.Model.gameObject;
+            _playerHealthListener = obj.AddComponent<PlayerHealthListenerBehaviour>();
+            _playerHealthListener.PlayerHealth = this;
         }
 
-        protected override void OnCollisionEnter(Collision collision)
+        protected override void OnPlayerModelChange(PlayerModel newModel)
         {
-            base.OnCollisionEnter(collision);
-            var momentum = collision.relativeVelocity * Rigidbody.mass;
-            var deathCause = EDamageCause.COLLISION;
-            var hitTransform = collision.transform;
-            bool isBullet = hitTransform.GetComponent<Projectile>() != null;
-
-            PlayerCollisionEvent @event = new PlayerCollisionEvent(Player, collision, momentum);
-            @event.IsBullet = isBullet;
-            EventManager.Instance.CallEvent(@event);
-            if (@event.IsCancelled) return;
-
-            if (isBullet)
-            {
-                var bullet = hitTransform.GetComponent<Projectile>();
-                Physics.IgnoreCollision(GetComponent<Collider>(), hitTransform.GetComponent<Collider>());
-                if (bullet.Damage != null)
-                {
-                    Player.Health.DamagePlayer(bullet.Damage.Value, EDamageCause.SHOT, bullet.Owner);
-                    return;
-                }
-                //If bullet.Damage == null we will calculate damamge from collision 
-                deathCause = EDamageCause.SHOT;
-            }
-
-            if (momentum.magnitude > MIN_COLLISION_MOMENTUM * Rigidbody.mass)
-            {
-                Player.Health.PlayerCollision(momentum, deathCause);
-            }
+            _playerHealthListener = newModel.Model.AddComponent<PlayerHealthListenerBehaviour>();
+            _playerHealthListener.PlayerHealth = this;
         }
 
         protected override void OnPlayerLoaded()
@@ -72,6 +51,7 @@ namespace Static_Interface.API.PlayerFramework
         public bool IsDead => Health == 0;
 
         private int _health;
+
         public int Health
         {
             get { return _health; }
@@ -82,7 +62,7 @@ namespace Static_Interface.API.PlayerFramework
 
                 if (!wasDead && newHealth == 0)
                 {
-                    Rigidbody.freezeRotation = false;
+                    Player.Rigidbody.freezeRotation = false;
                     Player.MovementController?.DisableControl();
                 }
 
@@ -115,7 +95,7 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (IsServer())
             {
-                Channel.Send(nameof(Network_Kill), ECall.Clients, (int)deathcause);
+                Channel.Send(nameof(Network_Kill), ECall.Clients, (int) deathcause);
             }
             Kill(deathcause, false);
         }
@@ -148,7 +128,7 @@ namespace Static_Interface.API.PlayerFramework
 
         public void RevivePlayer(int health)
         {
-            RevivePlayer(health, false);   
+            RevivePlayer(health, false);
         }
 
         private void RevivePlayer(int health, bool ignoreServer)
@@ -167,8 +147,8 @@ namespace Static_Interface.API.PlayerFramework
 
             _health = health;
 
-            Rigidbody.rotation = Quaternion.identity;
-            Rigidbody.freezeRotation = true;
+            Player.Rigidbody.rotation = Quaternion.identity;
+            Player.Rigidbody.freezeRotation = true;
             Player.MovementController?.EnableControl();
 
             PlayerReviveEvent @event = new PlayerReviveEvent(Player);
@@ -179,7 +159,7 @@ namespace Static_Interface.API.PlayerFramework
                 Channel.Send(nameof(Network_Revive), ECall.Clients, _health);
             }
         }
-        
+
         private int _maxHealth;
 
         public int MaxHealth
@@ -197,14 +177,14 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (!IsServer()) return;
             var magnitude = momentum.magnitude;
-            var speed = magnitude / GetComponent<Rigidbody>().mass;
-            var damage = (10 / 4) * speed;  // 100 damage at 40 m/s
-            DamagePlayer((int)damage, deathCause, World.Instance);
+            var speed = magnitude/Player.Rigidbody.mass;
+            var damage = (10/4)*speed; // 100 damage at 40 m/s
+            DamagePlayer((int) damage, deathCause, World.Instance);
         }
 
 
         public void DamagePlayer(int damage, EDamageCause cause, IEntity damagingEntity = null)
-        {         
+        {
             PlayerDamageEvent @event = new PlayerDamageEvent(Player);
             @event.Damage = damage;
             @event.DamageCausingEntity = damagingEntity;
@@ -247,6 +227,47 @@ namespace Static_Interface.API.PlayerFramework
         {
             if (identity == Connection.ClientID) return;
             RevivePlayer(health, true);
+        }
+
+        private class PlayerHealthListenerBehaviour : MonoBehaviour
+        {
+            protected override void OnCollisionEnter(Collision collision)
+            {
+                if (PlayerHealth == null) return;
+                var player = PlayerHealth.Player;
+                base.OnCollisionEnter(collision);
+                var momentum = collision.relativeVelocity * player.Rigidbody.mass;
+                var deathCause = EDamageCause.COLLISION;
+                var hitTransform = collision.transform;
+                bool isBullet = hitTransform.GetComponent<Projectile>();
+
+                PlayerCollisionEvent @event = new PlayerCollisionEvent(player, collision, momentum)
+                {
+                    IsBullet = isBullet
+                };
+                EventManager.Instance.CallEvent(@event);
+                if (@event.IsCancelled) return;
+
+                if (isBullet)
+                {
+                    var bullet = hitTransform.GetComponent<Projectile>();
+                    Physics.IgnoreCollision(GetComponent<Collider>(), hitTransform.GetComponent<Collider>());
+                    if (bullet.Damage != null)
+                    {
+                        PlayerHealth.DamagePlayer(bullet.Damage.Value, EDamageCause.SHOT, bullet.Owner);
+                        return;
+                    }
+                    //If bullet.Damage == null we will calculate damamge from collision 
+                    deathCause = EDamageCause.SHOT;
+                }
+
+                if (momentum.magnitude > MIN_COLLISION_MOMENTUM_VELOCITY * player.Rigidbody.mass)
+                {
+                    PlayerHealth.PlayerCollision(momentum, deathCause);
+                }
+            }
+
+            public PlayerHealth PlayerHealth { get; set; }
         }
     }
 }
