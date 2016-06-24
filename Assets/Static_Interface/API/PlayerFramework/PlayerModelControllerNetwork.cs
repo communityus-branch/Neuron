@@ -1,4 +1,5 @@
-﻿using Static_Interface.API.NetworkFramework;
+﻿using System.Linq;
+using Static_Interface.API.NetworkFramework;
 
 namespace Static_Interface.API.PlayerFramework
 {
@@ -13,7 +14,9 @@ namespace Static_Interface.API.PlayerFramework
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer = true)]
         private void Network_ChangeModel(Identity sender, Identity target, string modelController)
         {
-            var player = target.Owner.Player;
+            var clients = Connection.Clients.ToList();
+            var owner = target.Owner;
+            var player = owner.Player;
             var controller = PlayerModelController.GetPlayerModelController(modelController);
             controller.ApplyLocal(player);
         }

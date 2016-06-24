@@ -164,7 +164,8 @@ namespace Static_Interface.Internal.MultiplayerFramework
                 return;
             }
 
-            Destroy(ClientsInternal[index].Model.gameObject);
+            var playerObj = ClientsInternal[index]?.Model?.gameObject;
+            if(playerObj != null) Destroy(playerObj);
             ClientsInternal.RemoveAt(index);
         }
 

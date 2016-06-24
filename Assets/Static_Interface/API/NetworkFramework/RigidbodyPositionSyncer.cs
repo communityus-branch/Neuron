@@ -8,10 +8,9 @@ using UnityEngine;
 
 namespace Static_Interface.API.NetworkFramework
 {
-    [RequireComponent(typeof(Rigidbody))]
     public class RigidbodyPositionSyncer : NetworkedBehaviour
     {
-        private Rigidbody Rigidbody => GetComponent<Rigidbody>();
+        public Rigidbody RigidbodyToSync;
         private Vector3? _cachedPosition;
         private Vector3? _cachedVelocity;
 
@@ -37,6 +36,12 @@ namespace Static_Interface.API.NetworkFramework
             _positionValidators.Remove(validator);
         }
 
+        protected override void Awake()
+        {
+            base.Awake();
+            RigidbodyToSync = GetComponent<Rigidbody>();
+        }
+
         /*
         protected override void OnPlayerLoaded()
         {
@@ -51,10 +56,11 @@ namespace Static_Interface.API.NetworkFramework
         protected override void Update()
         {
             base.Update();
+            if (RigidbodyToSync == null || !RigidbodyToSync) return;
             _syncTime += Time.deltaTime;
             if (_syncStartPosition == null || _syncEndPosition == null) return;
             var vec = Vector3.Lerp(_syncStartPosition.Value, _syncEndPosition.Value, _syncTime / _syncDelay);
-            Rigidbody.position = vec;
+            RigidbodyToSync.position = vec;
 
             if (vec == _syncEndPosition.Value)
             {
@@ -66,31 +72,33 @@ namespace Static_Interface.API.NetworkFramework
         protected override bool OnSync()
         {
             base.OnSync();
-            if (_cachedPosition == Rigidbody.position && _cachedVelocity == Rigidbody.velocity)
+            if (RigidbodyToSync == null || !RigidbodyToSync) return false;
+            if (_cachedPosition == RigidbodyToSync.position && _cachedVelocity == RigidbodyToSync.velocity)
             {
                 // no changes, no need for updates
                 return false;
             }
 
-            _cachedPosition = Rigidbody.position;
-            _cachedVelocity = Rigidbody.velocity;
-            Channel.Send(nameof(Network_ReadPositionServer), ECall.Server, (object)Rigidbody.position, Rigidbody.velocity);
+            _cachedPosition = RigidbodyToSync.position;
+            _cachedVelocity = RigidbodyToSync.velocity;
+            Channel.Send(nameof(Network_ReadPositionServer), ECall.Server, (object)RigidbodyToSync.position, RigidbodyToSync.velocity);
             return true;
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.SERVER, ValidateOwner = true)]
         protected void Network_ReadPositionServer(Identity ident, Vector3 syncPosition, Vector3 syncVelocity)
         {
+            if (RigidbodyToSync == null || !RigidbodyToSync) return;
             if (ident != Connection.ServerID)
             {
                 if (_positionValidators.Count > 0)
                 {
-                    var deltaPosition = syncPosition - Rigidbody.position;
-                    var deltaVelocity = syncVelocity - Rigidbody.velocity;
-                    if (_positionValidators.Any(val => !val.ValidatePosition(ident, Rigidbody.transform, deltaPosition, deltaVelocity)))
+                    var deltaPosition = syncPosition - RigidbodyToSync.position;
+                    var deltaVelocity = syncVelocity - RigidbodyToSync.velocity;
+                    if (_positionValidators.Any(val => !val.ValidatePosition(ident, RigidbodyToSync.transform, deltaPosition, deltaVelocity)))
                     {
-                        Channel.Send(nameof(Network_ReadPositionClient), ECall.Owner, (object) Rigidbody.position,
-                            Rigidbody.velocity, true);
+                        Channel.Send(nameof(Network_ReadPositionClient), ECall.Owner, (object)RigidbodyToSync.position,
+                            RigidbodyToSync.velocity, true);
                         return;
                     }
                 }
@@ -98,23 +106,13 @@ namespace Static_Interface.API.NetworkFramework
                 ReadPosition(syncPosition, syncVelocity, IsDedicatedServer());
             }
 
-            try
-            {
-                var body = Rigidbody;
-                if(!body)
-                    throw new MissingReferenceException("Rigidbody not found");
-            }
-            catch (Exception)
-            {
-                Destroy(this);
-                return;
-            }
-            Channel.Send(nameof(Network_ReadPositionClient), ECall.NotOwner, Rigidbody.position, syncPosition, syncVelocity, false);
+            Channel.Send(nameof(Network_ReadPositionClient), ECall.NotOwner, RigidbodyToSync.position, syncPosition, syncVelocity, false);
         }
 
         [NetworkCall(ConnectionEnd = ConnectionEnd.CLIENT, ValidateServer= true, MaxRadius = 1000)]
         protected void Network_ReadPositionClient(Identity ident, Vector3 syncPosition, Vector3 syncVelocity, bool force)
         {
+            if (RigidbodyToSync == null || !RigidbodyToSync) return;
             ReadPosition(syncPosition, syncVelocity, force);
         }
 
@@ -122,8 +120,8 @@ namespace Static_Interface.API.NetworkFramework
         {
             if (snap)
             {
-                Rigidbody.position = syncPosition;
-                Rigidbody.velocity = syncVelocity;
+                RigidbodyToSync.position = syncPosition;
+                RigidbodyToSync.velocity = syncVelocity;
                 return;
             }
             _syncTime = 0f;
@@ -131,14 +129,15 @@ namespace Static_Interface.API.NetworkFramework
             _lastSynchronizationTime = Time.time;
             LastSync = TimeUtil.GetCurrentTime();
             _syncEndPosition = syncPosition + syncVelocity * _syncDelay;
-            _syncStartPosition = Rigidbody.position;
+            _syncStartPosition = RigidbodyToSync.position;
         }
 
-        public static void AddRigidbodySyncer(GameObject obj, Channel ch)
+        public static void AddRigidbodySyncer(GameObject obj, Rigidbody body, Channel ch)
         {
             obj.SetActive(false);
             var syncer = obj.AddComponent<RigidbodyPositionSyncer>();
-            syncer.Channel = ch;
+            if (body != null) syncer.RigidbodyToSync = body;
+            if (ch != null) syncer.Channel = ch;
             obj.SetActive(true);
         }
     }

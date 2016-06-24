@@ -118,7 +118,7 @@ namespace Static_Interface.API.EventFramework
                 object instance = null;
                 try
                 {
-                    foreach (var c in _listenerMethods.Keys.Where(c => _listenerMethods[c].Contains(info)))
+                    foreach (var c in _listenerMethods.Keys.Where(c => _listenerMethods.ContainsKey(c) && _listenerMethods[c].Contains(info)))
                     {
                         instance = c;
                     }

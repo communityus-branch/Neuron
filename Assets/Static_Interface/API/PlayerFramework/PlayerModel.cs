@@ -21,8 +21,12 @@ namespace Static_Interface.API.PlayerFramework
 
         public void UpdateModel()
         {
-            Player.Camera.transform.localRotation = GetCameraLocalRotation();
-            Player.Camera.transform.localPosition = GetFPSCameraLocalPosition();
+            if (Player?.Camera != null)
+            {
+                Player.Camera.transform.localRotation = GetCameraLocalRotation();
+                Player.Camera.transform.localPosition = GetFPSCameraLocalPosition();
+            }
+
             OnModelUpdate();
         }
 

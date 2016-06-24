@@ -97,6 +97,8 @@ namespace Static_Interface.API.PlayerFramework
             transform.position = oldModel.transform.position;
 
             player.SendMessage("OnPlayerModelChange", newModel, SendMessageOptions.DontRequireReceiver);
+            player.OnPlayerModelChange(newModel);
+
             var container = player.gameObject.transform;
             container.SetParent(transform);
 

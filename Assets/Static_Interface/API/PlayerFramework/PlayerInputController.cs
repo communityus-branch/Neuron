@@ -15,7 +15,6 @@ namespace Static_Interface.API.PlayerFramework
         protected override void OnPlayerLoaded()
         {
             base.OnPlayerLoaded();
-            RigidbodyPositionSyncer.AddRigidbodySyncer(Player.Model.gameObject, Channel);
             if (!Channel.IsOwner && !NetworkUtils.IsServer())
             {
                 Destroy(this);
@@ -95,7 +94,7 @@ namespace Static_Interface.API.PlayerFramework
                 return;
             }
 
-            if (ConsoleGUI.Instance.IsOpen) return;
+            if (ConsoleGUI.Instance != null && ConsoleGUI.Instance.IsOpen) return;
             if (PauseHook.IsPaused) return;
             var inputX = GetInputX();
             var inputY = GetInputY();

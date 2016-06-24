@@ -15,6 +15,8 @@ namespace Static_Interface.API.PlayerFramework
         {
             base.Awake();
             EventManager.Instance.RegisterEventsInternal(this, null);
+            gameObject.AddComponent<RigidbodyPositionSyncer>();
+            CheckRigidbody();
         }
 
         public Transform Model => PlayerModel == null ? transform.parent : PlayerModel.Model.transform;
@@ -66,7 +68,7 @@ namespace Static_Interface.API.PlayerFramework
         internal void OnPlayerModelChange(PlayerModel newModel)
         {
             CheckRigidbody(newModel.Model);
-            RigidbodyPositionSyncer.AddRigidbodySyncer(newModel.Model, Channel);
+            GetComponent<RigidbodyPositionSyncer>().RigidbodyToSync = newModel.Model.GetComponent<Rigidbody>();
         }
 
         public void CheckRigidbody()
@@ -74,7 +76,7 @@ namespace Static_Interface.API.PlayerFramework
             CheckRigidbody(Model.gameObject);
         }
 
-        private static void CheckRigidbody(GameObject model)
+        private void CheckRigidbody(GameObject model)
         {
             var rigidbody = model.GetComponent<Rigidbody>();
             if (!rigidbody)
@@ -82,6 +84,7 @@ namespace Static_Interface.API.PlayerFramework
                 rigidbody = model.AddComponent<Rigidbody>();
                 rigidbody.mass = 80;
                 rigidbody.freezeRotation = true;
+                GetComponent<RigidbodyPositionSyncer>().RigidbodyToSync = rigidbody;
             }
         }
     }
